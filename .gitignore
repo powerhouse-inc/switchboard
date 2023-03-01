@@ -1,4 +1,4 @@
-# default node stuff
+# default node
 node_modules
 *.log*
 .nitro
