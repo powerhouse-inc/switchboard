@@ -1,0 +1,17 @@
+# default node stuff
+node_modules
+*.log*
+.nitro
+.cache
+.output
+.env
+dist
+*.sqlite
+*.sqlite-journal
+
+# mac
+.DS_Store
+
+# deployment
+.helmsman-tmp
+secrets.yaml
