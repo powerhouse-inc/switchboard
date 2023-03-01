@@ -1,5 +1,8 @@
 ![Open-source API Supporting a Thriving Ecosystem of (D)apps](./banner.png)
 
+[![CI](https://github.com/makerdao-ses/switchboard-boilerplate/actions/workflows/ci.yaml/badge.svg)](https://github.com/makerdao-ses/switchboard-boilerplate/actions/workflows/ci.yaml)
+[![#license AGPLv3](https://img.shields.io/badge/license-AGPLv3-purple?style=plastic)](https://www.gnu.org/licenses/agpl-3.0)
+
 # Powerhouse Switchboard
 
 Open-source API over database models made to be developer- and analyst-friendly.
