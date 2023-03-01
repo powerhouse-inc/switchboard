@@ -9,7 +9,7 @@ Open-source API over database models made to be developer- and analyst-friendly.
 
 ## Development
 
-We use node and npm to develop this project. Commands:
+We use TypeScript, JavaScript and Node 18 (LTS) to develop this project. Commands:
 ```sh
 # Install all required dependencies
 npm i
