@@ -4,8 +4,15 @@
     "description": "Open-source API over database models made to be developer- and analyst-friendly.",
     "author": "makerdao",
     "license": "AGPL-3",
+    "scripts": {
+        "dev": "vite-node index.ts",
+        "lint": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings=0",
+        "typecheck": "tsc --noEmit"
+    },
     "dependencies": {
+        "vite-node": "^0.29.2"
     },
     "devDependencies": {
+        "@types/node": "^18.14.2"
     }
-  }
+}

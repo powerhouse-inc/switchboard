@@ -13,6 +13,9 @@ We use node and npm to develop this project. Commands:
 ```sh
 # Install all required dependencies
 npm i
+
+# Run application in development mode
+npm run dev
 ```
 
 
