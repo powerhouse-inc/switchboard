@@ -16,6 +16,9 @@ npm i
 
 # Run application in development mode
 npm run dev
+
+# Typechecking
+npm run typecheck
 ```
 
 

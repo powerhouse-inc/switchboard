@@ -20,3 +20,5 @@ jobs:
           node-version: 18.14.2
 
       - run: npm install
+
+      - run: npm run typecheck
