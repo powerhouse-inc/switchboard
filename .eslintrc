@@ -1,0 +1,29 @@
+{
+    // From: https://github.com/airbnb/javascript/issues/451 - we want airbnb, but not it's react rules (because we don't use react)
+    "extends": "airbnb-base",
+    "overrides": [
+        {
+            "files": [
+                "./**/*.ts"
+            ],
+            "rules": {
+                "no-console": [
+                    "error",
+                    {
+                        "allow": [
+                            "info",
+                            "warn",
+                            "trace",
+                            "error"
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "rules": {
+        "no-return-await": [
+            "error"
+        ]
+    }
+}

@@ -17,13 +17,11 @@ npm i
 # Run application in development mode
 npm run dev
 
-# Typechecking
+# Typechecking (via TypeScript / tsc)
 npm run typecheck
+
+# Linting (via eslint)
 ```
-
-
-
-
 
 ### Coding Setup
 
