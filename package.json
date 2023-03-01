@@ -1,0 +1,11 @@
+{
+    "name": "powerhouse-switchboard",
+    "version": "0.0.1",
+    "description": "Open-source API over database models made to be developer- and analyst-friendly.",
+    "author": "makerdao",
+    "license": "AGPL-3",
+    "dependencies": {
+    },
+    "devDependencies": {
+    }
+  }
