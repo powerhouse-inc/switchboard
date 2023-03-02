@@ -9,7 +9,7 @@
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
         "typecheck": "tsc --noEmit",
         "test": "vitest",
-        "test:coverage": "vitest run --coverage"
+        "test:cov": "vitest run --coverage"
     },
     "dependencies": {
         "vite-node": "^0.29.2"
