@@ -8,8 +8,7 @@
         "dev": "vite-node index.ts",
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
         "typecheck": "tsc --noEmit",
-        "test": "vitest",
-        "test:cov": "vitest run --coverage"
+        "test": "vitest run --coverage"
     },
     "dependencies": {
         "vite-node": "^0.29.2"
