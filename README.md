@@ -20,6 +20,9 @@ npm run dev
 # Typechecking (via TypeScript / tsc)
 npm run typecheck
 
+# Linting (via eslint)
+npm run lint
+
 # Testing via vitest
 npm run test
 
