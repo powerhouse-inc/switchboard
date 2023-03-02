@@ -4,9 +4,9 @@ export default defineConfig({
   test: {
     coverage: {
       provider: "istanbul",
-      lines: 80,
-      functions: 80,
-      statements: 80,
+      lines: 90,
+      functions: 90,
+      statements: 90,
     },
   },
 });
