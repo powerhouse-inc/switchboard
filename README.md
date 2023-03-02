@@ -20,7 +20,11 @@ npm run dev
 # Typechecking (via TypeScript / tsc)
 npm run typecheck
 
-# Linting (via eslint)
+# Testing via vitest
+npm run test
+
+# Coverage via vitest, istambul coverage provider
+npm run test:cov
 ```
 
 ### Coding Setup
