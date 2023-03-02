@@ -7,7 +7,7 @@ export default defineConfig({
       lines: 90,
       functions: 90,
       statements: 90,
-      all: true
+      all: true,
     },
   },
 });
