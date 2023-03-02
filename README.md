@@ -30,9 +30,6 @@ npm run lint
 
 # Testing via vitest
 npm run test
-
-# Coverage via vitest, istambul coverage provider
-npm run test:cov
 ```
 
 ### Coding Setup
