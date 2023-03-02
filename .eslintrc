@@ -1,6 +1,13 @@
 {
     // From: https://github.com/airbnb/javascript/issues/451 - we want airbnb, but not it's react rules (because we don't use react)
-    "extends": "airbnb-base",
+    "extends": [
+        "airbnb-base"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "root": true,
     "overrides": [
         {
             "files": [
@@ -24,6 +31,7 @@
     "rules": {
         "no-return-await": [
             "error"
-        ]
+        ],
+        "import/prefer-default-export": "off"
     }
 }
