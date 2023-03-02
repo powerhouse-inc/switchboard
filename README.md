@@ -7,10 +7,15 @@
 
 Open-source API over database models made to be developer- and analyst-friendly.
 
+![app](./.github/app.png)
+
 ## Development
 
 We use TypeScript, JavaScript and Node 18 (LTS) to develop this project. Commands:
 ```sh
+# Set the required environment variables
+cp .env.development .env
+
 # Install all required dependencies
 npm i
 
@@ -41,3 +46,18 @@ To understand bettwe that is planned, you can read and ask questions here:
 - Document Model explanation: https://github.com/makerdao-ses/switchboard-boilerplate/issues/1
 
 This covers the current idea of what we strive to achieve in a first phase.
+
+
+## Database
+
+We use [Prisma ORM](prisma.io/) as an ORM for this project. It is installed when you run `npm i`. Here are some useful commands for development:
+```sh
+# Push the current database schema to the database. This will also automatically generate the prisma client
+npx prisma db push
+
+# Create the typescript database client from the `schema.prisma` file
+npx prisma generate
+
+# Get a live-view of the database, useful for development and testing
+npx prisma studio
+```
