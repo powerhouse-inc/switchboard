@@ -26,6 +26,10 @@ npm run dev
 npm run typecheck
 
 # Linting (via eslint)
+npm run lint
+
+# Testing via vitest
+npm run test
 ```
 
 ### Coding Setup

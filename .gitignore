@@ -15,3 +15,5 @@ dist
 # deployment
 .helmsman-tmp
 secrets.yaml
+
+coverage/**
