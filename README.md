@@ -33,3 +33,11 @@ nvm use
 to automatically use the correct node version. The version is detected from the [.nvmrc](./.nvmrc).
 
 If you do not have a code editor setup, we recommend that you use [Visual Studio Code](https://code.visualstudio.com/) to get started. It is very beginner friendly and you can move on to something else (such as Sublime, vim, emacs, ...) down the road if you want to.
+
+### Project-Requirements
+
+To understand bettwe that is planned, you can read and ask questions here:
+- Initial Requirements: https://github.com/makerdao-ses/switchboard-boilerplate/issues/3
+- Document Model explanation: https://github.com/makerdao-ses/switchboard-boilerplate/issues/1
+
+This covers the current idea of what we strive to achieve in a first phase.
