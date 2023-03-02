@@ -7,13 +7,16 @@
     "scripts": {
         "dev": "vite-node index.ts",
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "test": "vitest",
+        "test:coverage": "vitest run --coverage"
     },
     "dependencies": {
         "vite-node": "^0.29.2"
     },
     "devDependencies": {
         "@types/node": "^18.14.2",
+        "@vitest/coverage-istanbul": "^0.29.2",
         "eslint": "^8.35.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "typescript": "^4.9.5"
