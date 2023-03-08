@@ -8,35 +8,27 @@
     "parserOptions": {
         "project": "./tsconfig.json"
     },
+    "ignorePatterns": ["**/generated/*"],
     "plugins": [
         "@typescript-eslint"
     ],
     "root": true,
-    "overrides": [
-        {
-            "files": [
-                "./**/*.ts"
-            ],
-            "rules": {
-                "no-console": [
-                    "error",
-                    {
-                        "allow": [
-                            "info",
-                            "warn",
-                            "trace",
-                            "error"
-                        ]
-                    }
-                ]
-            }
-        }
-    ],
     "rules": {
         "no-return-await": [
             "error"
         ],
-        "import/prefer-default-export": "off"
+        "import/prefer-default-export": "off",
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "info",
+                    "warn",
+                    "trace",
+                    "error"
+                ]
+            }
+        ]
     }
 }
 

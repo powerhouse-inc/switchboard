@@ -1,13 +1,38 @@
-import { getPrisma } from './database/index';
+import type { Server } from 'http';
+import { createServer as createHttpServer } from 'http';
+import { ApolloServer } from 'apollo-server-express';
+import { applyMiddleware } from 'graphql-middleware';
+import type express from 'express';
+import { PORT, isDevelopment } from './env';
+import { createApp } from './app';
+import { createContext } from './context';
+import { schema } from './schema';
 
-const main = async () => {
-  console.info('GM MakerDao');
+export const schemaWithMiddleware = applyMiddleware(schema);
 
-  const prisma = getPrisma();
-  console.info('Here are all core-units: ', await prisma.coreUnit.findMany());
+const createApolloServer = (): ApolloServer => new ApolloServer({
+  schema: schemaWithMiddleware,
+  context: createContext,
+  introspection: isDevelopment,
+});
+
+export const startServer = async (
+  app: express.Application,
+): Promise<Server> => {
+  const httpServer = createHttpServer(app);
+  const apollo = createApolloServer();
+
+  await apollo.start();
+  apollo.applyMiddleware({ app });
+
+  return httpServer.listen({ port: PORT }, () => {
+    console.info(`Running on ${PORT}`);
+  });
 };
 
-main()
+const app = createApp();
+
+startServer(app)
   .then(() => {
     // This should never happen, is only here until we add the real API which of course runs forever
     console.info('API execution ended');

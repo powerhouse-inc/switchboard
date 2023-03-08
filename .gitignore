@@ -1,4 +1,11 @@
-# default node
+# project-related
+*.sqlite
+*.sqlite-journal
+
+# deployment-related
+secrets.yaml
+
+# node-related
 node_modules
 *.log*
 .nitro
@@ -6,14 +13,7 @@ node_modules
 .output
 .env
 dist
-*.sqlite
-*.sqlite-journal
-
-# mac
-.DS_Store
-
-# deployment
-.helmsman-tmp
-secrets.yaml
-
 coverage/**
+
+# system-related
+.DS_Store
