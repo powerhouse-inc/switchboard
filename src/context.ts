@@ -3,7 +3,7 @@ import type express from 'express';
 import { getPrisma } from './database';
 
 export interface Context {
-  request: { req: ReqI18n };
+  request: { req: express.Request };
   prisma: PrismaClient;
 }
 
