@@ -54,6 +54,11 @@ export interface NexusGenObjects {
     shortCode?: string | null; // String
   }
   Query: {};
+  User: { // root type
+    id?: string | null; // String
+    password?: string | null; // String
+    username?: string | null; // String
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -80,6 +85,12 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
+    user: NexusGenRootTypes['User'] | null; // User
+  }
+  User: { // field return type
+    id: string | null; // String
+    password: string | null; // String
+    username: string | null; // String
   }
 }
 
@@ -97,12 +108,21 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
+    user: 'User'
+  }
+  User: { // field return type name
+    id: 'String'
+    password: 'String'
+    username: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
+      id?: string | null; // String
+    }
+    user: { // args
       id?: string | null; // String
     }
   }
