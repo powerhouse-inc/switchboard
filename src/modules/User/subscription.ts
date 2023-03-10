@@ -1,4 +1,4 @@
-import { nonNull, stringArg, subscriptionField } from 'nexus';
+import { nonNull, stringArg, subscriptionField } from 'nexus/dist';
 import { withFilter } from 'graphql-subscriptions';
 
 export const USER_SIGNED_IN = 'USER_SIGNED_IN';

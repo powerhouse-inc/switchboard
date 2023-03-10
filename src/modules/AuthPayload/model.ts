@@ -1,4 +1,4 @@
-import { objectType } from 'nexus';
+import { objectType } from 'nexus/dist';
 
 export const AuthPayload = objectType({
   name: 'AuthPayload',
