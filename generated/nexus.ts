@@ -63,7 +63,6 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
-  Subscription: {};
   User: { // root type
     id?: string | null; // String
     password?: string | null; // String
@@ -105,9 +104,6 @@ export interface NexusGenFieldTypes {
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     me: NexusGenRootTypes['User'] | null; // User
   }
-  Subscription: { // field return type
-    userSignedIn: NexusGenRootTypes['User'] | null; // User
-  }
   User: { // field return type
     id: string | null; // String
     password: string | null; // String
@@ -139,9 +135,6 @@ export interface NexusGenFieldTypeNames {
     coreUnits: 'CoreUnit'
     me: 'User'
   }
-  Subscription: { // field return type name
-    userSignedIn: 'User'
-  }
   User: { // field return type name
     id: 'String'
     password: 'String'
@@ -162,11 +155,6 @@ export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
       id?: string | null; // String
-    }
-  }
-  Subscription: {
-    userSignedIn: { // args
-      userId: string; // String!
     }
   }
 }

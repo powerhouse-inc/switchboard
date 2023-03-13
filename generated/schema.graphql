@@ -29,10 +29,6 @@ type Query {
   me: User
 }
 
-type Subscription {
-  userSignedIn(userId: String!): User
-}
-
 type User {
   id: String
   password: String

@@ -5,7 +5,7 @@ import type express from 'express';
 import type { Disposable } from 'graphql-ws';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { PORT, isDevelopment } from './env';
-import { createContext, runSubscriptionServer } from './context';
+import { createContext } from './context';
 import { schemaWithMiddleware } from './schema';
 
 let serverCleanup: Disposable;
@@ -29,16 +29,14 @@ const createApolloServer = (httpServer: Server): ApolloServer => new ApolloServe
 });
 
 const initializeApolloServer = (
-  httpServer: Server,
   apollo: ApolloServer,
   app: express.Application,
   port: number,
 ): (() => void) => {
   apollo.applyMiddleware({ app });
-  serverCleanup = runSubscriptionServer(httpServer, apollo);
   return (): void => {
     process.stdout.write(
-      `🚀 Server ready at http://localhost:${port}${apollo.graphqlPath}\nPlayground at http://localhost:${port}`,
+      `🚀 Server ready at port ${port}`,
     );
   };
 };
@@ -51,7 +49,6 @@ export const startServer = async (
   await apollo.start();
   apollo.applyMiddleware({ app });
   const handleApolloServerInit = initializeApolloServer(
-    httpServer,
     apollo,
     app,
     PORT,

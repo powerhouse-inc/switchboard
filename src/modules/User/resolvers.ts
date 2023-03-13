@@ -3,7 +3,6 @@ import {
 } from 'nexus/dist';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { USER_SIGNED_IN } from './subscription';
 import { APP_SECRET } from '../../utils/auth';
 
 export const me = queryField('me', {
@@ -27,7 +26,6 @@ export const signIn = mutationField('signIn', {
     password: nonNull(stringArg()),
   },
   resolve: async (_parent, { username, password }, ctx) => {
-    const { pubsub } = ctx;
     const user = await ctx.prisma.user.findUnique({
       where: {
         username,
@@ -40,7 +38,6 @@ export const signIn = mutationField('signIn', {
     if (!passwordValid) {
       throw new Error('invalid password');
     }
-    pubsub.publish(USER_SIGNED_IN, user);
     return {
       token: sign({ userId: user.id }, APP_SECRET),
       user,
