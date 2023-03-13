@@ -12,7 +12,7 @@ export const me = queryField('me', {
     if (!ctx.userId) {
       throw new Error('Not authorized');
     }
-    return ctx.prisma.coreUnit.findUnique({
+    return ctx.prisma.user.findUnique({
       where: {
         id: ctx.userId,
       },
