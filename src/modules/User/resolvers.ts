@@ -1,7 +1,7 @@
 import {
   stringArg, queryField, mutationField, nonNull,
 } from 'nexus/dist';
-import { compare, hash } from 'bcryptjs';
+import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { JWT_SECRET } from '../../env';
 
