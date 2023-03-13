@@ -1,7 +1,7 @@
 import { verify } from 'jsonwebtoken';
 import { JWT_SECRET } from '../env';
 
-const SECRET = JWT_SECRET || 'undefined';
+const SECRET = JWT_SECRET;
 
 export function getUserId(authorization: string): string | null {
   if (!authorization) {
