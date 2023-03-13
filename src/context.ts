@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import type express from 'express';
+import { verify } from 'jsonwebtoken';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
-import { verify } from 'jsonwebtoken';
 
 const prisma = getPrisma();
 
@@ -18,14 +18,18 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-
 function getUserId(authorization: string): string | null {
   if (!authorization) {
     return null;
   }
   const token = authorization.replace('Bearer ', '');
-  const verifiedToken = verify(token, JWT_SECRET) as { userId: string };
-  return verifiedToken && verifiedToken.userId;
+  let verifiedToken: { userId: string } | null = null;
+  try {
+    verifiedToken = verify(token, JWT_SECRET) as { userId: string };
+  } catch (err) {
+    return null;
+  }
+  return verifiedToken.userId;
 }
 
 export function createContext(params: CreateContextParams): Context {
