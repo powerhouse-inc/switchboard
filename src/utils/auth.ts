@@ -1,16 +1,14 @@
 import { verify } from 'jsonwebtoken';
+import { JWT_SECRET } from '../env';
 
-const {
-  JWT_SECRET = 'undefined',
-} = process.env;
+const SECRET = JWT_SECRET || 'undefined';
+
 export function getUserId(authorization: string): string | null {
   if (!authorization) {
     return null;
   }
-
   const token = authorization.replace('Bearer ', '');
-  const verifiedToken = verify(token, JWT_SECRET) as { userId: string };
-
+  const verifiedToken = verify(token, SECRET) as { userId: string };
   return verifiedToken && verifiedToken.userId;
 }
 

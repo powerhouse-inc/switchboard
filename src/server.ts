@@ -36,10 +36,9 @@ const initializeApolloServer = (
 ): (() => void) => {
   apollo.applyMiddleware({ app });
   serverCleanup = runSubscriptionServer(httpServer, apollo);
-
   return (): void => {
     process.stdout.write(
-      `🚀 Server ready at http://localhost:${port}${apollo.graphqlPath}\n`,
+      `🚀 Server ready at http://localhost:${port}${apollo.graphqlPath}\nPlayground at http://localhost:${port}`,
     );
   };
 };
@@ -49,7 +48,6 @@ export const startServer = async (
 ): Promise<Server> => {
   const httpServer = createHttpServer(app);
   const apollo = createApolloServer(httpServer);
-
   await apollo.start();
   apollo.applyMiddleware({ app });
   const handleApolloServerInit = initializeApolloServer(
@@ -58,9 +56,7 @@ export const startServer = async (
     app,
     PORT,
   );
-
   return httpServer.listen({ port: PORT }, () => {
     handleApolloServerInit();
-    console.info(`Running on ${PORT}`);
   });
 };

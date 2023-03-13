@@ -9,10 +9,11 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { getPrisma } from './database';
 import { schemaWithMiddleware } from './schema';
 import { getUserId } from './utils/auth';
+import { JWT_SECRET } from './env';
 
 const prisma = getPrisma();
 const pubsub = new PubSub();
-const { JWT_SECRET, NODE_ENV } = process.env;
+const NODE_ENV = process.env.NODE_ENV;
 
 export interface Context {
   request: { req: express.Request };
