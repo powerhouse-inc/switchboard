@@ -3,7 +3,7 @@ import {
 } from 'nexus/dist';
 import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import { APP_SECRET } from '../../utils/auth';
+import { JWT_SECRET } from '../../env';
 
 export const me = queryField('me', {
   type: 'User',
@@ -39,7 +39,7 @@ export const signIn = mutationField('signIn', {
       throw new Error('invalid password');
     }
     return {
-      token: sign({ userId: user.id }, APP_SECRET),
+      token: sign({ userId: user.id }, JWT_SECRET),
       user,
     };
   },
@@ -64,7 +64,7 @@ export const signUp = mutationField('signUp', {
     });
 
     return {
-      token: sign({ userId: created.id }, APP_SECRET),
+      token: sign({ userId: created.id }, JWT_SECRET),
       user: created,
     };
   },
