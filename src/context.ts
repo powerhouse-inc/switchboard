@@ -13,7 +13,7 @@ import { JWT_SECRET } from './env';
 
 const prisma = getPrisma();
 const pubsub = new PubSub();
-const NODE_ENV = process.env.NODE_ENV;
+const { NODE_ENV } = process.env;
 
 export interface Context {
   request: { req: express.Request };

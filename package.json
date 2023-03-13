@@ -20,6 +20,7 @@
         "bcrypt": "^5.1.0",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
         "express": "^4.18.2",
         "graphql-middleware": "^6.1.33",
         "graphql-playground-middleware-express": "^1.7.23",
