@@ -6,12 +6,12 @@ import { AUTH_SIGNUP_ENABLED, JWT_SECRET } from '../../env';
 export const me = queryField('me', {
   type: 'User',
   resolve: (_, __, ctx) => {
-    if (!ctx.userId) {
+    if (!ctx.authVerificationResult || !('userId' in ctx.authVerificationResult)) {
       throw new Error('Not authorized');
     }
     return ctx.prisma.user.findUnique({
       where: {
-        id: ctx.userId,
+        id: ctx.authVerificationResult.userId,
       },
     });
   },
@@ -37,7 +37,7 @@ export const signIn = mutationField('signIn', {
       throw new Error('invalid password');
     }
     return {
-      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' }),
+      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: 1 }),
       user,
     };
   },

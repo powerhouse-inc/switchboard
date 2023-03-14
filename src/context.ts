@@ -3,13 +3,14 @@ import type express from 'express';
 import { verify } from 'jsonwebtoken';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
+import { JwtVerificationResult } from './types';
 
 const prisma = getPrisma();
 
 export interface Context {
   request: { req: express.Request };
   prisma: PrismaClient;
-  userId: string | null;
+  authVerificationResult: JwtVerificationResult | null;
 }
 
 type CreateContextParams = {
@@ -18,18 +19,18 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-function getUserId(authorization: string): string | null {
+function getUserId(authorization: string): JwtVerificationResult {
   if (!authorization) {
-    return null;
+    return { error: 'Unhandled' };
   }
   const token = authorization.replace('Bearer ', '');
-  let verifiedToken: { userId: string } | null = null;
-  try {
-    verifiedToken = verify(token, JWT_SECRET) as { userId: string };
-  } catch (err) {
-    return null;
-  }
-  return verifiedToken.userId;
+  const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return err.name === 'TokenExpiredError' ? { error: 'JwtExpired' } : { error: 'Unhandled' };
+    }
+    return decoded;
+  }) as unknown as JwtVerificationResult;
+  return verificationTokenResult;
 }
 
 export function createContext(params: CreateContextParams): Context {
@@ -42,6 +43,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    userId: authorization ? getUserId(authorization) : null,
+    authVerificationResult: authorization ? getUserId(authorization) : null,
   };
 }

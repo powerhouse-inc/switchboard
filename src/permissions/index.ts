@@ -1,8 +1,10 @@
-import { rule, shield } from 'graphql-shield';
-import { ApolloError } from 'apollo-server-core';
+import { rule, shield } from "graphql-shield";
+import { ensureAuthenticated } from "../utils/auth";
 
 const rules = {
-  isAuthenticatedUser: rule()((_, __, { userId }) => Boolean(userId)),
+  isAuthenticatedUser: rule()((_, __, { authVerificationResult }) =>
+    ensureAuthenticated(authVerificationResult)
+  ),
 };
 
 export const permissionsAuth = shield(
@@ -12,7 +14,6 @@ export const permissionsAuth = shield(
     },
   },
   {
-    allowExternalErrors: process.env.NODE_ENV !== 'production',
-    fallbackError: new ApolloError('Not authorized', 'NOT_AUTHORIZED'),
-  },
+    allowExternalErrors: process.env.NODE_ENV !== "production",
+  }
 );
