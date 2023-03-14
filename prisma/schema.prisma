@@ -8,7 +8,7 @@ datasource db {
 }
 
 model CoreUnit {
-  id                              String @id @default(cuid())
+  id                              String @id @default(uuid())
   code                            String
   shortCode                       String
   name                            String
@@ -19,7 +19,7 @@ model CoreUnit {
 }
 
 model User {
-  id       String @id @default(cuid())
+  id       String @id @default(uuid())
   username String @unique
   password String
 }
