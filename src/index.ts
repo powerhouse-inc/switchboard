@@ -30,19 +30,6 @@ const createApolloServer = (httpServer: Server): ApolloServer => new ApolloServe
   ],
 });
 
-const initializeApolloServer = (
-  apollo: ApolloServer,
-  app: express.Application,
-  port: number,
-): (() => void) => {
-  apollo.applyMiddleware({ app });
-  return (): void => {
-    process.stdout.write(
-      `🚀 Server ready at port ${port}`,
-    );
-  };
-};
-
 const startServer = async (
   app: express.Application,
 ): Promise<Server> => {
@@ -50,13 +37,10 @@ const startServer = async (
   const apollo = createApolloServer(httpServer);
   await apollo.start();
   apollo.applyMiddleware({ app });
-  const handleApolloServerInit = initializeApolloServer(
-    apollo,
-    app,
-    PORT,
-  );
   return httpServer.listen({ port: PORT }, () => {
-    handleApolloServerInit();
+    process.stdout.write(
+      `🚀 Server ready at port ${PORT}`,
+    );
   });
 };
 
