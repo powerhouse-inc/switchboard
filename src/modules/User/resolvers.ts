@@ -3,7 +3,7 @@ import {
 } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { JWT_SECRET } from '../../env';
+import { AUTH_SIGNUP_ENABLED, JWT_SECRET } from '../../env';
 
 export const me = queryField('me', {
   type: 'User',
@@ -51,6 +51,9 @@ export const signUp = mutationField('signUp', {
     user: nonNull('UserNamePass'),
   },
   resolve: async (_parent, { user }, ctx) => {
+    if (!AUTH_SIGNUP_ENABLED) {
+      throw new Error('Sign up is disabled');
+    }
     const {
       username, password,
     } = user;
