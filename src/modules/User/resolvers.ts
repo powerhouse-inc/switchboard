@@ -6,9 +6,6 @@ import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD, JWT_SECRET } from '../../en
 export const me = queryField('me', {
   type: 'User',
   resolve: (_, __, ctx) => {
-    if (!ctx.authVerificationResult || !('userId' in ctx.authVerificationResult)) {
-      throw new Error('Not authorized');
-    }
     return ctx.prisma.user.findUnique({
       where: {
         id: ctx.authVerificationResult.userId,

@@ -10,7 +10,7 @@ const prisma = getPrisma();
 export interface Context {
   request: { req: express.Request };
   prisma: PrismaClient;
-  authVerificationResult: JwtVerificationResult | null;
+  authVerificationResult: JwtVerificationResult;
 }
 
 type CreateContextParams = {
@@ -21,7 +21,7 @@ type CreateContextParams = {
 
 function getUserId(authorization: string): JwtVerificationResult {
   if (!authorization) {
-    return { error: 'Unhandled' };
+    return { userId: 'unknown', error: 'Unhandled' };
   }
   const token = authorization.replace('Bearer ', '');
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
@@ -43,6 +43,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    authVerificationResult: authorization ? getUserId(authorization) : null,
+    authVerificationResult: authorization ? getUserId(authorization) : {userId: 'unknown'},
   };
 }
