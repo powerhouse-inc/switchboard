@@ -37,7 +37,7 @@ export const signIn = mutationField('signIn', {
       throw new Error('invalid password');
     }
     return {
-      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: 1 }),
+      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' }),
       user,
     };
   },
