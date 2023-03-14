@@ -3,7 +3,7 @@ import { ensureAuthenticated } from '../utils/auth';
 
 const rules = {
   isAuthenticatedUser: rule()(
-    (_, __, { authVerificationResult }) => ensureAuthenticated(authVerificationResult)
+    (_, __, { authVerificationResult }) => ensureAuthenticated(authVerificationResult),
   ),
 };
 
