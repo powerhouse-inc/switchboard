@@ -1,10 +1,8 @@
-import { rule, shield } from "graphql-shield";
-import { ensureAuthenticated } from "../utils/auth";
+import { rule, shield } from 'graphql-shield';
+import { ensureAuthenticated } from '../utils/auth';
 
 const rules = {
-  isAuthenticatedUser: rule()((_, __, { authVerificationResult }) =>
-    ensureAuthenticated(authVerificationResult)
-  ),
+  isAuthenticatedUser: rule()((_, __, { authVerificationResult }) => ensureAuthenticated(authVerificationResult)),
 };
 
 export const permissionsAuth = shield(
@@ -14,6 +12,6 @@ export const permissionsAuth = shield(
     },
   },
   {
-    allowExternalErrors: process.env.NODE_ENV !== "production",
-  }
+    allowExternalErrors: process.env.NODE_ENV !== 'production',
+  },
 );
