@@ -1,7 +1,7 @@
 import { ApolloError } from 'apollo-server-core';
 import { JwtVerificationResult } from '../types';
 
-const getErrorFromJwtVerificationResult = (err: UnsuccessfulAuthentication | null) => {
+const getErrorFromJwtVerificationResult = (err: JwtVerificationResult | null) => {
   if (err && err.error === 'JwtExpired') {
     return new ApolloError('Your session has expired. Please log in again.', 'JWT_EXPIRED');
   }
