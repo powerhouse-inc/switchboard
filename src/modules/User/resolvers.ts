@@ -1,7 +1,7 @@
 import { queryField, mutationField, nonNull } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
-import { AUTH_SIGNUP_ENABLED, JWT_SECRET } from '../../env';
+import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD, JWT_SECRET } from '../../env';
 
 export const me = queryField('me', {
   type: 'User',
@@ -37,7 +37,7 @@ export const signIn = mutationField('signIn', {
       throw new Error('invalid password');
     }
     return {
-      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' }),
+      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_PERIOD }),
       user,
     };
   },
