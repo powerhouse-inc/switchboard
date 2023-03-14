@@ -29,7 +29,7 @@ export const AuthPayload = objectType({
   },
 });
 
-export class UserOperations {
+export class UserInterface {
   constructor(private readonly UserPrisma: PrismaClient['user']) {}
 
   async signIn(userNamePass: { username: string; password: string }) {

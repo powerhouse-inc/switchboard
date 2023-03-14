@@ -1,5 +1,5 @@
 import { queryField, mutationField, nonNull } from 'nexus/dist';
-import { UserOperations } from './model';
+import { UserInterface } from './model';
 
 export const me = queryField('me', {
   type: 'User',
@@ -16,8 +16,8 @@ export const signIn = mutationField('signIn', {
     user: nonNull('UserNamePass'),
   },
   resolve: async (_parent, { user: userNamePass }, ctx) => {
-    const operations = new UserOperations(ctx.prisma.user);
-    return operations.signIn(userNamePass);
+    const userInterface = new UserInterface(ctx.prisma.user);
+    return userInterface.signIn(userNamePass);
   },
 });
 
@@ -27,7 +27,7 @@ export const signUp = mutationField('signUp', {
     user: nonNull('UserNamePass'),
   },
   resolve: async (_parent, { user }, ctx) => {
-    const operations = new UserOperations(ctx.prisma.user);
-    return operations.signUp(user);
+    const userInterface = new UserInterface(ctx.prisma.user);
+    return userInterface.signUp(user);
   },
 });
