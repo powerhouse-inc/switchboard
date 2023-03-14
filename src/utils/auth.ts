@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-core';
-import { JwtVerificationResult, UnsuccessfulAuthentication } from '../types';
+import { JwtVerificationResult } from '../types';
 
 const getErrorFromJwtVerificationResult = (err: UnsuccessfulAuthentication | null) => {
   if (err && err.error === 'JwtExpired') {
