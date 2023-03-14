@@ -21,12 +21,12 @@ type CreateContextParams = {
 
 function getUserId(authorization: string): JwtVerificationResult {
   if (!authorization) {
-    return { userId: 'unknown', error: 'Unhandled' };
+    return { userId: null, error: 'Unhandled' };
   }
   const token = authorization.replace('Bearer ', '');
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      return err.name === 'TokenExpiredError' ? { error: 'JwtExpired' } : { error: 'Unhandled' };
+      return { userId: null, error: err.name === 'TokenExpiredError' ? 'JwtExpired' : 'Unhandled' };
     }
     return decoded;
   }) as unknown as JwtVerificationResult;
@@ -43,6 +43,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    authVerificationResult: authorization ? getUserId(authorization) : { userId: 'unknown' },
+    authVerificationResult: authorization ? getUserId(authorization) : { userId: null },
   };
 }

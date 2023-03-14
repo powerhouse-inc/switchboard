@@ -1,1 +1,1 @@
-export type JwtVerificationResult = { userId: string; error?: 'JwtExpired' | 'Unhandled' };
+export type JwtVerificationResult = { userId: string | null; error?: 'JwtExpired' | 'Unhandled' };
