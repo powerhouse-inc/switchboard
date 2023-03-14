@@ -29,7 +29,7 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  UserCreateInput: { // input type
+  UserNamePass: { // input type
     password: string; // String!
     username: string; // String!
   }
@@ -145,11 +145,10 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     signIn: { // args
-      password: string; // String!
-      username: string; // String!
+      user: NexusGenInputs['UserNamePass']; // UserNamePass!
     }
     signUp: { // args
-      user: NexusGenInputs['UserCreateInput']; // UserCreateInput!
+      user: NexusGenInputs['UserNamePass']; // UserNamePass!
     }
   }
   Query: {

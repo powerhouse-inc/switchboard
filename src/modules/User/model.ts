@@ -9,8 +9,8 @@ export const User = objectType({
   },
 });
 
-export const UserInputType = inputObjectType({
-  name: 'UserCreateInput',
+export const UserNamePass = inputObjectType({
+  name: 'UserNamePass',
   definition(t) {
     t.nonNull.string('username');
     t.nonNull.string('password');

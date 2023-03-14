@@ -1,5 +1,5 @@
 import {
-  stringArg, queryField, mutationField, nonNull,
+  queryField, mutationField, nonNull,
 } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
@@ -22,10 +22,10 @@ export const me = queryField('me', {
 export const signIn = mutationField('signIn', {
   type: 'AuthPayload',
   args: {
-    username: nonNull(stringArg()),
-    password: nonNull(stringArg()),
+    user: nonNull('UserNamePass'),
   },
-  resolve: async (_parent, { username, password }, ctx) => {
+  resolve: async (_parent, { user: userNamePass }, ctx) => {
+    const { username, password } = userNamePass;
     const user = await ctx.prisma.user.findUnique({
       where: {
         username,
@@ -48,7 +48,7 @@ export const signIn = mutationField('signIn', {
 export const signUp = mutationField('signUp', {
   type: 'AuthPayload',
   args: {
-    user: nonNull('UserCreateInput'),
+    user: nonNull('UserNamePass'),
   },
   resolve: async (_parent, { user }, ctx) => {
     const {
