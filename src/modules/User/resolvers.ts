@@ -1,6 +1,4 @@
-import {
-  queryField, mutationField, nonNull,
-} from 'nexus/dist';
+import { queryField, mutationField, nonNull } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { AUTH_SIGNUP_ENABLED, JWT_SECRET } from '../../env';
@@ -39,7 +37,7 @@ export const signIn = mutationField('signIn', {
       throw new Error('invalid password');
     }
     return {
-      token: sign({ userId: user.id }, JWT_SECRET),
+      token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' }),
       user,
     };
   },
@@ -54,9 +52,7 @@ export const signUp = mutationField('signUp', {
     if (!AUTH_SIGNUP_ENABLED) {
       throw new Error('Sign up is disabled');
     }
-    const {
-      username, password,
-    } = user;
+    const { username, password } = user;
     const hashedPassword = await hash(password, 10);
 
     const created = await ctx.prisma.user.create({
