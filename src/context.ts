@@ -43,6 +43,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    authVerificationResult: authorization ? getUserId(authorization) : {userId: 'unknown'},
+    authVerificationResult: authorization ? getUserId(authorization) : { userId: 'unknown' },
   };
 }

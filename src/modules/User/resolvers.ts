@@ -3,13 +3,11 @@ import { UserOperations } from './model';
 
 export const me = queryField('me', {
   type: 'User',
-  resolve: (_, __, ctx) => {
-    return ctx.prisma.user.findUnique({
-      where: {
-        id: ctx.authVerificationResult.userId,
-      },
-    });
-  },
+  resolve: (_, __, ctx) => ctx.prisma.user.findUnique({
+    where: {
+      id: ctx.authVerificationResult.userId,
+    },
+  }),
 });
 
 export const signIn = mutationField('signIn', {

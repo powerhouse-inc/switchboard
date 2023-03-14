@@ -32,7 +32,7 @@ export const AuthPayload = objectType({
 export class UserOperations {
   constructor(private readonly User: PrismaClient['user']) {}
 
-  async signIn(userNamePass: {username: string; password: string}) {
+  async signIn(userNamePass: { username: string; password: string }) {
     const { username, password } = userNamePass;
     const user = await this.User.findUnique({
       where: {
@@ -52,7 +52,7 @@ export class UserOperations {
     };
   }
 
-  async signUp(user: {username: string; password: string}) {
+  async signUp(user: { username: string; password: string }) {
     if (!AUTH_SIGNUP_ENABLED) {
       throw new Error('Sign up is disabled');
     }
