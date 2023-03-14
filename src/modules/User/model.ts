@@ -30,11 +30,11 @@ export const AuthPayload = objectType({
 });
 
 export class UserOperations {
-  constructor(private readonly User: PrismaClient['user']) {}
+  constructor(private readonly UserPrisma: PrismaClient['user']) {}
 
   async signIn(userNamePass: { username: string; password: string }) {
     const { username, password } = userNamePass;
-    const user = await this.User.findUnique({
+    const user = await this.UserPrisma.findUnique({
       where: {
         username,
       },
@@ -58,7 +58,7 @@ export class UserOperations {
     }
     const { username, password } = user;
     const hashedPassword = await hash(password, 10);
-    const created = await this.User.create({
+    const created = await this.UserPrisma.create({
       data: {
         username,
         password: hashedPassword,
