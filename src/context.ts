@@ -1,15 +1,14 @@
-import { PrismaClient } from '@prisma/client';
 import type express from 'express';
 import { verify } from 'jsonwebtoken';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
 import { JwtVerificationResult } from './types';
 
-const prisma = getPrisma();
+export const prisma = getPrisma();
 
 export interface Context {
   request: { req: express.Request };
-  prisma: PrismaClient;
+  prisma: typeof prisma;
   authVerificationResult: JwtVerificationResult;
 }
 

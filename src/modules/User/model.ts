@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import { objectType, inputObjectType } from 'nexus/dist';
 import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
+import { PrismaClient } from '@prisma/client';
 import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD, JWT_SECRET } from '../../env';
 
 export const User = objectType({
@@ -29,12 +29,30 @@ export const AuthPayload = objectType({
   },
 });
 
-export class UserInterface {
-  constructor(private readonly UserPrisma: PrismaClient['user']) {}
+function userSignUpFactory(prisma: PrismaClient) {
+  return async (user: { username: string; password: string }) => {
+    if (!AUTH_SIGNUP_ENABLED) {
+      throw new Error('Sign up is disabled');
+    }
+    const { username, password } = user;
+    const hashedPassword = await hash(password, 10);
+    const created = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+    return {
+      token: sign({ userId: created.id }, JWT_SECRET),
+      user: created,
+    };
+  };
+}
 
-  async signIn(userNamePass: { username: string; password: string }) {
+function userSignInFactory(prisma: PrismaClient) {
+  return async (userNamePass: { username: string; password: string }) => {
     const { username, password } = userNamePass;
-    const user = await this.UserPrisma.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         username,
       },
@@ -50,23 +68,10 @@ export class UserInterface {
       token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_PERIOD }),
       user,
     };
-  }
-
-  async signUp(user: { username: string; password: string }) {
-    if (!AUTH_SIGNUP_ENABLED) {
-      throw new Error('Sign up is disabled');
-    }
-    const { username, password } = user;
-    const hashedPassword = await hash(password, 10);
-    const created = await this.UserPrisma.create({
-      data: {
-        username,
-        password: hashedPassword,
-      },
-    });
-    return {
-      token: sign({ userId: created.id }, JWT_SECRET),
-      user: created,
-    };
-  }
+  };
 }
+
+export const getUserCrud = (prisma: PrismaClient) => ({
+  signUp: userSignUpFactory(prisma),
+  signIn: userSignInFactory(prisma),
+});
