@@ -16,7 +16,7 @@ type CreateContextParams = {
 };
 
 export function createContext(params: CreateContextParams): Context {
-  logger.debug('creating context with params: %o', params);
+  logger.debug('Creating context with params: %o', params);
   return {
     request: params,
     prisma: getPrisma(),
