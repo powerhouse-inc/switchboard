@@ -18,6 +18,16 @@ const extractDbLogLevelsFromEnv = (): DbLogLevel[] | undefined => {
   return logLevels;
 };
 
+const extractLogModuleFilterFromEnv = (): string[] | undefined => {
+  // expected format: "path1,path2"
+  const moduleFilter = process.env.LOG_MODULE_FILTER;
+  if (!moduleFilter) {
+    return undefined;
+  }
+  const modules: string[] = moduleFilter.split(',');
+  return modules;
+};
+
 if (!!process.env.LOG_LEVEL && !defaultLogLevels.includes(process.env.LOG_LEVEL)) {
   throw new Error(`Invalid log level: ${process.env.LOG_LEVEL}`);
 }
@@ -28,4 +38,5 @@ if (!!process.env.HTTP_LOG_LEVEL && !defaultLogLevels.includes(process.env.HTTP_
 
 export const logLevel = process.env.LOG_LEVEL ?? 'info';
 export const httpLogLevel = process.env.HTTP_LOG_LEVEL ?? 'warn';
-export const dbLogLevels: DbLogLevel[] = extractDbLogLevelsFromEnv() ?? ['info', 'warn', 'error', 'query'];
+export const dbLogLevels: DbLogLevel[] = extractDbLogLevelsFromEnv() ?? ['error'];
+export const moduleFilter = extractLogModuleFilterFromEnv() ?? [];

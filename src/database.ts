@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import logger from './logger';
+import { getModuleBinding, getChildLogger } from './logger';
 import { dbLogLevels } from './env';
 
+const dbLogger = getChildLogger('DATABASE', { module: getModuleBinding(__filename) });
 let prisma: PrismaClient;
 
 export const getPrisma = () => {
-  logger.debug('Getting prisma client');
+  dbLogger.debug('Getting prisma client');
   if (!prisma) {
     prisma = new PrismaClient({
       datasources: {
