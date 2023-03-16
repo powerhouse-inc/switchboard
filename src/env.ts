@@ -4,7 +4,6 @@ export const isDevelopment = process.env.NODE_ENV === 'development';
 const defaultLogLevels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal', 'silent'];
 type DbLogLevel = 'info' | 'query' | 'warn' | 'error';
 const allowedDbLogLevels: DbLogLevel[] = ['info', 'query', 'warn', 'error'];
-const providedDbLogLevel = process.env.DB_LOG_LEVELS?.split(',') ?? [];
 
 const extractDbLogLevelsFromEnv = (): DbLogLevel[] | undefined => {
   // expected format: "info,query,warn,error"
@@ -13,8 +12,8 @@ const extractDbLogLevelsFromEnv = (): DbLogLevel[] | undefined => {
     return undefined;
   }
   const logLevels: any[] = dbLogLevel.split(',');
-  if (!logLevels.every((level) => !allowedDbLogLevels.includes(level))) {
-    throw new Error(`Invalid value of DB_LOG_LEVELS env variable: ${providedDbLogLevel}\n Valid values are: ${defaultLogLevels.join(',')} and separated by comma`);
+  if (!logLevels.every((level) => allowedDbLogLevels.includes(level))) {
+    throw new Error(`Invalid value of DB_LOG_LEVELS env variable: ${dbLogLevel}\n Valid values are: ${defaultLogLevels.join(',')} and must be separated by single comma\n`);
   }
   return logLevels;
 };
