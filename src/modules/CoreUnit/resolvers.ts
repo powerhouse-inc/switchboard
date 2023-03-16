@@ -2,7 +2,14 @@ import { stringArg, list, queryField } from 'nexus/dist';
 
 export const coreUnits = queryField('coreUnits', {
   type: list('CoreUnit'),
-  resolve: (_parent, _args, ctx) => ctx.prisma.coreUnit.findMany(),
+  resolve: (_parent, _args, ctx) => {
+    const response = ctx.prisma.coreUnit.findMany();
+    ctx.request.req.log.info({
+      message: 'returning 200 from `coreUnits` resolver',
+      response,
+    });
+    return response;
+  },
 });
 
 export const coreUnit = queryField('coreUnit', {
@@ -13,10 +20,15 @@ export const coreUnit = queryField('coreUnit', {
       ctx.request.req.log.error('coreUnit resolver: id is undefined');
       throw new Error('please provide id');
     }
-    return ctx.prisma.coreUnit.findUnique({
+    const response = ctx.prisma.coreUnit.findUnique({
       where: {
         id,
       },
     });
+    ctx.request.req.log.info({
+      message: 'returning 200 from `coreUnit` resolver',
+      response,
+    });
+    return response;
   },
 });
