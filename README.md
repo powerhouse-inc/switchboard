@@ -53,6 +53,9 @@ cp developer.env .env
 
 - `DATABASE_URL` (required): path to the database file.
 - `JWT_SECRET` (required): server's jwt secret.
+- `PORT` (optional, default: 3000): port on which the server will run.
+- `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up mutation is allowed (i.e. user creation via endpoint is enabled)
+- `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire.
 
 ### Project-Requirements
 
