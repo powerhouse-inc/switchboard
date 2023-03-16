@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import logger from './logger';
+import { dbLogLevels } from './env';
 
 let prisma: PrismaClient;
 
@@ -12,6 +13,7 @@ export const getPrisma = () => {
           url: 'file:./db.sqlite',
         },
       },
+      log: dbLogLevels,
     });
   }
   return prisma;
