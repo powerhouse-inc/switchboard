@@ -1,15 +1,15 @@
+import { ApolloError } from 'apollo-server-core';
 import type express from 'express';
 import { verify } from 'jsonwebtoken';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
-import { JwtVerificationResult } from './types';
 
 export const prisma = getPrisma();
 
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
-  authVerificationResult: JwtVerificationResult;
+  getUserId: () => string;
 }
 
 type CreateContextParams = {
@@ -18,18 +18,18 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-function getUserId(authorization: string): JwtVerificationResult {
+function getUserId(authorization?: string): string {
   if (!authorization) {
-    return { userId: null, error: 'Unhandled' };
+    throw new ApolloError('Not authenticated');
   }
   const token = authorization.replace('Bearer ', '');
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      return { userId: null, error: err.name === 'TokenExpiredError' ? 'JwtExpired' : 'Unhandled' };
+      throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
     }
     return decoded;
-  }) as unknown as JwtVerificationResult;
-  return verificationTokenResult;
+  }) as unknown as { userId: string };
+  return verificationTokenResult.userId;
 }
 
 export function createContext(params: CreateContextParams): Context {
@@ -42,6 +42,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    authVerificationResult: authorization ? getUserId(authorization) : { userId: null },
+    getUserId: () => getUserId(authorization),
   };
 }
