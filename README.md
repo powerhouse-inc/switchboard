@@ -32,6 +32,12 @@ npm run lint
 npm run test
 ```
 
+## Environment variables:
+
+- `DB_LOG_LEVELS` (optional, default: `info`): Controls the logging level which is used to log the application internal logic
+- `HTTP_LOG_LEVEL` (optional, default: `warn`): Contols the logging level for the logger that is embedded into express-api (resolver endpoints)
+- `DB_LOG_LEVELS` (optional, default: `info,warn,error,query`): Controls the logging levels that are printed out by prisma. Must be single string with comma-separated values. Allowed values are: `info` `warn` `error` `query`
+
 ### Coding Setup
 
 To install the correct node version, we recommend that you use [nvm](https://github.com/nvm-sh/nvm). If you have `nvm` installed you can run:
