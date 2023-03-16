@@ -28,7 +28,7 @@ In order to maintain the logging structure and be able to filter logs by file th
 ```typescript
 import { getModuleBinding, getChildLogger } from './logger';
 
-const logger = getChildLogger('PREFIX', { module: getModuleBinding(__filename), myOtherCustomBinding: 'Funny guy' });
+const logger = getChildLogger({ msgPrefix: 'PREFIX' }, { module: getModuleBinding(__filename), myOtherCustomBinding: 'Funny guy' });
 ```
 
 If this approach is used - then it will be possible to filter the logs via providing the corresponding environment variable values. For more on this read the root [README](./README.md)
