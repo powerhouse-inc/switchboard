@@ -22,6 +22,9 @@ npm i
 # Run application in development mode
 npm run dev
 
+# Run application with extensive logging enabled (full ORM logging + app's logger has `debug` level on)
+npm run debug
+
 # Typechecking (via TypeScript / tsc)
 npm run typecheck
 
@@ -37,6 +40,7 @@ npm run test
 - `LOG_LEVEL` (optional, default: `info`): Controls the logging level which is used to log the application internal logic. Allowed values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`
 - `HTTP_LOG_LEVEL` (optional, default: `warn`): Contols the logging level for the logger that is embedded into express-api (resolver endpoints). Allowed values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`
 - `DB_LOG_LEVELS` (optional, default: `error`): Controls the logging levels that are printed out by prisma. Must be single string with comma-separated values. Allowed values are: `info` `warn` `error` `query`
+- `LOG_MODULE_FILTER` (optional, default: []): Controls which modules will display logs. If provided in comma separated format (`relative/path/to/file.ts,another/relative/file/path.ts`), will only print logs from these files. If no files listed - will print everything.
 
 ### Coding Setup
 

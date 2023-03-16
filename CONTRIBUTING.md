@@ -23,8 +23,12 @@ Here's a couple of examples:
 
 2. Usual logger
 
-```typescript
-import logger from './logger'
+In order to maintain the logging structure and be able to filter logs by file they have been produced at the following approach has to be taken:
 
-logger.info('Earth is flat')
+```typescript
+import { getModuleBinding, getChildLogger } from './logger';
+
+const logger = getChildLogger('PREFIX', { module: getModuleBinding(__filename), myOtherCustomBinding: 'Funny guy' });
 ```
+
+If this approach is used - then it will be possible to filter the logs via providing the corresponding environment variable values. For more on this read the root [README](./README.md)
