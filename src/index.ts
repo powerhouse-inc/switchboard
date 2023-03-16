@@ -7,6 +7,7 @@ import { PORT, isDevelopment } from './env';
 import { createApp } from './app';
 import { createContext } from './context';
 import { schema } from './schema';
+import logger from './logger';
 
 export const schemaWithMiddleware = applyMiddleware(schema);
 
@@ -19,6 +20,7 @@ const createApolloServer = (): ApolloServer => new ApolloServer({
 export const startServer = async (
   app: express.Application,
 ): Promise<Server> => {
+  logger.debug('Starting server');
   const httpServer = createHttpServer(app);
   const apollo = createApolloServer();
 
@@ -26,7 +28,7 @@ export const startServer = async (
   apollo.applyMiddleware({ app });
 
   return httpServer.listen({ port: PORT }, () => {
-    console.info(`Running on ${PORT}`);
+    logger.info(`Running on ${PORT}`);
   });
 };
 
@@ -35,15 +37,15 @@ const app = createApp();
 startServer(app)
   .then(() => {
     // This should never happen, is only here until we add the real API which of course runs forever
-    console.info('API execution ended');
+    logger.info('API execution ended');
   })
   .catch((err) => {
-    console.error('Shutting down...');
+    logger.warn('Shutting down...');
     if (err instanceof Error) {
-      console.error(err);
+      logger.error(err);
     } else {
-      console.error('An unknown error has occurred. Please open an issue on github (https://github.com/makerdao-ses/switchboard-boilerplate/issues/new) with the below context:');
-      console.info(err);
+      logger.error('An unknown error has occurred. Please open an issue on github (https://github.com/makerdao-ses/switchboard-boilerplate/issues/new) with the below context:');
+      logger.info(err);
     }
     process.exit(1);
   });
