@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { getModuleBinding, getChildLogger } from './logger';
 import { dbLogLevels } from './env';
 
-const dbLogger = getChildLogger('DATABASE', { module: getModuleBinding(__filename) });
+const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' }, { module: getModuleBinding(__filename) });
 let prisma: PrismaClient;
 
 export const getPrisma = () => {

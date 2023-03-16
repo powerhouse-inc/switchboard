@@ -1,7 +1,11 @@
 import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
-import { logLevel, httpLogLevel, moduleFilter } from './env';
+import {
+  logLevel, httpLogLevel, moduleFilter, prefixFilter,
+} from './env';
+
+const formatPrefix = (prefix: string): string => `[${prefix.toUpperCase()}] `;
 
 export const expressLogger = pinoHttp(
   {
@@ -22,18 +26,24 @@ const logger = pino({
   },
 });
 
-export const getChildLogger = (prefix: string, bindings: pino.Bindings) => {
-  const options: { msgPrefix: string, level?: string } = {
-    msgPrefix: `[${prefix}] `,
-  };
-  if (moduleFilter.length === 0) {
-    return logger.child(bindings, options);
+export const getChildLogger = (options: pino.ChildLoggerOptions, bindings: pino.Bindings) => {
+  const localOptions = { ...options };
+  localOptions.msgPrefix = localOptions.msgPrefix
+    ? formatPrefix(localOptions.msgPrefix) : localOptions.msgPrefix;
+  const formattedPrefixFilter = prefixFilter.map(formatPrefix);
+  const isModuleFilterEmpty = moduleFilter.length === 0;
+  const isPrefixFilterEmpty = formattedPrefixFilter.length === 0;
+  if (!isModuleFilterEmpty && !moduleFilter.includes(bindings.module)) {
+    localOptions.level = 'silent';
   }
-  if (!moduleFilter.includes(bindings.module)) {
-    options.level = 'silent';
+  if (isPrefixFilterEmpty) {
+    return logger.child(bindings, localOptions);
   }
-  return logger.child(bindings, options);
+  const providedPrefix = localOptions.msgPrefix ?? '';
+  if (!formattedPrefixFilter.includes(providedPrefix)) {
+    localOptions.level = 'silent';
+  }
+  return logger.child(bindings, localOptions);
 };
-// applyModuleFilter(logger.child(bindings, { msgPrefix: `[${prefix}] ` }));
 
 export default logger;

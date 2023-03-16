@@ -4,7 +4,7 @@ import pino from 'pino';
 import { getPrisma } from './database';
 import { getModuleBinding, getChildLogger } from './logger';
 
-const logger = getChildLogger('CONTEXT', { module: getModuleBinding(__filename) });
+const logger = getChildLogger({ msgPrefix: 'CONTEXT' }, { module: getModuleBinding(__filename) });
 
 export interface Context {
   request: { req: express.Request & { log: pino.Logger } };

@@ -10,7 +10,7 @@ import { schema } from './schema';
 import { getChildLogger, getModuleBinding } from './logger';
 
 export const schemaWithMiddleware = applyMiddleware(schema);
-const logger = getChildLogger('SERVER', { module: getModuleBinding(__filename) });
+const logger = getChildLogger({ msgPrefix: 'SERVER' }, { module: getModuleBinding(__filename) });
 
 const createApolloServer = (): ApolloServer => new ApolloServer({
   schema: schemaWithMiddleware,
