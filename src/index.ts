@@ -15,16 +15,18 @@ const createApolloServer = (): ApolloServer => new ApolloServer({
   introspection: isDevelopment,
 });
 
-const startServer = async (
+export const startServer = async (
   app: express.Application,
+  port?: number,
 ): Promise<Server> => {
   const httpServer = createHttpServer(app);
   const apollo = createApolloServer();
   await apollo.start();
   apollo.applyMiddleware({ app });
-  return httpServer.listen({ port: PORT }, () => {
+  const usedPort = port || PORT;
+  return httpServer.listen({ port: usedPort }, () => {
     process.stdout.write(
-      `🚀 Server ready at port ${PORT}`,
+      `🚀 Server ready at port ${usedPort}`,
     );
   });
 };

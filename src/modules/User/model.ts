@@ -1,7 +1,9 @@
 import { objectType, inputObjectType } from 'nexus/dist';
 import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User as PrismaUser } from '@prisma/client';
+import { ApolloError } from 'apollo-server-core';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD, JWT_SECRET } from '../../env';
 
 export const User = objectType({
@@ -36,12 +38,20 @@ function userSignUpFactory(prisma: PrismaClient) {
     }
     const { username, password } = user;
     const hashedPassword = await hash(password, 10);
-    const created = await prisma.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-      },
-    });
+    let created: PrismaUser;
+    try {
+      created = await prisma.user.create({
+        data: {
+          username,
+          password: hashedPassword,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+        throw new ApolloError('Username already taken', 'USERNAME_TAKEN');
+      }
+      throw new ApolloError('Failed to create user', 'USER_CREATE_FAILED');
+    }
     return {
       token: sign({ userId: created.id }, JWT_SECRET),
       user: created,
@@ -58,11 +68,11 @@ function userSignInFactory(prisma: PrismaClient) {
       },
     });
     if (!user) {
-      throw new Error('user not found');
+      throw new ApolloError('User not found', 'USER_NOT_FOUND');
     }
     const passwordValid = (await compare(password, user.password || '')) || false;
     if (!passwordValid) {
-      throw new Error('invalid password');
+      throw new ApolloError('Invalid password', 'INVALID_PASSWORD');
     }
     return {
       token: sign({ userId: user.id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION_PERIOD }),
