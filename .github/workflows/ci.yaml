@@ -6,6 +6,8 @@ on:
   push:
     branches:  [ main ]
 
+env:
+  DATABASE_URL: file:./db.sqlite
 jobs:
   build:
 
