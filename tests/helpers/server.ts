@@ -9,10 +9,19 @@ interface TestContext {
   client: GraphQLClient;
 }
 
-export const ctx = createTestContext();
-
-export async function executeGraphQlQuery(query: string) {
-  return ctx.client.request(query).catch((e) => e.response);
+function getGraphqlTestContext() {
+  let serverInstance: Server | null = null;
+  return {
+    async before() {
+      const port = await getPort({ port: 3000 }); // 4
+      const app = createApp();
+      serverInstance = await startServer(app, port);
+      return new GraphQLClient(`http://localhost:${port}/graphql`); // 6
+    },
+    async after() {
+      serverInstance?.close();
+    },
+  };
 }
 
 function createTestContext(): TestContext {
@@ -28,17 +37,7 @@ function createTestContext(): TestContext {
   return context;
 }
 
-function getGraphqlTestContext() {
-  let serverInstance: Server | null = null;
-  return {
-    async before() {
-      const port = await getPort({ port: 3000 }); // 4
-      const app = createApp();
-      serverInstance = await startServer(app, port);
-      return new GraphQLClient(`http://localhost:${port}/graphql`); // 6
-    },
-    async after() {
-      serverInstance?.close();
-    },
-  };
+export const ctx = createTestContext();
+export async function executeGraphQlQuery(query: string) {
+  return ctx.client.request(query).catch((e) => e.response);
 }
