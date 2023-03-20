@@ -3,11 +3,11 @@ import type { Server } from 'http';
 import { generate } from '@genql/cli';
 import fs from 'fs';
 import path from 'path';
+import { fetch } from 'undici';
 import { startServer } from '../../src/server';
 import { createApp } from '../../src/app';
 import { Client, createClient } from '../../generated';
 import { PORT } from '../../src/env';
-import { fetch } from 'undici'
 
 // Generate types for the gql client
 generate({
@@ -20,7 +20,7 @@ let customHeaders: Record<string, string> = {}; // cant overwrite headers on ins
 const defaultHeaders = {
   'Content-Type': 'application/json',
   Accept: 'application/json',
-}
+};
 
 function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
@@ -52,7 +52,7 @@ export const getClient = (headers_?: Record<string, string>) => {
   }
   return createClient({
     url: `http://0.0.0.0:${PORT}/graphql`,
-    headers: () => ({...defaultHeaders, ...customHeaders}),
+    headers: () => ({ ...defaultHeaders, ...customHeaders }),
     fetch,
   });
 };
