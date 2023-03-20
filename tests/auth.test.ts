@@ -56,7 +56,7 @@ test('Authentication: sign in without signing up', async () => {
 test('Authentication: sign up with same username', async () => {
   await executeGraphQlQuery(signUpMutation);
   const response = (await executeGraphQlQuery(signUpMutation)) as any;
-  expect(response.errors[0].message).toBe('Failed to create user');
+  expect(response.errors[0].message).toBe('Username already taken');
 });
 
 test('Authentication: access protected endpoint without signing in', async () => {

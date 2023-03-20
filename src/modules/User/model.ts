@@ -3,7 +3,6 @@ import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { ApolloError } from 'apollo-server-core';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD, JWT_SECRET } from '../../env';
 
 export const User = objectType({
@@ -46,8 +45,8 @@ function userSignUpFactory(prisma: PrismaClient) {
           password: hashedPassword,
         },
       });
-    } catch (e) {
-      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+    } catch (e: any) {
+      if ('code' in e && e.code === 'P2002') {
         throw new ApolloError('Username already taken', 'USERNAME_TAKEN');
       }
       throw new ApolloError('Failed to create user', 'USER_CREATE_FAILED');
