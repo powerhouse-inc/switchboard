@@ -81,7 +81,7 @@ function userSignInFactory(prisma: PrismaClient) {
   };
 }
 
-export const getUserCrud = (prisma: PrismaClient) => ({
-  signUp: userSignUpFactory(prisma),
-  signIn: userSignInFactory(prisma),
-});
+export const userCrud = {
+  signUp: userSignUpFactory,
+  signIn: userSignInFactory,
+};
