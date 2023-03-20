@@ -1,9 +1,9 @@
-import { beforeEach, afterEach } from 'vitest';
-import getPort from 'get-port';
+import { beforeAll, afterAll, beforeEach } from 'vitest';
 import type { Server } from 'http';
 import { GraphQLClient } from 'graphql-request';
-import { startServer } from '../../src/index';
+import { startServer } from '../../src/server';
 import { createApp } from '../../src/app';
+import { PORT } from '../../src/env';
 
 interface TestContext {
   client: GraphQLClient;
@@ -13,7 +13,7 @@ function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
   return {
     async before() {
-      const port = await getPort({ port: 3000 }); // 4
+      const port = PORT;
       const app = createApp();
       serverInstance = await startServer(app, port);
       return new GraphQLClient(`http://localhost:${port}/graphql`); // 6
@@ -27,12 +27,15 @@ function getGraphqlTestContext() {
 function createTestContext(): TestContext {
   const context = {} as TestContext;
   const graphqlTestContext = getGraphqlTestContext();
-  beforeEach(async () => {
+  beforeAll(async () => {
     const client = await graphqlTestContext.before();
     context.client = client;
   });
-  afterEach(async () => {
+  afterAll(async () => {
     await graphqlTestContext.after();
+  });
+  beforeEach(async () => {
+    context.client?.setHeader('Authorization', '');
   });
   return context;
 }

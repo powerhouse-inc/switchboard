@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import { gql } from 'graphql-request';
-import { cleanDatabase } from './helpers/database';
+import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx, executeGraphQlQuery } from './helpers/server';
 
 const signUpMutation = gql`
@@ -29,7 +29,7 @@ const meQuery = gql`
     }
   }`;
 
-cleanDatabase();
+cleanDatabaseBeforeAfterEachTest();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
   const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<string, any>;
