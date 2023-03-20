@@ -10,13 +10,14 @@ import { Client, createClient } from '../../generated';
 import { PORT } from '../../src/env';
 import { ExecutionResult } from '../../generated/runtime/types';
 
+// Generate types for the gql client
 generate({
   schema: fs.readFileSync(path.join(__dirname, '..', '..', 'generated', 'schema.graphql')).toString(),
   output: path.join(__dirname, '..', '..', 'generated'),
 }).catch(console.error);
 
 let client: Client;
-let customHeaders: Record<string, string> = {};
+let customHeaders: Record<string, string> = {}; // cant overwrite headers on instantiated client
 
 function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
@@ -48,6 +49,7 @@ export const getClient = (headers_?: Record<string, string>) => {
   }
   return createClient({
     url: `http://0.0.0.0:${PORT}/graphql`,
+    // Throws error without custom fetcher
     fetcher: async (operation) => (
       await fetch(`http://0.0.0.0:${PORT}/graphql`, {
         method: 'POST',

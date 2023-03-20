@@ -2,6 +2,8 @@ import { test, expect } from 'vitest';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { getClient, runTestApiInstance } from './helpers/server';
 
+// Define calls with errors caught via `.catch` since with `expect().rejects`
+// vitest throws an "Unhandled Error"
 const signUpMutation = () => getClient().mutation({
   signUp: {
     __args: {
@@ -48,6 +50,7 @@ const meQuery = (headers: Record<string, string>) => getClient(headers).query({
   },
 }).catch((e) => e);
 
+// Test fixtures (before, after invocations)
 cleanDatabaseBeforeAfterEachTest();
 runTestApiInstance();
 
