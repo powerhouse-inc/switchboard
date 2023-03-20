@@ -34,7 +34,7 @@ function getUserId(authorization?: string): string {
 
 export function createContext(params: CreateContextParams): Context {
   const { req } = params;
-  const authorization = req.get('Authorization'); // for queries & mutations.
+  const authorizationHeader = req.get('Authorization');
 
   if (!JWT_SECRET) {
     throw new Error('Missing JWT_SECRET environment variable');
@@ -42,6 +42,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    getUserId: () => getUserId(authorization),
+    getUserId: () => getUserId(authorizationHeader),
   };
 }
