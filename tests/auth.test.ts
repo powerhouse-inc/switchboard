@@ -1,118 +1,96 @@
 import { test, expect } from 'vitest';
-import builder from 'gql-query-builder';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
-import { ctx, executeGraphQlQuery } from './helpers/server';
+import { getClient, runTestApiInstance } from './helpers/server';
 
-const signUpMutation = builder.mutation({
-  operation: 'signUp',
-  variables: {
-    user: {
-      value: {
+const signUpMutation = () => getClient().mutation({
+  signUp: {
+    __args: {
+      user: {
         username: 'asdf',
         password: 'asdf',
       },
-      type: 'UserNamePass',
-      required: true,
     },
+    token: true,
+    user: { username: true, id: true },
   },
-  fields: ['user{id, username}', 'token'],
-});
+}).catch((e) => e);
 
-const singInMutation = builder.mutation({
-  operation: 'signIn',
-  variables: {
-    user: {
-      value: {
+const signInMutation = () => getClient().mutation({
+  signIn: {
+    __args: {
+      user: {
         username: 'asdf',
         password: 'asdf',
       },
-      type: 'UserNamePass',
-      required: true,
     },
+    token: true,
+    user: { username: true, id: true },
   },
-  fields: ['user{id, username}', 'token'],
-});
+}).catch((e) => e);
 
-const signInIncorrectPasswordMutation = builder.mutation({
-  operation: 'signIn',
-  variables: {
-    user: {
-      value: {
+const signInIncorrectPasswordMutation = () => getClient().mutation({
+  signIn: {
+    __args: {
+      user: {
         username: 'asdf',
-        password: 'invalid',
+        password: 'wrong',
       },
-      type: 'UserNamePass',
-      required: true,
     },
+    token: true,
+    user: { username: true, id: true },
   },
-  fields: ['user{id, username}', 'token'],
-});
+}).catch((e) => e);
 
-const meQuery = builder.query({
-  operation: 'me',
-  fields: ['id', 'username'],
-});
+const meQuery = (headers: Record<string, string>) => getClient(headers).query({
+  me: {
+    username: true,
+    id: true,
+  },
+}).catch((e) => e);
 
 cleanDatabaseBeforeAfterEachTest();
+runTestApiInstance();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
-  const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
-  string,
-  any
-  >;
+  const signUpResponse = await signUpMutation();
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
   expect(signUpResponse?.signUp?.token).toBeTruthy();
 
-  const signInResponse = (await executeGraphQlQuery(singInMutation)) as Record<
-  string,
-  any
-  >;
+  const signInResponse = await signInMutation();
   expect(signInResponse?.signIn?.user?.username).toBe('asdf');
   expect(signInResponse?.signIn?.token).toBeTruthy();
 
   const token = signInResponse?.signIn?.token;
-  ctx.client.setHeader('Authorization', `Bearer ${token}`);
-
-  const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
-  string,
-  any
-  >;
+  const meResponse = await meQuery({ Authorization: `Bearer ${token}` });
   expect(meResponse?.me?.username).toBe('asdf');
   expect(meResponse?.me?.id).toBeTruthy();
 });
 
 test('Authentication: sign in without signing up', async () => {
-  const response = (await executeGraphQlQuery(singInMutation)) as any;
-  expect(response.errors[0].message).toBe('User not found');
+  const unexistantUserResponse = await signInMutation();
+  expect(unexistantUserResponse.errors[0].message).toBe('User not found');
 });
 
 test('Authentication: sign up with same username', async () => {
-  await executeGraphQlQuery(signUpMutation);
-  const response = (await executeGraphQlQuery(signUpMutation)) as any;
-  expect(response.errors[0].message).toBe('Username already taken');
+  await signUpMutation();
+  const secondSignUpResponse = await signUpMutation();
+  expect(secondSignUpResponse.errors[0].message).toBe('Username already taken');
 });
 
 test('Authentication: access protected endpoint without signing in', async () => {
-  const response = (await executeGraphQlQuery(meQuery)) as any;
-  expect(response.errors[0].message).toBe('Not authenticated');
+  const meResponse = await meQuery({});
+  expect(meResponse.errors[0].message).toBe('Not authenticated');
 });
 
 test('Authentication: sign up, sign in with wrong password', async () => {
-  const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
-  string,
-  any
-  >;
+  const signUpResponse = await signUpMutation();
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
   expect(signUpResponse?.signUp?.token).toBeTruthy();
-
-  const signInResponse = (await executeGraphQlQuery(
-    signInIncorrectPasswordMutation,
-  )) as Record<string, any>;
-  expect(signInResponse?.errors[0].message).toBe('Invalid password');
+  const incorrectPasswordResponse = await signInIncorrectPasswordMutation();
+  expect(incorrectPasswordResponse.errors[0].message).toBe('Invalid password');
 });
 
 test('Authentication: access protected endpoint without valid token', async () => {
-  ctx.client.setHeader('Authorization', 'Bearer heavy');
-  const response = (await executeGraphQlQuery(meQuery)) as any;
-  expect(response.errors[0].message).toBe('Invalid authentication token');
+  const invalidBearer = await meQuery({ Authorization: 'Bearer invalid' });
+  expect(invalidBearer.errors[0].message).toBe('Invalid authentication token');
 });
