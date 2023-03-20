@@ -13,10 +13,9 @@ function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
   return {
     async before() {
-      const port = PORT;
       const app = createApp();
-      serverInstance = await startServer(app, port);
-      return new GraphQLClient(`http://localhost:${port}/graphql`); // 6
+      serverInstance = await startServer(app, PORT);
+      return new GraphQLClient(`http://localhost:${PORT}/graphql`);
     },
     async after() {
       serverInstance?.close();
