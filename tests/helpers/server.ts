@@ -40,6 +40,7 @@ function createTestContext(): TestContext {
 }
 
 export const ctx = createTestContext();
-export async function executeGraphQlQuery(query: string) {
-  return ctx.client.request(query).catch((e) => e.response);
+export async function executeGraphQlQuery(data: { query: string, variables: any }) {
+  const { query, variables } = data;
+  return ctx.client.request(query, variables).catch((e) => e.response);
 }

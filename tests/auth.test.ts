@@ -1,46 +1,57 @@
 import { test, expect } from 'vitest';
-import { gql } from 'graphql-request';
+import builder from 'gql-query-builder';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx, executeGraphQlQuery } from './helpers/server';
 
-const signUpMutation = gql`
-  mutation {
-    signUp(user: { username: "asdf", password: "asdf" }) {
-      user {
-        username
-      }
-      token
-    }
-  }
-`;
-const signInMutation = gql`
-  mutation {
-    signIn(user: { username: "asdf", password: "asdf" }) {
-      token
-      user {
-        username
-      }
-    }
-  }
-`;
-const signInMutationWrongPassword = gql`
-  mutation {
-    signIn(user: { username: "asdf", password: "sage" }) {
-      token
-      user {
-        username
-      }
-    }
-  }
-`;
-const meQuery = gql`
-  query {
-    me {
-      username
-      id
-    }
-  }
-`;
+const signUpMutation = builder.mutation({
+  operation: 'signUp',
+  variables: {
+    user: {
+      value: {
+        username: 'asdf',
+        password: 'asdf',
+      },
+      type: 'UserNamePass',
+      required: true,
+    },
+  },
+  fields: ['user{id, username}', 'token'],
+});
+
+const singInMutation = builder.mutation({
+  operation: 'signIn',
+  variables: {
+    user: {
+      value: {
+        username: 'asdf',
+        password: 'asdf',
+      },
+      type: 'UserNamePass',
+      required: true,
+    },
+  },
+  fields: ['user{id, username}', 'token'],
+});
+
+const signInIncorrectPasswordMutation = builder.mutation({
+  operation: 'signIn',
+  variables: {
+    user: {
+      value: {
+        username: 'asdf',
+        password: 'invalid',
+      },
+      type: 'UserNamePass',
+      required: true,
+    },
+  },
+  fields: ['user{id, username}', 'token'],
+});
+
+const meQuery = builder.query({
+  operation: 'me',
+  fields: ['id', 'username'],
+});
 
 cleanDatabaseBeforeAfterEachTest();
 
@@ -52,7 +63,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
   expect(signUpResponse?.signUp?.token).toBeTruthy();
 
-  const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
+  const signInResponse = (await executeGraphQlQuery(singInMutation)) as Record<
   string,
   any
   >;
@@ -71,7 +82,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
 });
 
 test('Authentication: sign in without signing up', async () => {
-  const response = (await executeGraphQlQuery(signInMutation)) as any;
+  const response = (await executeGraphQlQuery(singInMutation)) as any;
   expect(response.errors[0].message).toBe('User not found');
 });
 
@@ -95,7 +106,7 @@ test('Authentication: sign up, sign in with wrong password', async () => {
   expect(signUpResponse?.signUp?.token).toBeTruthy();
 
   const signInResponse = (await executeGraphQlQuery(
-    signInMutationWrongPassword,
+    signInIncorrectPasswordMutation,
   )) as Record<string, any>;
   expect(signInResponse?.errors[0].message).toBe('Invalid password');
 });

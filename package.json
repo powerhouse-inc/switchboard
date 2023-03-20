@@ -41,6 +41,7 @@
         "eslint": "^8.35.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-airbnb-typescript": "^17.0.0",
+        "gql-query-builder": "^3.8.0",
         "graphql-request": "^5.2.0",
         "prisma": "^4.11.0",
         "typescript": "^4.9.5"
