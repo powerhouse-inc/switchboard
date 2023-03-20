@@ -7,6 +7,37 @@ import {
 
 const formatPrefix = (prefix: string): string => `[${prefix.toUpperCase()}] `;
 
+const filterPrefix = (config: {options: pino.ChildLoggerOptions, bindings: pino.Bindings}): boolean => {
+  if (prefixFilter.length === 0) {
+    return true;
+  }
+  const { options } = config;
+  const { msgPrefix } = options;
+  const prefix = formatPrefix(msgPrefix || '')
+  if (prefix && prefixFilter.map(p => formatPrefix(p)).includes(prefix)) {
+    return true
+  }
+  return false
+}
+
+const filterModule = (config: {options: pino.ChildLoggerOptions, bindings: pino.Bindings}): boolean => {
+  if (moduleFilter.length === 0) {
+    return true;
+  }
+  const { bindings } = config;
+  const { module: mod } = bindings;
+  if (mod && moduleFilter.includes(mod)) {
+    return true
+  }
+  return false
+}
+
+const FILTERS = [filterModule, filterPrefix]
+
+const doesPassFilters = (config: {options: pino.ChildLoggerOptions, bindings: pino.Bindings}): boolean => {
+  return FILTERS.every(f => f(config))
+}
+
 export const expressLogger = pinoHttp(
   {
     level: httpLogLevel,
@@ -28,21 +59,10 @@ const logger = pino({
 
 export const getChildLogger = (options: pino.ChildLoggerOptions, bindings: pino.Bindings) => {
   const localOptions = { ...options };
-  localOptions.msgPrefix = localOptions.msgPrefix
-    ? formatPrefix(localOptions.msgPrefix) : localOptions.msgPrefix;
-  const formattedPrefixFilter = prefixFilter.map(formatPrefix);
-  const isModuleFilterEmpty = moduleFilter.length === 0;
-  const isPrefixFilterEmpty = formattedPrefixFilter.length === 0;
-  if (!isModuleFilterEmpty && !moduleFilter.includes(bindings.module)) {
+  if (!doesPassFilters({ options: localOptions, bindings })) {
     localOptions.level = 'silent';
   }
-  if (isPrefixFilterEmpty) {
-    return logger.child(bindings, localOptions);
-  }
-  const providedPrefix = localOptions.msgPrefix ?? '';
-  if (!formattedPrefixFilter.includes(providedPrefix)) {
-    localOptions.level = 'silent';
-  }
+  localOptions.msgPrefix = localOptions.msgPrefix ? formatPrefix(localOptions.msgPrefix) : '';
   return logger.child(bindings, localOptions);
 };
 
