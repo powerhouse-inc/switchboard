@@ -1,14 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import { userCrud } from './modules';
+import { getUserCrud } from './modules';
 
 let prisma: PrismaClient;
-
-const mapCrudIntoContext = (
-  crud: Record<string, (p: PrismaClient) => Function>,
-  prismaInstance: PrismaClient,
-) => Object.fromEntries(
-  Object.entries(crud).map(([key, value]) => [key, value(prismaInstance)]),
-);
 
 export const getPrisma = () => {
   if (!prisma) {
@@ -23,7 +16,7 @@ export const getPrisma = () => {
   const xprisma = prisma.$extends({
     model: {
       user: {
-        ...mapCrudIntoContext(userCrud, prisma),
+        ...getUserCrud(prisma),
       },
     },
   });
