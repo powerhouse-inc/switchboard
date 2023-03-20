@@ -18,11 +18,10 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-function getUserId(authorization?: string): string {
-  if (!authorization) {
+function getUserId(token?: string): string {
+  if (!token) {
     throw new ApolloError('Not authenticated');
   }
-  const token = authorization.replace('Bearer ', '');
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
@@ -35,6 +34,7 @@ function getUserId(authorization?: string): string {
 export function createContext(params: CreateContextParams): Context {
   const { req } = params;
   const authorizationHeader = req.get('Authorization');
+  const token = authorizationHeader?.replace('Bearer ', '');
 
   if (!JWT_SECRET) {
     throw new Error('Missing JWT_SECRET environment variable');
@@ -42,6 +42,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    getUserId: () => getUserId(authorizationHeader),
+    getUserId: () => getUserId(token),
   };
 }
