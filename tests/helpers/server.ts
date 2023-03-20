@@ -13,9 +13,6 @@ import { ExecutionResult } from '../../generated/runtime/types';
 generate({
   schema: fs.readFileSync(path.join(__dirname, '..', '..', 'generated', 'schema.graphql')).toString(),
   output: path.join(__dirname, '..', '..', 'generated'),
-  scalarTypes: {
-    MongoID: 'string',
-  },
 }).catch(console.error);
 
 let client: Client;
