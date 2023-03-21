@@ -5,10 +5,12 @@ import { getPrisma } from './database';
 import { getChildLogger } from './logger';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
+const apolloLogger = getChildLogger({ msgPrefix: 'APOLLO' }, { module: undefined });
 
 export interface Context {
   request: { req: express.Request & { log: pino.Logger } };
   prisma: PrismaClient;
+  apolloLogger: pino.Logger;
 }
 
 type CreateContextParams = {
@@ -22,5 +24,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma: getPrisma(),
+    apolloLogger,
   };
 }

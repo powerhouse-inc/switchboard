@@ -71,8 +71,8 @@ export const getChildLogger = (
   const caller = Error().stack?.split('at ')[2].trim().split(':')[0] || '';
   const localOptions = { ...options };
   const appliedBindings: pino.Bindings = {
-    ...(bindings || {}),
     module: path.relative(PROJECT_ROOT, caller),
+    ...(bindings || {}),
   };
   if (!doesPassFilters({ options: localOptions, bindings: appliedBindings })) {
     localOptions.level = 'silent';
