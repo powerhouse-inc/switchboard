@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, beforeEach } from 'vitest';
+import { beforeEach, afterEach } from 'vitest';
 import type { Server } from 'http';
 import { GraphQLClient } from 'graphql-request';
 import { startServer } from '../../src/server';
@@ -26,15 +26,12 @@ function getGraphqlTestContext() {
 function createTestContext(): TestContext {
   const context = {} as TestContext;
   const graphqlTestContext = getGraphqlTestContext();
-  beforeAll(async () => {
+  beforeEach(async () => {
     const client = await graphqlTestContext.before();
     context.client = client;
   });
-  afterAll(async () => {
+  afterEach(async () => {
     await graphqlTestContext.after();
-  });
-  beforeEach(async () => {
-    context.client?.setHeader('Authorization', '');
   });
   return context;
 }
