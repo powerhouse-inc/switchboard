@@ -33,21 +33,6 @@ const singInMutation = builder.mutation({
   fields: ['user{id, username}', 'token'],
 });
 
-const signInIncorrectPasswordMutation = builder.mutation({
-  operation: 'signIn',
-  variables: {
-    user: {
-      value: {
-        username: 'asdf',
-        password: 'invalid',
-      },
-      type: 'UserNamePass',
-      required: true,
-    },
-  },
-  fields: ['user{id, username}', 'token'],
-});
-
 const meQuery = builder.query({
   operation: 'me',
   fields: ['id', 'username'],
@@ -105,8 +90,17 @@ test('Authentication: sign up, sign in with wrong password', async () => {
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
   expect(signUpResponse?.signUp?.token).toBeTruthy();
 
+  const singInIncorrectPassword = {
+    variables: {
+      user: {
+        username: 'asdf',
+        password: 'wrong'
+      }
+    },
+    query: singInMutation.query
+  };
   const signInResponse = (await executeGraphQlQuery(
-    signInIncorrectPasswordMutation,
+    singInIncorrectPassword
   )) as Record<string, any>;
   expect(signInResponse?.errors[0].message).toBe('Invalid password');
 });
