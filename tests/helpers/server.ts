@@ -1,25 +1,13 @@
-import { beforeAll, afterAll } from 'vitest';
+import { beforeAll, afterAll, beforeEach } from 'vitest';
 import type { Server } from 'http';
-import fetch from 'node-fetch';
-import { generate } from '@genql/cli';
-import fs from 'fs';
-import path from 'path';
+import { GraphQLClient } from 'graphql-request';
 import { startServer } from '../../src/server';
 import { createApp } from '../../src/app';
-import { Client, createClient } from '../../generated';
 import { PORT } from '../../src/env';
-import { ExecutionResult } from '../../generated/runtime/types';
 
-generate({
-  schema: fs.readFileSync(path.join(__dirname, '..', '..', 'generated', 'schema.graphql')).toString(),
-  output: path.join(__dirname, '..', '..', 'generated'),
-  scalarTypes: {
-    MongoID: 'string',
-  },
-}).catch(console.error);
-
-let client: Client;
-let customHeaders: Record<string, string> = {};
+interface TestContext {
+  client: GraphQLClient;
+}
 
 function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
@@ -27,6 +15,7 @@ function getGraphqlTestContext() {
     async before() {
       const app = createApp();
       serverInstance = await startServer(app, PORT);
+      return new GraphQLClient(`http://0.0.0.0:${PORT}/graphql`);
     },
     async after() {
       serverInstance?.close();
@@ -34,33 +23,24 @@ function getGraphqlTestContext() {
   };
 }
 
-export function runTestApiInstance() {
+function createTestContext(): TestContext {
+  const context = {} as TestContext;
   const graphqlTestContext = getGraphqlTestContext();
   beforeAll(async () => {
-    await graphqlTestContext.before();
+    const client = await graphqlTestContext.before();
+    context.client = client;
   });
   afterAll(async () => {
     await graphqlTestContext.after();
   });
+  beforeEach(async () => {
+    context.client?.setHeader('Authorization', '');
+  });
+  return context;
 }
 
-export const getClient = (headers_?: Record<string, string>) => {
-  customHeaders = headers_ || {};
-  if (client) {
-    return client;
-  }
-  return createClient({
-    url: `http://0.0.0.0:${PORT}/graphql`,
-    fetcher: async (operation) => (
-      await fetch(`http://0.0.0.0:${PORT}/graphql`, {
-        method: 'POST',
-        headers: {
-          ...customHeaders,
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(operation),
-      })
-    ).json() as unknown as Promise<ExecutionResult | ExecutionResult>,
-  });
-};
+export const ctx = createTestContext();
+export async function executeGraphQlQuery(data: { query: string, variables: any }) {
+  const { query, variables } = data;
+  return ctx.client.request(query, variables).catch((e) => e.response);
+}

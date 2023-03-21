@@ -20,7 +20,7 @@ type CreateContextParams = {
 
 function getUserId(token?: string): string {
   if (!token) {
-    throw new ApolloError('Not authenticated', 'NOT_AUTHENTICATED');
+    throw new ApolloError('Not authenticated');
   }
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
