@@ -1,54 +1,60 @@
 import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
-import {
-  logLevel, httpLogLevel, moduleFilter, prefixFilter,
-} from './env';
+import { loggerConfig } from '../logger.config';
+
+const {
+  moduleFilter, prefixFilter, logLevel, httpLogLevel,
+} = loggerConfig;
 
 const formatPrefix = (prefix: string): string => `[${prefix.toUpperCase()}] `;
+const PROJECT_ROOT = path.resolve(__dirname, '..');
 
-const filterPrefix = (config: {options: pino.ChildLoggerOptions, bindings: pino.Bindings}): boolean => {
+const filterPrefix = (config: {
+  options: pino.ChildLoggerOptions;
+  bindings: pino.Bindings;
+}): boolean => {
   if (prefixFilter.length === 0) {
     return true;
   }
   const { options } = config;
   const { msgPrefix } = options;
-  const prefix = formatPrefix(msgPrefix || '')
-  if (prefix && prefixFilter.map(p => formatPrefix(p)).includes(prefix)) {
-    return true
+  const prefix = formatPrefix(msgPrefix || '');
+  if (prefix && prefixFilter.map((p) => formatPrefix(p)).includes(prefix)) {
+    return true;
   }
-  return false
-}
+  return false;
+};
 
-const filterModule = (config: {options: pino.ChildLoggerOptions, bindings: pino.Bindings}): boolean => {
+const filterModule = (config: {
+  options: pino.ChildLoggerOptions;
+  bindings: pino.Bindings;
+}): boolean => {
   if (moduleFilter.length === 0) {
     return true;
   }
   const { bindings } = config;
   const { module: mod } = bindings;
   if (mod && moduleFilter.includes(mod)) {
-    return true
+    return true;
   }
-  return false
-}
+  return false;
+};
 
-const FILTERS = [filterModule, filterPrefix]
+const FILTERS = [filterModule, filterPrefix];
 
-const doesPassFilters = (config: {options: pino.ChildLoggerOptions, bindings: pino.Bindings}): boolean => {
-  return FILTERS.every(f => f(config))
-}
+const doesPassFilters = (config: {
+  options: pino.ChildLoggerOptions;
+  bindings: pino.Bindings;
+}): boolean => FILTERS.every((f) => f(config));
 
-export const expressLogger = pinoHttp(
-  {
-    level: httpLogLevel,
-    msgPrefix: '[EXPRESS]: ',
-    transport: {
-      target: 'pino-pretty',
-    },
+export const expressLogger = pinoHttp({
+  level: httpLogLevel,
+  msgPrefix: '[EXPRESS]: ',
+  transport: {
+    target: 'pino-pretty',
   },
-);
-
-export const getModuleBinding = (filename: string) => path.relative(__dirname, filename);
+});
 
 const logger = pino({
   level: logLevel,
@@ -57,13 +63,24 @@ const logger = pino({
   },
 });
 
-export const getChildLogger = (options: pino.ChildLoggerOptions, bindings: pino.Bindings) => {
+export const getChildLogger = (
+  options: pino.ChildLoggerOptions,
+  bindings?: pino.Bindings,
+) => {
+  // get caller module of this function
+  const caller = Error().stack?.split('at ')[2].trim().split(':')[0] || '';
   const localOptions = { ...options };
-  if (!doesPassFilters({ options: localOptions, bindings })) {
+  const appliedBindings: pino.Bindings = {
+    ...(bindings || {}),
+    module: path.relative(PROJECT_ROOT, caller),
+  };
+  if (!doesPassFilters({ options: localOptions, bindings: appliedBindings })) {
     localOptions.level = 'silent';
   }
-  localOptions.msgPrefix = localOptions.msgPrefix ? formatPrefix(localOptions.msgPrefix) : '';
-  return logger.child(bindings, localOptions);
+  localOptions.msgPrefix = localOptions.msgPrefix
+    ? formatPrefix(localOptions.msgPrefix)
+    : '';
+  return logger.child(appliedBindings, localOptions);
 };
 
 export default logger;

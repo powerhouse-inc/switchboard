@@ -2,9 +2,9 @@ import { PrismaClient } from '@prisma/client';
 import type express from 'express';
 import pino from 'pino';
 import { getPrisma } from './database';
-import { getModuleBinding, getChildLogger } from './logger';
+import { getChildLogger } from './logger';
 
-const logger = getChildLogger({ msgPrefix: 'CONTEXT' }, { module: getModuleBinding(__filename) });
+const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 
 export interface Context {
   request: { req: express.Request & { log: pino.Logger } };

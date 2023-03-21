@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { getModuleBinding, getChildLogger } from './logger';
-import { dbLogLevels } from './env';
+import { getChildLogger } from './logger';
+import { loggerConfig } from '../logger.config';
 
-const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' }, { module: getModuleBinding(__filename) });
+const { dbLogLevel } = loggerConfig;
+
+const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 let prisma: PrismaClient;
 
 export const getPrisma = () => {
@@ -14,7 +16,7 @@ export const getPrisma = () => {
           url: 'file:./db.sqlite',
         },
       },
-      log: dbLogLevels,
+      log: dbLogLevel,
     });
   }
   return prisma;

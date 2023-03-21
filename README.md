@@ -35,15 +35,9 @@ npm run lint
 npm run test
 ```
 
-## Environment variables:
+### Logging configuration
 
-- `LOG_LEVEL` (optional, default: `info`): Controls the logging level which is used to log the application internal logic. Allowed values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`
-- `HTTP_LOG_LEVEL` (optional, default: `warn`): Contols the logging level for the logger that is embedded into express-api (resolver endpoints). Allowed values are `trace`, `debug`, `info`, `warn`, `error`, `fatal`, `silent`
-- `DB_LOG_LEVELS` (optional, default: `error`): Controls the logging levels that are printed out by prisma. Must be single string with comma-separated values. Allowed values are: `info` `warn` `error` `query`
-- `LOG_MODULE_FILTER` (optional, default: []): Controls which modules will display logs. If provided in comma separated format (`relative/path/to/file.ts,another/relative/file/path.ts`), will only print logs from these files. If no files listed - will print everything.
-- `LOG_PREFIX_FILTER` (optional, default: []): Controls which log messages will be displayed based on their prefix. If provided in comma separated format (`PREFIX1,PREFIX2`), will only print logs with these prefixes. If no files listed - will print everything.
-
-Filters from `LOG_PREFIX_FILTER` and `LOG_MODULE_FILTER` are combined. So if filter is configured to filter `PREFIX1` from module `a.ts`, then only logs with this prefix from this file will be printed.
+The configuration is received from the `logger.config.ts` file at the root of the project. Adjust the file parameters to control the logger behaviour.
 
 ### Coding Setup
 
