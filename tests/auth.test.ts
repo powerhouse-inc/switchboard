@@ -94,13 +94,13 @@ test('Authentication: sign up, sign in with wrong password', async () => {
     variables: {
       user: {
         username: 'asdf',
-        password: 'wrong'
-      }
+        password: 'wrong',
+      },
     },
-    query: singInMutation.query
+    query: singInMutation.query,
   };
   const signInResponse = (await executeGraphQlQuery(
-    singInIncorrectPassword
+    singInIncorrectPassword,
   )) as Record<string, any>;
   expect(signInResponse?.errors[0].message).toBe('Invalid password');
 });
