@@ -1,4 +1,4 @@
-import { LoggerConfig } from './src/types';
+import { LoggerConfig } from "./src/types";
 
 export const defaultLoggerConfig: LoggerConfig = {
   // Filter by module name
@@ -7,11 +7,11 @@ export const defaultLoggerConfig: LoggerConfig = {
   // `pref` to filter is going to correspond to showing `[PERF]` logs
   prefixFilter: [],
   // Lowest printed log level of default logger
-  logLevel: 'info',
+  logLevel: "info",
   // Lowest printed log level of prisma logger
-  dbLogLevel: ['info'],
+  dbLogLevel: ["info"],
   // Lowest printed log level of express logger
-  httpLogLevel: 'info',
+  httpLogLevel: "info",
 };
 
 export const debugLogConfig: LoggerConfig = {
@@ -21,14 +21,13 @@ export const debugLogConfig: LoggerConfig = {
   // `pref` to filter is going to correspond to showing `[PERF]` logs
   prefixFilter: [],
   // Lowest printed log level of default logger
-  logLevel: 'debug',
+  logLevel: "debug",
   // Lowest printed log level of prisma logger
-  dbLogLevel: ['query'],
+  dbLogLevel: ["query"],
   // Lowest printed log level of express logger
-  httpLogLevel: 'debug',
+  httpLogLevel: "debug",
 };
 
-const getLoggerConfig = (debug: boolean): LoggerConfig => {
-  return debug ? debugLogConfig : defaultLoggerConfig;
-}
+const getLoggerConfig = (debug: boolean): LoggerConfig =>
+  debug ? debugLogConfig : defaultLoggerConfig;
 export const loggerConfig = getLoggerConfig(!!process.env.DEBUG);
