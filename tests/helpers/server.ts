@@ -1,5 +1,6 @@
 import { beforeAll, afterAll } from 'vitest';
 import type { Server } from 'http';
+import fetch from 'node-fetch';
 import { generate } from '@genql/cli';
 import fs from 'fs';
 import path from 'path';
@@ -7,7 +8,7 @@ import { startServer } from '../../src/server';
 import { createApp } from '../../src/app';
 import { Client, createClient } from '../../generated';
 import { PORT } from '../../src/env';
-import { fetch } from 'undici'
+import { ExecutionResult } from '../../generated/runtime/types';
 
 // Generate types for the gql client
 generate({
@@ -17,10 +18,6 @@ generate({
 
 let client: Client;
 let customHeaders: Record<string, string> = {}; // cant overwrite headers on instantiated client
-const defaultHeaders = {
-  'Content-Type': 'application/json',
-  Accept: 'application/json',
-}
 
 function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
@@ -52,7 +49,17 @@ export const getClient = (headers_?: Record<string, string>) => {
   }
   return createClient({
     url: `http://0.0.0.0:${PORT}/graphql`,
-    headers: () => ({...defaultHeaders, ...customHeaders}),
-    fetch,
+    // Throws error without custom fetcher
+    fetcher: async (operation) => (
+      await fetch(`http://0.0.0.0:${PORT}/graphql`, {
+        method: 'POST',
+        headers: {
+          ...customHeaders,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(operation),
+      })
+    ).json() as unknown as Promise<ExecutionResult | ExecutionResult>,
   });
 };
