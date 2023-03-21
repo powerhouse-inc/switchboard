@@ -30,6 +30,7 @@
         "vitest": "^0.29.2"
     },
     "devDependencies": {
+        "@types/cors": "^2.8.13",
         "@types/express": "^4.17.17",
         "@types/node": "^18.14.2",
         "@typescript-eslint/eslint-plugin": "^5.54.0",
