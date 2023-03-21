@@ -64,7 +64,7 @@ const logger = pino({
 });
 
 export const getChildLogger = (
-  options: pino.ChildLoggerOptions,
+  options?: pino.ChildLoggerOptions,
   bindings?: pino.Bindings,
 ) => {
   // get caller module of this function
