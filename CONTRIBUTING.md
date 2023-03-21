@@ -15,7 +15,7 @@ Here's a couple of examples:
 ```typescript
   // some resolver code above
   resolve: (_parent, _args, ctx) => {
-      ctx.request.req.log.warn('dangerous');
+      ctx.apolloLogger.debug('resolver called');
     });
   },
 
