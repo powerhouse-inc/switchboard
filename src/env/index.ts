@@ -1,15 +1,7 @@
 import dotenv from 'dotenv';
+import { getJwtSecret } from './getters'
 
 dotenv.config();
-
-export const getJwtSecret = (): string => {
-  if (!process.env.JWT_SECRET) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('JWT_SECRET is not defined');
-    }
-  }
-  return process.env.JWT_SECRET || 'dev';
-};
 
 export const JWT_SECRET = getJwtSecret();
 export const PORT = Number(process.env.PORT ?? '3000');

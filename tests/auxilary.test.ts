@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { getJwtSecret } from '../src/env';
+import { getJwtSecret } from '../src/env/getters';
 import { restoreEnvAfterEach } from './helpers/env';
 
 restoreEnvAfterEach();
