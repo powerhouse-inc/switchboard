@@ -4,9 +4,9 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'istanbul',
-      lines: 0,
-      functions: 0,
-      statements: 0,
+      lines: 90,
+      functions: 90,
+      statements: 90,
       all: true,
     },
     singleThread: true,
