@@ -15,11 +15,10 @@ export const coreUnit = queryField('coreUnit', {
     if (!id) {
       throw new Error('please provide id');
     }
-    const response = await ctx.prisma.coreUnit.findUnique({
+    return ctx.prisma.coreUnit.findUnique({
       where: {
         id,
       },
     });
-    return response;
   },
 });

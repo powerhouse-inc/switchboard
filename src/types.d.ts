@@ -1,4 +1,6 @@
-type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal' | 'silent';
+import type { Level } from 'pino';
+
+type LogLevel = Level;
 type DbLogLevel = 'info' | 'query' | 'warn' | 'error';
 
 export declare interface LoggerConfig {
