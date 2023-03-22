@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { getChildLogger } from './logger';
 import { loggerConfig } from '../logger.config';
+import { getUserCrud } from './modules';
 
 const { dbLogLevel } = loggerConfig;
 
@@ -19,5 +20,12 @@ export const getPrisma = () => {
       log: dbLogLevel,
     });
   }
-  return prisma;
+  const xprisma = prisma.$extends({
+    model: {
+      user: {
+        ...getUserCrud(prisma),
+      },
+    },
+  });
+  return xprisma;
 };

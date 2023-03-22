@@ -6,6 +6,9 @@ on:
   push:
     branches:  [ main ]
 
+env:
+  DATABASE_URL: file:./db.sqlite
+  AUTH_SIGNUP_ENABLED: 1
 jobs:
   build:
 
@@ -20,6 +23,8 @@ jobs:
           node-version: 18.14.2
 
       - run: npm install
+
+      - run: npx prisma db push
 
       - run: npm run typecheck
 

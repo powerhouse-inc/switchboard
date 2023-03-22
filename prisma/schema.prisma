@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
 }
 
 datasource db {
@@ -8,7 +9,7 @@ datasource db {
 }
 
 model CoreUnit {
-  id                              String @id @default(cuid())
+  id                              String @id @default(uuid())
   code                            String
   shortCode                       String
   name                            String
@@ -16,4 +17,10 @@ model CoreUnit {
   descriptionSentence             String
   descriptionParagraph            String
   descriptionParagraphImageSource String
+}
+
+model User {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
 }

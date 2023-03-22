@@ -9,5 +9,6 @@ export default defineConfig({
       statements: 0,
       all: true,
     },
+    singleThread: true,
   },
 });
