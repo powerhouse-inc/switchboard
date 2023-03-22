@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { GraphQLError } from 'graphql';
 import type express from 'express';
 import pino from 'pino';
 import { getChildLogger } from './logger';
@@ -26,11 +26,11 @@ type CreateContextParams = {
 
 function getUserId(token?: string): string {
   if (!token) {
-    throw new ApolloError('Not authenticated');
+    throw new GraphQLError('Not authenticated', { extensions: { code: 'NOT_AUTHENTICATED' } });
   }
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
+      throw new GraphQLError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token', { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } });
     }
     return decoded;
   }) as unknown as { userId: string };
