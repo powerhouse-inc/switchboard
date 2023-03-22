@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getUserCrud } from './modules';
 
 let prisma: PrismaClient;
 
@@ -12,5 +13,12 @@ export const getPrisma = () => {
       },
     });
   }
-  return prisma;
+  const xprisma = prisma.$extends({
+    model: {
+      user: {
+        ...getUserCrud(prisma),
+      },
+    },
+  });
+  return xprisma;
 };

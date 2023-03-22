@@ -1,38 +1,8 @@
-import type { Server } from 'http';
-import { createServer as createHttpServer } from 'http';
-import { ApolloServer } from 'apollo-server-express';
-import { applyMiddleware } from 'graphql-middleware';
-import type express from 'express';
-import { PORT, isDevelopment } from './env';
 import { createApp } from './app';
-import { createContext } from './context';
-import { schema } from './schema';
+import { startServer } from './server';
 
-export const schemaWithMiddleware = applyMiddleware(schema);
-
-const createApolloServer = (): ApolloServer => new ApolloServer({
-  schema: schemaWithMiddleware,
-  context: createContext,
-  introspection: isDevelopment,
-});
-
-export const startServer = async (
-  app: express.Application,
-): Promise<Server> => {
-  const httpServer = createHttpServer(app);
-  const apollo = createApolloServer();
-
-  await apollo.start();
-  apollo.applyMiddleware({ app });
-
-  return httpServer.listen({ port: PORT }, () => {
-    console.info(`Running on ${PORT}`);
-  });
-};
-
-const app = createApp();
-
-startServer(app)
+const application = createApp();
+startServer(application)
   .then(() => {
     // This should never happen, is only here until we add the real API which of course runs forever
     console.info('API execution ended');
