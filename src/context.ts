@@ -1,8 +1,8 @@
 import { GraphQLError } from 'graphql';
 import type express from 'express';
 import pino from 'pino';
-import { getChildLogger } from './logger';
 import { verify } from 'jsonwebtoken';
+import { getChildLogger } from './logger';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
 

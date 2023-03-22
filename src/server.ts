@@ -2,13 +2,13 @@ import type { Server } from 'http';
 import { createServer as createHttpServer } from 'http';
 import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import type express from 'express';
+import { expressMiddleware } from '@apollo/server/express4';
+import bodyParser from 'body-parser';
+import cors from 'cors';
 import { PORT, isDevelopment } from './env';
 import { schemaWithMiddleware } from './schema';
 import { Context, createContext } from './context';
 import { getChildLogger } from './logger';
-import { expressMiddleware } from '@apollo/server/express4';
-import bodyParser from 'body-parser';
-import cors from 'cors';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
