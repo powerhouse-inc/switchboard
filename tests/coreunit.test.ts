@@ -54,3 +54,12 @@ test('Core Unit: get by id', async () => {
   const response = await executeGraphQlQuery(query) as { coreUnit: CoreUnit };
   expect(response.coreUnit.id).toBe(created.id);
 });
+
+test('Core Unit: get by id without id field throws', async () => {
+  const query = builder.query({
+    operation: 'coreUnit',
+    fields: ['id'],
+  });
+  const response = await executeGraphQlQuery(query) as { errors: Record<string, unknown>[] };
+  expect(response.errors[0].message).toBe('please provide id');
+});
