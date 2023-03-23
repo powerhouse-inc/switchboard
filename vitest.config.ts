@@ -1,10 +1,12 @@
 import { defineConfig, UserConfigExport } from 'vitest/config';
 
 export const getVitestConfig = (fullyCoveredModulePaths?: string[]): UserConfigExport => {
-  const coverage = !!fullyCoveredModulePaths && fullyCoveredModulePaths.length !== 0 ? 100 : 90;
+  const enableFullCoverage = !!fullyCoveredModulePaths && fullyCoveredModulePaths.length !== 0;
+  const coverage = enableFullCoverage ? 100 : 90;
   return {
     test: {
       coverage: {
+        enabled: !enableFullCoverage,
         provider: 'istanbul',
         lines: coverage,
         functions: coverage,
