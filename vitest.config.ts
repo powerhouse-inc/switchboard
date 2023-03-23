@@ -6,7 +6,7 @@ export const getVitestConfig = (fullyCoveredModulePaths?: string[]): UserConfigE
   return {
     test: {
       coverage: {
-        enabled: !enableFullCoverage,
+        enabled: true,
         provider: 'istanbul',
         lines: coverage,
         functions: coverage,
