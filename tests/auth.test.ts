@@ -140,3 +140,9 @@ test('Authentication: token expiration error', async () => {
   await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
   expect(meResponse?.errors[0].message).toBe('Token expired');
 });
+
+test('Authentication: sign up disabled', async () => {
+  vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
+  const response = (await executeGraphQlQuery(signUpMutation)) as any;
+  expect(response.errors[0].message).toBe('Sign up is disabled');
+});

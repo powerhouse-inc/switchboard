@@ -75,7 +75,7 @@ export function getUserCrud(prisma: PrismaClient) {
         if ('code' in e && e.code === 'P2002') {
           throw new ApolloError('Username already taken', 'USERNAME_TAKEN');
         }
-        throw new ApolloError('Failed to create user', 'USER_CREATE_FAILED');
+        throw e;
       }
       return {
         token: sign({ userId: created.id }, JWT_SECRET),
