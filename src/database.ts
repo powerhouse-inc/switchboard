@@ -1,11 +1,11 @@
 import { PrismaClient, Prisma } from '@prisma/client';
+import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
 import { getUserCrud } from './modules';
-import { Level as PinoLevel } from 'pino'
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
-const LOGGING_EVENTS: {level: Prisma.LogLevel; emit: 'event'}[] = [
+const LOGGING_EVENTS: { level: Prisma.LogLevel; emit: 'event' }[] = [
   {
     emit: 'event',
     level: 'query',
@@ -22,14 +22,14 @@ const LOGGING_EVENTS: {level: Prisma.LogLevel; emit: 'event'}[] = [
     emit: 'event',
     level: 'warn',
   },
-]
+];
 
 const PRISMA_TO_PINO_LOG_LEVEL: Record<Prisma.LogLevel, PinoLevel> = {
   query: 'debug',
   info: 'info',
   warn: 'warn',
   error: 'error',
-}
+};
 
 // get base prisma client
 const prismaBase = new PrismaClient({

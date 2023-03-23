@@ -3,7 +3,7 @@ import type express from 'express';
 import pino from 'pino';
 import { verify } from 'jsonwebtoken';
 import { getChildLogger } from './logger';
-import  prisma  from './database';
+import prisma from './database';
 import { JWT_SECRET } from './env';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
