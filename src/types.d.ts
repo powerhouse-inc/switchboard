@@ -1,12 +1,11 @@
-import type { Level } from 'pino';
+import type { Level as PinoLevel } from 'pino';
 
-type LogLevel = Level;
-type DbLogLevel = 'info' | 'query' | 'warn' | 'error';
+export type DbLogLevel = 'info' | 'query' | 'warn' | 'error';
 
 export declare interface LoggerConfig {
   moduleFilter: string[];
   prefixFilter: string[];
-  logLevel: LogLevel;
+  logLevel: PinoLevel;
   dbLogLevel: DbLogLevel[];
-  httpLogLevel: LogLevel;
+  httpLogLevel: PinoLevel;
 }

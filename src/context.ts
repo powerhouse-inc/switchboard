@@ -3,13 +3,11 @@ import type express from 'express';
 import pino from 'pino';
 import { verify } from 'jsonwebtoken';
 import { getChildLogger } from './logger';
-import { getPrisma } from './database';
+import  prisma  from './database';
 import { JWT_SECRET } from './env';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger({ msgPrefix: 'APOLLO' }, { module: undefined });
-
-export const prisma = getPrisma();
 
 export interface Context {
   request: { req: express.Request };
