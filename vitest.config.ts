@@ -1,14 +1,19 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, UserConfigExport } from 'vitest/config';
 
-export default defineConfig({
-  test: {
-    coverage: {
-      provider: 'istanbul',
-      lines: 90,
-      functions: 90,
-      statements: 90,
-      all: true,
+export const getVitestConfig = (modulesWithFullCoverage?: string[]): UserConfigExport => {
+  const coverage = !!modulesWithFullCoverage && modulesWithFullCoverage.length !== 0 ? 100 : 90;
+  return {
+    test: {
+      coverage: {
+        provider: 'istanbul',
+        lines: coverage,
+        functions: coverage,
+        statements: coverage,
+        include: modulesWithFullCoverage || undefined,
+      },
+      singleThread: true,
     },
-    singleThread: true,
-  },
-});
+  };
+};
+
+export default defineConfig(getVitestConfig());
