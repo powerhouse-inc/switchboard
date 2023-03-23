@@ -14,8 +14,8 @@ function getGraphqlTestContext() {
     async before() {
       const app = createApp();
       serverInstance = await startServer(app);
-      const serverAddress = serverInstance.address()
-      if ( !serverAddress || typeof serverAddress === 'string') {
+      const serverAddress = serverInstance.address();
+      if (!serverAddress || typeof serverAddress === 'string') {
         throw new Error('Unexpected server address format');
       }
       const { port } = serverAddress;
