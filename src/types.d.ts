@@ -1,11 +1,10 @@
 import type { Level as PinoLevel } from 'pino';
-
-export type DbLogLevel = 'info' | 'query' | 'warn' | 'error';
+import { Prisma } from '@prisma/client';
 
 export declare interface LoggerConfig {
   moduleFilter: string[];
   prefixFilter: string[];
   logLevel: PinoLevel;
-  dbLogLevel: DbLogLevel[];
+  dbLogLevel: Prisma.LogLevel[];
   httpLogLevel: PinoLevel;
 }
