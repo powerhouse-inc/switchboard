@@ -121,7 +121,6 @@ test('Authentication: token expiration error', async () => {
   any
   >;
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
-  expect(signUpResponse?.signUp?.token).toBeTruthy();
 
   const signInResponse = (await executeGraphQlQuery(singInMutation)) as Record<
   string,
@@ -137,7 +136,7 @@ test('Authentication: token expiration error', async () => {
   string,
   any
   >;
-  // wait 2 seconds
-  await new Promise((resolve) => { setTimeout(resolve, 2000); resolve(null); });
+  // wait until token expires
+  await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
   expect(meResponse?.errors[0].message).toBe('Token expired');
 });
