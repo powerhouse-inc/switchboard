@@ -1,7 +1,9 @@
-import { test, expect } from 'vitest';
+import { test, expect, vi } from 'vitest';
 import builder from 'gql-query-builder';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx, executeGraphQlQuery } from './helpers/server';
+import { restoreEnvAfterEach } from './helpers/env';
+import * as env from '../src/env'
 
 const signUpMutation = builder.mutation({
   operation: 'signUp',
@@ -39,6 +41,7 @@ const meQuery = builder.query({
 });
 
 cleanDatabaseBeforeAfterEachTest();
+restoreEnvAfterEach();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
   const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
@@ -110,3 +113,30 @@ test('Authentication: access protected endpoint without valid token', async () =
   const response = (await executeGraphQlQuery(meQuery)) as any;
   expect(response.errors[0].message).toBe('Invalid authentication token');
 });
+
+test('Authentication: token expiration error', async () => {
+  vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1ms');
+  const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
+  string,
+  any
+  >;
+  expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
+  expect(signUpResponse?.signUp?.token).toBeTruthy();
+
+  const signInResponse = (await executeGraphQlQuery(singInMutation)) as Record<
+  string,
+  any
+  >;
+  expect(signInResponse?.signIn?.user?.username).toBe('asdf');
+  expect(signInResponse?.signIn?.token).toBeTruthy();
+
+  const token = signInResponse?.signIn?.token;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+
+  const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
+  string,
+  any
+  >;
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  expect(meResponse?.errors[0].message).toBe('Token expired');
+})
