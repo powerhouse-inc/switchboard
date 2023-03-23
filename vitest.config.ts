@@ -1,7 +1,7 @@
 import { defineConfig, UserConfigExport } from 'vitest/config';
 
-export const getVitestConfig = (modulesWithFullCoverage?: string[]): UserConfigExport => {
-  const coverage = !!modulesWithFullCoverage && modulesWithFullCoverage.length !== 0 ? 100 : 90;
+export const getVitestConfig = (fullyCoveredModulePaths?: string[]): UserConfigExport => {
+  const coverage = !!fullyCoveredModulePaths && fullyCoveredModulePaths.length !== 0 ? 100 : 90;
   return {
     test: {
       coverage: {
@@ -9,7 +9,7 @@ export const getVitestConfig = (modulesWithFullCoverage?: string[]): UserConfigE
         lines: coverage,
         functions: coverage,
         statements: coverage,
-        include: modulesWithFullCoverage || undefined,
+        include: fullyCoveredModulePaths || undefined,
       },
       singleThread: true,
     },

@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitest/config';
 import { getVitestConfig } from './vitest.config';
 
-const fullyCoveredModules = [
+const fullyCoveredModulePaths = [
   'src/modules/**',
 ];
 
-export default defineConfig(getVitestConfig(fullyCoveredModules));
+export default defineConfig(getVitestConfig(fullyCoveredModulePaths));
