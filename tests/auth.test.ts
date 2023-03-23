@@ -3,7 +3,7 @@ import builder from 'gql-query-builder';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx, executeGraphQlQuery } from './helpers/server';
 import { restoreEnvAfterEach } from './helpers/env';
-import * as env from '../src/env'
+import * as env from '../src/env';
 
 const signUpMutation = builder.mutation({
   operation: 'signUp',
@@ -137,6 +137,7 @@ test('Authentication: token expiration error', async () => {
   string,
   any
   >;
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  // wait 2 seconds
+  await new Promise((resolve) => { setTimeout(resolve, 2000); resolve(null); });
   expect(meResponse?.errors[0].message).toBe('Token expired');
-})
+});
