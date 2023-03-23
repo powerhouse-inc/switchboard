@@ -36,9 +36,6 @@ export function createContext(params: CreateContextParams): Context {
   const authorizationHeader = req.get('Authorization');
   const token = authorizationHeader?.replace('Bearer ', '');
 
-  if (!JWT_SECRET) {
-    throw new Error('Missing JWT_SECRET environment variable');
-  }
   return {
     request: params,
     prisma,
