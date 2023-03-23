@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { getJwtSecret } from './getters'
+import { getJwtSecret } from './getters';
 
 dotenv.config();
 
