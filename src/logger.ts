@@ -50,7 +50,7 @@ const doesPassFilters = (config: {
 
 export const expressLogger = pinoHttp({
   level: httpLogLevel,
-  msgPrefix: '[EXPRESS]: ',
+  msgPrefix: formatPrefix('express'),
   transport: {
     target: 'pino-pretty',
   },

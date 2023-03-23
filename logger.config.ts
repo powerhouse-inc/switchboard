@@ -31,4 +31,5 @@ export const debugLogConfig: LoggerConfig = {
 function getLoggerConfig(debug: boolean): LoggerConfig {
   return (debug ? debugLogConfig : defaultLoggerConfig);
 }
+
 export const loggerConfig = getLoggerConfig(!!process.env.DEBUG);
