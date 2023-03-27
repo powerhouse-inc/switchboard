@@ -1,15 +1,19 @@
 import { ApolloError } from 'apollo-server-core';
 import type express from 'express';
 import { verify } from 'jsonwebtoken';
+import { Session, User } from '@prisma/client';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
 
 export const prisma = getPrisma();
+// TODO: after merge of logging PR, move the type def to the db module
+// Have to derive type since feature is in preview state(https://www.prisma.io/docs/concepts/components/prisma-client/client-extensions#extensions-prerequisites) and typing seems off a bit.
+type XPrismaClient = typeof prisma;
 
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
-  getUserId: () => string;
+  getUserId: () => Promise<string>;
 }
 
 type CreateContextParams = {
@@ -18,7 +22,7 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-function getUserId(token?: string): string {
+async function getUserId(xprisma: XPrismaClient, token?: string): Promise<string> {
   if (!token) {
     throw new ApolloError('Not authenticated');
   }
@@ -27,8 +31,25 @@ function getUserId(token?: string): string {
       throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
     }
     return decoded;
-  }) as unknown as { userId: string };
-  return verificationTokenResult.userId;
+  }) as unknown as { sessionId: string; userId: string };
+  const { sessionId } = verificationTokenResult;
+  let session: Session & { creator: User };
+  try {
+    session = await xprisma.session.findUniqueOrThrow({
+      where: {
+        id: sessionId,
+      },
+      include: {
+        creator: true,
+      },
+    });
+  } catch (e) {
+    throw new ApolloError('Invalid authentication token');
+  }
+  if (session.revokedAt && session.revokedAt < new Date()) {
+    throw new ApolloError('Session expired');
+  }
+  return session.creator.id;
 }
 
 export function createContext(params: CreateContextParams): Context {
@@ -39,6 +60,6 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
-    getUserId: () => getUserId(token),
+    getUserId: async () => getUserId(prisma, token),
   };
 }

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getUserCrud } from './modules';
+import { getUserCrud, getSessionCrud } from './modules';
 
 let prisma: PrismaClient;
 
@@ -17,6 +17,9 @@ export const getPrisma = () => {
     model: {
       user: {
         ...getUserCrud(prisma),
+      },
+      session: {
+        ...getSessionCrud(prisma),
       },
     },
   });

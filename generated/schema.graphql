@@ -18,7 +18,12 @@ type CoreUnit {
   shortCode: String
 }
 
+"""Date custom scalar type"""
+scalar GQLDateBase
+
 type Mutation {
+  create(session: SessionCreate!): Session
+  revoke(sessionId: String!): Session
   signIn(user: UserNamePass!): AuthPayload
   signUp(user: UserNamePass!): AuthPayload
 }
@@ -26,7 +31,22 @@ type Mutation {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
+  list: [Session]
   me: User
+}
+
+type Session {
+  createdAt: GQLDateBase
+  createdBy: String
+  id: String
+  name: String
+  referenceExpiryDate: GQLDateBase
+  revokedAt: GQLDateBase
+}
+
+input SessionCreate {
+  name: String!
+  referenceExpiryDate: GQLDateBase!
 }
 
 type User {

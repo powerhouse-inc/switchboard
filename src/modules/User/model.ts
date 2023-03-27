@@ -1,13 +1,10 @@
 import { objectType, inputObjectType } from 'nexus/dist';
-import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { ApolloError } from 'apollo-server-core';
-import {
-  AUTH_SIGNUP_ENABLED,
-  JWT_EXPIRATION_PERIOD,
-  JWT_SECRET,
-} from '../../env';
+import ms from 'ms';
+import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD } from '../../env';
+import { generateTokenAndSession } from '../Session';
 
 export const User = objectType({
   name: 'User',
@@ -50,10 +47,17 @@ export function getUserCrud(prisma: PrismaClient) {
       if (!passwordValid) {
         throw new ApolloError('Invalid password', 'INVALID_PASSWORD');
       }
+      const { createdSession, createdToken } = await generateTokenAndSession(
+        prisma,
+        user.id,
+        {
+          referenceExpiryDate: new Date(Date.now() + ms(JWT_EXPIRATION_PERIOD)),
+          name: 'SignIn Session',
+        },
+      );
       return {
-        token: sign({ userId: user.id }, JWT_SECRET, {
-          expiresIn: JWT_EXPIRATION_PERIOD,
-        }),
+        token: createdToken,
+        session: createdSession,
         user,
       };
     },
@@ -63,9 +67,9 @@ export function getUserCrud(prisma: PrismaClient) {
       }
       const { username, password } = user;
       const hashedPassword = await hash(password, 10);
-      let created: PrismaUser;
+      let createdUser: PrismaUser;
       try {
-        created = await prisma.user.create({
+        createdUser = await prisma.user.create({
           data: {
             username,
             password: hashedPassword,
@@ -78,9 +82,18 @@ export function getUserCrud(prisma: PrismaClient) {
         /* istanbul ignore next @preserve */
         throw e;
       }
+      const { createdSession, createdToken } = await generateTokenAndSession(
+        prisma,
+        createdUser.id,
+        {
+          referenceExpiryDate: new Date(Date.now() + ms(JWT_EXPIRATION_PERIOD)),
+          name: 'SignUp Session',
+        },
+      );
       return {
-        token: sign({ userId: created.id }, JWT_SECRET),
-        user: created,
+        token: createdToken,
+        session: createdSession,
+        user: createdUser,
       };
     },
   };

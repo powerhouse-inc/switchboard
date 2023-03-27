@@ -2,8 +2,8 @@ import { queryField, mutationField, nonNull } from 'nexus/dist';
 
 export const me = queryField('me', {
   type: 'User',
-  resolve: (_, __, ctx) => {
-    const id = ctx.getUserId();
+  resolve: async (_, __, ctx) => {
+    const id = await ctx.getUserId();
     return ctx.prisma.user.findUnique({
       where: {
         id,
