@@ -17,6 +17,7 @@ model CoreUnit {
   descriptionSentence             String
   descriptionParagraph            String
   descriptionParagraphImageSource String
+  referenceTokenId                String
 }
 
 model User {

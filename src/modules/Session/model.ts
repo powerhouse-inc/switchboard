@@ -2,6 +2,7 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { ApolloError } from 'apollo-server-core';
 import { token } from '../../helpers';
+import { randomUUID } from 'crypto';
 
 export const Session = objectType({
   name: 'Session',
@@ -60,8 +61,13 @@ export async function generateTokenAndSession(
   userId: string,
   session: { referenceExpiryDate: Date; name: string },
 ) {
+  const createId = randomUUID();
+  const createdToken = token.generate(userId, createId);
+  const formattedToken = token.format(createdToken);
   const createData = {
     ...session,
+    id: createId,
+    referenceTokenId: formattedToken,
     creator: {
       connect: {
         id: userId,
@@ -69,7 +75,6 @@ export async function generateTokenAndSession(
     },
   };
   const createdSession = await newSession(prisma, createData);
-  const createdToken = token.generate(userId, createdSession.id);
   return {
     createdToken,
     createdSession,
