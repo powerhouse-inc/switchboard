@@ -46,7 +46,7 @@ export function getUserCrud(prisma: PrismaClient) {
       if (!user) {
         throw new GraphQLError('User not found', { extensions: { code: 'USER_NOT_FOUND' } });
       }
-      const passwordValid = (await compare(password, user.password || '')) || false;
+      const passwordValid = await compare(password, user.password);
       if (!passwordValid) {
         throw new GraphQLError('Invalid password', { extensions: { code: 'INVALID_PASSWORD' } });
       }
@@ -75,7 +75,8 @@ export function getUserCrud(prisma: PrismaClient) {
         if ('code' in e && e.code === 'P2002') {
           throw new GraphQLError('Username already taken', { extensions: { code: 'USERNAME_TAKEN' } });
         }
-        throw new GraphQLError('Failed to create user', { extensions: { code: 'USER_CREATE_FAILED' } });
+        /* istanbul ignore next @preserve */
+        throw e;
       }
       return {
         token: sign({ userId: created.id }, JWT_SECRET),

@@ -5,6 +5,7 @@ import { getChildLogger } from './logger';
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
 const application = createApp();
+/* istanbul ignore next @preserve */
 startServer(application)
   .then(() => {
     // This should never happen, is only here until we add the real API which of course runs forever
