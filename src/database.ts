@@ -5,6 +5,7 @@ import { getUserCrud } from './modules';
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
+// https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging#log-to-stdout
 const LOGGING_EVENTS: { level: Prisma.LogLevel; emit: 'event' }[] = [
   {
     emit: 'event',
