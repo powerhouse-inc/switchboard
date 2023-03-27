@@ -22,8 +22,8 @@ type CoreUnit {
 scalar GQLDateBase
 
 type Mutation {
-  create(session: SessionCreate!): Session
-  revoke(sessionId: String!): Session
+  createSession(session: SessionCreate!): Session
+  revokeSession(sessionId: String!): Session
   signIn(user: UserNamePass!): AuthPayload
   signUp(user: UserNamePass!): AuthPayload
 }
@@ -31,8 +31,8 @@ type Mutation {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
-  list: [Session]
   me: User
+  sessions: [Session]
 }
 
 type Session {
@@ -41,6 +41,7 @@ type Session {
   id: String
   name: String
   referenceExpiryDate: GQLDateBase
+  referenceTokenId: String
   revokedAt: GQLDateBase
 }
 

@@ -1,8 +1,8 @@
 import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { ApolloError } from 'apollo-server-core';
-import { token } from '../../helpers';
 import { randomUUID } from 'crypto';
+import { token } from '../../helpers';
 
 export const Session = objectType({
   name: 'Session',
@@ -11,6 +11,7 @@ export const Session = objectType({
     t.date('createdAt');
     t.string('createdBy');
     t.date('referenceExpiryDate');
+    t.string('referenceTokenId');
     t.string('name');
     t.date('revokedAt');
   },

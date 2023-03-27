@@ -31,6 +31,8 @@ export const AuthPayload = objectType({
   },
 });
 
+const getReferenceExpiryDate = () => new Date(Date.now() + ms(JWT_EXPIRATION_PERIOD));
+
 export function getUserCrud(prisma: PrismaClient) {
   return {
     signIn: async (userNamePass: { username: string; password: string }) => {
@@ -51,7 +53,7 @@ export function getUserCrud(prisma: PrismaClient) {
         prisma,
         user.id,
         {
-          referenceExpiryDate: new Date(Date.now() + ms(JWT_EXPIRATION_PERIOD)),
+          referenceExpiryDate: getReferenceExpiryDate(),
           name: 'SignIn Session',
         },
       );
@@ -86,7 +88,7 @@ export function getUserCrud(prisma: PrismaClient) {
         prisma,
         createdUser.id,
         {
-          referenceExpiryDate: new Date(Date.now() + ms(JWT_EXPIRATION_PERIOD)),
+          referenceExpiryDate: getReferenceExpiryDate(),
           name: 'SignUp Session',
         },
       );

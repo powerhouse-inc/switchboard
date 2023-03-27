@@ -17,7 +17,6 @@ model CoreUnit {
   descriptionSentence             String
   descriptionParagraph            String
   descriptionParagraphImageSource String
-  referenceTokenId                String
 }
 
 model User {
@@ -35,6 +34,7 @@ model Session {
   referenceExpiryDate DateTime
   name                String?
   revokedAt           DateTime?
+  referenceTokenId    String
 
   creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 }

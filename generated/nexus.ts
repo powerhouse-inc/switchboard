@@ -85,6 +85,7 @@ export interface NexusGenObjects {
     id?: string | null; // String
     name?: string | null; // String
     referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    referenceTokenId?: string | null; // String
     revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
   User: { // root type
@@ -120,16 +121,16 @@ export interface NexusGenFieldTypes {
     shortCode: string | null; // String
   }
   Mutation: { // field return type
-    create: NexusGenRootTypes['Session'] | null; // Session
-    revoke: NexusGenRootTypes['Session'] | null; // Session
+    createSession: NexusGenRootTypes['Session'] | null; // Session
+    revokeSession: NexusGenRootTypes['Session'] | null; // Session
     signIn: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signUp: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
   }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
-    list: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
     me: NexusGenRootTypes['User'] | null; // User
+    sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
   Session: { // field return type
     createdAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -137,6 +138,7 @@ export interface NexusGenFieldTypes {
     id: string | null; // String
     name: string | null; // String
     referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    referenceTokenId: string | null; // String
     revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
   User: { // field return type
@@ -162,16 +164,16 @@ export interface NexusGenFieldTypeNames {
     shortCode: 'String'
   }
   Mutation: { // field return type name
-    create: 'Session'
-    revoke: 'Session'
+    createSession: 'Session'
+    revokeSession: 'Session'
     signIn: 'AuthPayload'
     signUp: 'AuthPayload'
   }
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
-    list: 'Session'
     me: 'User'
+    sessions: 'Session'
   }
   Session: { // field return type name
     createdAt: 'GQLDateBase'
@@ -179,6 +181,7 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     name: 'String'
     referenceExpiryDate: 'GQLDateBase'
+    referenceTokenId: 'String'
     revokedAt: 'GQLDateBase'
   }
   User: { // field return type name
@@ -190,10 +193,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    create: { // args
+    createSession: { // args
       session: NexusGenInputs['SessionCreate']; // SessionCreate!
     }
-    revoke: { // args
+    revokeSession: { // args
       sessionId: string; // String!
     }
     signIn: { // args
