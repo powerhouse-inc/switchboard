@@ -10,11 +10,7 @@ export const listSessions = queryField('sessions', {
   type: list('Session'),
   resolve: async (_, __, ctx) => {
     const id = await ctx.getUserId();
-    return ctx.prisma.session.findMany({
-      where: {
-        createdBy: id,
-      },
-    });
+    return ctx.prisma.session.all(id);
   },
 });
 
@@ -27,7 +23,7 @@ export const revoke = mutationField('revokeSession', {
 });
 
 export const create = mutationField('createSession', {
-  type: 'Session',
+  type: 'SessionCreateOutput',
   args: {
     session: nonNull('SessionCreate'),
   },
@@ -37,7 +33,10 @@ export const create = mutationField('createSession', {
     ctx,
   ) => {
     const id = await ctx.getUserId();
-    return (await ctx.prisma.session.generateTokenAndSession(id, session))
-      .createdSession;
+    const {
+      createdSession,
+      createdToken,
+    } = await ctx.prisma.session.generateTokenAndSession(id, session);
+    return { createdSession, token: createdToken };
   },
 });

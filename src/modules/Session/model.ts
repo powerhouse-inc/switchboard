@@ -1,6 +1,5 @@
 import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
-import { ApolloError } from 'apollo-server-core';
 import { randomUUID } from 'crypto';
 import { token } from '../../helpers';
 
@@ -25,17 +24,21 @@ export const SessionCreate = inputObjectType({
   },
 });
 
+export const SessionCreateOutput = objectType({
+  name: 'SessionCreateOutput',
+  definition(t) {
+    t.nonNull.field('createdSession', { type: 'Session' });
+    t.nonNull.string('token');
+  },
+});
+
 async function newSession(
   prisma: PrismaClient,
   session: Prisma.SessionCreateInput,
 ) {
-  try {
-    return await prisma.session.create({
-      data: session,
-    });
-  } catch (error) {
-    throw new ApolloError('Failed to create session', 'SESSION_CREATE_FAILED');
-  }
+  return prisma.session.create({
+    data: session,
+  });
 }
 
 async function listSessions(prisma: PrismaClient, userId: string) {
@@ -60,7 +63,7 @@ async function revoke(prisma: PrismaClient, sessionId: string) {
 export async function generateTokenAndSession(
   prisma: PrismaClient,
   userId: string,
-  session: { referenceExpiryDate: Date; name: string },
+  session: { referenceExpiryDate: Date; name?: string },
 ) {
   const createId = randomUUID();
   const createdToken = token.generate(userId, createId);
@@ -84,12 +87,11 @@ export async function generateTokenAndSession(
 
 export function getSessionCrud(prisma: PrismaClient) {
   return {
-    new: async (session: Prisma.SessionCreateInput) => newSession(prisma, session),
     all: async (userId: string) => listSessions(prisma, userId),
     revoke: async (sessionId: string) => revoke(prisma, sessionId),
     generateTokenAndSession: async (
       userId: string,
-      session: { referenceExpiryDate: Date; name: string },
+      session: { referenceExpiryDate: Date; name?: string },
     ) => generateTokenAndSession(prisma, userId, session),
   };
 }

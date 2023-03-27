@@ -1,7 +1,6 @@
 import { ApolloError } from 'apollo-server-core';
 import type express from 'express';
 import { verify } from 'jsonwebtoken';
-import { Session, User } from '@prisma/client';
 import { getPrisma } from './database';
 import { JWT_SECRET } from './env';
 
@@ -33,19 +32,14 @@ async function getUserId(xprisma: XPrismaClient, token?: string): Promise<string
     return decoded;
   }) as unknown as { sessionId: string; userId: string };
   const { sessionId } = verificationTokenResult;
-  let session: Session & { creator: User };
-  try {
-    session = await xprisma.session.findUniqueOrThrow({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        creator: true,
-      },
-    });
-  } catch (e) {
-    throw new ApolloError('Invalid authentication token');
-  }
+  const session = await xprisma.session.findUniqueOrThrow({
+    where: {
+      id: sessionId,
+    },
+    include: {
+      creator: true,
+    },
+  });
   if (session.revokedAt && session.revokedAt < new Date()) {
     throw new ApolloError('Session expired');
   }

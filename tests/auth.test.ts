@@ -4,36 +4,7 @@ import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/dat
 import { ctx, executeGraphQlQuery } from './helpers/server';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
-
-const signUpMutation = builder.mutation({
-  operation: 'signUp',
-  variables: {
-    user: {
-      value: {
-        username: 'asdf',
-        password: 'asdf',
-      },
-      type: 'UserNamePass',
-      required: true,
-    },
-  },
-  fields: ['user{id, username}', 'token'],
-});
-
-const singInMutation = builder.mutation({
-  operation: 'signIn',
-  variables: {
-    user: {
-      value: {
-        username: 'asdf',
-        password: 'asdf',
-      },
-      type: 'UserNamePass',
-      required: true,
-    },
-  },
-  fields: ['user{id, username}', 'token'],
-});
+import { signUpMutation, signInMutation } from './helpers/const';
 
 const meQuery = builder.query({
   operation: 'me',
@@ -51,7 +22,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
   expect(signUpResponse?.signUp?.token).toBeTruthy();
 
-  const signInResponse = (await executeGraphQlQuery(singInMutation)) as Record<
+  const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
   string,
   any
   >;
@@ -70,7 +41,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
 });
 
 test('Authentication: sign in without signing up', async () => {
-  const response = (await executeGraphQlQuery(singInMutation)) as any;
+  const response = (await executeGraphQlQuery(signInMutation)) as any;
   expect(response.errors[0].message).toBe('User not found');
 });
 
@@ -100,7 +71,7 @@ test('Authentication: sign up, sign in with wrong password', async () => {
         password: 'wrong',
       },
     },
-    query: singInMutation.query,
+    query: signInMutation.query,
   };
   const signInResponse = (await executeGraphQlQuery(
     singInIncorrectPassword,
@@ -122,7 +93,7 @@ test('Authentication: token expiration error', async () => {
   >;
   expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
 
-  const signInResponse = (await executeGraphQlQuery(singInMutation)) as Record<
+  const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
   string,
   any
   >;

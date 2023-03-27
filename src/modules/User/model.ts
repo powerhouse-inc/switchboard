@@ -54,7 +54,6 @@ export function getUserCrud(prisma: PrismaClient) {
         user.id,
         {
           referenceExpiryDate: getReferenceExpiryDate(),
-          name: 'SignIn Session',
         },
       );
       return {
@@ -89,7 +88,6 @@ export function getUserCrud(prisma: PrismaClient) {
         createdUser.id,
         {
           referenceExpiryDate: getReferenceExpiryDate(),
-          name: 'SignUp Session',
         },
       );
       return {
