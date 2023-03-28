@@ -66,7 +66,7 @@ export async function generateTokenAndSession(
   session: { referenceExpiryDate: Date; name?: string },
 ) {
   const createId = randomUUID();
-  const createdToken = token.generate(userId, createId);
+  const createdToken = token.generate(createId);
   const formattedToken = token.format(createdToken);
   const createData = {
     ...session,

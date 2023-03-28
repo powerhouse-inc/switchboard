@@ -30,7 +30,7 @@ async function getUserId(xprisma: XPrismaClient, token?: string): Promise<string
       throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
     }
     return decoded;
-  }) as unknown as { sessionId: string; userId: string };
+  }) as unknown as { sessionId: string };
   const { sessionId } = verificationTokenResult;
   const session = await xprisma.session.findUniqueOrThrow({
     where: {
