@@ -9,7 +9,7 @@ cleanDatabaseBeforeAfterEachTest();
 
 const listSessionsQuery = builder.query({
   operation: 'sessions',
-  fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId'],
+  fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated'],
 });
 
 const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
@@ -20,7 +20,7 @@ const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
       type: 'String!',
     },
   },
-  fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId'],
+  fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated'],
 });
 
 const getCreateSessionMutation = (name: string, referenceExpiryDate: Date) => builder.mutation({
@@ -35,7 +35,7 @@ const getCreateSessionMutation = (name: string, referenceExpiryDate: Date) => bu
       required: true,
     },
   },
-  fields: ['session{name, id, referenceExpiryDate}', 'token'],
+  fields: ['session{name, id, referenceExpiryDate, isUserCreated}', 'token'],
 });
 
 test('Auth session: list', async () => {
@@ -46,6 +46,7 @@ test('Auth session: list', async () => {
   expect(sessionsResponse?.sessions?.length).toBe(1);
   const session = sessionsResponse?.sessions[0];
   expect(isRecent(new Date(session.createdAt), executedAt)).toBe(true);
+  expect(session.isUserCreated).toBe(false);
 });
 
 test('Auth session: revoke', async () => {
@@ -73,6 +74,7 @@ test('Auth session: create', async () => {
   ).toBe(expiryDate.toISOString());
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
+  expect(sessionsResponse?.sessions[1].isUserCreated).toBe(true);
 });
 
 test('Auth session: revoked session is forbidden', async () => {

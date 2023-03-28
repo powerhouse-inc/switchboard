@@ -11,6 +11,7 @@ export const Session = objectType({
     t.nonNull.string('createdBy');
     t.nonNull.date('referenceExpiryDate');
     t.nonNull.string('referenceTokenId');
+    t.nonNull.boolean('isUserCreated');
     t.string('name');
     t.date('revokedAt');
   },
@@ -64,6 +65,7 @@ export async function generateTokenAndSession(
   prisma: PrismaClient,
   userId: string,
   session: { referenceExpiryDate: Date; name?: string },
+  isUserCreated: boolean = false,
 ) {
   const createId = randomUUID();
   const createdToken = token.generate(createId);
@@ -72,6 +74,7 @@ export async function generateTokenAndSession(
     ...session,
     id: createId,
     referenceTokenId: formattedToken,
+    isUserCreated,
     creator: {
       connect: {
         id: userId,
@@ -92,6 +95,6 @@ export function getSessionCrud(prisma: PrismaClient) {
     generateTokenAndSession: async (
       userId: string,
       session: { referenceExpiryDate: Date; name?: string },
-    ) => generateTokenAndSession(prisma, userId, session),
+    ) => generateTokenAndSession(prisma, userId, session, true),
   };
 }

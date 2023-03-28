@@ -39,6 +39,7 @@ type Session {
   createdAt: GQLDateBase!
   createdBy: String!
   id: String!
+  isUserCreated: Boolean!
   name: String
   referenceExpiryDate: GQLDateBase!
   referenceTokenId: String!

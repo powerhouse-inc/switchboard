@@ -27,6 +27,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
   )
     .toBe(true);
   expect(signUpResponse?.signUp?.token).toBeTruthy();
+  expect(signUpResponse?.signUp?.session?.isUserCreated).toBe(false);
 
   const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
   string,
@@ -37,6 +38,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
   )
     .toBe(true);
   expect(signInResponse?.signIn?.token).toBeTruthy();
+  expect(signInResponse?.signIn?.session?.isUserCreated).toBe(false);
 
   const token = signInResponse?.signIn?.token;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
