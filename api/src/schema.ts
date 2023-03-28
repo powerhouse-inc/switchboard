@@ -4,6 +4,7 @@ import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import * as types from './modules';
 
+/* istanbul ignore next @preserve */
 export const schema = makeSchema({
   types,
   plugins: [

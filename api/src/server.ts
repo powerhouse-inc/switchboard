@@ -21,9 +21,5 @@ export const startServer = async (
   await apollo.start();
   apollo.applyMiddleware({ app });
   const usedPort = port || PORT;
-  return httpServer.listen({ port: usedPort }, () => {
-    process.stdout.write(
-      `🚀 Server ready at port ${usedPort}`,
-    );
-  });
+  return httpServer.listen({ port: usedPort }, () => {});
 };

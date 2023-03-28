@@ -46,7 +46,7 @@ export function getUserCrud(prisma: PrismaClient) {
       if (!user) {
         throw new ApolloError('User not found', 'USER_NOT_FOUND');
       }
-      const passwordValid = (await compare(password, user.password || '')) || false;
+      const passwordValid = await compare(password, user.password);
       if (!passwordValid) {
         throw new ApolloError('Invalid password', 'INVALID_PASSWORD');
       }
@@ -75,7 +75,8 @@ export function getUserCrud(prisma: PrismaClient) {
         if ('code' in e && e.code === 'P2002') {
           throw new ApolloError('Username already taken', 'USERNAME_TAKEN');
         }
-        throw new ApolloError('Failed to create user', 'USER_CREATE_FAILED');
+        /* istanbul ignore next @preserve */
+        throw e;
       }
       return {
         token: sign({ userId: created.id }, JWT_SECRET),

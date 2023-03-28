@@ -10,7 +10,8 @@
         "postinstall": "prisma generate",
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
         "typecheck": "tsc --noEmit",
-        "test": "vitest run --coverage"
+        "test": "vitest run && vitest run --config ./vitest.full-coverage.config.ts",
+        "watch": "vitest watch"
     },
     "dependencies": {
         "@prisma/client": "^4.11.0",
