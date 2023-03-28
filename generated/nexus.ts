@@ -42,7 +42,7 @@ declare global {
 export interface NexusGenInputs {
   SessionCreate: { // input type
     name: string; // String!
-    referenceExpiryDate: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
   UserNamePass: { // input type
     password: string; // String!
@@ -85,7 +85,7 @@ export interface NexusGenObjects {
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name?: string | null; // String
-    referenceExpiryDate: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
     referenceTokenId: string; // String!
     revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
@@ -143,7 +143,7 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name: string | null; // String
-    referenceExpiryDate: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
     referenceTokenId: string; // String!
     revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }

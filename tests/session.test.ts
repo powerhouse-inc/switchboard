@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
 import builder from 'gql-query-builder';
-import { signUpMutation } from './helpers/const';
+import { signUpMutation, meQuery, USERNAME } from './helpers/const';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { isRecent } from './helpers/time';
 import { ctx, executeGraphQlQuery } from './helpers/server';
@@ -23,7 +23,7 @@ const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
   fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated'],
 });
 
-const getCreateSessionMutation = (name: string, referenceExpiryDate: Date) => builder.mutation({
+const getCreateSessionMutation = (name: string, referenceExpiryDate?: Date) => builder.mutation({
   operation: 'createSession',
   variables: {
     session: {
@@ -61,7 +61,7 @@ test('Auth session: revoke', async () => {
   expect(isRecent(revokedDate, new Date())).toBe(true);
 });
 
-test('Auth session: create', async () => {
+test('Auth session: create expirable', async () => {
   const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const expiryDate = new Date();
@@ -75,6 +75,25 @@ test('Auth session: create', async () => {
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
   expect(sessionsResponse?.sessions[1].isUserCreated).toBe(true);
+});
+
+test('Auth session: create unexpirable', async () => {
+  const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  const name = 'JoJo';
+  const mutation = getCreateSessionMutation(name);
+  const createResponse = (await executeGraphQlQuery(mutation)) as any;
+  expect(createResponse?.createSession?.session.name).toBe(name);
+  expect(
+    createResponse?.createSession?.session.referenceExpiryDate,
+  ).toBe(null);
+  const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
+  expect(sessionsResponse?.sessions?.length).toBe(2);
+  expect(sessionsResponse?.sessions[1].isUserCreated).toBe(true);
+  const customToken = createResponse?.createSession?.token;
+  ctx.client.setHeader('Authorization', `Bearer ${customToken}`);
+  const meResponse = (await executeGraphQlQuery(meQuery)) as any;
+  expect(meResponse?.me?.username).toBe(USERNAME);
 });
 
 test('Auth session: revoked session is forbidden', async () => {

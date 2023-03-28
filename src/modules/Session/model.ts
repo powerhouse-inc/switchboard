@@ -9,7 +9,7 @@ export const Session = objectType({
     t.nonNull.string('id');
     t.nonNull.date('createdAt');
     t.nonNull.string('createdBy');
-    t.nonNull.date('referenceExpiryDate');
+    t.date('referenceExpiryDate');
     t.nonNull.string('referenceTokenId');
     t.nonNull.boolean('isUserCreated');
     t.string('name');
@@ -20,7 +20,7 @@ export const Session = objectType({
 export const SessionCreate = inputObjectType({
   name: 'SessionCreate',
   definition(t) {
-    t.nonNull.date('referenceExpiryDate');
+    t.date('referenceExpiryDate');
     t.nonNull.string('name');
   },
 });
@@ -64,7 +64,7 @@ async function revoke(prisma: PrismaClient, sessionId: string) {
 export async function generateTokenAndSession(
   prisma: PrismaClient,
   userId: string,
-  session: { referenceExpiryDate: Date; name?: string },
+  session: { referenceExpiryDate?: Date; name?: string },
   isUserCreated: boolean = false,
 ) {
   const createId = randomUUID();
@@ -94,7 +94,7 @@ export function getSessionCrud(prisma: PrismaClient) {
     revoke: async (sessionId: string) => revoke(prisma, sessionId),
     generateTokenAndSession: async (
       userId: string,
-      session: { referenceExpiryDate: Date; name?: string },
+      session: { referenceExpiryDate?: Date; name: string },
     ) => generateTokenAndSession(prisma, userId, session, true),
   };
 }

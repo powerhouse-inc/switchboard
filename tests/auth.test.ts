@@ -1,17 +1,13 @@
 import { test, expect, vi } from 'vitest';
-import builder from 'gql-query-builder';
 import ms from 'ms';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx, executeGraphQlQuery } from './helpers/server';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
-import { signUpMutation, signInMutation } from './helpers/const';
+import {
+  signUpMutation, signInMutation, meQuery, USERNAME,
+} from './helpers/const';
 import { isRecent } from './helpers/time';
-
-const meQuery = builder.query({
-  operation: 'me',
-  fields: ['id', 'username'],
-});
 
 cleanDatabaseBeforeAfterEachTest();
 restoreEnvAfterEach();
@@ -47,7 +43,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
   string,
   any
   >;
-  expect(meResponse?.me?.username).toBe('asdf');
+  expect(meResponse?.me?.username).toBe(USERNAME);
   expect(meResponse?.me?.id).toBeTruthy();
 });
 
@@ -73,7 +69,7 @@ test('Authentication: sign up, sign in with wrong password', async () => {
   const singInIncorrectPassword = {
     variables: {
       user: {
-        username: 'asdf',
+        username: USERNAME,
         password: 'wrong',
       },
     },

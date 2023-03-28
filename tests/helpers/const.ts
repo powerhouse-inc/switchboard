@@ -1,12 +1,15 @@
 import builder from 'gql-query-builder';
 
+export const USERNAME = 'usernameTest';
+export const PASSWORD = 'passwordTest';
+
 export const signUpMutation = builder.mutation({
   operation: 'signUp',
   variables: {
     user: {
       value: {
-        username: 'asdf',
-        password: 'asdf',
+        username: USERNAME,
+        password: PASSWORD,
       },
       type: 'UserNamePass',
       required: true,
@@ -20,12 +23,17 @@ export const signInMutation = builder.mutation({
   variables: {
     user: {
       value: {
-        username: 'asdf',
-        password: 'asdf',
+        username: USERNAME,
+        password: PASSWORD,
       },
       type: 'UserNamePass',
       required: true,
     },
   },
   fields: ['session{id, referenceExpiryDate, isUserCreated}', 'token'],
+});
+
+export const meQuery = builder.query({
+  operation: 'me',
+  fields: ['id', 'username'],
 });

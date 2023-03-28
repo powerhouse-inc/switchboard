@@ -41,14 +41,14 @@ type Session {
   id: String!
   isUserCreated: Boolean!
   name: String
-  referenceExpiryDate: GQLDateBase!
+  referenceExpiryDate: GQLDateBase
   referenceTokenId: String!
   revokedAt: GQLDateBase
 }
 
 input SessionCreate {
   name: String!
-  referenceExpiryDate: GQLDateBase!
+  referenceExpiryDate: GQLDateBase
 }
 
 type SessionCreateOutput {
