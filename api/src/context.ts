@@ -1,30 +1,34 @@
-import { ApolloError } from 'apollo-server-core';
+import { GraphQLError } from 'graphql';
 import type express from 'express';
+import pino from 'pino';
 import { verify } from 'jsonwebtoken';
-import { getPrisma } from './database';
+import { getChildLogger } from './logger';
+import prisma from './database';
 import { JWT_SECRET } from './env';
 
-export const prisma = getPrisma();
+const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
+const apolloLogger = getChildLogger({ msgPrefix: 'APOLLO' }, { module: undefined });
 
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
   getUserId: () => string;
+  apolloLogger: pino.Logger;
 }
 
 type CreateContextParams = {
-  req: express.Request;
+  req: express.Request & { log: pino.Logger };
   res: express.Response;
   connection?: unknown;
 };
 
 function getUserId(token?: string): string {
   if (!token) {
-    throw new ApolloError('Not authenticated');
+    throw new GraphQLError('Not authenticated', { extensions: { code: 'NOT_AUTHENTICATED' } });
   }
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
+      throw new GraphQLError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token', { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } });
     }
     return decoded;
   }) as unknown as { userId: string };
@@ -32,6 +36,7 @@ function getUserId(token?: string): string {
 }
 
 export function createContext(params: CreateContextParams): Context {
+  logger.trace('Creating context with params: %o', params);
   const { req } = params;
   const authorizationHeader = req.get('Authorization');
   const token = authorizationHeader?.replace('Bearer ', '');
@@ -39,6 +44,7 @@ export function createContext(params: CreateContextParams): Context {
   return {
     request: params,
     prisma,
+    apolloLogger,
     getUserId: () => getUserId(token),
   };
 }
