@@ -1,8 +1,8 @@
 import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { token } from '../../helpers';
 import { ApolloError } from 'apollo-server-core';
+import { token } from '../../helpers';
 
 export const Session = objectType({
   name: 'Session',
@@ -63,7 +63,7 @@ async function revoke(prisma: PrismaClient, sessionId: string) {
     });
   } catch (e) {
     console.error(e);
-    throw new ApolloError("Failed to update session", 'SESSION_UPDATE_FAILED');
+    throw new ApolloError('Failed to update session', 'SESSION_UPDATE_FAILED');
   }
 }
 
