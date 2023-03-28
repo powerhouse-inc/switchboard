@@ -9,8 +9,8 @@ export const getJwtSecret = (): string => {
   return process.env.JWT_SECRET || 'dev';
 };
 
-export const getJwtExpirationPeriod = (expiration?: string): string => {
-  if (!expiration) {
+export const getJwtExpirationPeriod = (): string => {
+  if (!process.env.JWT_EXPIRATION_PERIOD_SECONDS) {
     return '7d';
   }
   const expirationSeconds = Number(process.env.JWT_EXPIRATION_PERIOD_SECONDS);
