@@ -6,4 +6,4 @@ a subset of modules is maximal.
 
 The coverage report will therefore contain two tables.
 
-See corresponding configs in `./vitest.config.ts` and `./vitest.full-coverage.config.ts`
+See corresponding configs in `./vitest.config.ts` and `./vitest.modules.config.ts`
