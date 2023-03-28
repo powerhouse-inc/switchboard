@@ -61,6 +61,15 @@ test('Auth session: revoke', async () => {
   expect(isRecent(revokedDate, new Date())).toBe(true);
 });
 
+test('Auth session: revoke unexistant', async () => {
+  const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  const mutation = getRevokeSessionMutation('asdf');
+  const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
+  expect(revokeResponse?.errors[0].message).toBe('Failed to update session');
+  expect(revokeResponse?.errors[0].extensions.code).toBe('SESSION_UPDATE_FAILED');
+});
+
 test('Auth session: create expirable', async () => {
   const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);

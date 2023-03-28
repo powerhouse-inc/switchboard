@@ -2,6 +2,7 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { token } from '../../helpers';
+import { ApolloError } from 'apollo-server-core';
 
 export const Session = objectType({
   name: 'Session',
@@ -51,14 +52,19 @@ async function listSessions(prisma: PrismaClient, userId: string) {
 }
 
 async function revoke(prisma: PrismaClient, sessionId: string) {
-  return prisma.session.update({
-    where: {
-      id: sessionId,
-    },
-    data: {
-      revokedAt: new Date(),
-    },
-  });
+  try {
+    return await prisma.session.update({
+      where: {
+        id: sessionId,
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    throw new ApolloError("Failed to update session", 'SESSION_UPDATE_FAILED');
+  }
 }
 
 export async function generateTokenAndSession(
