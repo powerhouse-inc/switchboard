@@ -6,11 +6,11 @@ import { token } from '../../helpers';
 export const Session = objectType({
   name: 'Session',
   definition(t) {
-    t.string('id');
-    t.date('createdAt');
-    t.string('createdBy');
-    t.date('referenceExpiryDate');
-    t.string('referenceTokenId');
+    t.nonNull.string('id');
+    t.nonNull.date('createdAt');
+    t.nonNull.string('createdBy');
+    t.nonNull.date('referenceExpiryDate');
+    t.nonNull.string('referenceTokenId');
     t.string('name');
     t.date('revokedAt');
   },

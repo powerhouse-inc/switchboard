@@ -36,12 +36,12 @@ type Query {
 }
 
 type Session {
-  createdAt: GQLDateBase
-  createdBy: String
-  id: String
+  createdAt: GQLDateBase!
+  createdBy: String!
+  id: String!
   name: String
-  referenceExpiryDate: GQLDateBase
-  referenceTokenId: String
+  referenceExpiryDate: GQLDateBase!
+  referenceTokenId: String!
   revokedAt: GQLDateBase
 }
 

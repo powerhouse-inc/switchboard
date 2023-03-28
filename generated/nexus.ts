@@ -80,12 +80,12 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   Session: { // root type
-    createdAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
-    createdBy?: string | null; // String
-    id?: string | null; // String
+    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdBy: string; // String!
+    id: string; // String!
     name?: string | null; // String
-    referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
-    referenceTokenId?: string | null; // String
+    referenceExpiryDate: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    referenceTokenId: string; // String!
     revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
   SessionCreateOutput: { // root type
@@ -137,12 +137,12 @@ export interface NexusGenFieldTypes {
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
   Session: { // field return type
-    createdAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
-    createdBy: string | null; // String
-    id: string | null; // String
+    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdBy: string; // String!
+    id: string; // String!
     name: string | null; // String
-    referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
-    referenceTokenId: string | null; // String
+    referenceExpiryDate: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    referenceTokenId: string; // String!
     revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
   SessionCreateOutput: { // field return type
