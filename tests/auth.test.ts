@@ -100,12 +100,12 @@ test('Authentication: token expiration error', async () => {
   const token = signInResponse?.signIn?.token;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
 
+  // wait until token expires
+  await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
   const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
   string,
   any
   >;
-  // wait until token expires
-  await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
   expect(meResponse?.errors[0].message).toBe('Token expired');
 });
 

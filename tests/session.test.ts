@@ -72,9 +72,15 @@ test('Auth session: create expirable', async () => {
   expect(
     createResponse?.createSession?.session.referenceExpiryDate,
   ).toBe(expiryDate.toISOString());
+  const createdToken = createResponse?.createSession?.token;
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
   expect(sessionsResponse?.sessions[1].isUserCreated).toBe(true);
+  ctx.client.setHeader('Authorization', `Bearer ${createdToken}`);
+  await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
+  const meResponse = (await executeGraphQlQuery(meQuery)) as any;
+  expect(meResponse?.errors?.length).toBe(1);
+  expect(meResponse?.errors[0].message).toBe('Token expired');
 });
 
 test('Auth session: create unexpirable', async () => {
