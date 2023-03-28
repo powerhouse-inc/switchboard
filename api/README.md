@@ -34,8 +34,9 @@ Some environment variables are pre-configured for the development. You can copy 
 - `PORT` (optional, default: 3000): port on which the server will run
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up mutation is allowed (i.e. user creation via endpoint is enabled)
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire
+- `DEBUG` (optional): if set, enables the different more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
 
-## Database
+### Database
 
 We use [Prisma ORM](prisma.io/) as an ORM for this project. It is installed when you run `npm i`. Here are some useful commands for development:
 ```sh
@@ -48,3 +49,7 @@ npx prisma generate
 # Get a live-view of the database, useful for development and testing
 npx prisma studio
 ```
+
+### Logging configuration
+
+The configuration is received from the `logger.config.ts` file at the root of the project. Adjust the file parameters to control the logger behaviour.
