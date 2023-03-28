@@ -3,8 +3,8 @@
 
 
 type AuthPayload {
+  session: Session
   token: String
-  user: User
 }
 
 type CoreUnit {
@@ -51,7 +51,7 @@ input SessionCreate {
 }
 
 type SessionCreateOutput {
-  createdSession: Session!
+  session: Session!
   token: String!
 }
 

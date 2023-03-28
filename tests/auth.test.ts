@@ -1,10 +1,12 @@
 import { test, expect, vi } from 'vitest';
 import builder from 'gql-query-builder';
+import ms from 'ms';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx, executeGraphQlQuery } from './helpers/server';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
 import { signUpMutation, signInMutation } from './helpers/const';
+import { isRecent } from './helpers/time';
 
 const meQuery = builder.query({
   operation: 'me',
@@ -19,14 +21,21 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
   string,
   any
   >;
-  expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
+  const tokenExpiry = new Date(new Date().getTime() + ms(env.JWT_EXPIRATION_PERIOD));
+  expect(
+    isRecent(new Date(signUpResponse?.signUp?.session?.referenceExpiryDate), tokenExpiry),
+  )
+    .toBe(true);
   expect(signUpResponse?.signUp?.token).toBeTruthy();
 
   const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
   string,
   any
   >;
-  expect(signInResponse?.signIn?.user?.username).toBe('asdf');
+  expect(
+    isRecent(new Date(signInResponse?.signIn?.session?.referenceExpiryDate), tokenExpiry),
+  )
+    .toBe(true);
   expect(signInResponse?.signIn?.token).toBeTruthy();
 
   const token = signInResponse?.signIn?.token;
@@ -57,12 +66,7 @@ test('Authentication: access protected endpoint without signing in', async () =>
 });
 
 test('Authentication: sign up, sign in with wrong password', async () => {
-  const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
-  string,
-  any
-  >;
-  expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
-  expect(signUpResponse?.signUp?.token).toBeTruthy();
+  await executeGraphQlQuery(signUpMutation);
 
   const singInIncorrectPassword = {
     variables: {
@@ -87,17 +91,12 @@ test('Authentication: access protected endpoint without valid token', async () =
 
 test('Authentication: token expiration error', async () => {
   vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1ms');
-  const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
-  string,
-  any
-  >;
-  expect(signUpResponse?.signUp?.user?.username).toBe('asdf');
+  await executeGraphQlQuery(signUpMutation);
 
   const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
   string,
   any
   >;
-  expect(signInResponse?.signIn?.user?.username).toBe('asdf');
   expect(signInResponse?.signIn?.token).toBeTruthy();
 
   const token = signInResponse?.signIn?.token;

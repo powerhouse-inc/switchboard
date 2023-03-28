@@ -12,7 +12,7 @@ export const signUpMutation = builder.mutation({
       required: true,
     },
   },
-  fields: ['user{id, username}', 'token'],
+  fields: ['session{id, referenceExpiryDate}', 'token'],
 });
 
 export const signInMutation = builder.mutation({
@@ -27,5 +27,5 @@ export const signInMutation = builder.mutation({
       required: true,
     },
   },
-  fields: ['user{id, username}', 'token'],
+  fields: ['session{id, referenceExpiryDate}', 'token'],
 });

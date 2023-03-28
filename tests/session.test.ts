@@ -2,14 +2,10 @@ import { test, expect } from 'vitest';
 import builder from 'gql-query-builder';
 import { signUpMutation } from './helpers/const';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
+import { isRecent } from './helpers/time';
 import { ctx, executeGraphQlQuery } from './helpers/server';
 
 cleanDatabaseBeforeAfterEachTest();
-
-function isRecent(dateA: Date, dateB: Date) {
-  const diff = Math.abs(dateA.getTime() - dateB.getTime());
-  return diff < 1000;
-}
 
 const listSessionsQuery = builder.query({
   operation: 'sessions',
@@ -39,7 +35,7 @@ const getCreateSessionMutation = (name: string, referenceExpiryDate: Date) => bu
       required: true,
     },
   },
-  fields: ['createdSession{name, id, referenceExpiryDate}', 'token'],
+  fields: ['session{name, id, referenceExpiryDate}', 'token'],
 });
 
 test('Auth session: list', async () => {
@@ -71,9 +67,9 @@ test('Auth session: create', async () => {
   const name = 'JoJo';
   const mutation = getCreateSessionMutation(name, expiryDate);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
-  expect(createResponse?.createSession?.createdSession.name).toBe(name);
+  expect(createResponse?.createSession?.session.name).toBe(name);
   expect(
-    createResponse?.createSession?.createdSession.referenceExpiryDate,
+    createResponse?.createSession?.session.referenceExpiryDate,
   ).toBe(expiryDate.toISOString());
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
@@ -87,7 +83,7 @@ test('Auth session: revoked session is forbidden', async () => {
   const name = 'JoJo';
   let mutation = getCreateSessionMutation(name, expiryDate);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
-  const sessionId = createResponse?.createSession?.createdSession.id;
+  const sessionId = createResponse?.createSession?.session.id;
   mutation = getRevokeSessionMutation(sessionId);
   await executeGraphQlQuery(mutation);
   ctx.client.setHeader('Authorization', `Bearer ${createResponse.createSession.token}`);

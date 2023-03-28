@@ -27,7 +27,7 @@ export const SessionCreate = inputObjectType({
 export const SessionCreateOutput = objectType({
   name: 'SessionCreateOutput',
   definition(t) {
-    t.nonNull.field('createdSession', { type: 'Session' });
+    t.nonNull.field('session', { type: 'Session' });
     t.nonNull.string('token');
   },
 });
@@ -80,8 +80,8 @@ export async function generateTokenAndSession(
   };
   const createdSession = await newSession(prisma, createData);
   return {
-    createdToken,
-    createdSession,
+    token: createdToken,
+    session: createdSession,
   };
 }
 

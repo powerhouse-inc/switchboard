@@ -27,7 +27,7 @@ export const AuthPayload = objectType({
   name: 'AuthPayload',
   definition(t) {
     t.string('token');
-    t.field('user', { type: 'User' });
+    t.field('session', { type: 'Session' });
   },
 });
 
@@ -49,7 +49,7 @@ export function getUserCrud(prisma: PrismaClient) {
       if (!passwordValid) {
         throw new ApolloError('Invalid password', 'INVALID_PASSWORD');
       }
-      const { createdSession, createdToken } = await generateTokenAndSession(
+      const { session, token } = await generateTokenAndSession(
         prisma,
         user.id,
         {
@@ -57,9 +57,8 @@ export function getUserCrud(prisma: PrismaClient) {
         },
       );
       return {
-        token: createdToken,
-        session: createdSession,
-        user,
+        token,
+        session,
       };
     },
     signUp: async (user: { username: string; password: string }) => {
@@ -83,7 +82,7 @@ export function getUserCrud(prisma: PrismaClient) {
         /* istanbul ignore next @preserve */
         throw e;
       }
-      const { createdSession, createdToken } = await generateTokenAndSession(
+      const { session, token } = await generateTokenAndSession(
         prisma,
         createdUser.id,
         {
@@ -91,9 +90,8 @@ export function getUserCrud(prisma: PrismaClient) {
         },
       );
       return {
-        token: createdToken,
-        session: createdSession,
-        user: createdUser,
+        token,
+        session,
       };
     },
   };
