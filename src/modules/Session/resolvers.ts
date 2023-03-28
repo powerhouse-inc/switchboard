@@ -19,7 +19,10 @@ export const revoke = mutationField('revokeSession', {
   args: {
     sessionId: nonNull(stringArg()),
   },
-  resolve: async (_parent, { sessionId }, ctx) => ctx.prisma.session.revoke(sessionId),
+  resolve: async (_parent, { sessionId }, ctx) => {
+    const userId = await ctx.getUserId();
+    return ctx.prisma.session.revoke(sessionId, userId);
+  },
 });
 
 export const create = mutationField('createSession', {

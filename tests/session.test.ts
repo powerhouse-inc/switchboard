@@ -49,6 +49,11 @@ test('Auth session: list', async () => {
   expect(session.isUserCreated).toBe(false);
 });
 
+test('Auth session: list, no auth', async () => {
+  const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
+  expect(sessionsResponse.errors[0].message).toBe('Not authenticated');
+});
+
 test('Auth session: revoke', async () => {
   const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
@@ -59,6 +64,12 @@ test('Auth session: revoke', async () => {
   expect(revokeResponse?.revokeSession?.id).toBe(session.id);
   const revokedDate = new Date(revokeResponse?.revokeSession?.revokedAt);
   expect(isRecent(revokedDate, new Date())).toBe(true);
+});
+
+test('Auth session: revoke, no auth', async () => {
+  const mutation = getRevokeSessionMutation('funny');
+  const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
+  expect(revokeResponse.errors[0].message).toBe('Not authenticated');
 });
 
 test('Auth session: revoke unexistant', async () => {
@@ -125,4 +136,13 @@ test('Auth session: revoked session is forbidden', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${createResponse.createSession.token}`);
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse.errors[0].message).toBe('Session expired');
+});
+
+test('Auth session: revoked session is forbidden', async () => {
+  const expiryDate = new Date();
+  expiryDate.setDate(new Date().getDate() + 1);
+  const name = 'JoJo';
+  const mutation = getCreateSessionMutation(name, expiryDate);
+  const createResponse = (await executeGraphQlQuery(mutation)) as any;
+  expect(createResponse.errors[0].message).toBe('Not authenticated');
 });

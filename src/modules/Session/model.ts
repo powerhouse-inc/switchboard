@@ -51,18 +51,20 @@ async function listSessions(prisma: PrismaClient, userId: string) {
   });
 }
 
-async function revoke(prisma: PrismaClient, sessionId: string) {
+async function revoke(prisma: PrismaClient, sessionId: string, userId: string) {
   try {
     return await prisma.session.update({
       where: {
-        id: sessionId,
+        createdBy_id: {
+          id: sessionId,
+          createdBy: userId,
+        },
       },
       data: {
         revokedAt: new Date(),
       },
     });
   } catch (e) {
-    console.error(e);
     throw new ApolloError('Failed to update session', 'SESSION_UPDATE_FAILED');
   }
 }
@@ -97,7 +99,7 @@ export async function generateTokenAndSession(
 export function getSessionCrud(prisma: PrismaClient) {
   return {
     listSessions: async (userId: string) => listSessions(prisma, userId),
-    revoke: async (sessionId: string) => revoke(prisma, sessionId),
+    revoke: async (sessionId: string, userId: string) => revoke(prisma, sessionId, userId),
     generateTokenAndSession: async (
       userId: string,
       session: { referenceExpiryDate?: Date; name: string },
