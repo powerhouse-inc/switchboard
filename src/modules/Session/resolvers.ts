@@ -10,7 +10,7 @@ export const listSessions = queryField('sessions', {
   type: list('Session'),
   resolve: async (_, __, ctx) => {
     const id = await ctx.getUserId();
-    return ctx.prisma.session.all(id);
+    return ctx.prisma.session.listSessions(id);
   },
 });
 

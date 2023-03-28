@@ -87,7 +87,7 @@ export async function generateTokenAndSession(
 
 export function getSessionCrud(prisma: PrismaClient) {
   return {
-    all: async (userId: string) => listSessions(prisma, userId),
+    listSessions: async (userId: string) => listSessions(prisma, userId),
     revoke: async (sessionId: string) => revoke(prisma, sessionId),
     generateTokenAndSession: async (
       userId: string,
