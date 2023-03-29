@@ -13,7 +13,7 @@ node_modules
 .output
 .env
 dist
-coverage/**
+coverage
 
 # system-related
 .DS_Store
