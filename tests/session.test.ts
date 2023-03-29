@@ -100,8 +100,8 @@ test('Auth session: create expirable', async () => {
   const createdToken = createResponse?.createSession?.token;
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
-  const userCreatedList: boolean[] = sessionsResponse?.sessions.map((session: any) => session.isUserCreated)
-  expect(userCreatedList.some(i => i)).toBe(true);
+  const userCreatedList: boolean[] = sessionsResponse?.sessions.map((session: any) => session.isUserCreated);
+  expect(userCreatedList.some((i) => i)).toBe(true);
   ctx.client.setHeader('Authorization', `Bearer ${createdToken}`);
   await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
@@ -121,8 +121,8 @@ test('Auth session: create unexpirable', async () => {
   ).toBe(null);
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
-  const userCreatedList: boolean[] = sessionsResponse?.sessions.map((session: any) => session.isUserCreated)
-  expect(userCreatedList.some(i => i)).toBe(true);
+  const userCreatedList: boolean[] = sessionsResponse?.sessions.map((session: any) => session.isUserCreated);
+  expect(userCreatedList.some((i) => i)).toBe(true);
   const customToken = createResponse?.createSession?.token;
   ctx.client.setHeader('Authorization', `Bearer ${customToken}`);
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
