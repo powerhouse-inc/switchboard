@@ -1,6 +1,7 @@
 import ms from 'ms';
-import { sign } from 'jsonwebtoken';
+import { sign, verify as jwtVerify } from 'jsonwebtoken';
 import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../env';
+import { GraphQLError } from 'graphql';
 
 export const format = (token: string) => `${token.slice(0, 3)}...${token.slice(-3)}`;
 
@@ -27,3 +28,17 @@ export const getExpiryDate = (expiryDurationSeconds?: number | null) => {
     : ms(JWT_EXPIRATION_PERIOD);
   return new Date(Date.now() + expiresIn);
 };
+
+export const verify = (token: string): { sessionId: string } => {
+  return jwtVerify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      throw new GraphQLError(
+        err.name === 'TokenExpiredError'
+          ? 'Token expired'
+          : 'Invalid authentication token',
+        { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } },
+      );
+    }
+    return decoded;
+  }) as any;
+}

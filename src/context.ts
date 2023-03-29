@@ -1,10 +1,9 @@
 import { GraphQLError } from 'graphql';
 import type express from 'express';
 import pino from 'pino';
-import { verify } from 'jsonwebtoken';
 import { getChildLogger } from './logger';
 import prisma, { XPrismaClient } from './database';
-import { JWT_SECRET } from './env';
+import { token as tokenUtils } from './helpers';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
@@ -34,17 +33,7 @@ async function getUserId(
       extensions: { code: 'NOT_AUTHENTICATED' },
     });
   }
-  const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      throw new GraphQLError(
-        err.name === 'TokenExpiredError'
-          ? 'Token expired'
-          : 'Invalid authentication token',
-        { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } },
-      );
-    }
-    return decoded;
-  }) as unknown as { sessionId: string };
+  const verificationTokenResult = tokenUtils.verify(token);
   const { sessionId } = verificationTokenResult;
   const session = await xprisma.session.findUniqueOrThrow({
     where: {
