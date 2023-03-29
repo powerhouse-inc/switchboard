@@ -5,7 +5,7 @@ import type express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { PORT, isDevelopment } from './env';
+import { PORT } from './env';
 import { schemaWithMiddleware } from './schema';
 import { Context, createContext } from './context';
 import { getChildLogger } from './logger';
@@ -28,7 +28,7 @@ function loggerPlugin(): ApolloServerPlugin<Context> {
 
 const createApolloServer = (): ApolloServer<Context> => new ApolloServer<Context>({
   schema: schemaWithMiddleware,
-  introspection: isDevelopment,
+  introspection: true,
   plugins: [loggerPlugin()],
 });
 

@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+  api:
+    restart: unless-stopped
+    build:
+      context: ./api
+    expose:
+      - 3000
+    env_file:
+      - ./api/.env
+    command: >
+      sh -c "
+      cd /app &&
+      pwd &&
+      npx prisma db push &&
+      npx prisma generate &&
+      npm run start"
+
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend
+    expose:
+      - 3000
+
+  reverse-proxy:
+    restart: unless-stopped
+    image: nginx:stable
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
+      - frontend

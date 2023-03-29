@@ -1,5 +1,9 @@
 {
-  "private": true,
+  "name": "powerhouse-switchboard-frontend",
+  "version": "0.0.1",
+  "license": "AGPL-3",
+  "type": "module",
+  "main": ".output/server/index.mjs",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -8,7 +12,7 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint --max-warnings 0 .",
     "typecheck": "nuxt typecheck",
-    "start": "NODE_ENV=production node .output/server/index.mjs"
+    "start": "NODE_ENV=production node ."
   },
   "devDependencies": {
     "@huntersofbook/naive-ui-nuxt": "^0.7.1",
