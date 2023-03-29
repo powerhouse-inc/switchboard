@@ -43,7 +43,7 @@ async function getUser(
       creator: true,
     },
   });
-  if (session.revokedAt && session.revokedAt < new Date()) {
+  if (session.revokedAt) {
     throw new GraphQLError('Session expired', {
       extensions: { code: 'SESSION_EXPIRED' },
     });

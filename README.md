@@ -62,7 +62,7 @@ cp developer.env .env
 - `JWT_SECRET` (required): server's jwt secret.
 - `PORT` (optional, default: 3000): port on which the server will run.
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up mutation is allowed (i.e. user creation via endpoint is enabled)
-- `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire.
+- `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire. String that describes a time span according to https://github.com/vercel/ms
 - `DEBUG` (optional): if set, enables the different more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
 
 ### Project-Requirements
