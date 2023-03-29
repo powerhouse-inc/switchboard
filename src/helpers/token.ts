@@ -1,7 +1,12 @@
 import ms from 'ms';
 import { sign, verify as jwtVerify } from 'jsonwebtoken';
 import { GraphQLError } from 'graphql';
+import z from 'zod';
 import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../env';
+
+const jwtSchema = z.object({
+  sessionId: z.string(),
+});
 
 export const format = (token: string) => `${token.slice(0, 3)}...${token.slice(-3)}`;
 
@@ -37,8 +42,8 @@ export const getExpiryDate = (expiryDurationSeconds?: number | null) => {
   return new Date(Date.now() + expiresIn);
 };
 
-export function verify(token: string): { sessionId: string } {
-  return jwtVerify(token, JWT_SECRET, (err, decoded) => {
+export function verify(token: string) {
+  const verified = jwtVerify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       throw new GraphQLError(
         err.name === 'TokenExpiredError'
@@ -49,4 +54,6 @@ export function verify(token: string): { sessionId: string } {
     }
     return decoded;
   }) as any;
+  const validated = jwtSchema.parse(verified);
+  return validated;
 }
