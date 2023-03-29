@@ -36,6 +36,6 @@ export const create = mutationField('createSession', {
     ctx,
   ) => {
     const { id } = await ctx.getUser();
-    return ctx.prisma.session.generateTokenAndSession(id, session, true);
+    return ctx.prisma.session.createCustomSession(id, session, true);
   },
 });

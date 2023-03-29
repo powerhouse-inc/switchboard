@@ -2,8 +2,9 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
-import { token } from '../../helpers';
+import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
+import { JWT_EXPIRATION_PERIOD } from '../../env';
 
 export const Session = objectType({
   name: 'Session',
@@ -44,6 +45,34 @@ async function newSession(
   });
 }
 
+const generateTokenAndSession = async (
+  prisma: PrismaClient,
+  userId: string,
+  session: { expiryDurationSeconds?: number; name: string },
+  isUserCreated: boolean = false,
+) => {
+  const createId = randomUUID();
+  const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
+  const formattedToken = tokenUtils.format(createdToken);
+  const createData = {
+    name: session.name,
+    referenceExpiryDate: tokenUtils.getExpiryDate(session.expiryDurationSeconds),
+    id: createId,
+    referenceTokenId: formattedToken,
+    isUserCreated,
+    creator: {
+      connect: {
+        id: userId,
+      },
+    },
+  };
+  const createdSession = await newSession(prisma, createData);
+  return {
+    token: createdToken,
+    session: createdSession,
+  };
+};
+
 export function getSessionCrud(prisma: PrismaClient) {
   return {
     listSessions: async (userId: string) => prisma.session.findMany({
@@ -68,33 +97,22 @@ export function getSessionCrud(prisma: PrismaClient) {
         throw new GraphQLError('Failed to update session', { extensions: { code: 'SESSION_UPDATE_FAILED' } });
       }
     },
-    generateTokenAndSession: async (
+    createSignInSession: async (userId: string) => generateTokenAndSession(
+      prisma,
+      userId,
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in' },
+    ),
+    createSignUpSession: async (userId: string) => generateTokenAndSession(
+      prisma,
+      userId,
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up' },
+    ),
+    createCustomSession: async (
       userId: string,
       session: { expiryDurationSeconds?: number; name: string },
       isUserCreated: boolean = false,
-    ) => {
-      const createId = randomUUID();
-      const createdToken = token.generate(createId, session.expiryDurationSeconds);
-      const formattedToken = token.format(createdToken);
-      const createData = {
-        name: session.name,
-        referenceExpiryDate: token.getExpiryDate(session.expiryDurationSeconds),
-        id: createId,
-        referenceTokenId: formattedToken,
-        isUserCreated,
-        creator: {
-          connect: {
-            id: userId,
-          },
-        },
-      };
-      const createdSession = await newSession(prisma, createData);
-      return {
-        token: createdToken,
-        session: createdSession,
-      };
-    },
-    getUser: async function (
+    ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
+    async getUser(
       token?: string,
     ) {
       if (!token) {
@@ -118,7 +136,7 @@ export function getSessionCrud(prisma: PrismaClient) {
         });
       }
       return session.creator;
-    }
+    },
 
   };
 }
