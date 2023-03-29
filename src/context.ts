@@ -3,6 +3,7 @@ import type express from 'express';
 import pino from 'pino';
 import { getChildLogger } from './logger';
 import prisma, { XPrismaClient } from './database';
+import {User} from '@prisma/client'
 import { token as tokenUtils } from './helpers';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
@@ -14,7 +15,7 @@ const apolloLogger = getChildLogger(
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
-  getUserId: () => Promise<string>;
+  getUser: () => Promise<User>;
   apolloLogger: pino.Logger;
 }
 
@@ -24,10 +25,10 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-async function getUserId(
+async function getUser(
   xprisma: XPrismaClient,
   token?: string,
-): Promise<string> {
+): Promise<User> {
   if (!token) {
     throw new GraphQLError('Not authenticated', {
       extensions: { code: 'NOT_AUTHENTICATED' },
@@ -48,7 +49,7 @@ async function getUserId(
       extensions: { code: 'SESSION_EXPIRED' },
     });
   }
-  return session.creator.id;
+  return session.creator;
 }
 
 export function createContext(params: CreateContextParams): Context {
@@ -61,6 +62,6 @@ export function createContext(params: CreateContextParams): Context {
     request: params,
     prisma,
     apolloLogger,
-    getUserId: async () => getUserId(prisma, token),
+    getUser: async () => getUser(prisma, token),
   };
 }

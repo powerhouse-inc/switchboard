@@ -7,8 +7,8 @@ export const format = (token: string) =>
   `${token.slice(0, 3)}...${token.slice(-3)}`;
 
 /** Generate a JWT token
- * If expiryDurationSeconds is null, the token will never expire
- * If expiryDurationSeconds is undefined, the token will expire after the default expiry period
+ * - If expiryDurationSeconds is null, the token will never expire
+ * - If expiryDurationSeconds is undefined, the token will expire after the default expiry period
  */
 export const generate = (
   sessionId: string,
@@ -24,6 +24,11 @@ export const generate = (
   return sign({ sessionId }, JWT_SECRET, { expiresIn });
 };
 
+/** Generate a JWT token
+ * - If expiryDurationSeconds is null, null is also returned
+ * - If expiryDurationSeconds is undefined,
+ *    default expiry period is used and corresponding date in the fucure is returned
+ */
 export const getExpiryDate = (expiryDurationSeconds?: number | null) => {
   if (expiryDurationSeconds === null) {
     return null;
