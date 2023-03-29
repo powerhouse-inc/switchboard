@@ -9,25 +9,29 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
 
 ![app](./.github/app.png)
 
+## Quick start
+
+1. Set up [required enviourment variables](./api/#environment-variables) for the API
+    - Default values can be copied via `cp ./api/developer.env ./api/.env`
+2. Start the project via a single docker-compose command
+    ```sh
+    docker-compose up --build --force-recreate
+    ```
+
 ## Project structure
 - [`/api`](./api) directory contains the core logic that creates the API over the database
 - [`/frontend`](./frontend) directory contains the frontend-related code
 
-Please navigate to the respective directories to read concrete instructions on how to start them locally.
+Please navigate to the respective directories to read concrete instructions on how to start them separately and develop them further.
 
-## Project-Requirements
+## Project requirements
 
-To understand what is planned, you can read and ask questions here:
+To understand what is planned you can read and ask questions here:
 - Initial Requirements: https://github.com/makerdao-ses/switchboard-boilerplate/issues/3
 - Document Model explanation: https://github.com/makerdao-ses/switchboard-boilerplate/issues/1
 
 ## Coding Setup
 
-To install the correct node version, we recommend that you use [nvm](https://github.com/nvm-sh/nvm). If you have `nvm` installed you can run:
-```sh
-nvm install
-nvm use
-```
-to automatically use the correct node version. The version is detected from the [.nvmrc](./.nvmrc).
+To install correct node version, we recommend that you use [nvm](https://github.com/nvm-sh/nvm). If you have `nvm` installed you can run `nvm install && nvm use` to automatically use the correct node version. The version is detected from the [.nvmrc](./.nvmrc).
 
-If you do not have a code editor setup, we recommend that you use [Visual Studio Code](https://code.visualstudio.com/) to get started. It is very beginner friendly and you can move on to something else (such as Sublime, vim, emacs, ...) down the road if you want to.
+If you do not have a code editor setup, we recommend that you use [Visual Studio Code](https://code.visualstudio.com/) to get started. It is very beginner friendly and you can move on to something else down the road if you want to.
