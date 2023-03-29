@@ -5,6 +5,7 @@ export function cleanDatabase() {
   const clean = async () => {
     await prisma.coreUnit.deleteMany();
     await prisma.user.deleteMany();
+    await prisma.session.deleteMany();
   };
   beforeEach(async () => {
     await clean();
