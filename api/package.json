@@ -6,12 +6,13 @@
     "type": "module",
     "license": "AGPL-3",
     "scripts": {
-        "dev": "vite-node src/index.ts",
+        "dev": "vite-node -w src/index.ts",
+        "start": "NODE_ENV=production vite-node src/index.ts",
         "debug": "DEBUG=1 npm run dev",
         "postinstall": "prisma generate",
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
         "typecheck": "tsc --noEmit",
-        "test": "vitest run && vitest run --config ./vitest.full-coverage.config.ts",
+        "test": "vitest run && vitest run --config ./vitest.modules.config.ts",
         "watch": "vitest watch"
     },
     "dependencies": {
