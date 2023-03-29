@@ -1,15 +1,15 @@
-import { GraphQLError } from "graphql";
-import type express from "express";
-import pino from "pino";
-import { verify } from "jsonwebtoken";
-import { getChildLogger } from "./logger";
-import prisma, { XPrismaClient } from "./database";
-import { JWT_SECRET } from "./env";
+import { GraphQLError } from 'graphql';
+import type express from 'express';
+import pino from 'pino';
+import { verify } from 'jsonwebtoken';
+import { getChildLogger } from './logger';
+import prisma, { XPrismaClient } from './database';
+import { JWT_SECRET } from './env';
 
-const logger = getChildLogger({ msgPrefix: "CONTEXT" });
+const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
-  { msgPrefix: "APOLLO" },
-  { module: undefined }
+  { msgPrefix: 'APOLLO' },
+  { module: undefined },
 );
 
 export interface Context {
@@ -27,20 +27,20 @@ type CreateContextParams = {
 
 async function getUserId(
   xprisma: XPrismaClient,
-  token?: string
+  token?: string,
 ): Promise<string> {
   if (!token) {
-    throw new GraphQLError("Not authenticated", {
-      extensions: { code: "NOT_AUTHENTICATED" },
+    throw new GraphQLError('Not authenticated', {
+      extensions: { code: 'NOT_AUTHENTICATED' },
     });
   }
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       throw new GraphQLError(
-        err.name === "TokenExpiredError"
-          ? "Token expired"
-          : "Invalid authentication token",
-        { extensions: { code: "AUTHENTICATION_TOKEN_ERROR" } }
+        err.name === 'TokenExpiredError'
+          ? 'Token expired'
+          : 'Invalid authentication token',
+        { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } },
       );
     }
     return decoded;
@@ -55,18 +55,18 @@ async function getUserId(
     },
   });
   if (session.revokedAt && session.revokedAt < new Date()) {
-    throw new GraphQLError("Session expired", {
-      extensions: { code: "SESSION_EXPIRED" },
+    throw new GraphQLError('Session expired', {
+      extensions: { code: 'SESSION_EXPIRED' },
     });
   }
   return session.creator.id;
 }
 
 export function createContext(params: CreateContextParams): Context {
-  logger.trace("Creating context with params: %o", params);
+  logger.trace('Creating context with params: %o', params);
   const { req } = params;
-  const authorizationHeader = req.get("Authorization");
-  const token = authorizationHeader?.replace("Bearer ", "");
+  const authorizationHeader = req.get('Authorization');
+  const token = authorizationHeader?.replace('Bearer ', '');
 
   return {
     request: params,

@@ -2,8 +2,8 @@ import { objectType, inputObjectType } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import ms from 'ms';
-import { generateTokenAndSession } from '../Session';
 import { GraphQLError } from 'graphql';
+import { generateTokenAndSession } from '../Session';
 import {
   AUTH_SIGNUP_ENABLED,
   JWT_EXPIRATION_PERIOD,
@@ -34,8 +34,6 @@ export const AuthPayload = objectType({
   },
 });
 
-const getReferenceExpiryDate = () => new Date(Date.now() + ms(JWT_EXPIRATION_PERIOD));
-
 export function getUserCrud(prisma: PrismaClient) {
   return {
     signIn: async (userNamePass: { username: string; password: string }) => {
@@ -56,7 +54,7 @@ export function getUserCrud(prisma: PrismaClient) {
         prisma,
         user.id,
         {
-          referenceExpiryDate: getReferenceExpiryDate(),
+          expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000,
         },
       );
       return {
@@ -89,7 +87,7 @@ export function getUserCrud(prisma: PrismaClient) {
         prisma,
         createdUser.id,
         {
-          referenceExpiryDate: getReferenceExpiryDate(),
+          expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000,
         },
       );
       return {

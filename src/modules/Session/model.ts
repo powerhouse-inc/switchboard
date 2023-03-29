@@ -1,7 +1,7 @@
 import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { GraphQLError } from "graphql";
+import { GraphQLError } from 'graphql';
 import { token } from '../../helpers';
 
 export const Session = objectType({
@@ -21,7 +21,7 @@ export const Session = objectType({
 export const SessionCreate = inputObjectType({
   name: 'SessionCreate',
   definition(t) {
-    t.date('referenceExpiryDate');
+    t.int('expiryDurationSeconds');
     t.nonNull.string('name');
   },
 });
@@ -65,21 +65,22 @@ async function revoke(prisma: PrismaClient, sessionId: string, userId: string) {
       },
     });
   } catch (e) {
-    throw new GraphQLError('Failed to update session', {extensions: {code: 'SESSION_UPDATE_FAILED'}});
+    throw new GraphQLError('Failed to update session', { extensions: { code: 'SESSION_UPDATE_FAILED' } });
   }
 }
 
 export async function generateTokenAndSession(
   prisma: PrismaClient,
   userId: string,
-  session: { referenceExpiryDate?: Date; name?: string },
+  session: { expiryDurationSeconds?: number | null; name?: string },
   isUserCreated: boolean = false,
 ) {
   const createId = randomUUID();
-  const createdToken = token.generate(createId, session.referenceExpiryDate);
+  const createdToken = token.generate(createId, session.expiryDurationSeconds);
   const formattedToken = token.format(createdToken);
   const createData = {
-    ...session,
+    name: session.name,
+    referenceExpiryDate: token.getExpiryDate(session.expiryDurationSeconds),
     id: createId,
     referenceTokenId: formattedToken,
     isUserCreated,
@@ -102,7 +103,7 @@ export function getSessionCrud(prisma: PrismaClient) {
     revoke: async (sessionId: string, userId: string) => revoke(prisma, sessionId, userId),
     generateTokenAndSession: async (
       userId: string,
-      session: { referenceExpiryDate?: Date; name: string },
+      session: { expiryDurationSeconds?: number; name: string },
     ) => generateTokenAndSession(prisma, userId, session, true),
   };
 }

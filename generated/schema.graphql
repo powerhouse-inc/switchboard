@@ -47,8 +47,8 @@ type Session {
 }
 
 input SessionCreate {
+  expiryDurationSeconds: Int
   name: String!
-  referenceExpiryDate: GQLDateBase
 }
 
 type SessionCreateOutput {

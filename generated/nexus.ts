@@ -41,8 +41,8 @@ declare global {
 
 export interface NexusGenInputs {
   SessionCreate: { // input type
+    expiryDurationSeconds?: number | null; // Int
     name: string; // String!
-    referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
   UserNamePass: { // input type
     password: string; // String!

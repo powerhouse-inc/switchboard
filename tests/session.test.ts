@@ -23,13 +23,16 @@ const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
   fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated'],
 });
 
-const getCreateSessionMutation = (name: string, referenceExpiryDate?: Date) => builder.mutation({
+const getCreateSessionMutation = (
+  name: string,
+  expiryDurationSeconds?: number | null,
+) => builder.mutation({
   operation: 'createSession',
   variables: {
     session: {
       value: {
         name,
-        referenceExpiryDate,
+        expiryDurationSeconds,
       },
       type: 'SessionCreate',
       required: true,
@@ -84,14 +87,16 @@ test('Auth session: revoke unexistant', async () => {
 test('Auth session: create expirable', async () => {
   const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
-  const expiryDate = new Date();
   const name = 'JoJo';
-  const mutation = getCreateSessionMutation(name, expiryDate);
+  const expectedExpiryDate = new Date();
+  const mutation = getCreateSessionMutation(name, 0);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse?.createSession?.session.name).toBe(name);
   expect(
-    createResponse?.createSession?.session.referenceExpiryDate,
-  ).toBe(expiryDate.toISOString());
+    isRecent(new Date(
+      createResponse?.createSession?.session.referenceExpiryDate,
+    ), expectedExpiryDate),
+  ).toBe(true);
   const createdToken = createResponse?.createSession?.token;
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
@@ -107,7 +112,7 @@ test('Auth session: create unexpirable', async () => {
   const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const name = 'JoJo';
-  const mutation = getCreateSessionMutation(name);
+  const mutation = getCreateSessionMutation(name, null);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse?.createSession?.session.name).toBe(name);
   expect(
@@ -125,10 +130,8 @@ test('Auth session: create unexpirable', async () => {
 test('Auth session: revoked session is forbidden', async () => {
   const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
-  const expiryDate = new Date();
-  expiryDate.setDate(new Date().getDate() + 1);
   const name = 'JoJo';
-  let mutation = getCreateSessionMutation(name, expiryDate);
+  let mutation = getCreateSessionMutation(name, 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   const sessionId = createResponse?.createSession?.session.id;
   mutation = getRevokeSessionMutation(sessionId);
@@ -139,10 +142,8 @@ test('Auth session: revoked session is forbidden', async () => {
 });
 
 test('Auth session: revoked session is forbidden', async () => {
-  const expiryDate = new Date();
-  expiryDate.setDate(new Date().getDate() + 1);
   const name = 'JoJo';
-  const mutation = getCreateSessionMutation(name, expiryDate);
+  const mutation = getCreateSessionMutation(name, 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse.errors[0].message).toBe('Not authenticated');
 });
