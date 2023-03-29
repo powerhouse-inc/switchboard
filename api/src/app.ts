@@ -9,7 +9,7 @@ export const createApp = (): Express => {
   logger.debug('Creating app');
   const app = express();
 
-  app.get('/', expressPlayground({ endpoint: '/graphql' }));
+  app.get('/', expressPlayground({ endpoint: '/api/graphql' }));
 
   return app;
 };
