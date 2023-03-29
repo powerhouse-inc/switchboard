@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql';
 import type express from 'express';
 import pino from 'pino';
 import { getChildLogger } from './logger';
-import prisma, { XPrismaClient } from './database';
+import prisma from './database';
 import {User} from '@prisma/client'
 import { token as tokenUtils } from './helpers';
 
@@ -26,7 +26,6 @@ type CreateContextParams = {
 };
 
 async function getUser(
-  xprisma: XPrismaClient,
   token?: string,
 ): Promise<User> {
   if (!token) {
@@ -36,7 +35,7 @@ async function getUser(
   }
   const verificationTokenResult = tokenUtils.verify(token);
   const { sessionId } = verificationTokenResult;
-  const session = await xprisma.session.findUniqueOrThrow({
+  const session = await prisma.session.findUniqueOrThrow({
     where: {
       id: sessionId,
     },
@@ -62,6 +61,6 @@ export function createContext(params: CreateContextParams): Context {
     request: params,
     prisma,
     apolloLogger,
-    getUser: async () => getUser(prisma, token),
+    getUser: async () => getUser(token),
   };
 }

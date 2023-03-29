@@ -61,5 +61,4 @@ const prisma = prismaBase.$extends({
   },
 });
 
-export type XPrismaClient = typeof prisma;
 export default prisma;
