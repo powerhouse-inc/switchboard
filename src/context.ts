@@ -1,9 +1,9 @@
 import { GraphQLError } from 'graphql';
 import type express from 'express';
 import pino from 'pino';
+import { User } from '@prisma/client';
 import { getChildLogger } from './logger';
 import prisma from './database';
-import {User} from '@prisma/client'
 import { token as tokenUtils } from './helpers';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });

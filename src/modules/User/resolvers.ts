@@ -4,7 +4,7 @@ export const me = queryField('me', {
   type: 'User',
   resolve: async (_, __, ctx) => {
     const user = await ctx.getUser();
-    const id = user.id;
+    const { id } = user;
     return ctx.prisma.user.findUnique({
       where: {
         id,

@@ -9,7 +9,7 @@ import {
 export const listSessions = queryField('sessions', {
   type: list('Session'),
   resolve: async (_, __, ctx) => {
-    const id = (await ctx.getUser()).id;
+    const { id } = await ctx.getUser();
     return ctx.prisma.session.listSessions(id);
   },
 });
@@ -35,7 +35,7 @@ export const create = mutationField('createSession', {
     { session }: { session: { referenceExpiryDate?: Date; name: string } },
     ctx,
   ) => {
-    const id = (await ctx.getUser()).id;
+    const { id } = await ctx.getUser();
     return ctx.prisma.session.generateTokenAndSession(id, session);
   },
 });
