@@ -3,6 +3,7 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import { token } from '../../helpers';
+import { token as tokenUtils } from '../../helpers';
 
 export const Session = objectType({
   name: 'Session',
@@ -93,5 +94,31 @@ export function getSessionCrud(prisma: PrismaClient) {
         session: createdSession,
       };
     },
+    getUser: async function (
+      token?: string,
+    ) {
+      if (!token) {
+        throw new GraphQLError('Not authenticated', {
+          extensions: { code: 'NOT_AUTHENTICATED' },
+        });
+      }
+      const verificationTokenResult = tokenUtils.verify(token);
+      const { sessionId } = verificationTokenResult;
+      const session = await prisma.session.findUniqueOrThrow({
+        where: {
+          id: sessionId,
+        },
+        include: {
+          creator: true,
+        },
+      });
+      if (session.revokedAt) {
+        throw new GraphQLError('Session expired', {
+          extensions: { code: 'SESSION_EXPIRED' },
+        });
+      }
+      return session.creator;
+    }
+
   };
 }
