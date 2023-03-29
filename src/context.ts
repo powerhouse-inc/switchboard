@@ -55,8 +55,8 @@ async function getUserId(
     },
   });
   if (session.revokedAt && session.revokedAt < new Date()) {
-    throw new GraphQLError("SESSION_EXPIRED", {
-      extensions: { code: "Session expired" },
+    throw new GraphQLError("Session expired", {
+      extensions: { code: "SESSION_EXPIRED" },
     });
   }
   return session.creator.id;
