@@ -10,27 +10,38 @@ env:
   DATABASE_URL: file:./db.sqlite
   AUTH_SIGNUP_ENABLED: 1
 jobs:
-  build:
-    runs-on: ubuntu-latest
 
+  api-test:
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: 'api'
-
     steps:
       - uses: actions/checkout@v3
-
       - name: Use Node 18.14.2
         uses: actions/setup-node@v3
         with:
           node-version: 18.14.2
-
       - run: npm install
-
       - run: npx prisma db push
-
       - run: npm run typecheck
-
       - run: npm run lint
-
       - run: npm run test
+
+  frontend-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'frontend'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.14.2
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.14.2
+      - name: Install
+        run: npm install
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
