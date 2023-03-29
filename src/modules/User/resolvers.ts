@@ -1,4 +1,6 @@
 import { queryField, mutationField, nonNull } from 'nexus/dist';
+import ms from 'ms';
+import { JWT_EXPIRATION_PERIOD } from '../../env';
 
 export const me = queryField('me', {
   type: 'User',
@@ -18,7 +20,13 @@ export const signIn = mutationField('signIn', {
   args: {
     user: nonNull('UserNamePass'),
   },
-  resolve: async (_parent, { user: userNamePass }, ctx) => ctx.prisma.user.signIn(userNamePass),
+  resolve: async (_parent, { user: userNamePass }, ctx) => {
+    const user = await ctx.prisma.user.validatePassword(userNamePass);
+    return ctx.prisma.session.generateTokenAndSession(
+      user.id,
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in' },
+    );
+  },
 });
 
 export const signUp = mutationField('signUp', {
@@ -26,5 +34,11 @@ export const signUp = mutationField('signUp', {
   args: {
     user: nonNull('UserNamePass'),
   },
-  resolve: async (_parent, { user }, ctx) => ctx.prisma.user.signUp(user),
+  resolve: async (_parent, { user }, ctx) => {
+    const createdUser = await ctx.prisma.user.createUser(user);
+    return ctx.prisma.session.generateTokenAndSession(
+      createdUser.id,
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up' },
+    );
+  },
 });

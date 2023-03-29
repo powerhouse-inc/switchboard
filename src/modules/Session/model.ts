@@ -43,67 +43,55 @@ async function newSession(
   });
 }
 
-async function listSessions(prisma: PrismaClient, userId: string) {
-  return prisma.session.findMany({
-    where: {
-      createdBy: userId,
-    },
-  });
-}
-
-async function revoke(prisma: PrismaClient, sessionId: string, userId: string) {
-  try {
-    return await prisma.session.update({
-      where: {
-        createdBy_id: {
-          id: sessionId,
-          createdBy: userId,
-        },
-      },
-      data: {
-        revokedAt: new Date(),
-      },
-    });
-  } catch (e) {
-    throw new GraphQLError('Failed to update session', { extensions: { code: 'SESSION_UPDATE_FAILED' } });
-  }
-}
-
-export async function generateTokenAndSession(
-  prisma: PrismaClient,
-  userId: string,
-  session: { expiryDurationSeconds?: number | null; name?: string },
-  isUserCreated: boolean = false,
-) {
-  const createId = randomUUID();
-  const createdToken = token.generate(createId, session.expiryDurationSeconds);
-  const formattedToken = token.format(createdToken);
-  const createData = {
-    name: session.name,
-    referenceExpiryDate: token.getExpiryDate(session.expiryDurationSeconds),
-    id: createId,
-    referenceTokenId: formattedToken,
-    isUserCreated,
-    creator: {
-      connect: {
-        id: userId,
-      },
-    },
-  };
-  const createdSession = await newSession(prisma, createData);
-  return {
-    token: createdToken,
-    session: createdSession,
-  };
-}
-
 export function getSessionCrud(prisma: PrismaClient) {
   return {
-    listSessions: async (userId: string) => listSessions(prisma, userId),
-    revoke: async (sessionId: string, userId: string) => revoke(prisma, sessionId, userId),
+    listSessions: async (userId: string) => prisma.session.findMany({
+      where: {
+        createdBy: userId,
+      },
+    }),
+    revoke: async (sessionId: string, userId: string) => {
+      try {
+        return await prisma.session.update({
+          where: {
+            createdBy_id: {
+              id: sessionId,
+              createdBy: userId,
+            },
+          },
+          data: {
+            revokedAt: new Date(),
+          },
+        });
+      } catch (e) {
+        throw new GraphQLError('Failed to update session', { extensions: { code: 'SESSION_UPDATE_FAILED' } });
+      }
+    },
     generateTokenAndSession: async (
       userId: string,
       session: { expiryDurationSeconds?: number; name: string },
-    ) => generateTokenAndSession(prisma, userId, session, true),
+      isUserCreated: boolean = false,
+    ) => {
+      const createId = randomUUID();
+      const createdToken = token.generate(createId, session.expiryDurationSeconds);
+      const formattedToken = token.format(createdToken);
+      const createData = {
+        name: session.name,
+        referenceExpiryDate: token.getExpiryDate(session.expiryDurationSeconds),
+        id: createId,
+        referenceTokenId: formattedToken,
+        isUserCreated,
+        creator: {
+          connect: {
+            id: userId,
+          },
+        },
+      };
+      const createdSession = await newSession(prisma, createData);
+      return {
+        token: createdToken,
+        session: createdSession,
+      };
+    },
   };
 }

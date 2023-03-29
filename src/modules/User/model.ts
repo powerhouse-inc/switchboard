@@ -1,12 +1,9 @@
 import { objectType, inputObjectType } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
-import ms from 'ms';
 import { GraphQLError } from 'graphql';
-import { generateTokenAndSession } from '../Session';
 import {
   AUTH_SIGNUP_ENABLED,
-  JWT_EXPIRATION_PERIOD,
 } from '../../env';
 
 export const User = objectType({
@@ -36,7 +33,7 @@ export const AuthPayload = objectType({
 
 export function getUserCrud(prisma: PrismaClient) {
   return {
-    signIn: async (userNamePass: { username: string; password: string }) => {
+    validatePassword: async (userNamePass: { username: string; password: string }) => {
       const { username, password } = userNamePass;
       const user = await prisma.user.findUnique({
         where: {
@@ -50,19 +47,9 @@ export function getUserCrud(prisma: PrismaClient) {
       if (!passwordValid) {
         throw new GraphQLError('Invalid password', { extensions: { code: 'INVALID_PASSWORD' } });
       }
-      const { session, token } = await generateTokenAndSession(
-        prisma,
-        user.id,
-        {
-          expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000,
-        },
-      );
-      return {
-        token,
-        session,
-      };
+      return user;
     },
-    signUp: async (user: { username: string; password: string }) => {
+    createUser: async (user: { username: string; password: string }) => {
       if (!AUTH_SIGNUP_ENABLED) {
         throw new Error('Sign up is disabled');
       }
@@ -83,17 +70,7 @@ export function getUserCrud(prisma: PrismaClient) {
         /* istanbul ignore next @preserve */
         throw e;
       }
-      const { session, token } = await generateTokenAndSession(
-        prisma,
-        createdUser.id,
-        {
-          expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000,
-        },
-      );
-      return {
-        token,
-        session,
-      };
+      return createdUser;
     },
   };
 }
