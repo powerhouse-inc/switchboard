@@ -32,7 +32,7 @@ export const create = mutationField('createSession', {
   },
   resolve: async (
     _parent,
-    { session }: { session: { referenceExpiryDate?: Date; name: string } },
+    { session },
     ctx,
   ) => {
     const { id } = await ctx.getUser();

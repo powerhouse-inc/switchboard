@@ -48,7 +48,7 @@ async function newSession(
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
-  session: { expiryDurationSeconds?: number; name: string },
+  session: { expiryDurationSeconds?: number | null; name: string },
   isUserCreated: boolean = false,
 ) => {
   const createId = randomUUID();
@@ -109,7 +109,7 @@ export function getSessionCrud(prisma: PrismaClient) {
     ),
     createCustomSession: async (
       userId: string,
-      session: { expiryDurationSeconds?: number; name: string },
+      session: { expiryDurationSeconds?: number | null; name: string },
       isUserCreated: boolean = false,
     ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
     async getUser(
