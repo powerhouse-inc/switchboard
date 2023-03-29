@@ -3,12 +3,11 @@ import builder from 'gql-query-builder';
 import { CoreUnit } from '@prisma/client';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { executeGraphQlQuery } from './helpers/server';
-import { getPrisma } from '../src/database';
+import prisma from '../src/database';
 
 cleanDatabaseBeforeAfterEachTest();
 
 test('Core Unit: get all', async () => {
-  const prisma = getPrisma();
   await prisma.coreUnit.create({
     data: {
       code: 'asdf',
@@ -32,7 +31,6 @@ test('Core Unit: get all', async () => {
 });
 
 test('Core Unit: get by id', async () => {
-  const prisma = getPrisma();
   const created = await prisma.coreUnit.create({
     data: {
       code: 'asdf',

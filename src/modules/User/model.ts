@@ -1,10 +1,13 @@
 import { objectType, inputObjectType } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
-import { ApolloError } from 'apollo-server-core';
 import ms from 'ms';
-import { AUTH_SIGNUP_ENABLED, JWT_EXPIRATION_PERIOD } from '../../env';
 import { generateTokenAndSession } from '../Session';
+import { GraphQLError } from 'graphql';
+import {
+  AUTH_SIGNUP_ENABLED,
+  JWT_EXPIRATION_PERIOD,
+} from '../../env';
 
 export const User = objectType({
   name: 'User',
@@ -43,11 +46,11 @@ export function getUserCrud(prisma: PrismaClient) {
         },
       });
       if (!user) {
-        throw new ApolloError('User not found', 'USER_NOT_FOUND');
+        throw new GraphQLError('User not found', { extensions: { code: 'USER_NOT_FOUND' } });
       }
       const passwordValid = await compare(password, user.password);
       if (!passwordValid) {
-        throw new ApolloError('Invalid password', 'INVALID_PASSWORD');
+        throw new GraphQLError('Invalid password', { extensions: { code: 'INVALID_PASSWORD' } });
       }
       const { session, token } = await generateTokenAndSession(
         prisma,
@@ -77,7 +80,7 @@ export function getUserCrud(prisma: PrismaClient) {
         });
       } catch (e: any) {
         if ('code' in e && e.code === 'P2002') {
-          throw new ApolloError('Username already taken', 'USERNAME_TAKEN');
+          throw new GraphQLError('Username already taken', { extensions: { code: 'USERNAME_TAKEN' } });
         }
         /* istanbul ignore next @preserve */
         throw e;

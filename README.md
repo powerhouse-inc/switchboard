@@ -22,6 +22,9 @@ npm i
 # Run application in development mode
 npm run dev
 
+# Run application with extensive logging enabled (full ORM logging + app's logger has `debug` level on)
+npm run debug
+
 # Typechecking (via TypeScript / tsc)
 npm run typecheck
 
@@ -31,6 +34,10 @@ npm run lint
 # Testing via vitest
 npm run test
 ```
+
+### Logging configuration
+
+The configuration is received from the `logger.config.ts` file at the root of the project. Adjust the file parameters to control the logger behaviour.
 
 ### Coding Setup
 
@@ -56,6 +63,7 @@ cp developer.env .env
 - `PORT` (optional, default: 3000): port on which the server will run.
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up mutation is allowed (i.e. user creation via endpoint is enabled)
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire.
+- `DEBUG` (optional): if set, enables the different more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
 
 ### Project-Requirements
 

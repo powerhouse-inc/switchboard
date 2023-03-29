@@ -1,33 +1,47 @@
-import { ApolloError } from 'apollo-server-core';
-import type express from 'express';
-import { verify } from 'jsonwebtoken';
-import { getPrisma } from './database';
-import { JWT_SECRET } from './env';
+import { GraphQLError } from "graphql";
+import type express from "express";
+import pino from "pino";
+import { verify } from "jsonwebtoken";
+import { getChildLogger } from "./logger";
+import prisma, { XPrismaClient } from "./database";
+import { JWT_SECRET } from "./env";
 
-export const prisma = getPrisma();
-// TODO: after merge of logging PR, move the type def to the db module
-// Have to derive type since feature is in preview state(https://www.prisma.io/docs/concepts/components/prisma-client/client-extensions#extensions-prerequisites) and typing seems off a bit.
-type XPrismaClient = typeof prisma;
+const logger = getChildLogger({ msgPrefix: "CONTEXT" });
+const apolloLogger = getChildLogger(
+  { msgPrefix: "APOLLO" },
+  { module: undefined }
+);
 
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
   getUserId: () => Promise<string>;
+  apolloLogger: pino.Logger;
 }
 
 type CreateContextParams = {
-  req: express.Request;
+  req: express.Request & { log: pino.Logger };
   res: express.Response;
   connection?: unknown;
 };
 
-async function getUserId(xprisma: XPrismaClient, token?: string): Promise<string> {
+async function getUserId(
+  xprisma: XPrismaClient,
+  token?: string
+): Promise<string> {
   if (!token) {
-    throw new ApolloError('Not authenticated');
+    throw new GraphQLError("Not authenticated", {
+      extensions: { code: "NOT_AUTHENTICATED" },
+    });
   }
   const verificationTokenResult = verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
-      throw new ApolloError(err.name === 'TokenExpiredError' ? 'Token expired' : 'Invalid authentication token');
+      throw new GraphQLError(
+        err.name === "TokenExpiredError"
+          ? "Token expired"
+          : "Invalid authentication token",
+        { extensions: { code: "AUTHENTICATION_TOKEN_ERROR" } }
+      );
     }
     return decoded;
   }) as unknown as { sessionId: string };
@@ -41,19 +55,23 @@ async function getUserId(xprisma: XPrismaClient, token?: string): Promise<string
     },
   });
   if (session.revokedAt && session.revokedAt < new Date()) {
-    throw new ApolloError('Session expired');
+    throw new GraphQLError("SESSION_EXPIRED", {
+      extensions: { code: "Session expired" },
+    });
   }
   return session.creator.id;
 }
 
 export function createContext(params: CreateContextParams): Context {
+  logger.trace("Creating context with params: %o", params);
   const { req } = params;
-  const authorizationHeader = req.get('Authorization');
-  const token = authorizationHeader?.replace('Bearer ', '');
+  const authorizationHeader = req.get("Authorization");
+  const token = authorizationHeader?.replace("Bearer ", "");
 
   return {
     request: params,
     prisma,
+    apolloLogger,
     getUserId: async () => getUserId(prisma, token),
   };
 }
