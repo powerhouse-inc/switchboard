@@ -7,7 +7,7 @@
     "license": "AGPL-3",
     "scripts": {
         "dev": "vite-node -w src/index.ts",
-        "start": "vite-node src/index.ts",
+        "start": "NODE_ENV=production vite-node src/index.ts",
         "debug": "DEBUG=1 npm run dev",
         "postinstall": "prisma generate",
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",

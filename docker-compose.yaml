@@ -13,9 +13,7 @@ services:
     command: >
       sh -c "
       cd /app &&
-      pwd &&
       npx prisma db push &&
-      npx prisma generate &&
       npm run start"
 
   frontend:
