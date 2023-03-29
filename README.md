@@ -17,6 +17,7 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
     ```sh
     docker-compose up --build --force-recreate
     ```
+3. Open [http://localhost](http://localhost) to view the frontend
 
 ## Project structure
 - [`/api`](./api) directory contains the core logic that creates the API over the database
