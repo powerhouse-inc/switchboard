@@ -16,7 +16,7 @@ export const createApp = (): Express => {
       // TODO: after migration to postgres, do SELECT 1
       await prisma.user.findMany();
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         status: 'DB failed initialization check',
         time: new Date(),
         startupTime,
