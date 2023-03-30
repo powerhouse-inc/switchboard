@@ -1,7 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
-import { getUserCrud } from './modules';
+import { getUserCrud, getSessionCrud } from './modules';
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
@@ -54,6 +54,9 @@ const prisma = prismaBase.$extends({
   model: {
     user: {
       ...getUserCrud(prismaBase),
+    },
+    session: {
+      ...getSessionCrud(prismaBase),
     },
   },
 });

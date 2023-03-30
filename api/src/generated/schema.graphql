@@ -3,8 +3,8 @@
 
 
 type AuthPayload {
+  session: Session
   token: String
-  user: User
 }
 
 type CoreUnit {
@@ -18,7 +18,12 @@ type CoreUnit {
   shortCode: String
 }
 
+"""Date custom scalar type"""
+scalar GQLDateBase
+
 type Mutation {
+  createSession(session: SessionCreate!): SessionCreateOutput
+  revokeSession(sessionId: String!): Session
   signIn(user: UserNamePass!): AuthPayload
   signUp(user: UserNamePass!): AuthPayload
 }
@@ -27,6 +32,28 @@ type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   me: User
+  sessions: [Session]
+}
+
+type Session {
+  createdAt: GQLDateBase!
+  createdBy: String!
+  id: String!
+  isUserCreated: Boolean!
+  name: String
+  referenceExpiryDate: GQLDateBase
+  referenceTokenId: String!
+  revokedAt: GQLDateBase
+}
+
+input SessionCreate {
+  expiryDurationSeconds: Int
+  name: String!
+}
+
+type SessionCreateOutput {
+  session: Session!
+  token: String!
 }
 
 type User {

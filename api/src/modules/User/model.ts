@@ -1,12 +1,9 @@
 import { objectType, inputObjectType } from 'nexus/dist';
-import { sign } from 'jsonwebtoken';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
   AUTH_SIGNUP_ENABLED,
-  JWT_EXPIRATION_PERIOD,
-  JWT_SECRET,
 } from '../../env';
 
 export const User = objectType({
@@ -30,13 +27,13 @@ export const AuthPayload = objectType({
   name: 'AuthPayload',
   definition(t) {
     t.string('token');
-    t.field('user', { type: 'User' });
+    t.field('session', { type: 'Session' });
   },
 });
 
 export function getUserCrud(prisma: PrismaClient) {
   return {
-    signIn: async (userNamePass: { username: string; password: string }) => {
+    getUserByUsernamePassword: async (userNamePass: { username: string; password: string }) => {
       const { username, password } = userNamePass;
       const user = await prisma.user.findUnique({
         where: {
@@ -50,22 +47,17 @@ export function getUserCrud(prisma: PrismaClient) {
       if (!passwordValid) {
         throw new GraphQLError('Invalid password', { extensions: { code: 'INVALID_PASSWORD' } });
       }
-      return {
-        token: sign({ userId: user.id }, JWT_SECRET, {
-          expiresIn: JWT_EXPIRATION_PERIOD,
-        }),
-        user,
-      };
+      return user;
     },
-    signUp: async (user: { username: string; password: string }) => {
+    createUser: async (user: { username: string; password: string }) => {
       if (!AUTH_SIGNUP_ENABLED) {
         throw new Error('Sign up is disabled');
       }
       const { username, password } = user;
       const hashedPassword = await hash(password, 10);
-      let created: PrismaUser;
+      let createdUser: PrismaUser;
       try {
-        created = await prisma.user.create({
+        createdUser = await prisma.user.create({
           data: {
             username,
             password: hashedPassword,
@@ -78,10 +70,7 @@ export function getUserCrud(prisma: PrismaClient) {
         /* istanbul ignore next @preserve */
         throw e;
       }
-      return {
-        token: sign({ userId: created.id }, JWT_SECRET),
-        user: created,
-      };
+      return createdUser;
     },
   };
 }

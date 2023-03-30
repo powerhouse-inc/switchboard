@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["clientExtensions"]
 }
 
@@ -23,4 +23,20 @@ model User {
   id       String @id @default(uuid())
   username String @unique
   password String
+
+  sessions Session[]
+}
+
+model Session {
+  id                  String    @id @default(uuid())
+  createdAt           DateTime  @default(now())
+  createdBy           String
+  referenceExpiryDate DateTime?
+  name                String?
+  revokedAt           DateTime?
+  referenceTokenId    String
+  isUserCreated       Boolean   @default(false)
+
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  @@unique([createdBy, id])
 }

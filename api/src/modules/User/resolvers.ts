@@ -2,11 +2,11 @@ import { queryField, mutationField, nonNull } from 'nexus/dist';
 
 export const me = queryField('me', {
   type: 'User',
-  resolve: (_, __, ctx) => {
-    const id = ctx.getUserId();
+  resolve: async (_, __, ctx) => {
+    const { createdBy } = await ctx.getSession();
     return ctx.prisma.user.findUnique({
       where: {
-        id,
+        id: createdBy,
       },
     });
   },
@@ -17,7 +17,10 @@ export const signIn = mutationField('signIn', {
   args: {
     user: nonNull('UserNamePass'),
   },
-  resolve: async (_parent, { user: userNamePass }, ctx) => ctx.prisma.user.signIn(userNamePass),
+  resolve: async (_parent, { user: userNamePass }, ctx) => {
+    const { id } = await ctx.prisma.user.getUserByUsernamePassword(userNamePass);
+    return ctx.prisma.session.createSignInSession(id);
+  },
 });
 
 export const signUp = mutationField('signUp', {
@@ -25,5 +28,8 @@ export const signUp = mutationField('signUp', {
   args: {
     user: nonNull('UserNamePass'),
   },
-  resolve: async (_parent, { user }, ctx) => ctx.prisma.user.signUp(user),
+  resolve: async (_parent, { user }, ctx) => {
+    const { id } = await ctx.prisma.user.createUser(user);
+    return ctx.prisma.session.createSignUpSession(id);
+  },
 });
