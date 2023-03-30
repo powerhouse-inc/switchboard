@@ -5,7 +5,7 @@ import { ctx, executeGraphQlQuery } from './helpers/server';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
 import {
-  signUpMutation, signInMutation, meQuery, USERNAME,
+  getSignUpMutation, signInMutation, meQuery, USERNAME,
 } from './helpers/const';
 import { isRecent } from './helpers/time';
 
@@ -13,7 +13,7 @@ cleanDatabaseBeforeAfterEachTest();
 restoreEnvAfterEach();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
-  const signUpResponse = (await executeGraphQlQuery(signUpMutation)) as Record<
+  const signUpResponse = (await executeGraphQlQuery(getSignUpMutation())) as Record<
   string,
   any
   >;
@@ -53,6 +53,7 @@ test('Authentication: sign in without signing up', async () => {
 });
 
 test('Authentication: sign up with same username', async () => {
+  const signUpMutation = getSignUpMutation();
   await executeGraphQlQuery(signUpMutation);
   const response = (await executeGraphQlQuery(signUpMutation)) as any;
   expect(response.errors[0].message).toBe('Username already taken');
@@ -64,7 +65,7 @@ test('Authentication: access protected endpoint without signing in', async () =>
 });
 
 test('Authentication: sign up, sign in with wrong password', async () => {
-  await executeGraphQlQuery(signUpMutation);
+  await executeGraphQlQuery(getSignUpMutation());
 
   const singInIncorrectPassword = {
     variables: {
@@ -88,7 +89,7 @@ test('Authentication: access protected endpoint without valid token', async () =
 });
 
 test('Authentication: token expiration error', async () => {
-  await executeGraphQlQuery(signUpMutation);
+  await executeGraphQlQuery(getSignUpMutation());
 
   vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1s');
   const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
@@ -114,6 +115,6 @@ test('Authentication: token expiration error', async () => {
 
 test('Authentication: sign up disabled', async () => {
   vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
-  const response = (await executeGraphQlQuery(signUpMutation)) as any;
+  const response = (await executeGraphQlQuery(getSignUpMutation())) as any;
   expect(response.errors[0].message).toBe('Sign up is disabled');
 });

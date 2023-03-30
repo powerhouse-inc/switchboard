@@ -3,13 +3,16 @@ import builder from 'gql-query-builder';
 export const USERNAME = 'usernameTest';
 export const PASSWORD = 'passwordTest';
 
-export const signUpMutation = builder.mutation({
+export const getSignUpMutation = (
+  username: string = USERNAME,
+  password: string = PASSWORD,
+) => builder.mutation({
   operation: 'signUp',
   variables: {
     user: {
       value: {
-        username: USERNAME,
-        password: PASSWORD,
+        username,
+        password,
       },
       type: 'UserNamePass',
       required: true,
