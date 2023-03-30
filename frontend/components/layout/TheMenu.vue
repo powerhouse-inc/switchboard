@@ -9,7 +9,9 @@
           <NIcon v-if="link.icon" size="22">
             <Component :is="link.icon" />
           </NIcon>
-          {{ link.label }}
+          <div class="whitespace-nowrap">
+            {{ link.label }}
+          </div>
         </div>
         <div class="h-1 w-full -translate-y-1" :class="{'bg-primary': link.to === $route.path }" />
       </nuxt-link>
@@ -33,7 +35,7 @@ const links = [
   {
     to: '/user',
     icon: VideoPerson24Regular,
-    label: 'User Space'
+    label: 'API token generation'
   },
   {
     to: '/graphql-playground',

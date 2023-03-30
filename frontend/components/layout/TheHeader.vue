@@ -1,9 +1,9 @@
 <template>
   <div class="flex items-center justify-between bg-secondary px-1">
     <div class="flex-1 flex h-full">
-      <nuxt-link to="/" class="LogoLink flex h-full items-center gap-3">
-        <img src="~/assets/logo.png" class="h-full py-1">
-        <h2 class="text-primary opacity-0 transition duration-300">
+      <nuxt-link to="/" class="LogoLink flex h-full items-center gap-2 py-1">
+        <img src="~/assets/logo.png" class="h-full flex-shrink-0">
+        <h2 class="text-primary opacity-0 transition duration-300 whitespace-nowrap">
           Switchboard API
         </h2>
       </nuxt-link>
