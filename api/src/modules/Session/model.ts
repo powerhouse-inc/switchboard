@@ -82,6 +82,17 @@ export function getSessionCrud(prisma: PrismaClient) {
       },
     }),
     revoke: async (sessionId: string, userId: string) => {
+      const session = await prisma.session.findUnique({
+        where: {
+          id: sessionId,
+        },
+      });
+      if (!session) {
+        throw new GraphQLError('Session not found', { extensions: { code: 'SESSION_NOT_FOUND' } });
+      }
+      if (session.revokedAt !== null) {
+        throw new GraphQLError('Session already revoked', { extensions: { code: 'SESSION_ALREADY_REVOKED' } });
+      }
       try {
         return await prisma.session.update({
           where: {

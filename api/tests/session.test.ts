@@ -80,8 +80,8 @@ test('Auth session: revoke unexistant', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const mutation = getRevokeSessionMutation('asdf');
   const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
-  expect(revokeResponse?.errors[0].message).toBe('Failed to update session');
-  expect(revokeResponse?.errors[0].extensions.code).toBe('SESSION_UPDATE_FAILED');
+  expect(revokeResponse?.errors[0].message).toBe('Session not found');
+  expect(revokeResponse?.errors[0].extensions.code).toBe('SESSION_NOT_FOUND');
 });
 
 test('Auth session: create expirable', async () => {
@@ -150,9 +150,22 @@ test('Auth session: revoked session is forbidden', async () => {
   expect(sessionsResponse.errors[0].message).toBe('Session expired');
 });
 
-test('Auth session: revoked session is forbidden', async () => {
+test('Auth session: cant revoke without auth', async () => {
   const name = 'JoJo';
   const mutation = getCreateSessionMutation(name, 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse.errors[0].message).toBe('Not authenticated');
+});
+
+test('Auth session: cant revoke twice', async () => {
+  const { token } = (await executeGraphQlQuery(signUpMutation) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  const name = 'JoJo';
+  let mutation = getCreateSessionMutation(name, 3600);
+  const createResponse = (await executeGraphQlQuery(mutation)) as any;
+  const sessionId = createResponse?.createSession?.session.id;
+  mutation = getRevokeSessionMutation(sessionId);
+  await executeGraphQlQuery(mutation);
+  const secondRevokeResponse = await executeGraphQlQuery(mutation) as any;
+  expect(secondRevokeResponse.errors[0].message).toBe('Session already revoked');
 });
