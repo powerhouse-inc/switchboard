@@ -13,11 +13,14 @@ export const createApp = (): Express => {
 
   app.get('/healthz', async (_req, res) => {
     try {
-      await prisma.$queryRaw`SELECT 1;`;
+      // TODO: after migration to postgres, do SELECT 1
+      await prisma.user.findMany();
     } catch (error) {
-      // TODO: test after migration to postgres, since sqlite will
-      // still return success if the file is missing
-      res.status(500).send('DB failed initialization check');
+      res.status(500).json({
+        status: 'DB failed initialization check',
+        time: new Date(),
+        startupTime,
+      });
     }
     return res.json({
       status: 'healthy',
