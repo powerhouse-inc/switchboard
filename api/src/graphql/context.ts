@@ -13,7 +13,7 @@ const apolloLogger = getChildLogger(
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
-  getSessionByToken: () => Promise<Session>;
+  getSession: () => Promise<Session>;
   apolloLogger: pino.Logger;
 }
 
@@ -33,6 +33,6 @@ export function createContext(params: CreateContextParams): Context {
     request: params,
     prisma,
     apolloLogger,
-    getSessionByToken: async () => prisma.session.getSessionByToken(token),
+    getSession: async () => prisma.session.getSessionByToken(token),
   };
 }

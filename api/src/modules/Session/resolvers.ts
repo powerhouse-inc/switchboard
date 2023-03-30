@@ -9,7 +9,7 @@ import {
 export const listSessions = queryField('sessions', {
   type: list('Session'),
   resolve: async (_, __, ctx) => {
-    const { createdBy } = await ctx.getSessionByToken();
+    const { createdBy } = await ctx.getSession();
     return ctx.prisma.session.listSessions(createdBy);
   },
 });
@@ -20,7 +20,7 @@ export const revoke = mutationField('revokeSession', {
     sessionId: nonNull(stringArg()),
   },
   resolve: async (_parent, { sessionId }, ctx) => {
-    const userId = (await ctx.getSessionByToken()).createdBy;
+    const userId = (await ctx.getSession()).createdBy;
     return ctx.prisma.session.revoke(sessionId, userId);
   },
 });
@@ -35,7 +35,7 @@ export const create = mutationField('createSession', {
     { session },
     ctx,
   ) => {
-    const { createdBy } = await ctx.getSessionByToken();
+    const { createdBy } = await ctx.getSession();
     return ctx.prisma.session.createCustomSession(createdBy, session, true);
   },
 });
