@@ -4,6 +4,11 @@ import { restoreEnvAfterEach } from './helpers/env';
 
 restoreEnvAfterEach();
 
+test('Env: jwt expiration in ms format', async () => {
+  process.env.JWT_EXPIRATION_PERIOD = '5d';
+  expect(getJwtExpirationPeriod()).toBe('5d');
+});
+
 test('Env: production has jwt secret defined', async () => {
   process.env.JWT_SECRET = '';
   process.env.NODE_ENV = 'production';
@@ -16,11 +21,16 @@ test('Env: dev environment has jwt secret automatically set', async () => {
 });
 
 test('Env: jwt expiration automatically throws if invalid', async () => {
-  process.env.JWT_EXPIRATION_PERIOD_SECONDS = 'lol';
-  expect(getJwtExpirationPeriod).toThrowError('JWT_EXPIRATION_PERIOD_SECONDS must be a number');
+  process.env.JWT_EXPIRATION_PERIOD = 'lol';
+  expect(getJwtExpirationPeriod).toThrowError('JWT_EXPIRATION_PERIOD must be a number of seconds or ms string');
 });
 
 test('Env: jwt expiration automatically set if not provided', async () => {
-  process.env.JWT_EXPIRATION_PERIOD_SECONDS = '';
+  process.env.JWT_EXPIRATION_PERIOD = '';
   expect(getJwtExpirationPeriod()).toBe('7d');
+});
+
+test('Env: jwt expiration in seconds format', async () => {
+  process.env.JWT_EXPIRATION_PERIOD = '3600';
+  expect(getJwtExpirationPeriod()).toBe('1h');
 });
