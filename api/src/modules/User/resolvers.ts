@@ -18,7 +18,7 @@ export const signIn = mutationField('signIn', {
     user: nonNull('UserNamePass'),
   },
   resolve: async (_parent, { user: userNamePass }, ctx) => {
-    const { id } = await ctx.prisma.user.validatePassword(userNamePass);
+    const { id } = await ctx.prisma.user.getUserByUsernamePassword(userNamePass);
     return ctx.prisma.session.createSignInSession(id);
   },
 });

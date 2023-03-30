@@ -33,7 +33,7 @@ export const AuthPayload = objectType({
 
 export function getUserCrud(prisma: PrismaClient) {
   return {
-    validatePassword: async (userNamePass: { username: string; password: string }) => {
+    getUserByUsernamePassword: async (userNamePass: { username: string; password: string }) => {
       const { username, password } = userNamePass;
       const user = await prisma.user.findUnique({
         where: {
