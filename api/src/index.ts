@@ -1,5 +1,5 @@
 import { createApp } from './app';
-import { startServer } from './server';
+import { startServer } from './graphql/server';
 import { getChildLogger } from './logger';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });

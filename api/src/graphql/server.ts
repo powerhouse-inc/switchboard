@@ -5,10 +5,10 @@ import type express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { PORT } from './env';
+import { PORT } from '../env';
 import { schemaWithMiddleware } from './schema';
-import { Context, createContext } from './context';
-import { getChildLogger } from './logger';
+import { Context, createContext } from '../context';
+import { getChildLogger } from '../logger';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
