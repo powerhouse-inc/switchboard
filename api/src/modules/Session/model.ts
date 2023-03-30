@@ -53,10 +53,11 @@ const generateTokenAndSession = async (
 ) => {
   const createId = randomUUID();
   const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
+  const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
   const createData = {
     name: session.name,
-    referenceExpiryDate: tokenUtils.getExpiryDate(session.expiryDurationSeconds),
+    referenceExpiryDate: expiryDate,
     id: createId,
     referenceTokenId: formattedToken,
     isUserCreated,

@@ -1,8 +1,8 @@
 import type express from 'express';
 import pino from 'pino';
 import { Session } from '@prisma/client';
-import { getChildLogger } from './logger';
-import prisma from './database';
+import { getChildLogger } from '../logger';
+import prisma from '../database';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(

@@ -89,7 +89,7 @@ test('Auth session: create expirable', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const name = 'JoJo';
   const expectedExpiryDate = new Date();
-  const mutation = getCreateSessionMutation(name, 0);
+  const mutation = getCreateSessionMutation(name, 1);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse?.createSession?.session.name).toBe(name);
   expect(
@@ -98,6 +98,8 @@ test('Auth session: create expirable', async () => {
     ), expectedExpiryDate),
   ).toBe(true);
   const createdToken = createResponse?.createSession?.token;
+  // eslint-disable-next-line no-promise-executor-return
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse?.sessions?.length).toBe(2);
   const userCreatedList: boolean[] = (
@@ -105,7 +107,8 @@ test('Auth session: create expirable', async () => {
   );
   expect(userCreatedList.some((i) => i)).toBe(true);
   ctx.client.setHeader('Authorization', `Bearer ${createdToken}`);
-  await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
+  // eslint-disable-next-line no-promise-executor-return
+  await new Promise((resolve) => setTimeout(resolve, 20));
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
   expect(meResponse?.errors?.length).toBe(1);
   expect(meResponse?.errors[0].message).toBe('Token expired');

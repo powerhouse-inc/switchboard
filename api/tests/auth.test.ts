@@ -88,20 +88,23 @@ test('Authentication: access protected endpoint without valid token', async () =
 });
 
 test('Authentication: token expiration error', async () => {
-  vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1ms');
   await executeGraphQlQuery(signUpMutation);
 
+  vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1s');
   const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
   string,
   any
   >;
   expect(signInResponse?.signIn?.token).toBeTruthy();
+  const expiry = new Date(signInResponse?.signIn?.session?.referenceExpiryDate).getTime();
+  const now = new Date().getTime();
 
   const token = signInResponse?.signIn?.token;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
 
   // wait until token expires
-  await new Promise((resolve) => { setTimeout(resolve, 20); resolve(null); });
+  // eslint-disable-next-line no-promise-executor-return
+  await new Promise((resolve) => setTimeout(resolve, expiry - now));
   const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
   string,
   any

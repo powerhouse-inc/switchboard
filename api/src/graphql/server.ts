@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { PORT } from '../env';
 import { schemaWithMiddleware } from './schema';
-import { Context, createContext } from '../context';
+import { Context, createContext } from './context';
 import { getChildLogger } from '../logger';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });

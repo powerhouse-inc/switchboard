@@ -6,6 +6,7 @@ import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../env';
 
 const jwtSchema = z.object({
   sessionId: z.string(),
+  exp: z.optional(z.number()),
 });
 
 export const format = (token: string) => `${token.slice(0, 3)}...${token.slice(-3)}`;
@@ -27,19 +28,12 @@ export const generate = (
   return sign({ sessionId }, JWT_SECRET, { expiresIn });
 };
 
-/** Generate a JWT token
- * - If expiryDurationSeconds is null, null is also returned
- * - If expiryDurationSeconds is undefined,
- *    default expiry period is used and corresponding date in the fucure is returned
- */
-export const getExpiryDate = (expiryDurationSeconds?: number | null) => {
-  if (expiryDurationSeconds === null) {
+export const getExpiryDateFromToken = (token: string) => {
+  const { exp } = jwtSchema.parse(jwtVerify(token, JWT_SECRET));
+  if (!exp) {
     return null;
   }
-  const expiresIn = typeof expiryDurationSeconds !== 'undefined'
-    ? expiryDurationSeconds * 1000
-    : ms(JWT_EXPIRATION_PERIOD);
-  return new Date(Date.now() + expiresIn);
+  return new Date(exp * 1000);
 };
 
 export function verify(token: string) {
