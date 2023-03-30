@@ -1,19 +1,8 @@
 <template>
   <div class="h-full flex gap-3">
     <template v-for="link of links" :key="link.to">
-      <nuxt-link :to="link.to" class="h-full">
-        <div
-          class="h-full flex items-center gap-1 p-2 hover:text-primary transition duration-300"
-          :class="{'text-primary': link.to === $route.path }"
-        >
-          <NIcon v-if="link.icon" size="22">
-            <Component :is="link.icon" />
-          </NIcon>
-          <div class="whitespace-nowrap">
-            {{ link.label }}
-          </div>
-        </div>
-        <div class="h-1 w-full -translate-y-1" :class="{'bg-primary': link.to === $route.path }" />
+      <nuxt-link :to="link.id" class="h-full">
+        <BaseMenuItem v-bind="link" :active-id="$route.path" />
       </nuxt-link>
     </template>
   </div>
@@ -28,17 +17,17 @@ import {
 
 const links = [
   {
-    to: '/',
+    id: '/',
     icon: DocumentText24Regular,
     label: 'Documentation'
   },
   {
-    to: '/user',
+    id: '/user',
     icon: VideoPerson24Regular,
     label: 'API token generation'
   },
   {
-    to: '/graphql-playground',
+    id: '/graphql-playground',
     icon: PanelRight24Regular,
     label: 'GraphQL Playground',
     disabled: true
