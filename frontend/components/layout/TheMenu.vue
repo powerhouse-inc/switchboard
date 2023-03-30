@@ -10,15 +10,15 @@
 
 <script lang="ts" setup>
 import {
-  Document24Filled,
+  DocumentText24Regular,
   VideoPerson24Filled,
-  Play24Filled
+  Play24Regular
 } from '@vicons/fluent'
 
 const links = [
   {
     id: '/',
-    icon: Document24Filled,
+    icon: DocumentText24Regular,
     label: 'Documentation'
   },
   {
@@ -28,7 +28,7 @@ const links = [
   },
   {
     id: '/graphql-playground',
-    icon: Play24Filled,
+    icon: Play24Regular,
     label: 'GraphQL Playground',
     disabled: true
   }
