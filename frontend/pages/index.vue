@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col h-full px-10">
-    <div class="flex-shrink-0 text-center py-16">
-      <h1 class="text-6xl font-bold">
+  <div class="flex flex-col h-full px-5 md:px-10">
+    <div class="flex-shrink-0 text-center py-10 md:py-16">
+      <h1 class="text-3xl md:text-6xl font-bold">
         Switchboard API
       </h1>
-      <div class="text-base">
+      <div class="text-sm md:text-base">
         Open-source API over MakerDA0 models
       </div>
     </div>

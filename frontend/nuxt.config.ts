@@ -1,5 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: 'Switchboard API',
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0' }
+      ]
+    }
+  },
   modules: [
     '@nuxtjs/tailwindcss',
     '@huntersofbook/naive-ui-nuxt'

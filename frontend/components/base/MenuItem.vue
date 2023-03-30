@@ -7,7 +7,7 @@
       <NIcon v-if="icon" size="22">
         <Component :is="icon" />
       </NIcon>
-      <div class="whitespace-nowrap">
+      <div class="whitespace-nowrap hidden md:block">
         {{ label }}
       </div>
     </div>
