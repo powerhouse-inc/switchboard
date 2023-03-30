@@ -1,9 +1,9 @@
 const startupTime = new Date()
 
-export default eventHandler(async () => {
+export default eventHandler(() => {
   return {
     status: 'healthy',
     time: new Date(),
-    startupTime,
+    startupTime
   }
 })
