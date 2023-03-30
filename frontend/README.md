@@ -13,3 +13,7 @@ Please refer to the root readme to learn more about general development setup.
 ## Production
 
 You can build application for production using `npm run build` and then locally preview production build via `npm run preview`.
+
+## Health endpoint
+
+Endpoint available at `/healthz` path. Provides response if frontend is currently running.
