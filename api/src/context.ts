@@ -1,6 +1,6 @@
 import type express from 'express';
 import pino from 'pino';
-import { User } from '@prisma/client';
+import { Session } from '@prisma/client';
 import { getChildLogger } from './logger';
 import prisma from './database';
 
@@ -13,7 +13,7 @@ const apolloLogger = getChildLogger(
 export interface Context {
   request: { req: express.Request };
   prisma: typeof prisma;
-  getUser: () => Promise<User>;
+  getSessionByToken: () => Promise<Session>;
   apolloLogger: pino.Logger;
 }
 
@@ -33,6 +33,6 @@ export function createContext(params: CreateContextParams): Context {
     request: params,
     prisma,
     apolloLogger,
-    getUser: async () => prisma.session.getUser(token),
+    getSessionByToken: async () => prisma.session.getSessionByToken(token),
   };
 }

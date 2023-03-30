@@ -112,7 +112,7 @@ export function getSessionCrud(prisma: PrismaClient) {
       session: { expiryDurationSeconds?: number | null; name: string },
       isUserCreated: boolean = false,
     ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
-    async getUser(
+    async getSessionByToken(
       token?: string,
     ) {
       if (!token) {
@@ -135,7 +135,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
-      return session.creator;
+      return session;
     },
 
   };
