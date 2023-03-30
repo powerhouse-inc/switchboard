@@ -24,7 +24,8 @@ export function cleanDatabase() {
     await tablenames.slice(1).reduce(async (acc, tableName) => {
       const table: any = prisma[tableName as any];
       return acc.then(() => table.deleteMany());
-    }, (prisma[tablenames[0] as any] as any).deleteMany() as Promise<void>); // can't type properly tablenames received via raw query.
+    }, (prisma[tablenames[0] as any] as any).deleteMany() as Promise<void>);
+    // can't type properly tablenames received via raw query.
   };
   beforeEach(async () => {
     await clean();
