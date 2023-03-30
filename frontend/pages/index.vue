@@ -8,6 +8,8 @@
         Open-source API over MakerDA0 models
       </div>
     </div>
-    <div class="flex-grow flex items-center justify-center bg-white" />
+    <div class="flex-grow flex items-center justify-center">
+      <div class="w-full h-full bg-white max-w-screen-2xl" />
+    </div>
   </div>
 </template>
