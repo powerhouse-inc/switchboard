@@ -10,13 +10,19 @@ export const getJwtSecret = (): string => {
 };
 
 export const getJwtExpirationPeriod = (): string => {
-  if (!process.env.JWT_EXPIRATION_PERIOD_SECONDS) {
+  if (!process.env.JWT_EXPIRATION_PERIOD) {
     return '7d';
   }
-  const expirationSeconds = Number(process.env.JWT_EXPIRATION_PERIOD_SECONDS);
-  if (Number.isNaN(expirationSeconds)) {
-    throw new Error('JWT_EXPIRATION_PERIOD_SECONDS must be a number');
+  // check if number of seconds is provided
+  const expirationSeconds = Number(process.env.JWT_EXPIRATION_PERIOD);
+  if (!Number.isNaN(expirationSeconds)) {
+    // https://www.npmjs.com/package/jsonwebtoken for `expiresIn` format
+    return ms(expirationSeconds * 1000);
   }
-  // https://www.npmjs.com/package/jsonwebtoken for `expiresIn` format
-  return ms(expirationSeconds * 1000);
+  // check if a valid time string is provided
+  const expirationMs = ms(process.env.JWT_EXPIRATION_PERIOD);
+  if (!expirationMs) {
+    throw new Error('JWT_EXPIRATION_PERIOD_SECONDS must be a number of seconds or ms string');
+  }
+  return process.env.JWT_EXPIRATION_PERIOD;
 };
