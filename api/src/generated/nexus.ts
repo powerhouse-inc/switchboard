@@ -4,13 +4,24 @@
  */
 
 
-import type { Context } from "./../src/context"
+import type { Context } from "./../graphql/context"
 import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
 import type { core, connectionPluginCore } from "nexus"
 import type { ArgsValidationConfig, HasTypeField } from "nexus-validation-plugin/utils"
-
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "GQLDateBase";
+  }
+}
 declare global {
   interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "GQLDateBase";
     /**
      * Adds a Relay-style connection to the type, with numerous options for configuration
      *
@@ -29,6 +40,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  SessionCreate: { // input type
+    expiryDurationSeconds?: number | null; // Int
+    name: string; // String!
+  }
   UserNamePass: { // input type
     password: string; // String!
     username: string; // String!
@@ -44,12 +59,13 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  GQLDateBase: any
 }
 
 export interface NexusGenObjects {
   AuthPayload: { // root type
+    session?: NexusGenRootTypes['Session'] | null; // Session
     token?: string | null; // String
-    user?: NexusGenRootTypes['User'] | null; // User
   }
   CoreUnit: { // root type
     code?: string | null; // String
@@ -63,6 +79,20 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Session: { // root type
+    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdBy: string; // String!
+    id: string; // String!
+    isUserCreated: boolean; // Boolean!
+    name?: string | null; // String
+    referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    referenceTokenId: string; // String!
+    revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+  }
+  SessionCreateOutput: { // root type
+    session: NexusGenRootTypes['Session']; // Session!
+    token: string; // String!
+  }
   User: { // root type
     id?: string | null; // String
     password?: string | null; // String
@@ -82,8 +112,8 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
+    session: NexusGenRootTypes['Session'] | null; // Session
     token: string | null; // String
-    user: NexusGenRootTypes['User'] | null; // User
   }
   CoreUnit: { // field return type
     code: string | null; // String
@@ -96,6 +126,8 @@ export interface NexusGenFieldTypes {
     shortCode: string | null; // String
   }
   Mutation: { // field return type
+    createSession: NexusGenRootTypes['SessionCreateOutput'] | null; // SessionCreateOutput
+    revokeSession: NexusGenRootTypes['Session'] | null; // Session
     signIn: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
     signUp: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
   }
@@ -103,6 +135,21 @@ export interface NexusGenFieldTypes {
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     me: NexusGenRootTypes['User'] | null; // User
+    sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
+  }
+  Session: { // field return type
+    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdBy: string; // String!
+    id: string; // String!
+    isUserCreated: boolean; // Boolean!
+    name: string | null; // String
+    referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    referenceTokenId: string; // String!
+    revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+  }
+  SessionCreateOutput: { // field return type
+    session: NexusGenRootTypes['Session']; // Session!
+    token: string; // String!
   }
   User: { // field return type
     id: string | null; // String
@@ -113,8 +160,8 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenFieldTypeNames {
   AuthPayload: { // field return type name
+    session: 'Session'
     token: 'String'
-    user: 'User'
   }
   CoreUnit: { // field return type name
     code: 'String'
@@ -127,6 +174,8 @@ export interface NexusGenFieldTypeNames {
     shortCode: 'String'
   }
   Mutation: { // field return type name
+    createSession: 'SessionCreateOutput'
+    revokeSession: 'Session'
     signIn: 'AuthPayload'
     signUp: 'AuthPayload'
   }
@@ -134,6 +183,21 @@ export interface NexusGenFieldTypeNames {
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
     me: 'User'
+    sessions: 'Session'
+  }
+  Session: { // field return type name
+    createdAt: 'GQLDateBase'
+    createdBy: 'String'
+    id: 'String'
+    isUserCreated: 'Boolean'
+    name: 'String'
+    referenceExpiryDate: 'GQLDateBase'
+    referenceTokenId: 'String'
+    revokedAt: 'GQLDateBase'
+  }
+  SessionCreateOutput: { // field return type name
+    session: 'Session'
+    token: 'String'
   }
   User: { // field return type name
     id: 'String'
@@ -144,6 +208,12 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createSession: { // args
+      session: NexusGenInputs['SessionCreate']; // SessionCreate!
+    }
+    revokeSession: { // args
+      sessionId: string; // String!
+    }
     signIn: { // args
       user: NexusGenInputs['UserNamePass']; // UserNamePass!
     }

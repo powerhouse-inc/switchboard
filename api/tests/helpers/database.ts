@@ -3,8 +3,12 @@ import prisma from '../../src/database';
 
 export function cleanDatabase() {
   const clean = async () => {
-    await prisma.coreUnit.deleteMany();
+    // TODO: when migrate to postgres,
+    // replace below with
+    // https://www.prisma.io/docs/concepts/components/prisma-client/crud#deleting-all-data-with-raw-sql--truncate
+    await prisma.session.deleteMany();
     await prisma.user.deleteMany();
+    await prisma.coreUnit.deleteMany();
   };
   beforeEach(async () => {
     await clean();

@@ -1,7 +1,7 @@
 import { beforeEach, afterEach } from 'vitest';
 import type { Server } from 'http';
 import { GraphQLClient } from 'graphql-request';
-import { startServer } from '../../src/server';
+import { startServer } from '../../src/graphql/server';
 import { createApp } from '../../src/app';
 
 interface TestContext {
