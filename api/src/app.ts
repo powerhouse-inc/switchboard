@@ -14,7 +14,7 @@ export const createApp = (): Express => {
   app.get('/healthz', async (_req, res) => {
     try {
       // TODO: after migration to postgres, do SELECT 1
-      await prisma.user.findMany();
+      await prisma.user.findFirst();
     } catch (error) {
       return res.status(500).json({
         status: 'DB failed initialization check',
@@ -28,6 +28,7 @@ export const createApp = (): Express => {
       startupTime,
     });
   });
+
   app.get(
     '/',
     expressPlayground({

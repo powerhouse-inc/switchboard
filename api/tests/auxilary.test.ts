@@ -1,7 +1,6 @@
 import {
   test, expect, vi, describe,
 } from 'vitest';
-import fetch from 'node-fetch';
 import { getJwtSecret, getJwtExpirationPeriod } from '../src/env/getters';
 import { restoreEnvAfterEach } from './helpers/env';
 import { ctx } from './helpers/server';
@@ -44,7 +43,7 @@ describe('Healthz', () => {
   vi.mock('../src/database');
 
   test('healthz: returns 200', async () => {
-    prisma.user.findMany.mockResolvedValueOnce([]);
+    prisma.user.findFirst.mockResolvedValueOnce({'id': '1', 'username': 'asdf', 'password': 'asdf'});
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
     expect(res.status).toBe(200);
@@ -53,7 +52,7 @@ describe('Healthz', () => {
   });
 
   test('healthz: returns 500', async () => {
-    prisma.user.findMany.mockRejectedValueOnce(new Error('test'));
+    prisma.user.findFirst.mockRejectedValueOnce(new Error('test'));
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
     expect(res.status).toBe(500);
