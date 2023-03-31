@@ -6,10 +6,12 @@ import { createApp } from '../../src/app';
 
 interface TestContext {
   client: GraphQLClient;
+  baseUrl: string;
 }
 
 function getGraphqlTestContext() {
   let serverInstance: Server | null = null;
+  let baseUrl: string | null = null;
   return {
     async before() {
       const app = createApp();
@@ -19,10 +21,12 @@ function getGraphqlTestContext() {
         throw new Error('Unexpected server address format');
       }
       const { port } = serverAddress;
-      return new GraphQLClient(`http://0.0.0.0:${port}/graphql`);
+      baseUrl = `http://0.0.0.0:${port}`;
+      return { client: new GraphQLClient(`${baseUrl}/graphql`), baseUrl };
     },
     async after() {
       serverInstance?.close();
+      baseUrl = null;
     },
   };
 }
@@ -31,8 +35,9 @@ function createTestContext(): TestContext {
   const context = {} as TestContext;
   const graphqlTestContext = getGraphqlTestContext();
   beforeEach(async () => {
-    const client = await graphqlTestContext.before();
+    const { client, baseUrl } = await graphqlTestContext.before();
     context.client = client;
+    context.baseUrl = baseUrl;
   });
   afterEach(async () => {
     await graphqlTestContext.after();
