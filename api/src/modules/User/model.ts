@@ -1,15 +1,40 @@
-import { objectType, inputObjectType } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { GraphQLError } from 'graphql';
-import builder from '../../graphql/pothos'
+import builder from '../builder'
 import {
   AUTH_SIGNUP_ENABLED,
 } from '../../env';
+import prisma from '../../database';
+import { Session } from '../Session/model';
 
-builder.prismaObject( 'User', {
+builder.queryType({
+  fields: (t) => ({
+    me: t.prismaField({
+      type: 'User',
+      nullable: true,
+      resolve: async (_parent, _args, _trash, ctx) => {
+        const session = await ctx.getSession();
+        return prisma.user.findUnique({
+          where: {
+            id: session.creator.id,
+          }
+        })
+      },
+    }),
+  }),
+})
+
+export const UserNamePass = builder.inputType('UserNamePassInput', {
+  fields: (t) => ({
+    username: t.string({ required: true }),
+    password: t.string({ required: true }),
+  }),
+})
+
+export const User = builder.prismaObject('User', {
   name: 'User',
-  description: 'A user of the application',
+  description: 'A user',
   fields: (t) => ({
     id: t.exposeID('id'),
     username: t.exposeString('username'),
@@ -17,47 +42,15 @@ builder.prismaObject( 'User', {
   }),
 });
 
-class UserNamePasss {
-  username: string;
-  password: string;
-  constructor(username: string, password: string) {
-    this.username = username;
-    this.password = password;
-  }
-}
-
-builder.objectType(UserNamePasss, {
-  name: 'UserNamePass',
-  description: 'Sign up / in with username and password',
+export const AuthPayload = builder.simpleObject('AuthPayload', {
   fields: (t) => ({
-    username: t.exposeString('username', {nullable: false}),
-    password: t.exposeString('password', {nullable: false}),
+    token: t.string({nullable: false}),
+    session: t.field({
+      type: Session,
+      nullable: false,
+    }),
   }),
 })
-export const User = objectType({
-  name: 'User',
-  definition(t) {
-    t.string('id');
-    t.string('username');
-    t.string('password');
-  },
-});
-
-export const UserNamePass = inputObjectType({
-  name: 'UserNamePass',
-  definition(t) {
-    t.nonNull.string('username');
-    t.nonNull.string('password');
-  },
-});
-
-export const AuthPayload = objectType({
-  name: 'AuthPayload',
-  definition(t) {
-    t.string('token');
-    t.field('session', { type: 'Session' });
-  },
-});
 
 export function getUserCrud(prisma: PrismaClient) {
   return {

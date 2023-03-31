@@ -1,41 +1,40 @@
-import {
-  mutationField,
-  nonNull,
-  stringArg,
-  queryField,
-  list,
-} from 'nexus/dist';
+import builder from '../builder';
+import prisma from '../../database';
+import {Session, SessionCreateOutput, SessionCreate} from './model';
 
-export const listSessions = queryField('sessions', {
-  type: list('Session'),
-  resolve: async (_, __, ctx) => {
-    const { createdBy } = await ctx.getSession();
-    return ctx.prisma.session.listSessions(createdBy);
+builder.queryField('sessions', (t) => t.field({
+  type: t.listRef(Session, {nullable: false}),
+  resolve: async (_parent, _args, ctx) => {
+    const session = await ctx.getSession();
+    return prisma.session.listSessions(session.creator.id);
   },
-});
+}));
 
-export const revoke = mutationField('revokeSession', {
-  type: 'Session',
+builder.mutationField('revokeSession', (t) => t.field({
+  type: Session,
   args: {
-    sessionId: nonNull(stringArg()),
+    id: t.arg({
+      type: 'String',
+      required: true,
+    }),
   },
-  resolve: async (_parent, { sessionId }, ctx) => {
-    const userId = (await ctx.getSession()).createdBy;
-    return ctx.prisma.session.revoke(sessionId, userId);
+  resolve: async (_parent, {id}, ctx) => {
+    const session = await ctx.getSession();
+    return prisma.session.revoke(id, session.creator.id);
   },
-});
+}));
 
-export const create = mutationField('createSession', {
-  type: 'SessionCreateOutput',
+builder.mutationField('createSession', (t) => t.field({
+  type: SessionCreateOutput,
   args: {
-    session: nonNull('SessionCreate'),
+    session: t.arg({
+      type: SessionCreate,
+      required: true,
+    }),
   },
-  resolve: async (
-    _parent,
-    { session },
-    ctx,
-  ) => {
-    const { createdBy } = await ctx.getSession();
-    return ctx.prisma.session.createCustomSession(createdBy, session, true);
+  resolve: async (_parent, {session: s}, ctx) => {
+    const session = await ctx.getSession();
+    return prisma.session.createCustomSession(session.creator.id, s, true);
   },
-});
+}));
+

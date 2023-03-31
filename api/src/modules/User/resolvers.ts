@@ -1,35 +1,40 @@
-import { queryField, mutationField, nonNull } from 'nexus/dist';
+import  builder  from '../builder';
+import { User, AuthPayload, UserNamePass } from './model'
+import prisma from '../../database'
 
-export const me = queryField('me', {
-  type: 'User',
-  resolve: async (_, __, ctx) => {
-    const { createdBy } = await ctx.getSession();
-    return ctx.prisma.user.findUnique({
-      where: {
-        id: createdBy,
-      },
-    });
-  },
-});
+builder.queryField('me', (t) => t.field({
+    type: User,
+    resolve: async (_parent, _args, ctx) => {
+      const session = await ctx.getSession()
+      return session.creator;
+    }
+  })
+)
 
-export const signIn = mutationField('signIn', {
-  type: 'AuthPayload',
+builder.mutationField('signIn', (t) => t.field({
+  type: AuthPayload,
   args: {
-    user: nonNull('UserNamePass'),
+    user: t.arg({
+      type: UserNamePass,
+      required: true,
+    })
   },
-  resolve: async (_parent, { user: userNamePass }, ctx) => {
-    const { id } = await ctx.prisma.user.getUserByUsernamePassword(userNamePass);
-    return ctx.prisma.session.createSignInSession(id);
+  resolve: async (_parent, {user}, _ctx) => {
+    const { id } = await prisma.user.getUserByUsernamePassword(user);
+    return prisma.session.createSignInSession(id);
   },
-});
+}))
 
-export const signUp = mutationField('signUp', {
-  type: 'AuthPayload',
+builder.mutationField('signUp', (t) => t.field({
+  type: AuthPayload,
   args: {
-    user: nonNull('UserNamePass'),
+    user: t.arg({
+      type: UserNamePass,
+      required: true,
+    })
   },
-  resolve: async (_parent, { user }, ctx) => {
-    const { id } = await ctx.prisma.user.createUser(user);
-    return ctx.prisma.session.createSignUpSession(id);
+  resolve: async (_parent, {user}, _ctx) => {
+    const { id } = await prisma.user.createUser(user);
+    return prisma.session.createSignInSession(id);
   },
-});
+}))

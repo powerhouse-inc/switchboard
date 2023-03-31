@@ -5,35 +5,34 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
+import builder from '../builder'
 
-export const Session = objectType({
-  name: 'Session',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.date('createdAt');
-    t.nonNull.string('createdBy');
-    t.date('referenceExpiryDate');
-    t.nonNull.string('referenceTokenId');
-    t.nonNull.boolean('isUserCreated');
-    t.string('name');
-    t.date('revokedAt');
-  },
+export const Session = builder.prismaNode('Session', {
+  id: { field: 'id' },
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    createdAt: t.expose('createdAt', { type: 'DateTime' }),
+    createdBy: t.exposeString('createdBy'),
+    referenceExpiryDate: t.expose('referenceExpiryDate', { type: 'DateTime', nullable: true }),
+    referenceTokenId: t.exposeString('referenceTokenId'),
+    isUserCreated: t.exposeBoolean('isUserCreated'),
+    name: t.exposeString('name', { nullable: true }),
+    revokedAt: t.expose('revokedAt', { type: 'DateTime', nullable: true }),
+  }),
 });
 
-export const SessionCreate = inputObjectType({
-  name: 'SessionCreate',
-  definition(t) {
-    t.int('expiryDurationSeconds');
-    t.nonNull.string('name');
-  },
+export const SessionCreate = builder.inputType('SessionCreateInput', {
+  fields: (t) => ({
+    expiryDurationSeconds: t.int({ required: false }),
+    name: t.string({ required: true }),
+  }),
 });
 
-export const SessionCreateOutput = objectType({
-  name: 'SessionCreateOutput',
-  definition(t) {
-    t.nonNull.field('session', { type: 'Session' });
-    t.nonNull.string('token');
-  },
+export const SessionCreateOutput = builder.simpleObject('SessionCreateOutput', {
+  fields: (t) => ({
+    token: t.string({ nullable: false }),
+    session: t.field({ type: Session, nullable: false }),
+  }),
 });
 
 async function newSession(
