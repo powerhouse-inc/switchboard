@@ -2,10 +2,38 @@ import { objectType, inputObjectType } from 'nexus/dist';
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { GraphQLError } from 'graphql';
+import builder from '../../graphql/pothos'
 import {
   AUTH_SIGNUP_ENABLED,
 } from '../../env';
 
+builder.prismaObject( 'User', {
+  name: 'User',
+  description: 'A user of the application',
+  fields: (t) => ({
+    id: t.exposeID('id'),
+    username: t.exposeString('username'),
+    password: t.exposeString('password'),
+  }),
+});
+
+class UserNamePasss {
+  username: string;
+  password: string;
+  constructor(username: string, password: string) {
+    this.username = username;
+    this.password = password;
+  }
+}
+
+builder.objectType(UserNamePasss, {
+  name: 'UserNamePass',
+  description: 'Sign up / in with username and password',
+  fields: (t) => ({
+    username: t.exposeString('username', {nullable: false}),
+    password: t.exposeString('password', {nullable: false}),
+  }),
+})
 export const User = objectType({
   name: 'User',
   definition(t) {
