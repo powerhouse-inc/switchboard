@@ -43,7 +43,7 @@ describe('Healthz', () => {
   vi.mock('../src/database');
 
   test('healthz: returns 200', async () => {
-    prisma.user.findFirst.mockResolvedValueOnce({'id': '1', 'username': 'asdf', 'password': 'asdf'});
+    prisma.user.findFirst.mockResolvedValueOnce({ id: '1', username: 'asdf', password: 'asdf' });
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
     expect(res.status).toBe(200);
