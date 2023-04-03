@@ -2,10 +2,11 @@ import { test, expect, vi } from 'vitest';
 import ms from 'ms';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { ctx } from './helpers/server';
+import { setHeader } from './helpers/testContext';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
 import {
-  getSignUpMutation, signInMutation, meQuery, USERNAME,
+  getSignUpMutation, signInMutation, meQuery, USERNAME, PASSWORD,
 } from './helpers/const';
 import { isRecent } from './helpers/time';
 
@@ -14,22 +15,65 @@ cleanDatabaseBeforeAfterEachTest();
 restoreEnvAfterEach();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
-  const response = await ctx.client.mutation({
-    signUp: {
-      session: {
-        id: true,
-        isUserCreated: true
-      },
-      token: true,
-      __args: {
-        user: {
-          username: 'adf',
-          password: "adf"
+  console.log(ctx);
+    const signUpResponse = await ctx.client.mutation({
+      signUp: {
+        token: true,
+        session: {
+          isUserCreated: true,
+          id: true,
+          referenceExpiryDate: true
+        },
+        __args:{
+          user: {
+            username: USERNAME,
+            password: PASSWORD
+          }
         }
       }
-    }
-  })
-  console.log(response)
+    })
+    const tokenExpiry = new Date(new Date().getTime() + ms(env.JWT_EXPIRATION_PERIOD));
+    expect(signUpResponse.signUp.session.referenceExpiryDate).not.toBeUndefined()
+    expect(
+      isRecent(new Date(signUpResponse.signUp.session.referenceExpiryDate!), tokenExpiry),
+    )
+      .toBe(true);
+    expect(signUpResponse.signUp.token).toBeTruthy();
+    expect(signUpResponse.signUp.session.isUserCreated).toBe(false);
+
+    const signInResponse = await ctx.client.mutation({
+      signIn: {
+        token: true,
+        session: {
+          referenceExpiryDate: true,
+          isUserCreated: true
+        },
+        __args: {
+          user: {
+            username: USERNAME,
+            password: PASSWORD,
+          }
+        }
+      }
+    })
+    expect(
+      isRecent(new Date(signInResponse.signIn.session.referenceExpiryDate!), tokenExpiry),
+    )
+      .toBe(true);
+    expect(signInResponse?.signIn?.token).toBeTruthy();
+    expect(signInResponse?.signIn?.session?.isUserCreated).toBe(false);
+
+    const token = signInResponse?.signIn?.token;
+    setHeader({Authorization: `Bearer ${token}`});
+
+    const meResponse = await ctx.client.query({
+      me: {
+        username: true,
+        id: true
+      }
+    })
+    expect(meResponse.me.username).toBe(USERNAME);
+    expect(meResponse.me.id).toBeTruthy();
 });
 
 test('Authentication: sign in without signing up', async () => {

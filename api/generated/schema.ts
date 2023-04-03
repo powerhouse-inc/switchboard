@@ -1,7 +1,7 @@
 export type Scalars = {
     String: string,
     ID: string,
-    DateTime: any,
+    DateTime: Date,
     Boolean: boolean,
     Int: number,
 }
