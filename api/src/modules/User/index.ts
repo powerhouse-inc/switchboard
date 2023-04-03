@@ -1,6 +1,2 @@
-import { getUserCrud } from './model';
+import './model';
 import './resolvers';
-
-export {
-  getUserCrud
-}
