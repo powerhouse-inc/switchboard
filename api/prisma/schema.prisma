@@ -5,6 +5,7 @@ generator client {
 
 generator pothos {
   provider = "prisma-pothos-types"
+  previewFeatures = ["clientExtensions"]
 }
 
 datasource db {

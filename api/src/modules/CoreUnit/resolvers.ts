@@ -1,24 +1,32 @@
-import { stringArg, list, queryField } from 'nexus/dist';
+import builder from '../builder'
+import {CoreUnit} from './model'
+import prisma from '../../database'
 
-export const coreUnits = queryField('coreUnits', {
-  type: list('CoreUnit'),
-  resolve: async (_parent, _args, ctx) => {
-    const response = await ctx.prisma.coreUnit.findMany();
+builder.queryField('coreUnits', (t) => t.field({
+  type: t.listRef(CoreUnit),
+  resolve: async (_parent, _args, _ctx) => {
+    const response = await prisma.coreUnit.findMany();
     return response;
   },
-});
+}));
 
-export const coreUnit = queryField('coreUnit', {
-  type: 'CoreUnit',
-  args: { id: stringArg() },
-  resolve: async (_parent, { id }, ctx) => {
-    if (!id) {
-      throw new Error('please provide id');
-    }
-    return ctx.prisma.coreUnit.findUnique({
+builder.queryField('coreUnit', (t) => t.field({
+  type: CoreUnit,
+  args: {
+    id: t.arg({
+      type: 'String',
+      required: true,
+    })
+  },
+  resolve: async (_parent, { id }, _ctx) => {
+    const unit = await prisma.coreUnit.findUnique({
       where: {
         id,
       },
     });
+    if (!unit) {
+      throw new Error('Unit not found');
+    }
+    return unit;
   },
-});
+}));

@@ -1,2 +1,3 @@
-export * from './model';
-export * from './resolvers';
+export {getSessionCrud} from './model';
+import './resolvers';
+

@@ -1,2 +1,2 @@
-export * from './model';
-export * from './resolvers';
+import './model';
+import './resolvers';

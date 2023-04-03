@@ -1,4 +1,3 @@
-import { inputObjectType, objectType } from 'nexus/dist';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
@@ -7,8 +6,7 @@ import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
 import builder from '../builder'
 
-export const Session = builder.prismaNode('Session', {
-  id: { field: 'id' },
+export const Session = builder.prismaObject('Session', {
   fields: (t) => ({
     id: t.exposeID('id'),
     createdAt: t.expose('createdAt', { type: 'DateTime' }),
