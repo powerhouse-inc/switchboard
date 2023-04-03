@@ -34,6 +34,6 @@ builder.mutationField('signUp', (t) => t.field({
   },
   resolve: async (_parent, { user }) => {
     const { id } = await prisma.user.createUser(user);
-    return prisma.session.createSignInSession(id);
+    return prisma.session.createSignUpSession(id);
   },
 }));
