@@ -1,4 +1,4 @@
-import builder from '../builder'
+import builder from '../builder';
 import { Session } from '../Session/model';
 
 export const UserNamePass = builder.inputType('UserNamePassInput', {
@@ -6,7 +6,7 @@ export const UserNamePass = builder.inputType('UserNamePassInput', {
     username: t.string({ required: true }),
     password: t.string({ required: true }),
   }),
-})
+});
 
 export const User = builder.prismaObject('User', {
   name: 'User',
@@ -20,11 +20,10 @@ export const User = builder.prismaObject('User', {
 
 export const AuthPayload = builder.simpleObject('AuthPayload', {
   fields: (t) => ({
-    token: t.string({nullable: false}),
+    token: t.string({ nullable: false }),
     session: t.field({
       type: Session,
       nullable: false,
     }),
   }),
-})
-
+});

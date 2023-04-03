@@ -1,15 +1,14 @@
-import  builder  from '../builder';
-import { User, AuthPayload, UserNamePass } from './model'
-import prisma from '../../database'
+import builder from '../builder';
+import { User, AuthPayload, UserNamePass } from './model';
+import prisma from '../../database';
 
 builder.queryField('me', (t) => t.field({
-    type: User,
-    resolve: async (_parent, _args, ctx) => {
-      const session = await ctx.getSession()
-      return session.creator;
-    }
-  })
-)
+  type: User,
+  resolve: async (_parent, _args, ctx) => {
+    const session = await ctx.getSession();
+    return session.creator;
+  },
+}));
 
 builder.mutationField('signIn', (t) => t.field({
   type: AuthPayload,
@@ -17,13 +16,13 @@ builder.mutationField('signIn', (t) => t.field({
     user: t.arg({
       type: UserNamePass,
       required: true,
-    })
+    }),
   },
-  resolve: async (_parent, {user}, _ctx) => {
+  resolve: async (_parent, { user }) => {
     const { id } = await prisma.user.getUserByUsernamePassword(user);
     return prisma.session.createSignInSession(id);
   },
-}))
+}));
 
 builder.mutationField('signUp', (t) => t.field({
   type: AuthPayload,
@@ -31,10 +30,10 @@ builder.mutationField('signUp', (t) => t.field({
     user: t.arg({
       type: UserNamePass,
       required: true,
-    })
+    }),
   },
-  resolve: async (_parent, {user}, _ctx) => {
+  resolve: async (_parent, { user }) => {
     const { id } = await prisma.user.createUser(user);
     return prisma.session.createSignInSession(id);
   },
-}))
+}));

@@ -1,9 +1,9 @@
 import builder from '../builder';
 import prisma from '../../database';
-import {Session, SessionCreateOutput, SessionCreate} from './model';
+import { Session, SessionCreateOutput, SessionCreate } from './model';
 
 builder.queryField('sessions', (t) => t.field({
-  type: t.listRef(Session, {nullable: false}),
+  type: t.listRef(Session, { nullable: false }),
   resolve: async (_parent, _args, ctx) => {
     const session = await ctx.getSession();
     return prisma.session.listSessions(session.creator.id);
@@ -18,7 +18,7 @@ builder.mutationField('revokeSession', (t) => t.field({
       required: true,
     }),
   },
-  resolve: async (_parent, {id}, ctx) => {
+  resolve: async (_parent, { id }, ctx) => {
     const session = await ctx.getSession();
     return prisma.session.revoke(id, session.creator.id);
   },
@@ -32,9 +32,8 @@ builder.mutationField('createSession', (t) => t.field({
       required: true,
     }),
   },
-  resolve: async (_parent, {session: s}, ctx) => {
+  resolve: async (_parent, { session: s }, ctx) => {
     const session = await ctx.getSession();
     return prisma.session.createCustomSession(session.creator.id, s, true);
   },
 }));
-

@@ -1,9 +1,9 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
+import { randomUUID } from 'crypto';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { randomUUID } from 'crypto';
 
 async function newSession(
   prisma: PrismaClient,

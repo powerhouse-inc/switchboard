@@ -1,4 +1,4 @@
-import builder from '../builder'
+import builder from '../builder';
 
 export const Session = builder.prismaObject('Session', {
   fields: (t) => ({
@@ -26,5 +26,3 @@ export const SessionCreateOutput = builder.simpleObject('SessionCreateOutput', {
     session: t.field({ type: Session, nullable: false }),
   }),
 });
-
-

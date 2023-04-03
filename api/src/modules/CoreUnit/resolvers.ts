@@ -1,10 +1,10 @@
-import builder from '../builder'
-import {CoreUnit} from './model'
-import prisma from '../../database'
+import builder from '../builder';
+import { CoreUnit } from './model';
+import prisma from '../../database';
 
 builder.queryField('coreUnits', (t) => t.field({
   type: t.listRef(CoreUnit),
-  resolve: async (_parent, _args, _ctx) => {
+  resolve: async () => {
     const response = await prisma.coreUnit.findMany();
     return response;
   },
@@ -16,9 +16,9 @@ builder.queryField('coreUnit', (t) => t.field({
     id: t.arg({
       type: 'String',
       required: true,
-    })
+    }),
   },
-  resolve: async (_parent, { id }, _ctx) => {
+  resolve: async (_parent, { id }) => {
     const unit = await prisma.coreUnit.findUnique({
       where: {
         id,
