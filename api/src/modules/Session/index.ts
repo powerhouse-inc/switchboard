@@ -1,3 +1,3 @@
-export {getSessionCrud} from './model';
+import './model';
 import './resolvers';
 

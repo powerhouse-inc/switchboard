@@ -1,2 +1,2 @@
-export {getUserCrud} from './model';
+import './model';
 import './resolvers';
