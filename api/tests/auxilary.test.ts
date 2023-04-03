@@ -4,7 +4,7 @@ import {
 import { getJwtSecret, getJwtExpirationPeriod } from '../src/env/getters';
 import { restoreEnvAfterEach } from './helpers/env';
 import { ctx } from './helpers/server';
-import prisma from '../src/__mocks__/database';
+import prisma from '../src/database';
 
 restoreEnvAfterEach();
 
@@ -40,10 +40,9 @@ test('Env: jwt expiration in seconds format', async () => {
 });
 
 describe('Healthz', () => {
-  vi.mock('../src/database');
 
   test('healthz: returns 200', async () => {
-    prisma.user.findFirst.mockResolvedValueOnce({ id: '1', username: 'asdf', password: 'asdf' });
+    vi.spyOn(prisma.user, 'findFirst').mockImplementationOnce(async () => { return null as any })
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
     expect(res.status).toBe(200);
@@ -52,7 +51,7 @@ describe('Healthz', () => {
   });
 
   test('healthz: returns 500', async () => {
-    prisma.user.findFirst.mockRejectedValueOnce(new Error('test'));
+    vi.spyOn(prisma.user, 'findFirst').mockImplementationOnce(async () => { throw new Error('test') })
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
     expect(res.status).toBe(500);
