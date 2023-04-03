@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { beforeEach } from 'vitest';
 import { mockDeep, mockReset } from 'vitest-mock-extended';
+import { XPrisma } from '../database';
 
-const prisma = mockDeep<PrismaClient>();
+const prisma = mockDeep<XPrisma>();
 
 beforeEach(() => {
   mockReset(prisma);

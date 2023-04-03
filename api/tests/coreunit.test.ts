@@ -45,7 +45,10 @@ test('Core Unit: get by id', async () => {
   const query = builder.query({
     operation: 'coreUnit',
     variables: {
-      id: created.id,
+      id: {
+        value: created.id,
+        type: 'String!',
+      },
     },
     fields: ['id'],
   });
@@ -59,5 +62,5 @@ test('Core Unit: get by id without id field throws', async () => {
     fields: ['id'],
   });
   const response = await executeGraphQlQuery(query) as { errors: Record<string, unknown>[] };
-  expect(response.errors[0].message).toBe('please provide id');
+  expect(response.errors[0].message).toBe('Field "coreUnit" argument "id" of type "String!" is required, but it was not provided.');
 });

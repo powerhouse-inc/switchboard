@@ -13,14 +13,14 @@ builder.queryField('sessions', (t) => t.field({
 builder.mutationField('revokeSession', (t) => t.field({
   type: Session,
   args: {
-    id: t.arg({
+    sessionId: t.arg({
       type: 'String',
       required: true,
     }),
   },
-  resolve: async (_parent, { id }, ctx) => {
+  resolve: async (_parent, { sessionId }, ctx) => {
     const session = await ctx.getSession();
-    return prisma.session.revoke(id, session.creator.id);
+    return prisma.session.revoke(sessionId, session.creator.id);
   },
 }));
 
