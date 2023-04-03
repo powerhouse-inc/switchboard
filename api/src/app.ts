@@ -13,7 +13,6 @@ export const createApp = (): Express => {
 
   app.get('/healthz', async (_req, res) => {
     try {
-      // TODO: after migration to postgres, do SELECT 1
       await prisma.user.findFirst();
     } catch (error) {
       return res.status(500).json({

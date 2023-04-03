@@ -42,6 +42,8 @@ test('Env: jwt expiration in seconds format', async () => {
 describe('Healthz', () => {
 
   test('healthz: returns 200', async () => {
+    // mocking `prisma` is not straighforward because pothos builder
+    // depends on it and ts checks break.
     vi.spyOn(prisma.user, 'findFirst').mockImplementationOnce(async () => { return null as any })
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
@@ -51,6 +53,8 @@ describe('Healthz', () => {
   });
 
   test('healthz: returns 500', async () => {
+    // mocking `prisma` is not straighforward because pothos builder
+    // depends on it and ts checks break.
     vi.spyOn(prisma.user, 'findFirst').mockImplementationOnce(async () => { throw new Error('test') })
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
