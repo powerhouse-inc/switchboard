@@ -64,3 +64,18 @@ test('Core Unit: get by id without id field throws', async () => {
   const response = await executeGraphQlQuery(query) as { errors: Record<string, unknown>[] };
   expect(response.errors[0].message).toBe('Field "coreUnit" argument "id" of type "String!" is required, but it was not provided.');
 });
+
+test('Core Unit: get by id of unexistant throws', async () => {
+  const query = builder.query({
+    operation: 'coreUnit',
+    variables: {
+      id: {
+        value: 'adsfs',
+        type: 'String!',
+      },
+    },
+    fields: ['id'],
+  });
+  const response = await executeGraphQlQuery(query) as any;
+  expect(response.errors[0].message).toBe('Unit not found');
+});
