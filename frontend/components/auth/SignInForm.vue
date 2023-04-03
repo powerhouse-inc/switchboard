@@ -4,27 +4,35 @@
       <button @click="activeId = 'sign-in'">
         <BaseMenuItem id="sign-in" label="Sign In" :icon="LogInOutline" :active-id="activeId" />
       </button>
-      <button @click="activeId = 'sign-up'">
+      <!-- <button @click="activeId = 'sign-up'">
         <BaseMenuItem id="sign-up" label="Sign Up" :icon="FormNew24Regular" :active-id="activeId" />
-      </button>
+      </button> -->
     </div>
     <form class="flex flex-col gap-4" @submit.prevent="loginAndAwait">
-      <NInput
+      <n-input
         v-model:value="username"
         autofocus
         type="text"
         class="w-full"
         placeholder="Username"
         :disabled="isLoading"
-      />
-      <NInput
+      >
+        <template #prefix>
+          <n-icon :component="PersonCircle" class="-ml-1" />
+        </template>
+      </n-input>
+      <n-input
         v-model:value="password"
         autofocus
         type="password"
         class="w-full"
         placeholder="Password"
         :disabled="isLoading"
-      />
+      >
+        <template #prefix>
+          <n-icon :component="LockClosed24Filled" class="-ml-1" />
+        </template>
+      </n-input>
       <NButton
         type="primary"
         attr-type="submit"
@@ -39,8 +47,9 @@
 
 <script lang="ts" setup>
 import { useMessage } from 'naive-ui'
-import { LogInOutline } from '@vicons/ionicons5'
-import { FormNew24Regular } from '@vicons/fluent'
+import { LogInOutline, PersonCircle } from '@vicons/ionicons5'
+import { LockClosed24Filled } from '@vicons/fluent'
+// import { FormNew24Regular } from '@vicons/fluent'
 
 const message = useMessage()
 

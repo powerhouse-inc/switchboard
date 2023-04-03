@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     themeOverrides: {
       common: {
         primaryColor: '#e88339',
-        primaryColorHover: '#fae6d8',
+        primaryColorHover: '#f45d2f',
         primaryColorPressed: '#fae6d8'
       }
     }
