@@ -1,7 +1,11 @@
+import { getUserCrud } from './User';
 import './CoreUnit';
-import './User';
 import './Session';
 import builder from './builder'
 
-export const schema = builder.toSchema();
+const schema = builder.toSchema();
+export {
+  schema,
+  getUserCrud
+}
 
