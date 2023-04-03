@@ -1,0 +1,68 @@
+type AuthPayload {
+  session: Session!
+  token: String!
+}
+
+"""CoreUnit"""
+type CoreUnit {
+  code: String!
+  descriptionParagraph: String!
+  descriptionParagraphImageSource: String!
+  descriptionSentence: String!
+  id: ID!
+  imageSource: String!
+  name: String!
+  shortCode: String!
+}
+
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type Mutation {
+  createSession(session: SessionCreateInput!): SessionCreateOutput!
+  revokeSession(sessionId: String!): Session!
+  signIn(user: UserNamePassInput!): AuthPayload!
+  signUp(user: UserNamePassInput!): AuthPayload!
+}
+
+type Query {
+  coreUnit(id: String!): CoreUnit!
+  coreUnits: [CoreUnit!]!
+  me: User!
+  sessions: [Session!]!
+}
+
+type Session {
+  createdAt: DateTime!
+  createdBy: String!
+  id: ID!
+  isUserCreated: Boolean!
+  name: String
+  referenceExpiryDate: DateTime
+  referenceTokenId: String!
+  revokedAt: DateTime
+}
+
+input SessionCreateInput {
+  expiryDurationSeconds: Int
+  name: String!
+}
+
+type SessionCreateOutput {
+  session: Session!
+  token: String!
+}
+
+"""A user"""
+type User {
+  id: ID!
+  password: String!
+  username: String!
+}
+
+input UserNamePassInput {
+  password: String!
+  username: String!
+}

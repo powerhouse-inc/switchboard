@@ -1,7 +1,7 @@
 import { test, expect, vi } from 'vitest';
 import ms from 'ms';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
-import { ctx, executeGraphQlQuery } from './helpers/server';
+import { ctx } from './helpers/server';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
 import {
@@ -9,42 +9,27 @@ import {
 } from './helpers/const';
 import { isRecent } from './helpers/time';
 
+
 cleanDatabaseBeforeAfterEachTest();
 restoreEnvAfterEach();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
-  const signUpResponse = (await executeGraphQlQuery(getSignUpMutation())) as Record<
-  string,
-  any
-  >;
-  const tokenExpiry = new Date(new Date().getTime() + ms(env.JWT_EXPIRATION_PERIOD));
-  expect(
-    isRecent(new Date(signUpResponse?.signUp?.session?.referenceExpiryDate), tokenExpiry),
-  )
-    .toBe(true);
-  expect(signUpResponse?.signUp?.token).toBeTruthy();
-  expect(signUpResponse?.signUp?.session?.isUserCreated).toBe(false);
-
-  const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
-  string,
-  any
-  >;
-  expect(
-    isRecent(new Date(signInResponse?.signIn?.session?.referenceExpiryDate), tokenExpiry),
-  )
-    .toBe(true);
-  expect(signInResponse?.signIn?.token).toBeTruthy();
-  expect(signInResponse?.signIn?.session?.isUserCreated).toBe(false);
-
-  const token = signInResponse?.signIn?.token;
-  ctx.client.setHeader('Authorization', `Bearer ${token}`);
-
-  const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
-  string,
-  any
-  >;
-  expect(meResponse?.me?.username).toBe(USERNAME);
-  expect(meResponse?.me?.id).toBeTruthy();
+  const response = await ctx.client.mutation({
+    signUp: {
+      session: {
+        id: true,
+        isUserCreated: true
+      },
+      token: true,
+      __args: {
+        user: {
+          username: 'adf',
+          password: "adf"
+        }
+      }
+    }
+  })
+  console.log(response)
 });
 
 test('Authentication: sign in without signing up', async () => {

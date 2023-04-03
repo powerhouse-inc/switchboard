@@ -1,11 +1,14 @@
-import { beforeEach, afterEach } from 'vitest';
-import type { Server } from 'http';
-import { GraphQLClient } from 'graphql-request';
-import { startServer } from '../../src/graphql/server';
-import { createApp } from '../../src/app';
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import { beforeEach, afterEach } from "vitest";
+import type { Server } from "http";
+import { GraphQLClient } from "graphql-request";
+import { startServer } from "../../src/graphql/server";
+import { createApp } from "../../src/app";
+import {createClient, Client} from '../../generated'
+
 
 interface TestContext {
-  client: GraphQLClient;
+  client: Client;
   baseUrl: string;
 }
 
@@ -17,12 +20,17 @@ function getGraphqlTestContext() {
       const app = createApp();
       serverInstance = await startServer(app);
       const serverAddress = serverInstance.address();
-      if (!serverAddress || typeof serverAddress === 'string') {
-        throw new Error('Unexpected server address format');
+      if (!serverAddress || typeof serverAddress === "string") {
+        throw new Error("Unexpected server address format");
       }
       const { port } = serverAddress;
       baseUrl = `http://0.0.0.0:${port}`;
-      return { client: new GraphQLClient(`${baseUrl}/graphql`), baseUrl };
+      const client = createClient(
+        {
+          url: baseUrl
+        }
+      )
+      return { client, baseUrl };
     },
     async after() {
       serverInstance?.close();
@@ -46,7 +54,4 @@ function createTestContext(): TestContext {
 }
 
 export const ctx = createTestContext();
-export async function executeGraphQlQuery(data: { query: string, variables: any }) {
-  const { query, variables } = data;
-  return ctx.client.request(query, variables).catch((e) => e.response);
-}
+
