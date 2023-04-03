@@ -1,10 +1,12 @@
 <template>
-  <div class="h-screen flex flex-col">
-    <LayoutTheHeader class="flex-shrink-0 h-14" />
-    <div class="flex-grow">
-      <NuxtPage />
+  <NMessageProvider>
+    <div class="h-screen flex flex-col">
+      <LayoutTheHeader class="flex-shrink-0 h-14" />
+      <div class="flex-grow">
+        <NuxtPage />
+      </div>
     </div>
-  </div>
+  </NMessageProvider>
 </template>
 
 <style>
