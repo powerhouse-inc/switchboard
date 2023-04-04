@@ -3,7 +3,7 @@
     Loading...
   </div>
   <div v-else-if="!user?.id" class="flex items-center justify-center">
-    <AuthSignInForm :login="login" class="w-128 pb-20" />
+    <AuthSignInForm :sign-in="signIn" class="w-128 pb-20" />
   </div>
   <slot v-else :user="user" />
 </template>
@@ -25,7 +25,9 @@ const check = async () => {
 }
 onMounted(check)
 
-const login = async (username: string, password: string) => {
-  await executeAPI('/api/auth/init', { method: 'POST', data: { username, password } })
+const signIn = async (username: string, password: string) => {
+  const { data } = await useAsyncGql('signIn', { username, password })
+  console.log('data', data)
+  // await executeAPI('/api/auth/init', { method: 'POST', data: { username, password } })
 }
 </script>

@@ -8,9 +8,15 @@ export default defineNuxtConfig({
       ]
     }
   },
+  runtimeConfig: {
+    public: {
+      GQL_HOST: '/api/graphql'
+    }
+  },
   modules: [
+    '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/tailwindcss',
-    '@huntersofbook/naive-ui-nuxt'
+    'nuxt-graphql-client'
   ],
   typescript: {
     shim: false

@@ -4,9 +4,9 @@
       <button @click="activeId = 'sign-in'">
         <BaseMenuItem id="sign-in" label="Sign In" :icon="LogInOutline" :active-id="activeId" />
       </button>
-      <!-- <button @click="activeId = 'sign-up'">
+      <button v-if="isSignupEnabled" @click="activeId = 'sign-up'">
         <BaseMenuItem id="sign-up" label="Sign Up" :icon="FormNew24Regular" :active-id="activeId" />
-      </button> -->
+      </button>
     </div>
     <form class="flex flex-col gap-4" @submit.prevent="loginAndAwait">
       <n-input
@@ -48,13 +48,16 @@
 <script lang="ts" setup>
 import { useMessage } from 'naive-ui'
 import { LogInOutline, PersonCircle } from '@vicons/ionicons5'
-import { LockClosed24Filled } from '@vicons/fluent'
-// import { FormNew24Regular } from '@vicons/fluent'
+import { LockClosed24Filled, FormNew24Regular } from '@vicons/fluent'
 
 const message = useMessage()
 
 const props = defineProps({
-  login: {
+  isSignupEnabled: {
+    type: Boolean,
+    default: false
+  },
+  signIn: {
     type: Function,
     required: true
   }
@@ -68,7 +71,7 @@ const isLoading = ref(false)
 const loginAndAwait = async () => {
   try {
     isLoading.value = true
-    await props.login(username.value, password.value)
+    await props.signIn(username.value, password.value)
   } catch (error: any) {
     message.error(`Error while signing in: ${error.message}`)
   } finally {
