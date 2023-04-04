@@ -12,7 +12,7 @@
         "postinstall": "prisma generate",
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
         "typecheck": "tsc --noEmit",
-        "test": "vitest run && vitest run --config ./vitest.modules.config.ts",
+        "test": "npm run gql-generate && vitest run && vitest run --config ./vitest.modules.config.ts",
         "watch": "vitest watch",
         "gql-generate": "graphql-codegen -c ./codegen/graphql.ts && vite-node ./codegen/client.ts"
     },

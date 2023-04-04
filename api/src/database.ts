@@ -1,8 +1,8 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
-import { getSessionCrud } from './modules/Session/crud';
-import { getUserCrud } from './modules/User/crud';
+import { getSessionCrud } from './modules/Session/operations';
+import { getUserCrud } from './modules/User/operations';
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
