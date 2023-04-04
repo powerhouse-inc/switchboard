@@ -4,10 +4,7 @@ import prisma from '../../database';
 
 builder.queryField('coreUnits', (t) => t.field({
   type: t.listRef(CoreUnit),
-  resolve: async () => {
-    const response = await prisma.coreUnit.findMany();
-    return response;
-  },
+  resolve: async () => prisma.coreUnit.findMany(),
 }));
 
 builder.queryField('coreUnit', (t) => t.field({
