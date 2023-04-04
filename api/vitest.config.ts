@@ -1,4 +1,4 @@
-import { defineConfig, UserConfig } from 'vitest/config';
+import { defineConfig, UserConfig, coverageConfigDefaults } from 'vitest/config';
 
 export const defaultConfig: UserConfig = {
   test: {
@@ -8,6 +8,7 @@ export const defaultConfig: UserConfig = {
       lines: 90,
       functions: 90,
       statements: 90,
+      exclude: [ ...coverageConfigDefaults.exclude, '**/codegen/**', '**/generated/**']
     },
     singleThread: true,
   },
