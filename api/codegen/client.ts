@@ -8,4 +8,7 @@ generate({
   scalarTypes: {
     DateTime: 'Date',
   },
-}).catch(console.error);
+}).catch(
+  // eslint-disable-next-line no-console
+  console.error,
+);

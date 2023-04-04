@@ -34,7 +34,14 @@ builder.mutationField('createSession', (t) => t.field({
   },
   resolve: async (_parent, { session: s }, ctx) => {
     const currentSession = await ctx.getSession();
-    const { token, session: createdSession } = await prisma.session.createCustomSession(currentSession.creator.id, s, true);
+    const {
+      token,
+      session: createdSession,
+    } = await prisma.session.createCustomSession(
+      currentSession.creator.id,
+      s,
+      true,
+    );
     return {
       token,
       session: createdSession,

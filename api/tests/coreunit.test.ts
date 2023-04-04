@@ -1,6 +1,4 @@
 import { test, expect } from 'vitest';
-import builder from 'gql-query-builder';
-import { CoreUnit } from '@prisma/client';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import prisma from '../src/database';
 import { ctx } from './helpers/server';
