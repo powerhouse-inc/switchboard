@@ -6,8 +6,12 @@ import { setHeader } from './helpers/testContext';
 import { restoreEnvAfterEach } from './helpers/env';
 import * as env from '../src/env';
 import {
-  getSignUpMutation, signInMutation, meQuery, USERNAME, PASSWORD,
-} from './helpers/const';
+    getMe,
+  signIn,
+  signUp,
+  USERNAME
+} from './helpers/requests';
+import { GenqlError } from '../generated'
 import { isRecent } from './helpers/time';
 
 
@@ -15,23 +19,7 @@ cleanDatabaseBeforeAfterEachTest();
 restoreEnvAfterEach();
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
-  console.log(ctx);
-    const signUpResponse = await ctx.client.mutation({
-      signUp: {
-        token: true,
-        session: {
-          isUserCreated: true,
-          id: true,
-          referenceExpiryDate: true
-        },
-        __args:{
-          user: {
-            username: USERNAME,
-            password: PASSWORD
-          }
-        }
-      }
-    })
+    const signUpResponse = await signUp(ctx.client)
     const tokenExpiry = new Date(new Date().getTime() + ms(env.JWT_EXPIRATION_PERIOD));
     expect(signUpResponse.signUp.session.referenceExpiryDate).not.toBeUndefined()
     expect(
@@ -41,21 +29,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
     expect(signUpResponse.signUp.token).toBeTruthy();
     expect(signUpResponse.signUp.session.isUserCreated).toBe(false);
 
-    const signInResponse = await ctx.client.mutation({
-      signIn: {
-        token: true,
-        session: {
-          referenceExpiryDate: true,
-          isUserCreated: true
-        },
-        __args: {
-          user: {
-            username: USERNAME,
-            password: PASSWORD,
-          }
-        }
-      }
-    })
+    const signInResponse = await signIn(ctx.client)
     expect(
       isRecent(new Date(signInResponse.signIn.session.referenceExpiryDate!), tokenExpiry),
     )
@@ -66,84 +40,61 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
     const token = signInResponse?.signIn?.token;
     setHeader({Authorization: `Bearer ${token}`});
 
-    const meResponse = await ctx.client.query({
-      me: {
-        username: true,
-        id: true
-      }
-    })
+    const meResponse = await getMe(ctx.client);
     expect(meResponse.me.username).toBe(USERNAME);
     expect(meResponse.me.id).toBeTruthy();
 });
 
 test('Authentication: sign in without signing up', async () => {
-  const response = (await executeGraphQlQuery(signInMutation)) as any;
+  const response: GenqlError = await signIn(ctx.client).catch((e) => e);
   expect(response.errors[0].message).toBe('User not found');
 });
 
 test('Authentication: sign up with same username', async () => {
-  const signUpMutation = getSignUpMutation();
-  await executeGraphQlQuery(signUpMutation);
-  const response = (await executeGraphQlQuery(signUpMutation)) as any;
+  await signUp(ctx.client);
+  const response: GenqlError = await signUp(ctx.client).catch((e) => e);
   expect(response.errors[0].message).toBe('Username already taken');
 });
 
 test('Authentication: access protected endpoint without signing in', async () => {
-  const response = (await executeGraphQlQuery(meQuery)) as any;
+  const response: GenqlError = await getMe(ctx.client).catch((e) => e);
   expect(response.errors[0].message).toBe('Not authenticated');
 });
 
 test('Authentication: sign up, sign in with wrong password', async () => {
-  await executeGraphQlQuery(getSignUpMutation());
+  await signUp(ctx.client);
 
-  const singInIncorrectPassword = {
-    variables: {
-      user: {
-        username: USERNAME,
-        password: 'wrong',
-      },
-    },
-    query: signInMutation.query,
-  };
-  const signInResponse = (await executeGraphQlQuery(
-    singInIncorrectPassword,
-  )) as Record<string, any>;
-  expect(signInResponse?.errors[0].message).toBe('Invalid password');
+  const signInResponse: GenqlError = await signIn(ctx.client, USERNAME, 'wrong').catch(e => e);
+  expect(signInResponse.errors[0].message).toBe('Invalid password');
 });
 
 test('Authentication: access protected endpoint without valid token', async () => {
-  ctx.client.setHeader('Authorization', 'Bearer heavy');
-  const response = (await executeGraphQlQuery(meQuery)) as any;
+  setHeader({Authorization: 'Bearer heavy'});
+  const response = await getMe(ctx.client).catch((e) => e);
   expect(response.errors[0].message).toBe('Invalid authentication token');
 });
 
 test('Authentication: token expiration error', async () => {
-  await executeGraphQlQuery(getSignUpMutation());
+  await signUp(ctx.client);
 
   vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1s');
-  const signInResponse = (await executeGraphQlQuery(signInMutation)) as Record<
-  string,
-  any
-  >;
-  expect(signInResponse?.signIn?.token).toBeTruthy();
-  const expiry = new Date(signInResponse?.signIn?.session?.referenceExpiryDate).getTime();
+  const signInResponse = await signIn(ctx.client);
+  expect(signInResponse.signIn.token).toBeTruthy();
+  const expiry = new Date(signInResponse.signIn.session.referenceExpiryDate!).getTime();
   const now = new Date().getTime();
 
   const token = signInResponse?.signIn?.token;
-  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  setHeader({Authorization: `Bearer ${token}`});
 
   // wait until token expires
   // eslint-disable-next-line no-promise-executor-return
   await new Promise((resolve) => setTimeout(resolve, expiry - now));
-  const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
-  string,
-  any
-  >;
-  expect(meResponse?.errors[0].message).toBe('Token expired');
+  const meResponse: GenqlError = (await getMe(ctx.client).catch(e => e))
+  expect(meResponse.errors[0].message).toBe('Token expired');
 });
 
 test('Authentication: sign up disabled', async () => {
   vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
-  const response = (await executeGraphQlQuery(getSignUpMutation())) as any;
+  const response: GenqlError = await signUp(ctx.client).catch((e) => e);
   expect(response.errors[0].message).toBe('Sign up is disabled');
 });

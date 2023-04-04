@@ -10,7 +10,6 @@ function getGraphqlTestContext() {
   let headers: Record<string, string> = {};
   return {
     async before() {
-      console.error('before')
       const app = createApp();
       serverInstance = await startServer(app);
       const serverAddress = serverInstance.address();
@@ -20,7 +19,6 @@ function getGraphqlTestContext() {
       const { port } = serverAddress;
       baseUrl = `http://0.0.0.0:${port}`;
       setClient(baseUrl, headers)
-      console.error(context);
     },
     async after() {
       serverInstance?.close();
