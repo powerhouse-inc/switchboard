@@ -7,11 +7,11 @@ export const defaultLoggerConfig: LoggerConfig = {
   // `pref` to filter is going to correspond to showing `[PREF] ` logs
   prefixFilter: [],
   // Lowest printed log level of default logger
-  logLevel: 'info',
+  logLevel: process.env.NODE_ENV === 'test' ? 'fatal' : 'info',
   // Log levels of prisma logger that are enabled
-  dbLogLevel: ['info'],
+  dbLogLevel: process.env.NODE_ENV === 'test' ? [] : ['info'],
   // Lowest printed log level of express logger
-  httpLogLevel: 'info',
+  httpLogLevel: process.env.NODE_ENV === 'test' ? 'fatal' : 'info',
 };
 
 export const debugLogConfig: LoggerConfig = {
