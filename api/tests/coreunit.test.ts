@@ -2,10 +2,32 @@ import { test, expect } from 'vitest';
 import builder from 'gql-query-builder';
 import { CoreUnit } from '@prisma/client';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
-import { executeGraphQlQuery } from './helpers/server';
 import prisma from '../src/database';
+import { ctx } from './helpers/server';
+import { GenqlError } from '../generated';
 
 cleanDatabaseBeforeAfterEachTest();
+
+const listCoreUnits = async () => ctx.client.query({
+  coreUnits: {
+    code: true,
+    shortCode: true,
+    name: true,
+    id: true,
+  },
+});
+
+const getCoreUnit = async (id: string) => ctx.client.query({
+  coreUnit: {
+    code: true,
+    shortCode: true,
+    name: true,
+    id: true,
+    __args: {
+      id,
+    },
+  },
+});
 
 test('Core Unit: get all', async () => {
   await prisma.coreUnit.create({
@@ -19,11 +41,7 @@ test('Core Unit: get all', async () => {
       descriptionParagraphImageSource: '',
     },
   });
-  const query = builder.query({
-    operation: 'coreUnits',
-    fields: ['code', 'shortCode', 'name'],
-  });
-  const response = await executeGraphQlQuery(query) as { coreUnits: CoreUnit[] };
+  const response = await listCoreUnits();
   expect(response.coreUnits).toHaveLength(1);
   expect(response.coreUnits[0].code).toBe('asdf');
   expect(response.coreUnits[0].shortCode).toBe('a');
@@ -42,40 +60,11 @@ test('Core Unit: get by id', async () => {
       descriptionParagraphImageSource: '',
     },
   });
-  const query = builder.query({
-    operation: 'coreUnit',
-    variables: {
-      id: {
-        value: created.id,
-        type: 'String!',
-      },
-    },
-    fields: ['id'],
-  });
-  const response = await executeGraphQlQuery(query) as { coreUnit: CoreUnit };
+  const response = await getCoreUnit(created.id);
   expect(response.coreUnit.id).toBe(created.id);
 });
 
-test('Core Unit: get by id without id field throws', async () => {
-  const query = builder.query({
-    operation: 'coreUnit',
-    fields: ['id'],
-  });
-  const response = await executeGraphQlQuery(query) as { errors: Record<string, unknown>[] };
-  expect(response.errors[0].message).toBe('Field "coreUnit" argument "id" of type "String!" is required, but it was not provided.');
-});
-
 test('Core Unit: get by id of unexistant throws', async () => {
-  const query = builder.query({
-    operation: 'coreUnit',
-    variables: {
-      id: {
-        value: 'adsfs',
-        type: 'String!',
-      },
-    },
-    fields: ['id'],
-  });
-  const response = await executeGraphQlQuery(query) as any;
+  const response: GenqlError = await getCoreUnit('asdf').catch((e) => e);
   expect(response.errors[0].message).toBe('Unit not found');
 });

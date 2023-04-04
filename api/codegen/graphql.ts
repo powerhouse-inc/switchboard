@@ -13,8 +13,8 @@ const config: CodegenConfig = {
   config: {
     scalars: {
       DateTime: 'Date',
-    }
-  }
+    },
+  },
 };
 
 export default config;

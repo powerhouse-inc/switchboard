@@ -1,4 +1,4 @@
-import {Client, createClient} from '../../generated'
+import { Client, createClient } from '../../generated';
 
 export interface TestContext {
   client: Client;
@@ -7,17 +7,17 @@ export interface TestContext {
 
 export const context = {} as TestContext;
 
-export function setHeader (headers: Record<string,string>) {
+export function setHeader(headers: Record<string, string>) {
   context.client = createClient({
     url: context.baseUrl,
-    headers: headers,
-  })
+    headers,
+  });
 }
 
-export function setClient (baseUrl: string, headers: Record<string,string>) {
+export function setClient(baseUrl: string, headers: Record<string, string>) {
   context.baseUrl = baseUrl;
   context.client = createClient({
     url: baseUrl,
-    headers: headers,
-  })
+    headers,
+  });
 }
