@@ -34,11 +34,6 @@ const PRISMA_TO_PINO_LOG_LEVEL: Record<Prisma.LogLevel, PinoLevel> = {
 
 // get base prisma client
 const prismaBase = new PrismaClient({
-  datasources: {
-    db: {
-      url: 'file:./db.sqlite',
-    },
-  },
   log: LOGGING_EVENTS,
 });
 
