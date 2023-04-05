@@ -10,11 +10,15 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@huntersofbook/naive-ui-nuxt'
+    '@huntersofbook/naive-ui-nuxt',
+    '@nuxt/content'
   ],
   typescript: {
     shim: false
   },
+  css: [
+    'github-markdown-css'
+  ],
   tailwindcss: {
     config: {
       theme: {
