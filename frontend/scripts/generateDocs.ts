@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { concatMdSync } from 'concat-md'
-import {mkdirpSync} from 'mkdirp'
+import { mkdirpSync } from 'mkdirp'
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
   const result = concatMdSync(pathToDir, {
@@ -9,7 +9,7 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
     dirNameAsTitle: true
   })
   mkdirpSync(path.dirname(outputFilePath))
-  fs.writeFileSync(outputFilePath, result, {encoding: 'utf8'})
+  fs.writeFileSync(outputFilePath, result, { encoding: 'utf8' })
 }
 
 function main () {

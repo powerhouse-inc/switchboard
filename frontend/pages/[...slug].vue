@@ -1,5 +1,5 @@
 <template>
   <div class="markdown-body h-full p-4">
-      <ContentDoc/>
+    <ContentDoc />
   </div>
 </template>
