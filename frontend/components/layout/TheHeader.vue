@@ -9,19 +9,35 @@
       </nuxt-link>
     </div>
     <LayoutTheMenu class="flex-shrink-0" />
-    <div class="flex-1 flex h-full justify-end items-center pr-1">
-      <a :href="repository.url" target="_blank" class="hover:text-primary transition duration-300">
-        <NIcon size="30">
+    <div class="flex-1 flex h-full justify-end items-center pr-1 gap-1">
+      <nuxt-link to="/user">
+        <n-button secondary round type="primary" class="gap-1" icon-placement="right">
+          <span>Logged in as <strong>{{ user?.username }}</strong></span>
+          <template #icon>
+            <n-icon :component="PersonOutline" />
+          </template>
+        </n-button>
+      </nuxt-link>
+      <a :href="repository.url" target="_blank" class="text-primary hover:text-primaryHover transition duration-300">
+        <n-icon size="30">
           <LogoGithub />
-        </NIcon>
+        </n-icon>
       </a>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { LogoGithub } from '@vicons/ionicons5'
+import { LogoGithub, PersonOutline } from '@vicons/ionicons5'
+import type { User } from '~/composables/useAuth'
 import { repository } from '~/package.json'
+
+defineProps({
+  user: {
+    type: Object as PropType<User>,
+    default: undefined
+  }
+})
 </script>
 
 <style scoped>

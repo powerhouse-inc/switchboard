@@ -30,6 +30,7 @@ export default defineNuxtConfig({
         extend: {
           colors: {
             primary: '#e88339',
+            primaryHover: '#f45d2f',
             secondary: '#fae6d8'
           }
         }

@@ -2,17 +2,29 @@ import { ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import decode from 'jwt-decode'
 
-const useAuth = function () {
-  const user = useStorage('userstore', {} as any)
-  const isLoading = ref(true)
+export declare interface User {
+    id: string;
+    username: string;
+}
 
+const user = ref(undefined as User | null | undefined)
+const isLoading = ref(true)
+const authStorage = useStorage('auth', {} as { token?: string })
+const isAuthorized = computed(() => Boolean(authStorage.value.token && user.value?.id))
+
+const useAuth = function () {
   const check = async () => {
-    useGqlToken(user.value?.token)
-    const { data, error } = await useAsyncGql('me')
-    if (error.value) {
-      user.value = {}
+    if (user.value) {
+      return
     }
-    user.value = { ...user.value, ...data.value?.me }
+    if (authStorage.value?.token) {
+      useGqlToken(authStorage.value?.token)
+    }
+    const { data, error } = await useAsyncGql('me')
+    if (error.value || !data.value?.me) {
+      user.value = undefined
+    }
+    user.value = data.value?.me
     isLoading.value = false
   }
 
@@ -21,7 +33,7 @@ const useAuth = function () {
     if (error.value || !data.value?.signIn?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    user.value.token = data.value?.signIn?.token
+    authStorage.value.token = data.value?.signIn?.token
     await check()
   }
   const signUp = async (username: string, password: string) => {
@@ -29,14 +41,14 @@ const useAuth = function () {
     if (error.value || !data.value?.signUp?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    user.value.token = data.value?.signUp?.token
+    authStorage.value.token = data.value?.signUp?.token
     await check()
   }
   const signOut = async () => {
-    if (!user.value?.token) {
+    if (!authStorage.value?.token) {
       throw new Error('No user token provided')
     }
-    const payload = decode(user.value?.token) as { sessionId?: string } | undefined
+    const payload = decode(authStorage.value?.token) as { sessionId?: string } | undefined
     if (!payload || !payload.sessionId) {
       throw new Error('Token has invalid format')
     }
@@ -44,11 +56,16 @@ const useAuth = function () {
     if (error.value || !data.value?.revokeSession?.id) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    user.value.token = undefined
+    authStorage.value.token = undefined
     await check()
   }
 
-  return { user, isLoading, check, signIn, signUp, signOut }
+  onMounted(async () => {
+    await nextTick()
+    check()
+  })
+
+  return { isLoading, isAuthorized, user, check, signIn, signUp, signOut }
 }
 
 export default useAuth

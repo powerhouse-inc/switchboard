@@ -9,9 +9,9 @@ import {
 export const User = objectType({
   name: 'User',
   definition(t) {
-    t.string('id');
-    t.string('username');
-    t.string('password');
+    t.nonNull.string('id');
+    t.nonNull.string('username');
+    t.nonNull.string('password');
   },
 });
 
@@ -26,8 +26,8 @@ export const UserNamePass = inputObjectType({
 export const AuthPayload = objectType({
   name: 'AuthPayload',
   definition(t) {
-    t.string('token');
-    t.field('session', { type: 'Session' });
+    t.nonNull.string('token');
+    t.nonNull.field('session', { type: 'Session' });
   },
 });
 
