@@ -12,9 +12,10 @@ export const Session = objectType({
     t.nonNull.string('id');
     t.nonNull.date('createdAt');
     t.nonNull.string('createdBy');
-    t.date('referenceExpiryDate');
+    t.nonNull.date('referenceExpiryDate');
     t.nonNull.string('referenceTokenId');
     t.nonNull.boolean('isUserCreated');
+    t.nonNull.boolean('isExpired');
     t.string('name');
     t.date('revokedAt');
   },
@@ -76,11 +77,25 @@ const generateTokenAndSession = async (
 
 export function getSessionCrud(prisma: PrismaClient) {
   return {
-    listSessions: async (userId: string) => prisma.session.findMany({
-      where: {
-        createdBy: userId,
-      },
-    }),
+    listSessions: async (userId?: string) => {
+      if (!userId) {
+        return [];
+      }
+      const sessions = await prisma.session.findMany({
+        where: {
+          createdBy: userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      const now = Date.now();
+      return sessions.map((session) => ({
+        ...session,
+        isExpired:
+          session.referenceExpiryDate ? now > session.referenceExpiryDate.getTime() : false,
+      }));
+    },
     revoke: async (sessionId: string, userId: string) => {
       const session = await prisma.session.findUnique({
         where: {

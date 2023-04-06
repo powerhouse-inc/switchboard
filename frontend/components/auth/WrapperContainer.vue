@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoading" class="flex items-center justify-center">
+  <div v-if="isLoading" class="w-full h-full bg-white flex items-center justify-center">
     Loading...
   </div>
   <div v-else-if="!isAuthorized" class="w-full h-full bg-white flex items-center justify-center">

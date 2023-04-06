@@ -8,27 +8,31 @@ export declare interface User {
 }
 
 const user = ref(undefined as User | undefined)
-const isLoading = ref(false)
 const authStorage = useStorage('auth', {} as { token?: string })
+const isLoading = ref(true)
 const isAuthorized = computed(() => {
   return Boolean(authStorage.value.token && user.value?.id)
 })
 
 const useAuth = function () {
+  if (authStorage.value?.token) {
+    useGqlToken(authStorage.value?.token)
+  }
+
   const check = async () => {
     if (user.value) {
       return
     }
-    if (authStorage.value?.token) {
-      useGqlToken(authStorage.value?.token)
+    try {
+      const { data, error } = await useAsyncGql('me')
+      if (error.value || !data.value?.me) {
+        user.value = undefined
+        return
+      }
+      user.value = data.value?.me
+    } finally {
+      isLoading.value = false
     }
-    const { data, error } = await useAsyncGql('me')
-    if (error.value || !data.value?.me) {
-      user.value = undefined
-      return
-    }
-    user.value = data.value?.me
-    isLoading.value = false
   }
 
   const signIn = async (username: string, password: string) => {
@@ -36,6 +40,7 @@ const useAuth = function () {
     if (error.value || !data.value?.signIn?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
+    useGqlToken(data.value?.signIn?.token)
     authStorage.value.token = data.value?.signIn?.token
     await check()
   }
@@ -44,24 +49,32 @@ const useAuth = function () {
     if (error.value || !data.value?.signUp?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
+    useGqlToken(data.value?.signUp?.token)
     authStorage.value.token = data.value?.signUp?.token
     await check()
+  }
+  const revokeSession = async (sessionId: string) => {
+    const { data, error } = await useAsyncGql('revokeSession', { sessionId })
+    if (error.value || !data.value?.revokeSession?.id) {
+      throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
+    }
+    if (authStorage.value?.token) {
+      const payload = decode(authStorage.value?.token) as { sessionId?: string } | undefined
+      if (sessionId === payload?.sessionId) {
+        authStorage.value.token = undefined
+        await check()
+      }
+    }
   }
   const signOut = async () => {
     if (!authStorage.value?.token) {
       throw new Error('No user token provided')
     }
-    useGqlToken(authStorage.value?.token)
     const payload = decode(authStorage.value?.token) as { sessionId?: string } | undefined
     if (!payload || !payload.sessionId) {
       throw new Error('Token has invalid format')
     }
-    const { data, error } = await useAsyncGql('revokeSession', { sessionId: payload.sessionId })
-    if (error.value || !data.value?.revokeSession?.id) {
-      throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
-    }
-    authStorage.value.token = undefined
-    await check()
+    await revokeSession(payload.sessionId)
   }
 
   onMounted(async () => {
@@ -69,7 +82,7 @@ const useAuth = function () {
     check()
   })
 
-  return { isLoading, isAuthorized, user, check, signIn, signUp, signOut }
+  return { isLoading, isAuthorized, user, check, signIn, signUp, signOut, revokeSession }
 }
 
 export default useAuth

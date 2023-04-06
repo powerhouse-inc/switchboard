@@ -2,30 +2,46 @@
   <div v-if="areSessionsLoading" class="flex items-center justify-center">
     Loading...
   </div>
-  <slot v-else :sessions="sessions" />
+  <div v-else-if="errorMessage" class="text-red-500">
+    {{ errorMessage }}
+  </div>
+  <slot v-else :sessions="sessions" :revoke-session="revoke" />
 </template>
 
 <script lang="ts" setup>
-interface Session {
+export interface Session {
   id: string;
   createdAt: any;
   createdBy: string;
   referenceExpiryDate?: any;
   referenceTokenId: string;
+  isExpired: boolean;
   isUserCreated: boolean;
   name?: string | null | undefined;
   revokedAt?: any;
 }
 
+const { revokeSession } = useAuth()
 const sessions = ref([{ id: 'test' }] as Session[])
-const areSessionsLoading = ref(false)
+const errorMessage = ref('')
+const areSessionsLoading = ref(true)
 
 const getSessions = async () => {
-  const { data, error } = await useAsyncGql('getSessions')
-  if (error.value || !data.value?.sessions) {
-    throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
+  try {
+    errorMessage.value = ''
+    const { data, error } = await useAsyncGql('getSessions')
+    if (error.value || !data.value?.sessions) {
+      errorMessage.value = error.value?.gqlErrors?.[0]?.message ?? 'Unknown error'
+    }
+    sessions.value = data.value?.sessions as Session[]
+  } finally {
+    areSessionsLoading.value = false
   }
-  sessions.value = data.value?.sessions as Session[]
+}
+
+const revoke = async (sessionId: string) => {
+  await revokeSession(sessionId)
+  await getSessions()
 }
 
 onMounted(getSessions)

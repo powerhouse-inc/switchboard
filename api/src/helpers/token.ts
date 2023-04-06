@@ -9,7 +9,7 @@ const jwtSchema = z.object({
   exp: z.optional(z.number()),
 });
 
-export const format = (token: string) => `${token.slice(0, 3)}...${token.slice(-3)}`;
+export const format = (token: string) => `${token.slice(0, 4)}...${token.slice(-4)}`;
 
 /** Generate a JWT token
  * - If expiryDurationSeconds is null, the token will never expire

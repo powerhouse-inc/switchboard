@@ -8,5 +8,6 @@ query getSessions {
         isUserCreated
         name
         revokedAt
+        isExpired
     }
 }
