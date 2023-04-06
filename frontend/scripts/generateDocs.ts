@@ -5,8 +5,7 @@ import { mkdirpSync } from 'mkdirp'
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
   const result = concatMdSync(pathToDir, {
-    fileNameAsTitle: true,
-    dirNameAsTitle: true
+    fileNameAsTitle: true
   })
   mkdirpSync(path.dirname(outputFilePath))
   fs.writeFileSync(outputFilePath, result, { encoding: 'utf8' })
@@ -14,7 +13,7 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
 
 function main () {
   const pathToDir = path.resolve(__dirname, '..', 'docs')
-  const outputFilePath = path.resolve(__dirname, '..', 'content', 'docs', 'index.md')
+  const outputFilePath = path.resolve(__dirname, '..', 'content', 'documentation', 'index.md')
   generateMdDocs(pathToDir, outputFilePath)
 }
 

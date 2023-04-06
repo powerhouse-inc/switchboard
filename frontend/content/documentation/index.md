@@ -253,9 +253,7 @@ submitForReview();
 escalate();
 ```
 
-# Classes
-
-## Budget Statement Budget Statement
+# Budget Statement Budget Statement
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [BudgetStatement](#budget-statement) / BudgetStatement
 
@@ -1519,7 +1517,7 @@ TopupObject.transferTopup
 
 [budget-statement/gen/topup/object.ts:31](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/object.ts#L31)
 
-## Document Base Document
+# Document Base Document
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [Document](#document) / BaseDocument
 
@@ -2014,9 +2012,7 @@ The state of the document.
 
 [index.doc.ts:35](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/index.doc.ts#L35)
 
-# Modules
-
-## Budget Statement Actions
+# Budget Statement Actions
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [BudgetStatement](#budget-statement) / actions
 
@@ -2394,7 +2390,7 @@ Action creator for transferring top-up to an account.
 
 [budget-statement/gen/topup/creators.ts:30](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/creators.ts#L30)
 
-## Budget Statement
+# Budget Statement
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / BudgetStatement
 
@@ -2705,7 +2701,7 @@ The new state after applying the action.
 
 [document/utils/base.ts:59](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/base.ts#L59)
 
-## Budget Statement Utils
+# Budget Statement Utils
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [BudgetStatement](#budget-statement) / utils
 
@@ -2844,7 +2840,7 @@ A promise that resolves with the saved file path.
 
 [budget-statement/custom/utils.ts:90](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/utils.ts#L90)
 
-## Document Actions
+# Document Actions
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [Document](#document) / actions
 
@@ -2983,7 +2979,7 @@ Cancels the last `count` operations.
 
 [document/actions/creators.ts:31](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/actions/creators.ts#L31)
 
-## Document
+# Document
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / Document
 
@@ -3314,7 +3310,7 @@ The new state of the document.
 
 [document/reducer.ts:149](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/reducer.ts#L149)
 
-## Document Utils
+# Document Utils
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [Document](#document) / utils
 
