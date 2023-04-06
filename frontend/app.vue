@@ -11,4 +11,8 @@
 html, body {
   @apply bg-neutral-50;
 }
+
+.Body {
+    @apply h-[calc(100vh-88px)];
+}
 </style>

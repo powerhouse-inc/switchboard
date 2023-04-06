@@ -1,8 +1,17 @@
 <template>
-  <div class="markdown-body h-full p-4 flex flex-wrap justify-center ">
-    <ContentDoc path="/documentation" class="w-full lg:w-3/4">
-      <template #not-found>
-        <h1> Document not found </h1>
+  <div class="markdown-body w-full">
+    <ContentDoc path="/documentation">
+      <template #default="{doc}">
+        <div class="flex flex-row w-full">
+            <div class="w-1/4 m-4 hidden lg:block h-full">
+                <div class="items-center">
+                    <DocTableOfContents/>
+                </div>
+            </div>
+            <div class="w-3/4 sm:max-lg:w-full p-4">
+                <ContentRenderer :value="doc"/>
+            </div>
+        </div>
       </template>
     </ContentDoc>
   </div>
