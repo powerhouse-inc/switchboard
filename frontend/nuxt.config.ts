@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     shim: false
   },
   css: [
-    'github-markdown-css'
+    'github-markdown-css/github-markdown-light.css'
   ],
   tailwindcss: {
     config: {
