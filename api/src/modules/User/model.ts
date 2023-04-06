@@ -37,7 +37,7 @@ export function getUserCrud(prisma: PrismaClient) {
       const { username, password } = userNamePass;
       const user = await prisma.user.findUnique({
         where: {
-          username,
+          username: username.toLocaleLowerCase(),
         },
       });
       if (!user) {
@@ -59,7 +59,7 @@ export function getUserCrud(prisma: PrismaClient) {
       try {
         createdUser = await prisma.user.create({
           data: {
-            username,
+            username: username.toLocaleLowerCase(),
             password: hashedPassword,
           },
         });
