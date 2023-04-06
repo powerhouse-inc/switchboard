@@ -3,7 +3,7 @@
     <div class="h-screen flex flex-col">
       <LayoutTheHeader :user="user" class="flex-shrink-0 h-14" />
       <div class="flex-grow">
-        <NuxtPage />
+        <NuxtPage :user="user" />
       </div>
     </div>
   </NMessageProvider>

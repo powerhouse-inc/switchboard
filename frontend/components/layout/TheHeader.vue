@@ -10,11 +10,11 @@
     </div>
     <LayoutTheMenu class="flex-shrink-0" />
     <div class="flex-1 flex h-full justify-end items-center pr-1 gap-1">
-      <nuxt-link to="/user">
-        <n-button secondary round type="primary" class="gap-1" icon-placement="right">
-          <span>Logged in as <strong>{{ user?.username }}</strong></span>
+      <nuxt-link v-if="user" to="/user">
+        <n-button secondary round type="primary" class="gap-1 !pl-2 px-0 lg:!pl-5" icon-placement="right">
+          <span class="hidden lg:block">Logged in as <strong>{{ user?.username }}</strong></span>
           <template #icon>
-            <n-icon :component="PersonOutline" />
+            <n-icon :component="PersonCircleOutline" />
           </template>
         </n-button>
       </nuxt-link>
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { LogoGithub, PersonOutline } from '@vicons/ionicons5'
+import { LogoGithub, PersonCircleOutline } from '@vicons/ionicons5'
 import type { User } from '~/composables/useAuth'
 import { repository } from '~/package.json'
 

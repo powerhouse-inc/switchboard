@@ -7,8 +7,8 @@ export declare interface User {
     username: string;
 }
 
-const user = ref(undefined as User | null | undefined)
-const isLoading = ref(true)
+const user = ref(null as User | null)
+const isLoading = ref(false)
 const authStorage = useStorage('auth', {} as { token?: string })
 const isAuthorized = computed(() => Boolean(authStorage.value.token && user.value?.id))
 
@@ -22,7 +22,8 @@ const useAuth = function () {
     }
     const { data, error } = await useAsyncGql('me')
     if (error.value || !data.value?.me) {
-      user.value = undefined
+      user.value = null
+      return
     }
     user.value = data.value?.me
     isLoading.value = false
@@ -48,6 +49,7 @@ const useAuth = function () {
     if (!authStorage.value?.token) {
       throw new Error('No user token provided')
     }
+    useGqlToken(authStorage.value?.token)
     const payload = decode(authStorage.value?.token) as { sessionId?: string } | undefined
     if (!payload || !payload.sessionId) {
       throw new Error('Token has invalid format')
