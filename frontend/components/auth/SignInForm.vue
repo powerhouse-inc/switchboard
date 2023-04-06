@@ -8,7 +8,7 @@
         <BaseMenuItem id="sign-up" label="Sign Up" :icon="FormNew24Regular" :active-id="activeId" />
       </button>
     </div>
-    <form class="flex flex-col gap-4" @submit.prevent="loginAndAwait">
+    <form class="flex flex-col gap-4" @submit.prevent="activeId === 'sign-in' ? signInAndAwait() : signUpAndAwait()">
       <n-input
         v-model:value="username"
         autofocus
@@ -39,7 +39,7 @@
         :disabled="!username || !password"
         :loading="isLoading"
       >
-        Sign in
+        {{ activeId === 'sign-in' ? 'Sign in' : 'Sign up' }}
       </NButton>
     </form>
   </div>
@@ -55,9 +55,13 @@ const message = useMessage()
 const props = defineProps({
   isSignupEnabled: {
     type: Boolean,
-    default: false
+    default: true
   },
   signIn: {
+    type: Function,
+    required: true
+  },
+  signUp: {
     type: Function,
     required: true
   }
@@ -68,12 +72,23 @@ const username = ref('')
 const password = ref('')
 const isLoading = ref(false)
 
-const loginAndAwait = async () => {
+const signInAndAwait = async () => {
   try {
     isLoading.value = true
     await props.signIn(username.value, password.value)
   } catch (error: any) {
-    message.error(`Error while signing in: ${error.message}`)
+    message.error(`Sign in error: ${error.message}`)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const signUpAndAwait = async () => {
+  try {
+    isLoading.value = true
+    await props.signUp(username.value, password.value)
+  } catch (error: any) {
+    message.error(`Sign up error: ${error.message}`)
   } finally {
     isLoading.value = false
   }

@@ -1,3 +1,5 @@
+const BACKEND_ORIGIN = process.env.BACKEND_ORIGIN ?? ''
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
@@ -10,7 +12,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      GQL_HOST: '/api/graphql'
+      GQL_HOST: `${BACKEND_ORIGIN}/api/graphql`
     }
   },
   modules: [

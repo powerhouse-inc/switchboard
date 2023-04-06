@@ -1,4 +1,4 @@
-mutation signIn($username: String, $password: String) {
+mutation signIn($username: String!, $password: String!) {
     signIn(user: { username: $username, password: $password }) {
         token
     }
