@@ -5,7 +5,7 @@
   <div v-else-if="errorMessage" class="text-red-500">
     {{ errorMessage }}
   </div>
-  <slot v-else :sessions="sessions" :revoke-session="revoke" />
+  <slot v-else :sessions="sessions" :revoke-session="revoke" :create-session="create" />
 </template>
 
 <script lang="ts" setup>
@@ -21,7 +21,7 @@ export interface Session {
   revokedAt?: any;
 }
 
-const { revokeSession } = useAuth()
+const { createSession, revokeSession } = useAuth()
 const sessions = ref([{ id: 'test' }] as Session[])
 const errorMessage = ref('')
 const areSessionsLoading = ref(true)
@@ -41,6 +41,11 @@ const getSessions = async () => {
 
 const revoke = async (sessionId: string) => {
   await revokeSession(sessionId)
+  await getSessions()
+}
+
+const create = async (name: string, expiryDurationSeconds: number) => {
+  await createSession(name, expiryDurationSeconds)
   await getSessions()
 }
 

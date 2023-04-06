@@ -90,10 +90,9 @@ const columns = [
       return h(
         NButton,
         {
-          quaternary: true,
+          text: true,
           type: 'primary',
           size: 'small',
-          class: '!px-1',
           onClick: () => revoke(session?.id)
         },
         { default: () => 'Revoke' }
