@@ -16,7 +16,8 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint --max-warnings 0 .",
     "typecheck": "nuxt typecheck",
-    "start": "NODE_ENV=production node ."
+    "start": "NODE_ENV=production node .",
+    "mkdocs": "vite-node ./scripts/generateDocs.ts"
   },
   "devDependencies": {
     "@huntersofbook/naive-ui-nuxt": "^0.7.1",
