@@ -18,7 +18,7 @@ const onClick = (id: string) => {
 </script>
 
 <template>
-    <nav>
+    <nav class="border-black">
       <ul class="ml-0 pl-4">
         <li
           v-for="{ id, text, children } in tocLinks"
