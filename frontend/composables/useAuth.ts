@@ -7,10 +7,12 @@ export declare interface User {
     username: string;
 }
 
-const user = ref(null as User | null)
+const user = ref(undefined as User | undefined)
 const isLoading = ref(false)
 const authStorage = useStorage('auth', {} as { token?: string })
-const isAuthorized = computed(() => Boolean(authStorage.value.token && user.value?.id))
+const isAuthorized = computed(() => {
+  return Boolean(authStorage.value.token && user.value?.id)
+})
 
 const useAuth = function () {
   const check = async () => {
@@ -22,7 +24,7 @@ const useAuth = function () {
     }
     const { data, error } = await useAsyncGql('me')
     if (error.value || !data.value?.me) {
-      user.value = null
+      user.value = undefined
       return
     }
     user.value = data.value?.me

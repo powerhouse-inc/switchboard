@@ -10,7 +10,7 @@
     </div>
     <LayoutTheMenu class="flex-shrink-0" />
     <div class="flex-1 flex h-full justify-end items-center pr-1 gap-1">
-      <nuxt-link v-if="user" to="/user">
+      <nuxt-link v-if="isAuthorized" to="/user">
         <n-button secondary round type="primary" class="gap-1 !pl-2 px-0 lg:!pl-5" icon-placement="right">
           <span class="hidden lg:block">Logged in as <strong>{{ user?.username }}</strong></span>
           <template #icon>
@@ -33,6 +33,10 @@ import type { User } from '~/composables/useAuth'
 import { repository } from '~/package.json'
 
 defineProps({
+  isAuthorized: {
+    type: Boolean,
+    default: false
+  },
   user: {
     type: Object as PropType<User>,
     default: undefined
