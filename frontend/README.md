@@ -10,6 +10,10 @@ The UI part of the system that intends to provide user-friendly wrapper over the
 
 Please refer to the root readme to learn more about general development setup.
 
+### Environment variables
+
+- `API_ORIGIN` (optional, default `/api`): relative path or the url under which `api` service is running. For example, if you run api on port 4000 via `PORT=4000 npm run start`, the value should be `http://localhost:4000`
+
 ## Production
 
 You can build application for production using `npm run build` and then locally preview production build via `npm run preview`.
