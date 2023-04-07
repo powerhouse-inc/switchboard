@@ -5,7 +5,7 @@ import { mkdirpSync } from 'mkdirp'
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
   const content = concatMdSync(pathToDir, {
-    fileNameAsTitle: true,
+    fileNameAsTitle: true
   })
   mkdirpSync(path.dirname(outputFilePath))
   fs.writeFileSync(outputFilePath, content, { encoding: 'utf8' })

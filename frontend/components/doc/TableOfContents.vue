@@ -1,27 +1,22 @@
 <script setup lang="ts">
 
-const router = useRouter();
+const props = defineProps<{
+    tocLinks: Array<{id: string; text: string, children: {id: string, text: string}[]}> | null;
+}>()
 
-const { data: blogPost } = await useAsyncData(`blogToc`, () =>
-  queryContent(`/documentation`).findOne()
-);
-const tocLinks = computed(() => blogPost.value?.body.toc.links ?? []);
+const emit = defineEmits<{(e: 'click', id: string): void}>()
 
 const onClick = (id: string) => {
-  const el = document.getElementById(id);
-  if (el) {
-    router.push({ hash: `#${id}` });
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
+  emit('click', id)
 };
 
 </script>
 
 <template>
-    <nav class="border-black">
+    <nav>
       <ul class="ml-0 pl-4">
         <li
-          v-for="{ id, text, children } in tocLinks"
+          v-for="{ id, text, children } in props.tocLinks"
           :id="`toc-${id}`"
           :key="id"
           class="cursor-pointer text-sm list-none ml-0 mb-2 last:mb-0"
