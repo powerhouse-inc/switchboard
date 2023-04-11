@@ -1,5 +1,5 @@
 import {
-  test, expect, vi, describe,
+  test, expect, vi, describe, afterEach,
 } from 'vitest';
 import { getJwtSecret, getJwtExpirationPeriod } from '../src/env/getters';
 import { restoreEnvAfterEach } from './helpers/env';
@@ -40,6 +40,9 @@ test('Env: jwt expiration in seconds format', async () => {
 });
 
 describe('Healthz', () => {
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
   test('healthz: returns 200', async () => {
     // mocking `prisma` is not straighforward because pothos builder
     // depends on it and ts checks break.

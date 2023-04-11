@@ -1,7 +1,11 @@
 import {
-  test, expect, vi, describe,
+  test, expect, vi, describe, afterEach,
 } from 'vitest';
 import { getChildLogger } from '../src/logger';
+
+afterEach(() => {
+  vi.resetAllMocks();
+});
 
 describe('Logger: metadata', () => {
   test('Logger: creation, prefix and bindings', () => {
