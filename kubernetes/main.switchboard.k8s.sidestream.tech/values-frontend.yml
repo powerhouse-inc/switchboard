@@ -39,7 +39,7 @@ podAutoscaler:
           averageUtilization: 75
 
 oauth2:
-  enabled: true
+  enabled: false
 
 ingress:
   enabled: true
