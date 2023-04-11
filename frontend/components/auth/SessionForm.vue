@@ -1,7 +1,11 @@
 <template>
-  <form class="flex items-center gap-5" @submit.prevent="create">
-    <n-input v-model:value="name" placeholder="Name" />
-    <n-input v-model:value="expiryDurationSeconds" placeholder="Duration" />
+  <form class="flex items-end gap-5" @submit.prevent="create">
+    <label class="w-full"><span class="font-semibold">Name</span>
+      <n-input v-model:value="name" placeholder="Name" />
+    </label>
+    <label class="w-full"><span class="font-semibold">Duration</span>
+      <n-select v-model:value="expiryDurationSeconds" :options="options" clearable placeholder="Please select" />
+    </label>
     <n-button
       attr-type="submit"
       type="primary"
@@ -19,9 +23,36 @@ const props = defineProps({
   }
 })
 
+const options = [
+  {
+    label: '1 hour',
+    value: 60 * 60
+  },
+  {
+    label: '1 day',
+    value: 60 * 60 * 24
+  },
+  {
+    label: '1 week',
+    value: 60 * 60 * 24 * 7
+  },
+  {
+    label: '1 month',
+    value: 60 * 60 * 24 * 30
+  },
+  {
+    label: '1 year',
+    value: 60 * 60 * 24 * 365
+  },
+  {
+    label: 'Non expiring',
+    value: undefined
+  }
+]
+
 const isCreating = ref(false)
 const name = ref('')
-const expiryDurationSeconds = ref('')
+const expiryDurationSeconds = ref(60 * 60)
 
 const create = async () => {
   isCreating.value = true
