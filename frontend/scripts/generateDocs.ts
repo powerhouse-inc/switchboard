@@ -14,7 +14,7 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
 
 function main () {
   if (!DOCS_DIR) {
-    throw new Error("Please provide DOCS_DIR env variable which points to documentation directory")
+    throw new Error('Please provide DOCS_DIR env variable which points to documentation directory')
   }
   const pathToDir = path.resolve(DOCS_DIR)
   const outputFilePath = path.resolve(__dirname, '..', 'content', 'documentation', 'index.md')
