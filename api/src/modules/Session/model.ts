@@ -1,5 +1,5 @@
+import type { PrismaClient, Prisma, Session as SessionPrisma } from '@prisma/client';
 import { inputObjectType, objectType } from 'nexus/dist';
-import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
@@ -75,6 +75,15 @@ const generateTokenAndSession = async (
   };
 };
 
+export const extendSession = (session: SessionPrisma) => {
+  const now = Date.now();
+  return {
+    ...session,
+    isExpired:
+      session.referenceExpiryDate ? now > session.referenceExpiryDate.getTime() : false,
+  };
+};
+
 export function getSessionCrud(prisma: PrismaClient) {
   return {
     listSessions: async (userId?: string) => {
@@ -89,12 +98,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           createdAt: 'desc',
         },
       });
-      const now = Date.now();
-      return sessions.map((session) => ({
-        ...session,
-        isExpired:
-          session.referenceExpiryDate ? now > session.referenceExpiryDate.getTime() : false,
-      }));
+      return sessions;
     },
     revoke: async (sessionId: string, userId: string) => {
       const session = await prisma.session.findUnique({
