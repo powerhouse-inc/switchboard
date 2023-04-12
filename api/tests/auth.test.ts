@@ -1,5 +1,5 @@
 import {
-  test, expect
+  test, expect,
 } from 'vitest';
 import ms from 'ms';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
