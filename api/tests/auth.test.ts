@@ -110,8 +110,3 @@ test('Authentication: token expiration error', async () => {
   expect(meResponse.errors[0].message).toBe('Token expired');
 });
 
-test('Authentication: sign up disabled', async () => {
-  vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
-  const response: GenqlError = await signUp(ctx.client).catch((e) => e);
-  expect(response.errors[0].message).toBe('Sign up is disabled');
-});

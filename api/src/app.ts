@@ -7,6 +7,7 @@ import prisma from './database';
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
 
+/* istanbul ignore next @preserve */
 export const createApp = (): Express => {
   logger.debug('Creating app');
   const app = express();

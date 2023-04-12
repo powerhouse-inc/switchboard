@@ -1,9 +1,6 @@
 import { compare, hash } from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { GraphQLError } from 'graphql';
-import {
-  AUTH_SIGNUP_ENABLED,
-} from '../../env';
 
 export function getUserCrud(prisma: PrismaClient) {
   return {
@@ -24,9 +21,6 @@ export function getUserCrud(prisma: PrismaClient) {
       return user;
     },
     createUser: async (user: { username: string; password: string }) => {
-      if (!AUTH_SIGNUP_ENABLED) {
-        throw new Error('Sign up is disabled');
-      }
       const { username, password } = user;
       const hashedPassword = await hash(password, 10);
       let createdUser: PrismaUser;

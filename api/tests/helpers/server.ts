@@ -1,4 +1,4 @@
-import { beforeEach, afterEach } from 'vitest';
+import { beforeEach, afterEach, vi } from 'vitest';
 import type { Server } from 'http';
 import { startServer } from '../../src/graphql/server';
 import { createApp } from '../../src/app';
@@ -30,9 +30,11 @@ function getGraphqlTestContext() {
 function createTestContext(): TestContext {
   const graphqlTestContext = getGraphqlTestContext();
   beforeEach(async () => {
+    vi.clearAllMocks()
     await graphqlTestContext.before();
   });
   afterEach(async () => {
+    vi.clearAllMocks()
     await graphqlTestContext.after();
   });
   return context;
