@@ -9,13 +9,42 @@
     <n-button
       attr-type="submit"
       type="primary"
+      class="!w-52"
+      :loading="isCreating"
+      :disabled="isCreationDisabed"
     >
       Create new token
     </n-button>
   </form>
+  <n-modal :show="!!createdToken">
+    <n-card
+      style="width: 570px"
+      title="Created token"
+      size="small"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="bg-neutral-100 p-3 rounded border-2 border-neutral-200">
+        {{ createdToken }}
+      </div>
+      <div class="text-neutral-400 text-sm my-5">
+        Note: the token is not stored in our database, so it is only displayed
+        once to you. Please make sure you've copied it into a secure place before closing this window
+      </div>
+      <n-button
+        type="primary"
+        class="!w-full"
+        @click="createdToken = ''"
+      >
+        I have saved the token
+      </n-button>
+    </n-card>
+  </n-modal>
 </template>
 
 <script lang="ts" setup>
+import { useMessage, NButton } from 'naive-ui'
+
 const props = defineProps({
   createSession: {
     type: Function,
@@ -50,14 +79,23 @@ const options = [
   }
 ]
 
+const message = useMessage()
 const isCreating = ref(false)
 const name = ref('')
-const expiryDurationSeconds = ref(60 * 60)
+const expiryDurationSeconds = ref(null)
+const createdToken = ref('')
+const isCreationDisabed = computed(() => !name.value || expiryDurationSeconds.value === null)
 
 const create = async () => {
   isCreating.value = true
   try {
-    await props.createSession(name.value, expiryDurationSeconds.value)
+    const token = await props.createSession(name.value, expiryDurationSeconds.value ?? null)
+    name.value = ''
+    expiryDurationSeconds.value = null
+    createdToken.value = token
+  } catch (error: any) {
+    console.error('Failed to create new token', error)
+    message.error(`Failed to create new token: ${error?.message}`)
   } finally {
     isCreating.value = false
   }

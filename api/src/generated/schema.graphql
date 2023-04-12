@@ -3,8 +3,8 @@
 
 
 type AuthPayload {
-  session: Session
-  token: String
+  session: Session!
+  token: String!
 }
 
 type CoreUnit {
@@ -39,6 +39,7 @@ type Session {
   createdAt: GQLDateBase!
   createdBy: String!
   id: String!
+  isExpired: Boolean!
   isUserCreated: Boolean!
   name: String
   referenceExpiryDate: GQLDateBase
@@ -57,9 +58,9 @@ type SessionCreateOutput {
 }
 
 type User {
-  id: String
-  password: String
-  username: String
+  id: String!
+  password: String!
+  username: String!
 }
 
 input UserNamePass {

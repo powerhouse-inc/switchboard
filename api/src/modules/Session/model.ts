@@ -12,7 +12,7 @@ export const Session = objectType({
     t.nonNull.string('id');
     t.nonNull.date('createdAt');
     t.nonNull.string('createdBy');
-    t.nonNull.date('referenceExpiryDate');
+    t.date('referenceExpiryDate');
     t.nonNull.string('referenceTokenId');
     t.nonNull.boolean('isUserCreated');
     t.nonNull.boolean('isExpired');

@@ -34,8 +34,8 @@ const formatDate = (dateString?: string): string => {
 
 const revoke = async (sessionId: string) => {
   try {
-    await props.revokeSession(sessionId)
-    message.success(`Succesfully revoked session ${sessionId}`)
+    const referenceTokenId = await props.revokeSession(sessionId)
+    message.success(`Succesfully revoked token ${referenceTokenId}`)
   } catch (error: any) {
     message.error(`Session revocation failed: ${error?.message}`)
   }

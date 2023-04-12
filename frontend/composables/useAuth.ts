@@ -53,18 +53,12 @@ const useAuth = function () {
     authStorage.value.token = data.value?.signUp?.token
     await check()
   }
-  const createSession = async (name: string, expiryDurationSeconds: number) => {
-    // const { data, error } = await useAsyncGql('revokeSession', { validityOfSeconds })
-    // if (error.value || !data.value?.revokeSession?.id) {
-    //   throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
-    // }
-    // if (authStorage.value?.token) {
-    //   const payload = decode(authStorage.value?.token) as { sessionId?: string } | undefined
-    //   if (sessionId === payload?.sessionId) {
-    //     authStorage.value.token = undefined
-    //     await check()
-    //   }
-    // }
+  const createSession = async (name: string, expiryDurationSeconds: number | null) => {
+    const { data, error } = await useAsyncGql('createSession', { name, expiryDurationSeconds })
+    if (error.value || !data.value?.createSession?.token) {
+      throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
+    }
+    return data.value?.createSession?.token
   }
   const revokeSession = async (sessionId: string) => {
     const { data, error } = await useAsyncGql('revokeSession', { sessionId })
@@ -78,6 +72,7 @@ const useAuth = function () {
         await check()
       }
     }
+    return data.value?.revokeSession?.referenceTokenId
   }
   const signOut = async () => {
     if (!authStorage.value?.token) {

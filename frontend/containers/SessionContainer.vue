@@ -40,13 +40,15 @@ const getSessions = async () => {
 }
 
 const revoke = async (sessionId: string) => {
-  await revokeSession(sessionId)
+  const referenceTokenId = await revokeSession(sessionId)
   await getSessions()
+  return referenceTokenId
 }
 
-const create = async (name: string, expiryDurationSeconds: number) => {
-  await createSession(name, expiryDurationSeconds)
+const create = async (name: string, expiryDurationSeconds: number | null) => {
+  const token = await createSession(name, expiryDurationSeconds)
   await getSessions()
+  return token
 }
 
 onMounted(getSessions)
