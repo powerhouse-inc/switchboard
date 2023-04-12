@@ -3,6 +3,8 @@ import path from 'path'
 import { concatMdSync } from 'concat-md'
 import { mkdirpSync } from 'mkdirp'
 
+const DOCS_DIR = process.env.DOCS_DIR
+
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
   const content = concatMdSync(pathToDir, {
     fileNameAsTitle: true
@@ -12,7 +14,10 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
 }
 
 function main () {
-  const pathToDir = path.resolve(__dirname, '..', 'docs')
+  if (!DOCS_DIR) {
+    throw new Error("Please provide DOCS_DIR env variable which points to documentation directory")
+  }
+  const pathToDir = path.resolve(DOCS_DIR)
   const outputFilePath = path.resolve(__dirname, '..', 'content', 'documentation', 'index.md')
   generateMdDocs(pathToDir, outputFilePath)
 }
