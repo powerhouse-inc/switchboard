@@ -1,5 +1,5 @@
 import {
-  test, expect, vi, afterEach,
+  test, expect
 } from 'vitest';
 import ms from 'ms';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
@@ -18,10 +18,6 @@ import { isRecent } from './helpers/time';
 
 cleanDatabaseBeforeAfterEachTest();
 restoreEnvAfterEach();
-
-afterEach(() => {
-  vi.resetAllMocks();
-});
 
 test('Authentication: sign up, sign in, request protected enpoint', async () => {
   const signUpResponse = await signUp(ctx.client);
