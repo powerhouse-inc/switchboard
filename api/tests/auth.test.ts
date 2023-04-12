@@ -109,4 +109,3 @@ test('Authentication: token expiration error', async () => {
   const meResponse: GenqlError = (await getMe(ctx.client).catch((e) => e));
   expect(meResponse.errors[0].message).toBe('Token expired');
 });
-

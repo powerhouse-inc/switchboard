@@ -30,11 +30,11 @@ function getGraphqlTestContext() {
 function createTestContext(): TestContext {
   const graphqlTestContext = getGraphqlTestContext();
   beforeEach(async () => {
-    vi.clearAllMocks()
+    vi.clearAllMocks();
     await graphqlTestContext.before();
   });
   afterEach(async () => {
-    vi.clearAllMocks()
+    vi.clearAllMocks();
     await graphqlTestContext.after();
   });
   return context;
