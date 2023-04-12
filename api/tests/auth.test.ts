@@ -81,19 +81,31 @@ test('Authentication: access protected endpoint without valid token', async () =
 
 test('Authentication: token expiration error', async () => {
   await signUp(ctx.client);
-
-  vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1s');
   const signInResponse = await signIn(ctx.client);
   expect(signInResponse.signIn.token).toBeTruthy();
-  const expiry = new Date(signInResponse.signIn.session.referenceExpiryDate!).getTime();
-  const now = new Date().getTime();
-
-  const token = signInResponse?.signIn?.token;
+  setHeader({ Authorization: `Bearer ${signInResponse.signIn.token}` });
+  const createdFastExpiredSession = await ctx.client.mutation({
+    createSession: {
+      token: true,
+      session: {
+        isUserCreated: true,
+        id: true,
+        referenceExpiryDate: true,
+      },
+      __args: {
+        session: {
+          expiryDurationSeconds: 1,
+          name: 'test',
+        },
+      },
+    },
+  });
+  const { token } = createdFastExpiredSession.createSession;
   setHeader({ Authorization: `Bearer ${token}` });
 
   // wait until token expires
   // eslint-disable-next-line no-promise-executor-return
-  await new Promise((resolve) => setTimeout(resolve, expiry - now));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
   const meResponse: GenqlError = (await getMe(ctx.client).catch((e) => e));
   expect(meResponse.errors[0].message).toBe('Token expired');
 });
