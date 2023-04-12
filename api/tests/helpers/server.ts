@@ -17,7 +17,7 @@ function getGraphqlTestContext() {
         throw new Error('Unexpected server address format');
       }
       const { port } = serverAddress;
-      baseUrl = `http://0.0.0.0:${port}`;
+      baseUrl = `http://0.0.0.0:${port}/graphql`;
       setClient(baseUrl, headers);
     },
     async after() {
