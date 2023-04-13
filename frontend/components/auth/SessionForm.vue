@@ -86,7 +86,7 @@ const message = useMessage()
 const isCreating = ref(false)
 const name = ref('')
 const expiryDurationSeconds = ref(null)
-const originRestriction = ref(null)
+const originRestriction = ref('*')
 const createdToken = ref('')
 const isCreationDisabed = computed(() => !name.value || expiryDurationSeconds.value === null || originRestriction.value === null)
 
