@@ -4,6 +4,7 @@
 
 # deployment-related
 secrets.yaml
+.helmsman-tmp
 
 # node-related
 node_modules

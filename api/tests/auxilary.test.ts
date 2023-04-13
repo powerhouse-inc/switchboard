@@ -57,6 +57,6 @@ describe('Healthz', () => {
     const res = await fetch(url);
     expect(res.status).toBe(500);
     const json: any = await res.json();
-    expect(json.status).toBe('DB failed initialization check');
+    expect(json.status).toBe('Failed database initialization check with error: test');
   });
 });
