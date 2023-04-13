@@ -178,7 +178,8 @@ export function getSessionCrud(prisma: PrismaClient) {
             extensions: { code: 'ORIGIN_HEADER_MISSING' },
           });
         }
-        if (!origin.startsWith(session.originRestriction)) {
+        const allowedOrigins = session.originRestriction.split(',')
+        if (!allowedOrigins.some(o => origin.startsWith(o))) {
           throw new GraphQLError('Access denied due to origin restriction', {
             extensions: { code: 'ORIGIN_FORBIDDEN' },
           });
