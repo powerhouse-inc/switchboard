@@ -10,7 +10,7 @@ export const listSessions = queryField('sessions', {
   type: list('Session'),
   resolve: async (_, __, ctx) => {
     const { createdBy } = await ctx.getSession();
-    return await ctx.prisma.session.listSessions(createdBy);
+    return ctx.prisma.session.listSessions(createdBy);
   },
 });
 

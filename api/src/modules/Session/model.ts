@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma, Session as SessionPrisma } from '@prisma/client';
+import type { PrismaClient, Prisma } from '@prisma/client';
 import { inputObjectType, objectType } from 'nexus/dist';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
