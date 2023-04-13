@@ -6,6 +6,7 @@ import ms from 'ms';
 import wildcard from 'wildcard-match';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
+import { isOriginValid } from '../../helpers/origin';
 
 export const Session = objectType({
   name: 'Session',
@@ -48,21 +49,6 @@ async function newSession(
   });
 }
 
-function isOriginValid(originParam: string): boolean {
-  if (originParam === '*') {
-    return true;
-  }
-  if (originParam.includes(' ')) {
-    return false;
-  }
-  const origins = originParam.split(',');
-  return origins.some((origin) => {
-    if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
-      return false;
-    }
-    return true;
-  });
-}
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
