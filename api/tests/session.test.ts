@@ -226,3 +226,11 @@ test('Auth session: origin invalid - contains space', async () => {
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   expect(sessionResponse.errors[0].message).toBe('Invalid origin parameter');
 });
+
+test('Auth session: origin invalid - bad protocol', async () => {
+  const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  const mutation = getCreateSessionMutation('Origin', 'htt://google.com', 3600);
+  const sessionResponse = await executeGraphQlQuery(mutation) as any;
+  expect(sessionResponse.errors[0].message).toBe('Invalid origin parameter');
+});
