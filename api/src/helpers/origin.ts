@@ -16,7 +16,7 @@ export function isOriginValid(originParam: string): boolean {
     return true;
   });
 }
-export function throwGQLErrorIfOriginInvalid(originRestriction: string, originReceived?: string) {
+export function throwGQLErrorIfOriginDisallowed(originRestriction: string, originReceived?: string) {
   if (originRestriction !== '*') {
     if (!originReceived) {
       throw new GraphQLError('Origin not provided', {

@@ -5,7 +5,7 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { isOriginValid, throwGQLErrorIfOriginInvalid } from '../../helpers/origin';
+import { isOriginValid, throwGQLErrorIfOriginDisallowed } from '../../helpers/origin';
 
 export const Session = objectType({
   name: 'Session',
@@ -160,7 +160,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
-      throwGQLErrorIfOriginInvalid(session.originRestriction, origin);
+      throwGQLErrorIfOriginDisallowed(session.originRestriction, origin);
       return session;
     },
 
