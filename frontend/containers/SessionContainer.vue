@@ -21,7 +21,7 @@ export interface Session {
 }
 
 const { createSession, revokeSession } = useAuth()
-const sessions = ref([{ id: 'test' }] as Session[])
+const sessions = ref([] as Session[])
 const errorMessage = ref('')
 const areSessionsLoading = ref(true)
 
