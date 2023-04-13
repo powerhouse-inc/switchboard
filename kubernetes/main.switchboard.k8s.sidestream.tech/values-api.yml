@@ -54,7 +54,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
   hosts:
   - url: main.switchboard.k8s.sidestream.tech
-    path: /api/(.*)
+    path: /backend/(.*)
     tlsSecretName: switchboard-api-ingress-crt
 
 resources:
