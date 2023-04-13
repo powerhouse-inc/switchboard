@@ -12,7 +12,7 @@
           </div>
           <div class="w-full bg-white p-5 pt-4">
             <div class="mb-2 font-semibold">
-              Existing tokens
+              Existing tokens3
             </div>
             <AuthSessionTable
               :sessions="sessions"

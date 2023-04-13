@@ -12,8 +12,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      GQL_PLAYGROUND: `${API_ORIGIN}/`,
-      GQL_HOST: `${API_ORIGIN}/graphql`
+      GQL_PLAYGROUND: `${API_ORIGIN}/`
     }
   },
   modules: [
@@ -48,8 +47,11 @@ export default defineNuxtConfig({
     }
   },
   'graphql-client': {
-    codegen: {
-      disableOnBuild: true
+    clients: {
+      default: {
+        host: `${API_ORIGIN}/graphql`,
+        schema: '../api/src/generated/schema.graphql'
+      }
     }
   }
 })

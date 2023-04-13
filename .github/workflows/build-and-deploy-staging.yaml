@@ -45,7 +45,7 @@ jobs:
     - name: Build and Push switchboard-frontend
       uses: docker/build-push-action@v3
       with:
-        context: ./frontend
+        context: .
         platforms: linux/amd64
         push: true
         tags: |
