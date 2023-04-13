@@ -1,0 +1,9 @@
+mutation createSession($name: String!, $expiryDurationSeconds: Int) {
+    createSession(session: { name: $name, expiryDurationSeconds: $expiryDurationSeconds }) {
+        token
+        session {
+            id
+            referenceExpiryDate
+        }
+    }
+}

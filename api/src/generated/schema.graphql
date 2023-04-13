@@ -3,8 +3,8 @@
 
 
 type AuthPayload {
-  session: Session
-  token: String
+  session: Session!
+  token: String!
 }
 
 type CoreUnit {
@@ -57,9 +57,9 @@ type SessionCreateOutput {
 }
 
 type User {
-  id: String
-  password: String
-  username: String
+  id: String!
+  password: String!
+  username: String!
 }
 
 input UserNamePass {

@@ -1,3 +1,5 @@
+const API_ORIGIN = process.env.API_ORIGIN ?? '/api'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
@@ -8,10 +10,17 @@ export default defineNuxtConfig({
       ]
     }
   },
+  runtimeConfig: {
+    public: {
+      GQL_PLAYGROUND: `${API_ORIGIN}/`
+    }
+  },
   modules: [
+    '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/tailwindcss',
     '@huntersofbook/naive-ui-nuxt',
-    '@nuxt/content'
+    '@nuxt/content',
+    'nuxt-graphql-client'
   ],
   typescript: {
     shim: false
@@ -25,6 +34,7 @@ export default defineNuxtConfig({
         extend: {
           colors: {
             primary: '#e88339',
+            primaryHover: '#f45d2f',
             secondary: '#fae6d8'
           }
         }
@@ -36,8 +46,16 @@ export default defineNuxtConfig({
     themeOverrides: {
       common: {
         primaryColor: '#e88339',
-        primaryColorHover: '#fae6d8',
+        primaryColorHover: '#f45d2f',
         primaryColorPressed: '#fae6d8'
+      }
+    }
+  },
+  'graphql-client': {
+    clients: {
+      default: {
+        host: `${API_ORIGIN}/graphql`,
+        schema: '../api/src/generated/schema.graphql'
       }
     }
   }

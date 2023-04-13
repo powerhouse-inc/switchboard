@@ -1,0 +1,12 @@
+query getSessions {
+    sessions {
+        id
+        createdAt
+        createdBy
+        referenceExpiryDate
+        referenceTokenId
+        isUserCreated
+        name
+        revokedAt
+    }
+}

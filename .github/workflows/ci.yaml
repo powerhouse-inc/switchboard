@@ -9,6 +9,7 @@ on:
 env:
   DATABASE_URL: file:./db.sqlite
   AUTH_SIGNUP_ENABLED: 1
+
 jobs:
 
   api-test:

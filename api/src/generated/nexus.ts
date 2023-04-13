@@ -64,8 +64,8 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   AuthPayload: { // root type
-    session?: NexusGenRootTypes['Session'] | null; // Session
-    token?: string | null; // String
+    session: NexusGenRootTypes['Session']; // Session!
+    token: string; // String!
   }
   CoreUnit: { // root type
     code?: string | null; // String
@@ -94,9 +94,9 @@ export interface NexusGenObjects {
     token: string; // String!
   }
   User: { // root type
-    id?: string | null; // String
-    password?: string | null; // String
-    username?: string | null; // String
+    id: string; // String!
+    password: string; // String!
+    username: string; // String!
   }
 }
 
@@ -112,8 +112,8 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
-    session: NexusGenRootTypes['Session'] | null; // Session
-    token: string | null; // String
+    session: NexusGenRootTypes['Session']; // Session!
+    token: string; // String!
   }
   CoreUnit: { // field return type
     code: string | null; // String
@@ -152,9 +152,9 @@ export interface NexusGenFieldTypes {
     token: string; // String!
   }
   User: { // field return type
-    id: string | null; // String
-    password: string | null; // String
-    username: string | null; // String
+    id: string; // String!
+    password: string; // String!
+    username: string; // String!
   }
 }
 
