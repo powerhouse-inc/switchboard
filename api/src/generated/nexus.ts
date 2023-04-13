@@ -83,7 +83,6 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
     createdBy: string; // String!
     id: string; // String!
-    isExpired: boolean; // Boolean!
     isUserCreated: boolean; // Boolean!
     name?: string | null; // String
     referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -142,7 +141,6 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
     createdBy: string; // String!
     id: string; // String!
-    isExpired: boolean; // Boolean!
     isUserCreated: boolean; // Boolean!
     name: string | null; // String
     referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -191,7 +189,6 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'GQLDateBase'
     createdBy: 'String'
     id: 'String'
-    isExpired: 'Boolean'
     isUserCreated: 'Boolean'
     name: 'String'
     referenceExpiryDate: 'GQLDateBase'

@@ -5,14 +5,12 @@ import {
   queryField,
   list,
 } from 'nexus/dist';
-import { extendSession } from './model';
 
 export const listSessions = queryField('sessions', {
   type: list('Session'),
   resolve: async (_, __, ctx) => {
     const { createdBy } = await ctx.getSession();
-    const sessions = await ctx.prisma.session.listSessions(createdBy);
-    return sessions.map(extendSession);
+    return await ctx.prisma.session.listSessions(createdBy);
   },
 });
 
@@ -23,7 +21,7 @@ export const revoke = mutationField('revokeSession', {
   },
   resolve: async (_parent, { sessionId }, ctx) => {
     const userId = (await ctx.getSession()).createdBy;
-    return extendSession(await ctx.prisma.session.revoke(sessionId, userId));
+    return ctx.prisma.session.revoke(sessionId, userId);
   },
 });
 
@@ -38,10 +36,6 @@ export const create = mutationField('createSession', {
     ctx,
   ) => {
     const { createdBy } = await ctx.getSession();
-    const result = await ctx.prisma.session.createCustomSession(createdBy, session, true);
-    return {
-      ...result,
-      session: extendSession(result.session),
-    };
+    return ctx.prisma.session.createCustomSession(createdBy, session, true);
   },
 });

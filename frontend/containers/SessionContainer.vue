@@ -15,7 +15,6 @@ export interface Session {
   createdBy: string;
   referenceExpiryDate?: any;
   referenceTokenId: string;
-  isExpired: boolean;
   isUserCreated: boolean;
   name?: string | null | undefined;
   revokedAt?: any;
