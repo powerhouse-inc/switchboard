@@ -5,6 +5,7 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
+import z, { boolean } from 'zod';
 
 export const Session = objectType({
   name: 'Session',
@@ -47,6 +48,18 @@ async function newSession(
   });
 }
 
+function isOriginValid(originParam: string): boolean {
+  if ( originParam.includes(' ') ) {
+    return false
+  }
+  const origins = originParam.split(',');
+  origins.forEach(origin => {
+    if (!origin.startsWith('http://') && !origin.startsWith('https://') ) {
+      return false
+    }
+  })
+  return true
+}
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
@@ -57,6 +70,11 @@ const generateTokenAndSession = async (
   const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
+
+  if (!isOriginValid(session.originRestriction)) {
+    throw new GraphQLError("Invalid origin parameter", {extensions: {code: "INVALID_ORIGIN_FORMAT"}})
+  }
+
   const createData = {
     originRestriction: session.originRestriction,
     name: session.name,
