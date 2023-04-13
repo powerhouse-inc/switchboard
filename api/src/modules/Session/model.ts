@@ -3,10 +3,9 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
-import wildcard from 'wildcard-match';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { isOriginValid } from '../../helpers/origin';
+import { isOriginValid, throwGQLErrorIfOriginInvalid } from '../../helpers/origin';
 
 export const Session = objectType({
   name: 'Session',
@@ -161,19 +160,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
-      if (session.originRestriction !== '*') {
-        if (!origin) {
-          throw new GraphQLError('Origin header not found', {
-            extensions: { code: 'ORIGIN_HEADER_MISSING' },
-          });
-        }
-        const allowedOrigins = session.originRestriction.split(',');
-        if (!allowedOrigins.some((o) => wildcard(o)(origin))) {
-          throw new GraphQLError('Access denied due to origin restriction', {
-            extensions: { code: 'ORIGIN_FORBIDDEN' },
-          });
-        }
-      }
+      throwGQLErrorIfOriginInvalid(session.originRestriction, origin);
       return session;
     },
 

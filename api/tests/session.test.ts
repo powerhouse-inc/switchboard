@@ -216,7 +216,7 @@ test('Auth session: origin restriction missing header', async () => {
   const sessionToken = sessionResponse.createSession?.token;
   ctx.client.setHeader('Authorization', `Bearer ${sessionToken}`);
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
-  expect(meResponse.errors[0].message).toBe('Origin header not found');
+  expect(meResponse.errors[0].message).toBe('Origin not provided');
 });
 
 test('Auth session: origin invalid - contains space', async () => {
