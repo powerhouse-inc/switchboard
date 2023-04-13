@@ -75,7 +75,7 @@ const columns = [
         return `Revoked at ${formatDate(session.revokedAt)}`
       }
       const isExpired = session.referenceExpiryDate
-        ? Date.now() > session.referenceExpiryDate.getTime()
+        ? Date.now() > new Date(session.referenceExpiryDate).getTime()
         : false
       if (isExpired) {
         return `Expired at ${formatDate(session.referenceExpiryDate)}`
