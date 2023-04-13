@@ -49,6 +49,9 @@ async function newSession(
 }
 
 function isOriginValid(originParam: string): boolean {
+  if ( originParam === '*' ) {
+    return true
+  }
   if (originParam.includes(' ')) {
     return false;
   }
