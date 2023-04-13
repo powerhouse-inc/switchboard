@@ -3,9 +3,9 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
+import wildcard from 'wildcard-match';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import wildcard from 'wildcard-match';
 
 export const Session = objectType({
   name: 'Session',
@@ -27,7 +27,7 @@ export const SessionCreate = inputObjectType({
   definition(t) {
     t.int('expiryDurationSeconds');
     t.nonNull.string('name');
-    t.nonNull.string('originRestriction')
+    t.nonNull.string('originRestriction');
   },
 });
 
@@ -49,16 +49,16 @@ async function newSession(
 }
 
 function isOriginValid(originParam: string): boolean {
-  if ( originParam.includes(' ') ) {
-    return false
+  if (originParam.includes(' ')) {
+    return false;
   }
   const origins = originParam.split(',');
-  origins.forEach(origin => {
-    if (!origin.startsWith('http://') && !origin.startsWith('https://') ) {
-      return false
+  origins.forEach((origin) => {
+    if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
+      return false;
     }
-  })
-  return true
+  });
+  return true;
 }
 const generateTokenAndSession = async (
   prisma: PrismaClient,
@@ -72,7 +72,7 @@ const generateTokenAndSession = async (
   const formattedToken = tokenUtils.format(createdToken);
 
   if (!isOriginValid(session.originRestriction)) {
-    throw new GraphQLError("Invalid origin parameter", {extensions: {code: "INVALID_ORIGIN_FORMAT"}})
+    throw new GraphQLError('Invalid origin parameter', { extensions: { code: 'INVALID_ORIGIN_FORMAT' } });
   }
 
   const createData = {
@@ -150,7 +150,7 @@ export function getSessionCrud(prisma: PrismaClient) {
     ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
     async getSessionByToken(
       origin?: string,
-      token?: string
+      token?: string,
     ) {
       if (!token) {
         throw new GraphQLError('Not authenticated', {
@@ -172,14 +172,14 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
-      if (session.originRestriction !== '*' ) {
+      if (session.originRestriction !== '*') {
         if (!origin) {
           throw new GraphQLError('Origin header not found', {
             extensions: { code: 'ORIGIN_HEADER_MISSING' },
           });
         }
-        const allowedOrigins = session.originRestriction.split(',')
-        if (!allowedOrigins.some(o => wildcard(o)(origin))) {
+        const allowedOrigins = session.originRestriction.split(',');
+        if (!allowedOrigins.some((o) => wildcard(o)(origin))) {
           throw new GraphQLError('Access denied due to origin restriction', {
             extensions: { code: 'ORIGIN_FORBIDDEN' },
           });
