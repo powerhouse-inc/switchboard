@@ -12,7 +12,7 @@ Please refer to the root readme to learn more about general development setup.
 
 ### Environment variables
 
-- `API_ORIGIN` (optional, default `/api`): relative path or the url under which `api` service is running. For example, if you run api on port 4000 via `PORT=4000 npm run start`, the value should be `http://localhost:4000`
+- `API_ORIGIN` (optional, default `/api`): relative path or the url under which `api` service is running. For example, if the `api` service is running on port 4000, the value should be `http://localhost:4000`. However, if the `api` is sharing the origin with the `frontend` service via reverse-proxy, providing relative path is enough (e.g.: `/api`)
 
 ## Production
 
