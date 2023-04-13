@@ -53,12 +53,12 @@ function isOriginValid(originParam: string): boolean {
     return false;
   }
   const origins = originParam.split(',');
-  origins.forEach((origin) => {
+  return origins.some((origin) => {
     if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
       return false;
     }
+    return true;
   });
-  return true;
 }
 const generateTokenAndSession = async (
   prisma: PrismaClient,
