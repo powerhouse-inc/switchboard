@@ -53,3 +53,7 @@ npx prisma studio
 ### Logging configuration
 
 The configuration is received from the `logger.config.ts` file at the root of the project. Adjust the file parameters to control the logger behaviour.
+
+## Health endpoint
+
+Endpoint available at `/healthz` path. Provides response if api is currently running and prisma (orm) is able to execute queries.

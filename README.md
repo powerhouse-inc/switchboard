@@ -36,3 +36,9 @@ To understand what is planned you can read and ask questions here:
 To install correct node version, we recommend that you use [nvm](https://github.com/nvm-sh/nvm). If you have `nvm` installed you can run `nvm install && nvm use` to automatically use the correct node version. The version is detected from the [.nvmrc](./.nvmrc).
 
 If you do not have a code editor setup, we recommend that you use [Visual Studio Code](https://code.visualstudio.com/) to get started. It is very beginner friendly and you can move on to something else down the road if you want to.
+
+## Health endpoints
+
+Both api and frontend have health endpoints that can be used to check if the service is up and running.
+
+See the respective descriptions in the [api](./api/README.md#health-endpoint) and [frontend](./frontend/README.md#health-endpoint) READMEs.

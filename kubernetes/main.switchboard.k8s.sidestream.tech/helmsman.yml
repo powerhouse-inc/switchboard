@@ -1,0 +1,70 @@
+context: default
+
+metadata:
+  org: "github.com/sidestream-tech/"
+  maintainer: "DevOps"
+  description: "Desired State File of the switchboard application deployment"
+
+settings:
+  kubeContext: "arn:aws:eks:eu-central-1:802385070966:cluster/eks-cluster-sidestream"
+  globalMaxHistory: 5
+
+namespaces:
+  switchboard-staging:
+    protected: false
+
+helmRepos:
+  sidechart: "https://$SIDECHART_USERNAME:$SIDECHART_TOKEN@raw.githubusercontent.com/sidestream-tech/helm-charts/gh-pages/"
+  bitnami: "https://charts.bitnami.com/bitnami"
+
+apps:
+  switchboard-api:
+    namespace: "switchboard-staging"
+    enabled: true
+    chart: "sidechart/sidechart"
+    version: "0.2.6"
+    valuesFile: values-api.yml
+    test: false
+    protected: false
+    priority: -2
+    wait: true
+    helmFlags: [
+      "--atomic",
+    ]
+    set:
+      "commitShortSHA": "$COMMIT_SHA"
+      "releaseTag": "$GITHUB_REF_NAME"
+      "image.tag": "$COMMIT_SHA"
+      "imageCredentials.password": "$GITHUB_PACKAGES_TOKEN"
+      "secrets.data.jwt_secret": "$JWT_SECRET"
+
+  switchboard-frontend:
+    namespace: "switchboard-staging"
+    enabled: true
+    chart: "sidechart/sidechart"
+    version: "0.2.6"
+    valuesFile: values-frontend.yml
+    test: false
+    protected: false
+    priority: -1
+    wait: true
+    helmFlags: [
+      "--atomic",
+    ]
+    set:
+      "commitShortSHA": "$COMMIT_SHA"
+      "releaseTag": "$GITHUB_REF_NAME"
+      "image.tag": "$COMMIT_SHA"
+      "imageCredentials.password": "$GITHUB_PACKAGES_TOKEN"
+      "secrets.data.jwt_secret": "$JWT_SECRET"
+
+  postgresql:
+    namespace: "switchboard-staging"
+    enabled: true
+    chart: "bitnami/postgresql"
+    version: "11.6.6"
+    valuesFile: "values-postgresql.yml"
+    test: false
+    protected: false
+    priority: -3
+    wait: true

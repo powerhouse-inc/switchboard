@@ -1,8 +1,9 @@
 import type { Server } from 'http';
 import { createServer as createHttpServer } from 'http';
-import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import type express from 'express';
+import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { PORT } from '../env';
@@ -29,7 +30,7 @@ function loggerPlugin(): ApolloServerPlugin<Context> {
 const createApolloServer = (): ApolloServer<Context> => new ApolloServer<Context>({
   schema: schemaWithMiddleware,
   introspection: true,
-  plugins: [loggerPlugin()],
+  plugins: [ApolloServerPluginLandingPageDisabled(), loggerPlugin()],
 });
 
 export const startServer = async (
@@ -40,7 +41,7 @@ export const startServer = async (
   const apollo = createApolloServer();
 
   await apollo.start();
-  app.use('/', cors<cors.CorsRequest>(), bodyParser.json(), expressMiddleware(apollo, {
+  app.use('/graphql', cors<cors.CorsRequest>(), bodyParser.json(), expressMiddleware(apollo, {
     context: async (params) => (createContext(params)),
   }));
 

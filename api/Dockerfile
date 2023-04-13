@@ -18,6 +18,7 @@ COPY . .
 
 # Run in production mode
 ENV NODE_ENV=production
+RUN sed --in-place 's/sqlite/postgresql/g' ./prisma/schema.prisma 
 
-# start the app
-CMD [ "npm", "run", "start" ]
+# initialize db and start the app
+CMD npx prisma db push && npm run start
