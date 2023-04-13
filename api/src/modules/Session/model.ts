@@ -5,7 +5,7 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import z, { boolean } from 'zod';
+import wildcard from 'wildcard-match';
 
 export const Session = objectType({
   name: 'Session',
@@ -179,7 +179,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           });
         }
         const allowedOrigins = session.originRestriction.split(',')
-        if (!allowedOrigins.some(o => origin.startsWith(o))) {
+        if (!allowedOrigins.some(o => wildcard(o)(origin))) {
           throw new GraphQLError('Access denied due to origin restriction', {
             extensions: { code: 'ORIGIN_FORBIDDEN' },
           });
