@@ -46,5 +46,10 @@ export default defineNuxtConfig({
         primaryColorPressed: '#fae6d8'
       }
     }
+  },
+  'graphql-client': {
+    codegen: {
+      disableOnBuild: true
+    }
   }
 })
