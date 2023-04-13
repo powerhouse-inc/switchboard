@@ -18,7 +18,6 @@ export default defineNuxtConfig({
   modules: [
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/tailwindcss',
-    '@huntersofbook/naive-ui-nuxt',
     '@nuxt/content',
     'nuxt-graphql-client'
   ],
