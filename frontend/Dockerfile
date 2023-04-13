@@ -16,7 +16,8 @@ FROM dependency-base AS production-base
 
 # build will also take care of building
 # if necessary
-COPY . .
+COPY frontend /app/frontend
+COPY api /app/api
 WORKDIR /app/frontend
 RUN npm run build
 
