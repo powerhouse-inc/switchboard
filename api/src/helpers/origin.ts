@@ -27,7 +27,7 @@ export function throwGQLErrorIfOriginDisallowed(
       });
     }
     const allowedOrigins = originRestriction.split(',');
-    if (!allowedOrigins.some((o) => wildcard(o)(originReceived))) {
+    if (!wildcard(allowedOrigins)(originReceived)) {
       throw new GraphQLError('Access denied due to origin restriction', {
         extensions: { code: 'ORIGIN_FORBIDDEN' },
       });
