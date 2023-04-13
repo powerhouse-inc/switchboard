@@ -44,8 +44,8 @@ const revoke = async (sessionId: string) => {
   return referenceTokenId
 }
 
-const create = async (name: string, expiryDurationSeconds: number | null) => {
-  const token = await createSession(name, expiryDurationSeconds)
+const create = async (name: string, expiryDurationSeconds: number | null, originRestriction: string) => {
+  const token = await createSession(name, expiryDurationSeconds, originRestriction)
   await getSessions()
   return token
 }

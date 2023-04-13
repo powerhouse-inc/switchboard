@@ -17,6 +17,7 @@ export const Session = objectType({
     t.nonNull.boolean('isUserCreated');
     t.string('name');
     t.date('revokedAt');
+    t.string('originRestriction');
   },
 });
 
@@ -25,6 +26,7 @@ export const SessionCreate = inputObjectType({
   definition(t) {
     t.int('expiryDurationSeconds');
     t.nonNull.string('name');
+    t.nonNull.string('originRestriction')
   },
 });
 
@@ -48,7 +50,7 @@ async function newSession(
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
-  session: { expiryDurationSeconds?: number | null; name: string },
+  session: { expiryDurationSeconds?: number | null; name: string; originRestriction: string },
   isUserCreated: boolean = false,
 ) => {
   const createId = randomUUID();
@@ -56,6 +58,7 @@ const generateTokenAndSession = async (
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
   const createData = {
+    originRestriction: session.originRestriction,
     name: session.name,
     referenceExpiryDate: expiryDate,
     id: createId,
@@ -115,20 +118,21 @@ export function getSessionCrud(prisma: PrismaClient) {
     createSignInSession: async (userId: string) => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in' },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', originRestriction: '*' },
     ),
     createSignUpSession: async (userId: string) => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up' },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', originRestriction: '*' },
     ),
     createCustomSession: async (
       userId: string,
-      session: { expiryDurationSeconds?: number | null; name: string },
+      session: { expiryDurationSeconds?: number | null; name: string, originRestriction: string },
       isUserCreated: boolean = false,
     ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
     async getSessionByToken(
-      token?: string,
+      origin?: string,
+      token?: string
     ) {
       if (!token) {
         throw new GraphQLError('Not authenticated', {
@@ -149,6 +153,18 @@ export function getSessionCrud(prisma: PrismaClient) {
         throw new GraphQLError('Session expired', {
           extensions: { code: 'SESSION_EXPIRED' },
         });
+      }
+      if (session.originRestriction !== '*' ) {
+        if (!origin) {
+          throw new GraphQLError('Origin header not found', {
+            extensions: { code: 'ORIGIN_HEADER_MISSING' },
+          });
+        }
+        if (!origin.startsWith(session.originRestriction)) {
+          throw new GraphQLError('Access denied due to origin restriction', {
+            extensions: { code: 'ORIGIN_FORBIDDEN' },
+          });
+        }
       }
       return session;
     },

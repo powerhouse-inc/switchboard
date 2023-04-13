@@ -43,6 +43,7 @@ export interface NexusGenInputs {
   SessionCreate: { // input type
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
+    originRestriction: string; // String!
   }
   UserNamePass: { // input type
     password: string; // String!
@@ -85,6 +86,7 @@ export interface NexusGenObjects {
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name?: string | null; // String
+    originRestriction?: string | null; // String
     referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
     referenceTokenId: string; // String!
     revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -143,6 +145,7 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name: string | null; // String
+    originRestriction: string | null; // String
     referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
     referenceTokenId: string; // String!
     revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -191,6 +194,7 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     isUserCreated: 'Boolean'
     name: 'String'
+    originRestriction: 'String'
     referenceExpiryDate: 'GQLDateBase'
     referenceTokenId: 'String'
     revokedAt: 'GQLDateBase'

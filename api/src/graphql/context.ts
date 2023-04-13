@@ -28,11 +28,12 @@ export function createContext(params: CreateContextParams): Context {
   const { req } = params;
   const authorizationHeader = req.get('Authorization');
   const token = authorizationHeader?.replace('Bearer ', '');
+  const origin = req.get('Origin');
 
   return {
     request: params,
     prisma,
     apolloLogger,
-    getSession: async () => prisma.session.getSessionByToken(token),
+    getSession: async () => prisma.session.getSessionByToken(origin, token),
   };
 }

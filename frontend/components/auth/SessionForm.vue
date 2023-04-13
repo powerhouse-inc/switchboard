@@ -6,6 +6,9 @@
     <label class="w-full"><span class="font-semibold">Duration</span>
       <n-select v-model:value="expiryDurationSeconds" :options="options" clearable placeholder="Please select" />
     </label>
+    <label class="w-full"><span class="font-semibold">Origin restriction</span>
+      <n-input v-model:value="originRestriction" placeholder="Origin restriction"/>
+    </label>
     <n-button
       attr-type="submit"
       type="primary"
@@ -83,13 +86,14 @@ const message = useMessage()
 const isCreating = ref(false)
 const name = ref('')
 const expiryDurationSeconds = ref(null)
+const originRestriction = ref(null)
 const createdToken = ref('')
-const isCreationDisabed = computed(() => !name.value || expiryDurationSeconds.value === null)
+const isCreationDisabed = computed(() => !name.value || expiryDurationSeconds.value === null || originRestriction.value === null)
 
 const create = async () => {
   isCreating.value = true
   try {
-    const token = await props.createSession(name.value, expiryDurationSeconds.value ?? null)
+    const token = await props.createSession(name.value, expiryDurationSeconds.value ?? null, originRestriction.value)
     name.value = ''
     expiryDurationSeconds.value = null
     createdToken.value = token

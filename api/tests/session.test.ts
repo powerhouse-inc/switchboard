@@ -25,6 +25,7 @@ const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
 
 const getCreateSessionMutation = (
   name: string,
+  originRestriction: string,
   expiryDurationSeconds?: number | null,
 ) => builder.mutation({
   operation: 'createSession',
@@ -33,6 +34,7 @@ const getCreateSessionMutation = (
       value: {
         name,
         expiryDurationSeconds,
+        originRestriction
       },
       type: 'SessionCreate',
       required: true,
@@ -89,7 +91,7 @@ test('Auth session: create expirable', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const name = 'JoJo';
   const expectedExpiryDate = new Date();
-  const mutation = getCreateSessionMutation(name, 1);
+  const mutation = getCreateSessionMutation(name, '*', 1);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse?.createSession?.session.name).toBe(name);
   expect(
@@ -118,7 +120,7 @@ test('Auth session: create unexpirable', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const name = 'JoJo';
-  const mutation = getCreateSessionMutation(name, null);
+  const mutation = getCreateSessionMutation(name, '*', null);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse?.createSession?.session.name).toBe(name);
   expect(
@@ -140,7 +142,7 @@ test('Auth session: revoked session is forbidden', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const name = 'JoJo';
-  let mutation = getCreateSessionMutation(name, 3600);
+  let mutation = getCreateSessionMutation(name, '*', 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   const sessionId = createResponse?.createSession?.session.id;
   mutation = getRevokeSessionMutation(sessionId);
@@ -152,7 +154,7 @@ test('Auth session: revoked session is forbidden', async () => {
 
 test('Auth session: cant revoke without auth', async () => {
   const name = 'JoJo';
-  const mutation = getCreateSessionMutation(name, 3600);
+  const mutation = getCreateSessionMutation(name, '*', 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(createResponse.errors[0].message).toBe('Not authenticated');
 });
@@ -161,7 +163,7 @@ test('Auth session: cant revoke twice', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const name = 'JoJo';
-  let mutation = getCreateSessionMutation(name, 3600);
+  let mutation = getCreateSessionMutation(name, '*', 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
   const sessionId = createResponse?.createSession?.session.id;
   mutation = getRevokeSessionMutation(sessionId);
@@ -181,3 +183,38 @@ test('Auth session: revoke sessions of other users', async () => {
   const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(revokeResponse.errors[0].message).toBe('Failed to revoke session');
 });
+
+test('Auth session: origin restriction wrong origin', async () => {
+  const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  let mutation = getCreateSessionMutation('Origin', 'http://google.com', 3600);
+  const sessionResponse = await executeGraphQlQuery(mutation) as any;
+  const sessionToken = sessionResponse.createSession?.token;
+  ctx.client.setHeader('Authorization', `Bearer ${sessionToken}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
+  const meResponse = (await executeGraphQlQuery(meQuery)) as any;
+  expect(meResponse.errors[0].message).toBe("Access denied due to origin restriction")
+})
+
+test('Auth session: origin restriction success', async () => {
+  const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  let mutation = getCreateSessionMutation('Origin', 'http://google.com', 3600);
+  const sessionResponse = await executeGraphQlQuery(mutation) as any;
+  const sessionToken = sessionResponse.createSession?.token;
+  ctx.client.setHeader('Authorization', `Bearer ${sessionToken}`);
+  ctx.client.setHeader('Origin', `http://google.com`);
+  const meResponse = (await executeGraphQlQuery(meQuery)) as any;
+  expect(meResponse.me.username).toBe(USERNAME)
+})
+
+test('Auth session: origin restriction missing header', async () => {
+  const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
+  ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  let mutation = getCreateSessionMutation('Origin', 'http://google.com', 3600);
+  const sessionResponse = await executeGraphQlQuery(mutation) as any;
+  const sessionToken = sessionResponse.createSession?.token;
+  ctx.client.setHeader('Authorization', `Bearer ${sessionToken}`);
+  const meResponse = (await executeGraphQlQuery(meQuery)) as any;
+  expect(meResponse.errors[0].message).toBe("Origin header not found")
+})

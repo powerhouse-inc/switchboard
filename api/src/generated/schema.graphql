@@ -41,6 +41,7 @@ type Session {
   id: String!
   isUserCreated: Boolean!
   name: String
+  originRestriction: String
   referenceExpiryDate: GQLDateBase
   referenceTokenId: String!
   revokedAt: GQLDateBase
@@ -49,6 +50,7 @@ type Session {
 input SessionCreate {
   expiryDurationSeconds: Int
   name: String!
+  originRestriction: String!
 }
 
 type SessionCreateOutput {
