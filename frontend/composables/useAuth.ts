@@ -19,7 +19,7 @@ const useAuth = function () {
     useGqlToken(authStorage.value?.token)
   }
 
-  const check = async () => {
+  const checkAuthValidity = async () => {
     if (user.value) {
       return
     }
@@ -42,7 +42,7 @@ const useAuth = function () {
     }
     useGqlToken(data.value?.signIn?.token)
     authStorage.value.token = data.value?.signIn?.token
-    await check()
+    await checkAuthValidity()
   }
   const signUp = async (username: string, password: string) => {
     const { data, error } = await useAsyncGql('signUp', { username, password })
@@ -51,7 +51,7 @@ const useAuth = function () {
     }
     useGqlToken(data.value?.signUp?.token)
     authStorage.value.token = data.value?.signUp?.token
-    await check()
+    await checkAuthValidity()
   }
   const createSession = async (name: string, expiryDurationSeconds: number | null) => {
     const { data, error } = await useAsyncGql('createSession', { name, expiryDurationSeconds })
@@ -69,7 +69,7 @@ const useAuth = function () {
       const payload = decode(authStorage.value?.token) as { sessionId?: string } | undefined
       if (sessionId === payload?.sessionId) {
         authStorage.value.token = undefined
-        await check()
+        await checkAuthValidity()
       }
     }
     return data.value?.revokeSession?.referenceTokenId
@@ -87,10 +87,10 @@ const useAuth = function () {
 
   onMounted(async () => {
     await nextTick()
-    check()
+    checkAuthValidity()
   })
 
-  return { isLoading, isAuthorized, user, check, signIn, signUp, signOut, createSession, revokeSession }
+  return { isLoading, isAuthorized, user, checkAuthValidity, signIn, signUp, signOut, createSession, revokeSession }
 }
 
 export default useAuth
