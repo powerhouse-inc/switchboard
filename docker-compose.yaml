@@ -2,19 +2,35 @@ version: '3'
 
 services:
 
+  database:
+    restart: unless-stopped
+    image: postgres:15
+    expose:
+      - 5432
+    environment:
+      POSTGRES_DB: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_PORT: "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+
   api:
     restart: unless-stopped
-    build:
-      context: ./api
     expose:
       - 3000
-    env_file:
-      - ./api/.env
-    command: >
-      sh -c "
-      cd /app &&
-      npx prisma db push &&
-      npm run start"
+    build:
+      context: ./api
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@database:5432/postgres?sslmode=disable
+      AUTH_SIGNUP_ENABLED: "1"
+      JWT_SECRET: replace_in_production_with_actual_secret
+      JWT_EXPIRATION_PERIOD_SECONDS: 3600
+    depends_on:
+      - database
 
   frontend:
     restart: unless-stopped
