@@ -1,5 +1,5 @@
+import type { PrismaClient, Prisma } from '@prisma/client';
 import { inputObjectType, objectType } from 'nexus/dist';
-import { PrismaClient, Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
@@ -79,6 +79,9 @@ export function getSessionCrud(prisma: PrismaClient) {
     listSessions: async (userId: string) => prisma.session.findMany({
       where: {
         createdBy: userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     }),
     revoke: async (sessionId: string, userId: string) => {

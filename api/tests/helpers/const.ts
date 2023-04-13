@@ -1,6 +1,6 @@
 import builder from 'gql-query-builder';
 
-export const USERNAME = 'usernameTest';
+export const USERNAME = 'usernametest';
 export const PASSWORD = 'passwordTest';
 
 export const getSignUpMutation = (

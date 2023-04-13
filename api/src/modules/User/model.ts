@@ -9,9 +9,9 @@ import {
 export const User = objectType({
   name: 'User',
   definition(t) {
-    t.string('id');
-    t.string('username');
-    t.string('password');
+    t.nonNull.string('id');
+    t.nonNull.string('username');
+    t.nonNull.string('password');
   },
 });
 
@@ -26,8 +26,8 @@ export const UserNamePass = inputObjectType({
 export const AuthPayload = objectType({
   name: 'AuthPayload',
   definition(t) {
-    t.string('token');
-    t.field('session', { type: 'Session' });
+    t.nonNull.string('token');
+    t.nonNull.field('session', { type: 'Session' });
   },
 });
 
@@ -37,7 +37,7 @@ export function getUserCrud(prisma: PrismaClient) {
       const { username, password } = userNamePass;
       const user = await prisma.user.findUnique({
         where: {
-          username,
+          username: username.toLocaleLowerCase(),
         },
       });
       if (!user) {
@@ -59,7 +59,7 @@ export function getUserCrud(prisma: PrismaClient) {
       try {
         createdUser = await prisma.user.create({
           data: {
-            username,
+            username: username.toLocaleLowerCase(),
             password: hashedPassword,
           },
         });

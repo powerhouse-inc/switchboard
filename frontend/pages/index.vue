@@ -5,7 +5,7 @@
         Switchboard API
       </h1>
       <div class="text-sm md:text-base">
-        Open-source API over MakerDA0 models
+        Open-source API over MakerDAO models
       </div>
     </div>
     <div class="flex-grow flex items-center justify-center">
