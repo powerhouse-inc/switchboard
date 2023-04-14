@@ -14,7 +14,7 @@ const tocLinks = computed(() => blogPost.value?.body.toc.links ?? [])
           <div class="flex-shrink-0 w-56 py-3 hidden md:block h-screen overflow-x-scroll sticky top-14">
             <DocTableOfContents :toc-links="tocLinks" class="pb-14" />
           </div>
-          <div class="flex-grow w-[calc(100%-18rem)] p-4 pt-2 mt-4 bg-white w-full">
+          <div class="flex-grow w-[calc(100%-28rem)] p-4 pt-2 mt-4 bg-white w-full">
             <ContentRenderer :value="doc" class="markdown-body w-full" />
           </div>
         </div>
