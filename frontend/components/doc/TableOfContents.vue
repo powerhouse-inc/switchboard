@@ -5,37 +5,33 @@ const props = defineProps<{
     text: string;
     children: { id: string; text: string }[];
   }> | null;
-}>();
+}>()
 
-const emit = defineEmits<{ (e: "click", id: string): void }>();
-
-const onClick = (id: string) => {
-  emit("click", id);
-};
+defineEmits<{(e: 'scrollToId', id: string): void }>()
 </script>
 
 <template>
   <nav>
-    <ul class="ml-0 pl-4">
+    <ul class="!p-0">
       <li
         v-for="{ id, text, children } in props.tocLinks"
         :id="`toc-${id}`"
         :key="id"
-        class="cursor-pointer text-sm list-none ml-0 mb-2 last:mb-0 hover:bg-gray-100"
-        @click="onClick(id)"
+        class="text-sm list-none"
       >
-        {{ text }}
-        <ul v-if="children" class="ml-3 my-2">
-          <li
-            v-for="{ id: childId, text: childText } in children"
-            :id="`toc-${childId}`"
-            :key="childId"
-            class="cursor-pointer text-xs list-none ml-0 pt-2 last:mb-0 hover:underline"
-            @click.stop="onClick(childId)"
-          >
-            {{ childText }}
-          </li>
-        </ul>
+        <template v-if="text !== 'Table of contents'">
+          <a :href="`#${id}`" class="!text-neutral-800" @click="$emit('scrollToId', id)">{{ text }}</a>
+          <ul v-if="children" class="!p-0 ml-4 mt-1 mb-2 flex flex-col gap-2">
+            <li
+              v-for="{ id: childId, text: childText } in children"
+              :id="`toc-${childId}`"
+              :key="childId"
+              class="text-xs list-none ml-0 hover:underline"
+            >
+              <a :href="`#${childId}`" class="!text-neutral-700" @click="$emit('scrollToId', childId)">{{ childText }}</a>
+            </li>
+          </ul>
+        </template>
       </li>
     </ul>
   </nav>

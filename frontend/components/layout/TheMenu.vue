@@ -17,7 +17,7 @@ import {
 
 const links = [
   {
-    id: '/docs',
+    id: '/documentation',
     icon: DocumentText24Regular,
     label: 'Documentation'
   },

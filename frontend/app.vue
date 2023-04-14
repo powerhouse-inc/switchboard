@@ -1,8 +1,8 @@
 <template>
   <NMessageProvider>
-    <div class="h-screen flex flex-col">
+    <div class="h-screen flex flex-col w-full">
       <LayoutTheHeader :user="user" :is-authorized="isAuthorized" class="flex-shrink-0 h-14 fixed top-0 z-10" />
-      <div class="flex-grow mt-14">
+      <div class="flex-grow mt-14 w-full">
         <NuxtPage :user="user" />
       </div>
     </div>
@@ -16,9 +16,5 @@ const { isAuthorized, user } = useAuth()
 <style>
 html, body {
   @apply bg-neutral-50;
-}
-
-.Body {
-    @apply h-[calc(100vh-88px)];
 }
 </style>
