@@ -1,4 +1,4 @@
-const API_ORIGIN = process.env.API_ORIGIN ?? '/api'
+const API_ORIGIN = process.env.API_ORIGIN ?? '/backend'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -18,11 +18,15 @@ export default defineNuxtConfig({
   modules: [
     '@huntersofbook/naive-ui-nuxt',
     '@nuxtjs/tailwindcss',
+    '@nuxt/content',
     'nuxt-graphql-client'
   ],
   typescript: {
     shim: false
   },
+  css: [
+    'github-markdown-css/github-markdown-light.css'
+  ],
   tailwindcss: {
     config: {
       theme: {
