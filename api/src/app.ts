@@ -1,6 +1,7 @@
 import type { Express } from 'express';
 import express from 'express';
 import expressPlayground from 'graphql-playground-middleware-express';
+import cookierParser from 'cookie-parser';
 import { getChildLogger } from './logger';
 import prisma from './database';
 
@@ -31,12 +32,18 @@ export const createApp = (): Express => {
 
   app.get(
     '/',
-    expressPlayground({
-      endpoint: '/api/graphql',
-      settings: {
-        'editor.theme': 'light',
-      },
-    }),
+    cookierParser(undefined, { decode: (value: string) => value }),
+    (req, res, next) => {
+      const globalHeaders = req.cookies['gql:default'];
+      const playgroundMiddleware = expressPlayground({
+        endpoint: '/api/graphql',
+        settings: {
+          'editor.theme': 'light',
+          'request.globalHeaders': { Authorization: `Bearer ${globalHeaders}` },
+        },
+      });
+      playgroundMiddleware(req, res, next);
+    },
   );
 
   return app;
