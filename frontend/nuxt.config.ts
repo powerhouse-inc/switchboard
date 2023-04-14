@@ -1,4 +1,4 @@
-const API_ORIGIN = process.env.API_ORIGIN ?? '/api'
+const API_ORIGIN = process.env.API_ORIGIN ?? '/backend'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
