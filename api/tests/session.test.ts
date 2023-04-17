@@ -232,7 +232,7 @@ test('Auth session: origin invalid - bad protocol', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const mutation = getCreateSessionMutation('Origin', 'htt://google.com', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
-  expect(sessionResponse.errors[0].message).toBe('Invalid origin parameter');
+  expect(sessionResponse.errors[0].message).toBe("Origin must start with 'http://' or 'https://'");
 });
 
 test('Auth session: origin invalid - empty string', async () => {
@@ -240,5 +240,5 @@ test('Auth session: origin invalid - empty string', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const mutation = getCreateSessionMutation('Origin', '', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
-  expect(sessionResponse.errors[0].message).toBe('Invalid origin parameter');
+  expect(sessionResponse.errors[0].message).toBe("Origin must start with 'http://' or 'https://'");
 });

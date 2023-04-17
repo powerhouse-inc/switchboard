@@ -1,17 +1,16 @@
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
 
-export function isOriginValid(originParam: string): boolean {
+export function validateOrigin(originParam: string) {
   if (originParam === '*') {
     return true;
   }
   const trimmedOriginParam = originParam.trim();
   const origins = trimmedOriginParam.split(',');
-  return origins.some((origin) => {
+  origins.forEach((origin) => {
     if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
-      return false;
+      throw new Error("Origin must start with 'http://' or 'https://'");
     }
-    return true;
   });
 }
 export function throwGQLErrorIfOriginDisallowed(

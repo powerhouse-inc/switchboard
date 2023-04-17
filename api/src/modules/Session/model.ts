@@ -5,7 +5,7 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { isOriginValid, throwGQLErrorIfOriginDisallowed } from '../../helpers/origin';
+import { validateOrigin, throwGQLErrorIfOriginDisallowed } from '../../helpers/origin';
 
 export const Session = objectType({
   name: 'Session',
@@ -59,8 +59,9 @@ const generateTokenAndSession = async (
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
 
-  if (!isOriginValid(session.originRestriction)) {
-    throw new GraphQLError('Invalid origin parameter', { extensions: { code: 'INVALID_ORIGIN_FORMAT' } });
+  try {validateOrigin(session.originRestriction)}
+  catch (e: any) {
+    throw new GraphQLError(e.message, { extensions: { code: 'INVALID_ORIGIN_FORMAT' } });
   }
 
   const createData = {
