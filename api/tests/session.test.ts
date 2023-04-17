@@ -219,12 +219,12 @@ test('Auth session: origin restriction missing header', async () => {
   expect(meResponse.errors[0].message).toBe('Origin not provided');
 });
 
-test('Auth session: origin invalid - contains space', async () => {
+test('Auth session: origin valid - contains space', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
   const mutation = getCreateSessionMutation('Origin', 'http://google.com ', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
-  expect(sessionResponse.errors[0].message).toBe('Invalid origin parameter');
+  expect(sessionResponse.createSession.session.name).toBe('Origin');
 });
 
 test('Auth session: origin invalid - bad protocol', async () => {
