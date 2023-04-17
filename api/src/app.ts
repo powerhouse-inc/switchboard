@@ -31,16 +31,13 @@ export const createApp = (): Express => {
 
   app.get(
     '/',
-    (req, res, next) => {
-      const playgroundMiddleware = expressPlayground({
-        endpoint: '/api/graphql',
-        settings: {
-          'editor.theme': 'light',
-          'request.credentials': 'include',
-        },
-      });
-      playgroundMiddleware(req, res, next);
-    },
+    expressPlayground({
+      endpoint: '/api/graphql',
+      settings: {
+        'editor.theme': 'light',
+        'request.credentials': 'include',
+      },
+    }),
   );
 
   return app;
