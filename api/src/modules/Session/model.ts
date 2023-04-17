@@ -61,7 +61,7 @@ function throwGQLErrorIfOriginDisallowed(
   originReceived?: string,
 ) {
   if (allowedOrigins === '*') {
-    return
+    return;
   }
   if (!originReceived) {
     throw new GraphQLError('Origin not provided', {
@@ -90,7 +90,6 @@ const generateTokenAndSession = async (
   session: { expiryDurationSeconds?: number | null; name: string; allowedOrigins: string },
   isUserCreated: boolean = false,
 ) => {
-  console.log('allowedOrigins', session.allowedOrigins)
   const createId = randomUUID();
   const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
@@ -197,7 +196,6 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
-      console.log(session, origin)
       throwGQLErrorIfOriginDisallowed(session.allowedOrigins, origin);
       return session;
     },
