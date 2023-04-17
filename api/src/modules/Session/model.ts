@@ -7,6 +7,8 @@ import wildcard from 'wildcard-match';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
 
+// Models
+
 export const Session = objectType({
   name: 'Session',
   definition(t) {
@@ -39,6 +41,8 @@ export const SessionCreateOutput = objectType({
   },
 });
 
+// Actions
+
 function validateOrigin(originParam: string): void {
   if (originParam === '*') {
     return;
@@ -56,18 +60,19 @@ function throwGQLErrorIfOriginDisallowed(
   originRestriction: string,
   originReceived?: string,
 ) {
-  if (originRestriction !== '*') {
-    if (!originReceived) {
-      throw new GraphQLError('Origin not provided', {
-        extensions: { code: 'ORIGIN_HEADER_MISSING' },
-      });
-    }
-    const allowedOrigins = originRestriction.split(',');
-    if (!wildcard(allowedOrigins)(originReceived)) {
-      throw new GraphQLError('Access denied due to origin restriction', {
-        extensions: { code: 'ORIGIN_FORBIDDEN' },
-      });
-    }
+  if (originRestriction === '*') {
+    return
+  }
+  if (!originReceived) {
+    throw new GraphQLError('Origin not provided', {
+      extensions: { code: 'ORIGIN_HEADER_MISSING' },
+    });
+  }
+  const allowedOrigins = originRestriction.split(',');
+  if (!wildcard(allowedOrigins)(originReceived)) {
+    throw new GraphQLError('Access denied due to origin restriction', {
+      extensions: { code: 'ORIGIN_FORBIDDEN' },
+    });
   }
 }
 async function newSession(
