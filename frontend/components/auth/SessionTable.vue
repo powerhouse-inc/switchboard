@@ -72,7 +72,7 @@ const columns = [
     }
   },
   {
-    title: 'Origin restriction',
+    title: 'Allowed origins',
     key: 'allowedOrigins',
     render (session: Session) {
         return formatCommaList(session.allowedOrigins)
