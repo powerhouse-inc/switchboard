@@ -25,7 +25,7 @@ const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
 
 const getCreateSessionMutation = (
   name: string,
-  originRestriction: string,
+  allowedOrigins: string,
   expiryDurationSeconds?: number | null,
 ) => builder.mutation({
   operation: 'createSession',
@@ -34,7 +34,7 @@ const getCreateSessionMutation = (
       value: {
         name,
         expiryDurationSeconds,
-        originRestriction,
+        allowedOrigins,
       },
       type: 'SessionCreate',
       required: true,

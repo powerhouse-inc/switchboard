@@ -36,21 +36,21 @@ type Query {
 }
 
 type Session {
+  allowedOrigins: String
   createdAt: GQLDateBase!
   createdBy: String!
   id: String!
   isUserCreated: Boolean!
   name: String
-  originRestriction: String
   referenceExpiryDate: GQLDateBase
   referenceTokenId: String!
   revokedAt: GQLDateBase
 }
 
 input SessionCreate {
+  allowedOrigins: String!
   expiryDurationSeconds: Int
   name: String!
-  originRestriction: String!
 }
 
 type SessionCreateOutput {

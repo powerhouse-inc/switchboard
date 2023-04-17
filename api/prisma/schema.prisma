@@ -36,7 +36,7 @@ model Session {
   revokedAt           DateTime?
   referenceTokenId    String
   isUserCreated       Boolean   @default(false)
-  originRestriction   String
+  allowedOrigins      String
 
   creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 

@@ -20,7 +20,7 @@ export const Session = objectType({
     t.nonNull.boolean('isUserCreated');
     t.string('name');
     t.date('revokedAt');
-    t.string('originRestriction');
+    t.string('allowedOrigins');
   },
 });
 
@@ -29,7 +29,7 @@ export const SessionCreate = inputObjectType({
   definition(t) {
     t.int('expiryDurationSeconds');
     t.nonNull.string('name');
-    t.nonNull.string('originRestriction');
+    t.nonNull.string('allowedOrigins');
   },
 });
 
@@ -57,10 +57,10 @@ function validateOrigin(originParam: string): void {
 }
 
 function throwGQLErrorIfOriginDisallowed(
-  originRestriction: string,
+  allowedOrigins: string,
   originReceived?: string,
 ) {
-  if (originRestriction === '*') {
+  if (allowedOrigins === '*') {
     return
   }
   if (!originReceived) {
@@ -68,8 +68,8 @@ function throwGQLErrorIfOriginDisallowed(
       extensions: { code: 'ORIGIN_HEADER_MISSING' },
     });
   }
-  const allowedOrigins = originRestriction.split(',');
-  if (!wildcard(allowedOrigins)(originReceived)) {
+  const allowedOriginsSplit = allowedOrigins.split(',');
+  if (!wildcard(allowedOriginsSplit)(originReceived)) {
     throw new GraphQLError('Access denied due to origin restriction', {
       extensions: { code: 'ORIGIN_FORBIDDEN' },
     });
@@ -87,7 +87,7 @@ async function newSession(
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
-  session: { expiryDurationSeconds?: number | null; name: string; originRestriction: string },
+  session: { expiryDurationSeconds?: number | null; name: string; allowedOrigins: string },
   isUserCreated: boolean = false,
 ) => {
   const createId = randomUUID();
@@ -95,12 +95,12 @@ const generateTokenAndSession = async (
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
 
-  try { validateOrigin(session.originRestriction); } catch (e: any) {
+  try { validateOrigin(session.allowedOrigins); } catch (e: any) {
     throw new GraphQLError(e.message, { extensions: { code: 'INVALID_ORIGIN_FORMAT' } });
   }
 
   const createData = {
-    originRestriction: session.originRestriction,
+    allowedOrigins: session.allowedOrigins,
     name: session.name,
     referenceExpiryDate: expiryDate,
     id: createId,
@@ -160,16 +160,16 @@ export function getSessionCrud(prisma: PrismaClient) {
     createSignInSession: async (userId: string) => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', originRestriction: '*' },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: '*' },
     ),
     createSignUpSession: async (userId: string) => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', originRestriction: '*' },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', allowedOrigins: '*' },
     ),
     createCustomSession: async (
       userId: string,
-      session: { expiryDurationSeconds?: number | null; name: string, originRestriction: string },
+      session: { expiryDurationSeconds?: number | null; name: string, allowedOrigins: string },
       isUserCreated: boolean = false,
     ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
     async getSessionByToken(
@@ -196,7 +196,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
-      throwGQLErrorIfOriginDisallowed(session.originRestriction, origin);
+      throwGQLErrorIfOriginDisallowed(session.allowedOrigins, origin);
       return session;
     },
 

@@ -41,9 +41,9 @@ declare global {
 
 export interface NexusGenInputs {
   SessionCreate: { // input type
+    allowedOrigins: string; // String!
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
-    originRestriction: string; // String!
   }
   UserNamePass: { // input type
     password: string; // String!
@@ -81,12 +81,12 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   Session: { // root type
+    allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
     createdBy: string; // String!
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name?: string | null; // String
-    originRestriction?: string | null; // String
     referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
     referenceTokenId: string; // String!
     revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -140,12 +140,12 @@ export interface NexusGenFieldTypes {
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
   Session: { // field return type
+    allowedOrigins: string | null; // String
     createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
     createdBy: string; // String!
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name: string | null; // String
-    originRestriction: string | null; // String
     referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
     referenceTokenId: string; // String!
     revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
@@ -189,12 +189,12 @@ export interface NexusGenFieldTypeNames {
     sessions: 'Session'
   }
   Session: { // field return type name
+    allowedOrigins: 'String'
     createdAt: 'GQLDateBase'
     createdBy: 'String'
     id: 'String'
     isUserCreated: 'Boolean'
     name: 'String'
-    originRestriction: 'String'
     referenceExpiryDate: 'GQLDateBase'
     referenceTokenId: 'String'
     revokedAt: 'GQLDateBase'
