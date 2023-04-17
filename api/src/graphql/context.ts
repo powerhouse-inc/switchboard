@@ -34,6 +34,6 @@ export function createContext(params: CreateContextParams): Context {
     request: params,
     prisma,
     apolloLogger,
-    getSession: async () => prisma.session.getSessionByToken(cookieAuthHeader || token),
+    getSession: async () => prisma.session.getSessionByToken(token || cookieAuthHeader),
   };
 }
