@@ -28,7 +28,6 @@ export function createContext(params: CreateContextParams): Context {
   const { req } = params;
   const authorizationHeader = req.get('Authorization');
   const cookieAuthHeader = req.cookies['gql:default'];
-  console.log('cookieAuthHeader', cookieAuthHeader);
   const token = authorizationHeader?.replace('Bearer ', '');
 
   return {
