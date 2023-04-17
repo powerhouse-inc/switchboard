@@ -5,7 +5,7 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import wildcard from 'wildcard-match';
 import { token as tokenUtils } from '../../helpers';
-import { JWT_EXPIRATION_PERIOD } from '../../env';
+import { JWT_EXPIRATION_PERIOD, OWN_ORIGIN } from '../../env';
 
 // Models
 
@@ -90,6 +90,7 @@ const generateTokenAndSession = async (
   session: { expiryDurationSeconds?: number | null; name: string; allowedOrigins: string },
   isUserCreated: boolean = false,
 ) => {
+  console.log('allowedOrigins', session.allowedOrigins)
   const createId = randomUUID();
   const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
@@ -160,12 +161,12 @@ export function getSessionCrud(prisma: PrismaClient) {
     createSignInSession: async (userId: string) => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: '*' },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: OWN_ORIGIN },
     ),
     createSignUpSession: async (userId: string) => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', allowedOrigins: '*' },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', allowedOrigins: OWN_ORIGIN },
     ),
     createCustomSession: async (
       userId: string,
@@ -196,6 +197,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'SESSION_EXPIRED' },
         });
       }
+      console.log(session, origin)
       throwGQLErrorIfOriginDisallowed(session.allowedOrigins, origin);
       return session;
     },

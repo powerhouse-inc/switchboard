@@ -46,6 +46,7 @@ const getCreateSessionMutation = (
 test('Auth session: list', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   const executedAt = new Date();
   expect(sessionsResponse?.sessions?.length).toBe(1);
@@ -62,6 +63,7 @@ test('Auth session: list, no auth', async () => {
 test('Auth session: revoke', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   const session = sessionsResponse?.sessions[0];
   const mutation = getRevokeSessionMutation(session.id);
@@ -80,6 +82,7 @@ test('Auth session: revoke, no auth', async () => {
 test('Auth session: revoke unexistant', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getRevokeSessionMutation('asdf');
   const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(revokeResponse?.errors[0].message).toBe('Session not found');
@@ -89,6 +92,7 @@ test('Auth session: revoke unexistant', async () => {
 test('Auth session: create expirable', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const name = 'JoJo';
   const expectedExpiryDate = new Date();
   const mutation = getCreateSessionMutation(name, '*', 1);
@@ -109,6 +113,7 @@ test('Auth session: create expirable', async () => {
   );
   expect(userCreatedList.some((i) => i)).toBe(true);
   ctx.client.setHeader('Authorization', `Bearer ${createdToken}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   // eslint-disable-next-line no-promise-executor-return
   await new Promise((resolve) => setTimeout(resolve, 20));
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
@@ -119,6 +124,7 @@ test('Auth session: create expirable', async () => {
 test('Auth session: create unexpirable', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const name = 'JoJo';
   const mutation = getCreateSessionMutation(name, '*', null);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
@@ -134,6 +140,7 @@ test('Auth session: create unexpirable', async () => {
   expect(userCreatedList.some((i) => i)).toBe(true);
   const customToken = createResponse?.createSession?.token;
   ctx.client.setHeader('Authorization', `Bearer ${customToken}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
   expect(meResponse?.me?.username).toBe(USERNAME);
 });
@@ -141,6 +148,7 @@ test('Auth session: create unexpirable', async () => {
 test('Auth session: revoked session is forbidden', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const name = 'JoJo';
   let mutation = getCreateSessionMutation(name, '*', 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
@@ -148,6 +156,7 @@ test('Auth session: revoked session is forbidden', async () => {
   mutation = getRevokeSessionMutation(sessionId);
   await executeGraphQlQuery(mutation);
   ctx.client.setHeader('Authorization', `Bearer ${createResponse.createSession.token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   expect(sessionsResponse.errors[0].message).toBe('Session expired');
 });
@@ -162,6 +171,7 @@ test('Auth session: cant revoke without auth', async () => {
 test('Auth session: cant revoke twice', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const name = 'JoJo';
   let mutation = getCreateSessionMutation(name, '*', 3600);
   const createResponse = (await executeGraphQlQuery(mutation)) as any;
@@ -175,10 +185,12 @@ test('Auth session: cant revoke twice', async () => {
 test('Auth session: revoke sessions of other users', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const sessionsResponse = (await executeGraphQlQuery(listSessionsQuery)) as any;
   const session = sessionsResponse?.sessions[0];
   const { token: secondUserToken } = (await executeGraphQlQuery(getSignUpMutation('scott', 'malcinson')) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${secondUserToken}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getRevokeSessionMutation(session.id);
   const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
   expect(revokeResponse.errors[0].message).toBe('Failed to revoke session');
@@ -187,6 +199,7 @@ test('Auth session: revoke sessions of other users', async () => {
 test('Auth session: origin restriction wrong origin', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getCreateSessionMutation('Origin', 'http://google.com', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   const sessionToken = sessionResponse.createSession?.token;
@@ -199,10 +212,12 @@ test('Auth session: origin restriction wrong origin', async () => {
 test('Auth session: origin restriction success', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getCreateSessionMutation('Origin', 'http://google.com', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   const sessionToken = sessionResponse.createSession?.token;
   ctx.client.setHeader('Authorization', `Bearer ${sessionToken}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   ctx.client.setHeader('Origin', 'http://google.com');
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
   expect(meResponse.me.username).toBe(USERNAME);
@@ -211,10 +226,12 @@ test('Auth session: origin restriction success', async () => {
 test('Auth session: origin restriction missing header', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getCreateSessionMutation('Origin', 'http://google.com', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   const sessionToken = sessionResponse.createSession?.token;
   ctx.client.setHeader('Authorization', `Bearer ${sessionToken}`);
+  ctx.client.setHeader('Origin', '');
   const meResponse = (await executeGraphQlQuery(meQuery)) as any;
   expect(meResponse.errors[0].message).toBe('Origin not provided');
 });
@@ -222,6 +239,7 @@ test('Auth session: origin restriction missing header', async () => {
 test('Auth session: origin valid - contains space', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getCreateSessionMutation('Origin', 'http://google.com ', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   expect(sessionResponse.createSession.session.name).toBe('Origin');
@@ -230,6 +248,7 @@ test('Auth session: origin valid - contains space', async () => {
 test('Auth session: origin invalid - bad protocol', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', 'http://localhost')
   const mutation = getCreateSessionMutation('Origin', 'htt://google.com', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   expect(sessionResponse.errors[0].message).toBe("Origin must start with 'http://' or 'https://'");
@@ -238,6 +257,7 @@ test('Auth session: origin invalid - bad protocol', async () => {
 test('Auth session: origin invalid - empty string', async () => {
   const { token } = (await executeGraphQlQuery(getSignUpMutation()) as any).signUp;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', `http://localhost`);
   const mutation = getCreateSessionMutation('Origin', '', 3600);
   const sessionResponse = await executeGraphQlQuery(mutation) as any;
   expect(sessionResponse.errors[0].message).toBe("Origin must start with 'http://' or 'https://'");
