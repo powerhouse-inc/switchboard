@@ -1,9 +1,9 @@
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
 
-export function validateOrigin(originParam: string) {
+export function validateOrigin(originParam: string): void {
   if (originParam === '*') {
-    return true;
+    return;
   }
   const trimmedOriginParam = originParam.trim();
   const origins = trimmedOriginParam.split(',');

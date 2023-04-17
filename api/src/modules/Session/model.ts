@@ -59,8 +59,7 @@ const generateTokenAndSession = async (
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
 
-  try {validateOrigin(session.originRestriction)}
-  catch (e: any) {
+  try { validateOrigin(session.originRestriction); } catch (e: any) {
     throw new GraphQLError(e.message, { extensions: { code: 'INVALID_ORIGIN_FORMAT' } });
   }
 
