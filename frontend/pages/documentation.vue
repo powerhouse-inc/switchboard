@@ -1,18 +1,35 @@
 <script setup lang="ts">
+import scrollIntoView from 'scroll-into-view-if-needed'
+
 const { data: documentation } = await useAsyncData('blogToc', () =>
   queryContent('/documentation').findOne()
 )
 
 const currentlyActiveId = ref(null as string | null)
-const content = ref(null)
+const content = ref<HTMLDivElement>()
 const tocLinks = computed(() => documentation.value?.body.toc.links ?? [])
+
+const scrollToId = function (id: string) {
+  const navigationElement = document.querySelector(`nav [href="#${id}"]`)
+  if (navigationElement) {
+    scrollIntoView(navigationElement, {
+      scrollMode: 'if-needed',
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'start'
+    })
+  }
+}
 
 const trackCurrentlyActiveId = function () {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const id = entry.target.getAttribute('id')
-        currentlyActiveId.value = id
+        if (id) {
+          currentlyActiveId.value = id
+          scrollToId(id)
+        }
       }
     })
   }, {
