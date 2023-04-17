@@ -27,12 +27,14 @@ export function createContext(params: CreateContextParams): Context {
   logger.trace('Creating context with params: %o', params);
   const { req } = params;
   const authorizationHeader = req.get('Authorization');
+  const cookieAuthHeader = req.cookies['gql:default'];
+  console.log('cookieAuthHeader', cookieAuthHeader);
   const token = authorizationHeader?.replace('Bearer ', '');
 
   return {
     request: params,
     prisma,
     apolloLogger,
-    getSession: async () => prisma.session.getSessionByToken(token),
+    getSession: async () => prisma.session.getSessionByToken(cookieAuthHeader || token),
   };
 }
