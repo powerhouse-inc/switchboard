@@ -28,8 +28,6 @@ service:
       value: "1"
     - name: "JWT_EXPIRATION_PERIOD_SECONDS"
       value: "3600"
-    - name: "OWN_ORIGIN"
-      value: "https://main.switchboard.k8s.sidestream.tech"
 
 podAutoscaler:
   minReplicas: 1
