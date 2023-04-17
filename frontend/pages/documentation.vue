@@ -45,6 +45,10 @@ const trackCurrentlyActiveId = function () {
 }
 
 onMounted(trackCurrentlyActiveId)
+
+useHead({
+  title: 'Makerdao Document Model Documentation'
+})
 </script>
 
 <template>
