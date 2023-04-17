@@ -18,6 +18,7 @@ export interface Session {
   isUserCreated: boolean;
   name?: string | null | undefined;
   revokedAt?: any;
+  allowedOrigins: string;
 }
 
 const { createSession, revokeSession } = useAuth()
@@ -44,8 +45,8 @@ const revoke = async (sessionId: string) => {
   return referenceTokenId
 }
 
-const create = async (name: string, expiryDurationSeconds: number | null, originRestriction: string) => {
-  const token = await createSession(name, expiryDurationSeconds, originRestriction)
+const create = async (name: string, expiryDurationSeconds: number | null, allowedOrigins: string) => {
+  const token = await createSession(name, expiryDurationSeconds, allowedOrigins)
   await getSessions()
   return token
 }

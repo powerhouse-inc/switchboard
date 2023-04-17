@@ -53,8 +53,8 @@ const useAuth = function () {
     authStorage.value.token = data.value?.signUp?.token
     await checkAuthValidity()
   }
-  const createSession = async (name: string, expiryDurationSeconds: number | null, originRestriction: string) => {
-    const { data, error } = await useAsyncGql('createSession', { name, expiryDurationSeconds, originRestriction })
+  const createSession = async (name: string, expiryDurationSeconds: number | null, allowedOrigins: string) => {
+    const { data, error } = await useAsyncGql('createSession', { name, expiryDurationSeconds, allowedOrigins })
     if (error.value || !data.value?.createSession?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }

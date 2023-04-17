@@ -1,10 +1,10 @@
-mutation createSession($name: String!, $expiryDurationSeconds: Int, $originRestriction: String!) {
-    createSession(session: { name: $name, expiryDurationSeconds: $expiryDurationSeconds, originRestriction: $originRestriction }) {
+mutation createSession($name: String!, $expiryDurationSeconds: Int, $allowedOrigins: String!) {
+    createSession(session: { name: $name, expiryDurationSeconds: $expiryDurationSeconds, allowedOrigins: $allowedOrigins }) {
         token
         session {
             id
             referenceExpiryDate
-            originRestriction
+            allowedOrigins
         }
     }
 }
