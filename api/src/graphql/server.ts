@@ -42,11 +42,15 @@ export const startServer = async (
   const apollo = createApolloServer();
 
   await apollo.start();
-  app.use('/graphql', cors<cors.CorsRequest>(),
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
-    bodyParser.json(), expressMiddleware(apollo, {
-    context: async (params) => (createContext(params)),
-  }));
+    bodyParser.json(),
+    expressMiddleware(apollo, {
+      context: async (params) => (createContext(params)),
+    }),
+  );
 
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);
