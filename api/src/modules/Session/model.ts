@@ -3,9 +3,9 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
+import wildcard from 'wildcard-match';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { validateOrigin, throwGQLErrorIfOriginDisallowed } from '../../helpers/origin';
 
 export const Session = objectType({
   name: 'Session',
@@ -39,6 +39,37 @@ export const SessionCreateOutput = objectType({
   },
 });
 
+function validateOrigin(originParam: string): void {
+  if (originParam === '*') {
+    return;
+  }
+  const trimmedOriginParam = originParam.trim();
+  const origins = trimmedOriginParam.split(',');
+  origins.forEach((origin) => {
+    if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
+      throw new Error("Origin must start with 'http://' or 'https://'");
+    }
+  });
+}
+
+function throwGQLErrorIfOriginDisallowed(
+  originRestriction: string,
+  originReceived?: string,
+) {
+  if (originRestriction !== '*') {
+    if (!originReceived) {
+      throw new GraphQLError('Origin not provided', {
+        extensions: { code: 'ORIGIN_HEADER_MISSING' },
+      });
+    }
+    const allowedOrigins = originRestriction.split(',');
+    if (!wildcard(allowedOrigins)(originReceived)) {
+      throw new GraphQLError('Access denied due to origin restriction', {
+        extensions: { code: 'ORIGIN_FORBIDDEN' },
+      });
+    }
+  }
+}
 async function newSession(
   prisma: PrismaClient,
   session: Prisma.SessionCreateInput,
