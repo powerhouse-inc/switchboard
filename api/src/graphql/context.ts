@@ -15,6 +15,7 @@ export interface Context {
   prisma: typeof prisma;
   getSession: () => Promise<Session>;
   apolloLogger: pino.Logger;
+  origin: string | undefined;
 }
 
 type CreateContextParams = {
@@ -35,5 +36,6 @@ export function createContext(params: CreateContextParams): Context {
     prisma,
     apolloLogger,
     getSession: async () => prisma.session.getSessionByToken(origin, token),
+    origin: origin,
   };
 }

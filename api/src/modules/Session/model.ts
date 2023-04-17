@@ -3,7 +3,7 @@ import { inputObjectType, objectType } from 'nexus/dist';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
-import { JWT_EXPIRATION_PERIOD, OWN_ORIGIN } from '../../env';
+import { JWT_EXPIRATION_PERIOD } from '../../env';
 import { validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
 
 export const Session = objectType({
@@ -76,15 +76,15 @@ export function getSessionCrud(prisma: PrismaClient) {
         throw new GraphQLError('Failed to revoke session', { extensions: { code: 'REVOKE_SESSION_FAILED' } });
       }
     },
-    createSignInSession: async (userId: string) => generateTokenAndSession(
+    createSignInSession: async (userId: string, origin: string = '*') => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: OWN_ORIGIN },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: origin },
     ),
-    createSignUpSession: async (userId: string) => generateTokenAndSession(
+    createSignUpSession: async (userId: string, origin: string = '*') => generateTokenAndSession(
       prisma,
       userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', allowedOrigins: OWN_ORIGIN },
+      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', allowedOrigins: origin },
     ),
     createCustomSession: async (
       userId: string,
