@@ -43,17 +43,18 @@ export const SessionCreateOutput = objectType({
 
 // Actions
 
-function validateOrigin(originParam: string): void {
+function parseOriginMarkup(originParam: string): string {
   if (originParam === '*') {
-    return;
+    return '*';
   }
   const trimmedOriginParam = originParam.trim();
-  const origins = trimmedOriginParam.split(',');
+  const origins = trimmedOriginParam.split(',').map((origin) => origin.trim());
   origins.forEach((origin) => {
     if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
       throw new Error("Origin must start with 'http://' or 'https://'");
     }
   });
+  return origins.join(',');
 }
 
 function throwGQLErrorIfOriginDisallowed(
@@ -95,12 +96,13 @@ const generateTokenAndSession = async (
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
 
-  try { validateOrigin(session.allowedOrigins); } catch (e: any) {
+  let parsedAllowedOrigins: string = '';
+  try { parsedAllowedOrigins = parseOriginMarkup(session.allowedOrigins); } catch (e: any) {
     throw new GraphQLError(e.message, { extensions: { code: 'INVALID_ORIGIN_FORMAT' } });
   }
 
   const createData = {
-    allowedOrigins: session.allowedOrigins,
+    allowedOrigins: parsedAllowedOrigins,
     name: session.name,
     referenceExpiryDate: expiryDate,
     id: createId,
