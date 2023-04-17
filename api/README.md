@@ -35,6 +35,7 @@ Some environment variables are pre-configured for the development. You can copy 
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up mutation is allowed (i.e. user creation via endpoint is enabled)
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire
 - `DEBUG` (optional): if set, enables the different more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
+- `OWN_ORIGIN` (optional, default: `'http://localhost'`): defines the origin where the api is located. The generated sign in and sign up tokens will be restricted to this value.
 
 ### Database
 
