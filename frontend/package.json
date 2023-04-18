@@ -36,10 +36,11 @@
     "vue-tsc": "^1.0.24"
   },
   "dependencies": {
-    "github-markdown-css": "^5.2.0",
     "@vueuse/core": "^9.13.0",
     "date-fns": "^2.29.3",
+    "github-markdown-css": "^5.2.0",
     "jwt-decode": "^3.1.2",
-    "nuxt-graphql-client": "^0.2.27"
+    "nuxt-graphql-client": "^0.2.27",
+    "scroll-into-view-if-needed": "^3.0.10"
   }
 }
