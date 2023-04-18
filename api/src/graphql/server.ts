@@ -5,6 +5,7 @@ import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
 import bodyParser from 'body-parser';
+import cookierParser from 'cookie-parser';
 import cors from 'cors';
 import { PORT } from '../env';
 import { schemaWithMiddleware } from './schema';
@@ -41,9 +42,15 @@ export const startServer = async (
   const apollo = createApolloServer();
 
   await apollo.start();
-  app.use('/graphql', cors<cors.CorsRequest>(), bodyParser.json(), expressMiddleware(apollo, {
-    context: async (params) => (createContext(params)),
-  }));
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>(),
+    cookierParser(undefined, { decode: (value: string) => value }),
+    bodyParser.json(),
+    expressMiddleware(apollo, {
+      context: async (params) => (createContext(params)),
+    }),
+  );
 
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);

@@ -35,6 +35,7 @@ export const createApp = (): Express => {
       endpoint: '/api/graphql',
       settings: {
         'editor.theme': 'light',
+        'request.credentials': 'include',
       },
     }),
   );
