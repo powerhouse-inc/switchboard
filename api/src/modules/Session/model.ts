@@ -5,6 +5,7 @@ import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
+import { SiweMessage } from 'siwe';
 
 export const Session = objectType({
   name: 'Session',
@@ -48,17 +49,16 @@ async function newSession(
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
-  session: { expiryDurationSeconds?: number | null; name: string },
+  session: { expiryDurationSeconds?: number | null; name: string, id: string },
   isUserCreated: boolean = false,
 ) => {
-  const createId = randomUUID();
-  const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
+  const createdToken = tokenUtils.generate(session.id, session.expiryDurationSeconds);
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
   const createData = {
     name: session.name,
     referenceExpiryDate: expiryDate,
-    id: createId,
+    id: session.id,
     referenceTokenId: formattedToken,
     isUserCreated,
     creator: {
@@ -73,6 +73,34 @@ const generateTokenAndSession = async (
     session: createdSession,
   };
 };
+
+async function createPendingSession(prisma: PrismaClient): Promise<string> {
+  const id = randomUUID();
+  await prisma.pendingAuth.create({
+    data: {
+      id,
+    },
+  });
+  return id
+}
+
+async function verifyMessageAndCreateSession(
+  prisma: PrismaClient,
+  message: string,
+  signature: string,
+  userId: string,
+  session: { expiryDurationSeconds?: number | null; name: string },
+  isUserCreated: boolean = false
+) {
+  const siweMessage = new SiweMessage(message);
+  const sessionId = siweMessage.nonce;
+  try {
+    await siweMessage.validate(signature);
+  } catch (e) {
+    throw new GraphQLError('Invalid signature');
+  }
+  return generateTokenAndSession(prisma, userId, {...session, id: sessionId}, isUserCreated);
+}
 
 export function getSessionCrud(prisma: PrismaClient) {
   return {

@@ -41,3 +41,7 @@ model Session {
 
   @@unique([createdBy, id])
 }
+
+model PendingAuth {
+  id String @id @default(uuid())
+}
