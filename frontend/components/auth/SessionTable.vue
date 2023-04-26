@@ -32,6 +32,10 @@ const formatDate = (dateString?: string): string => {
   return format(new Date(dateString), 'dd.MM.yyyy HH:mm')
 }
 
+const formatCommaList = (list: string): string[] => {
+    return list.replace(',', ', ');
+}
+
 const revoke = async (sessionId: string) => {
   try {
     const referenceTokenId = await props.revokeSession(sessionId)
@@ -65,6 +69,13 @@ const columns = [
         return formatDate(session.referenceExpiryDate)
       }
       return 'never'
+    }
+  },
+  {
+    title: 'Allowed origins',
+    key: 'allowedOrigins',
+    render (session: Session) {
+        return formatCommaList(session.allowedOrigins)
     }
   },
   {

@@ -15,6 +15,7 @@ export interface Context {
   prisma: typeof prisma;
   getSession: () => Promise<Session>;
   apolloLogger: pino.Logger;
+  origin: string | undefined;
 }
 
 type CreateContextParams = {
@@ -29,11 +30,13 @@ export function createContext(params: CreateContextParams): Context {
   const authorizationHeader = req.get('Authorization');
   const cookieAuthHeader = req.cookies['gql:default'];
   const token = authorizationHeader?.replace('Bearer ', '');
+  const origin = req.get('Origin');
 
   return {
     request: params,
     prisma,
     apolloLogger,
-    getSession: async () => prisma.session.getSessionByToken(token || cookieAuthHeader),
+    getSession: async () => prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
+    origin,
   };
 }

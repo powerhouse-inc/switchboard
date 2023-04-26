@@ -36,6 +36,7 @@ type Query {
 }
 
 type Session {
+  allowedOrigins: String
   createdAt: GQLDateBase!
   createdBy: String!
   id: String!
@@ -47,6 +48,7 @@ type Session {
 }
 
 input SessionCreate {
+  allowedOrigins: String!
   expiryDurationSeconds: Int
   name: String!
 }

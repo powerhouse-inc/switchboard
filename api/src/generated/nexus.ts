@@ -41,6 +41,7 @@ declare global {
 
 export interface NexusGenInputs {
   SessionCreate: { // input type
+    allowedOrigins: string; // String!
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
   }
@@ -80,6 +81,7 @@ export interface NexusGenObjects {
   Mutation: {};
   Query: {};
   Session: { // root type
+    allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
     createdBy: string; // String!
     id: string; // String!
@@ -138,6 +140,7 @@ export interface NexusGenFieldTypes {
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
   Session: { // field return type
+    allowedOrigins: string | null; // String
     createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
     createdBy: string; // String!
     id: string; // String!
@@ -186,6 +189,7 @@ export interface NexusGenFieldTypeNames {
     sessions: 'Session'
   }
   Session: { // field return type name
+    allowedOrigins: 'String'
     createdAt: 'GQLDateBase'
     createdBy: 'String'
     id: 'String'

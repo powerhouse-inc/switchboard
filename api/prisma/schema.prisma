@@ -36,6 +36,7 @@ model Session {
   revokedAt           DateTime?
   referenceTokenId    String
   isUserCreated       Boolean   @default(false)
+  allowedOrigins      String // comma separated strings
 
   creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 

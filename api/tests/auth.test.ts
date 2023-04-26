@@ -38,6 +38,7 @@ test('Authentication: sign up, sign in, request protected enpoint', async () => 
 
   const token = signInResponse?.signIn?.token;
   ctx.client.setHeader('Authorization', `Bearer ${token}`);
+  ctx.client.setHeader('Origin', 'http://localhost:3000');
 
   const meResponse = (await executeGraphQlQuery(meQuery)) as Record<
   string,

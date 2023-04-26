@@ -19,7 +19,7 @@ export const signIn = mutationField('signIn', {
   },
   resolve: async (_parent, { user: userNamePass }, ctx) => {
     const { id } = await ctx.prisma.user.getUserByUsernamePassword(userNamePass);
-    return ctx.prisma.session.createSignInSession(id);
+    return ctx.prisma.session.createSignInSession(id, ctx.origin);
   },
 });
 
@@ -30,6 +30,6 @@ export const signUp = mutationField('signUp', {
   },
   resolve: async (_parent, { user }, ctx) => {
     const { id } = await ctx.prisma.user.createUser(user);
-    return ctx.prisma.session.createSignUpSession(id);
+    return ctx.prisma.session.createSignUpSession(id, ctx.origin);
   },
 });
