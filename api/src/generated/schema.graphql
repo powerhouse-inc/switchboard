@@ -2,9 +2,8 @@
 ### Do not make changes to this file directly
 
 
-type AuthPayload {
-  session: Session!
-  token: String!
+type Challenge {
+  challenge: String!
 }
 
 type CoreUnit {
@@ -23,9 +22,9 @@ scalar GQLDateBase
 
 type Mutation {
   createSession(session: SessionCreate!): SessionCreateOutput
+  getChallenge: Challenge
   revokeSession(sessionId: String!): Session
-  signIn(user: UserNamePass!): AuthPayload
-  signUp(user: UserNamePass!): AuthPayload
+  solveChallenge(message: String!, signature: String!): SessionCreateOutput
 }
 
 type Query {
@@ -58,8 +57,6 @@ type SessionCreateOutput {
 
 type User {
   id: String!
-  password: String!
-  username: String!
 }
 
 input UserNamePass {

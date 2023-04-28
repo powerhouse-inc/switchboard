@@ -7,6 +7,13 @@ import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
 import { SiweMessage } from 'siwe';
 
+export const Challenge = objectType({
+  name: 'Challenge',
+  definition(t) {
+    t.nonNull.string('challenge');
+  },
+});
+
 export const Session = objectType({
   name: 'Session',
   definition(t) {
@@ -49,10 +56,11 @@ async function newSession(
 const generateTokenAndSession = async (
   prisma: PrismaClient,
   userId: string,
-  session: { expiryDurationSeconds?: number | null; name: string, id: string },
+  session: { expiryDurationSeconds?: number | null; name: string, id?: string },
   isUserCreated: boolean = false,
 ) => {
-  const createdToken = tokenUtils.generate(session.id, session.expiryDurationSeconds);
+  const sessionId = session.id || randomUUID();
+  const createdToken = tokenUtils.generate(sessionId, session.expiryDurationSeconds);
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
   const formattedToken = tokenUtils.format(createdToken);
   const createData = {
@@ -74,6 +82,22 @@ const generateTokenAndSession = async (
   };
 };
 
+async function createUserIfNotExists(prisma: PrismaClient, wallet_address: string) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: wallet_address,
+    }
+  })
+  if (!!user) {
+    return user
+  }
+  return await prisma.user.create({
+    data: {
+      id: wallet_address,
+    }
+  })
+
+}
 async function createPendingSession(prisma: PrismaClient): Promise<string> {
   const id = randomUUID();
   await prisma.pendingAuth.create({
@@ -88,17 +112,18 @@ async function verifyMessageAndCreateSession(
   prisma: PrismaClient,
   message: string,
   signature: string,
-  userId: string,
   session: { expiryDurationSeconds?: number | null; name: string },
   isUserCreated: boolean = false
 ) {
   const siweMessage = new SiweMessage(message);
+  const userId = siweMessage.address;
   const sessionId = siweMessage.nonce;
   try {
     await siweMessage.validate(signature);
   } catch (e) {
     throw new GraphQLError('Invalid signature');
   }
+  await createUserIfNotExists(prisma, userId);
   return generateTokenAndSession(prisma, userId, {...session, id: sessionId}, isUserCreated);
 }
 
@@ -140,16 +165,6 @@ export function getSessionCrud(prisma: PrismaClient) {
         throw new GraphQLError('Failed to revoke session', { extensions: { code: 'REVOKE_SESSION_FAILED' } });
       }
     },
-    createSignInSession: async (userId: string) => generateTokenAndSession(
-      prisma,
-      userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in' },
-    ),
-    createSignUpSession: async (userId: string) => generateTokenAndSession(
-      prisma,
-      userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up' },
-    ),
     createCustomSession: async (
       userId: string,
       session: { expiryDurationSeconds?: number | null; name: string },
@@ -180,6 +195,13 @@ export function getSessionCrud(prisma: PrismaClient) {
       }
       return session;
     },
-
+    getChallenge: async () => {
+      return {
+        challenge: await createPendingSession(prisma),
+      };
+    },
+    solveChallenge: async (message: string, signature: string) => {
+      return await verifyMessageAndCreateSession(prisma, message, signature, { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up' }, false)
+    }
   };
 }

@@ -12,24 +12,21 @@ export const me = queryField('me', {
   },
 });
 
-export const signIn = mutationField('signIn', {
-  type: 'AuthPayload',
-  args: {
-    user: nonNull('UserNamePass'),
-  },
-  resolve: async (_parent, { user: userNamePass }, ctx) => {
-    const { id } = await ctx.prisma.user.getUserByUsernamePassword(userNamePass);
-    return ctx.prisma.session.createSignInSession(id);
-  },
+export const getChallenge = mutationField('getChallenge', {
+  type: 'Challenge',
+  resolve: async (_, __, ctx) => {
+    return ctx.prisma.session.getChallenge();
+  }
 });
 
-export const signUp = mutationField('signUp', {
-  type: 'AuthPayload',
+export const solveChallenge = mutationField('solveChallenge', {
+  type: 'SessionCreateOutput',
   args: {
-    user: nonNull('UserNamePass'),
+    message: nonNull('String'),
+    signature: nonNull('String'),
   },
-  resolve: async (_parent, { user }, ctx) => {
-    const { id } = await ctx.prisma.user.createUser(user);
-    return ctx.prisma.session.createSignUpSession(id);
-  },
+  resolve: async (_, { message, signature }, ctx) => {
+    return ctx.prisma.session.solveChallenge(message, signature);
+  }
 });
+
