@@ -14,9 +14,7 @@ export const me = queryField('me', {
 
 export const getChallenge = mutationField('getChallenge', {
   type: 'Challenge',
-  resolve: async (_, __, ctx) => {
-    return ctx.prisma.session.getChallenge();
-  }
+  resolve: async (_, __, ctx) => ctx.prisma.session.getChallenge(),
 });
 
 export const solveChallenge = mutationField('solveChallenge', {
@@ -26,7 +24,6 @@ export const solveChallenge = mutationField('solveChallenge', {
     signature: nonNull('String'),
   },
   resolve: async (_, { message, signature }, ctx) => {
-    return ctx.prisma.session.solveChallenge(message, signature);
-  }
+    return ctx.prisma.session.solveChallenge(message, signature)
+  },
 });
-

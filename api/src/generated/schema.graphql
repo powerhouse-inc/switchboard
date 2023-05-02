@@ -4,6 +4,7 @@
 
 type Challenge {
   challenge: String!
+  exampleMessage: String!
 }
 
 type CoreUnit {

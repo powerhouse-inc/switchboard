@@ -1,16 +1,20 @@
-import type { PrismaClient, Prisma } from '@prisma/client';
+import type { PrismaClient, Prisma, Session as PrismaSession } from '@prisma/client';
 import { inputObjectType, objectType } from 'nexus/dist';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
+import { SiweMessage } from 'siwe';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { SiweMessage } from 'siwe';
+import logger from '../../logger';
+
+const log = logger.child({ module: 'Session' });
 
 export const Challenge = objectType({
   name: 'Challenge',
   definition(t) {
     t.nonNull.string('challenge');
+    t.nonNull.string('exampleMessage');
   },
 });
 
@@ -58,7 +62,7 @@ const generateTokenAndSession = async (
   userId: string,
   session: { expiryDurationSeconds?: number | null; name: string, id?: string },
   isUserCreated: boolean = false,
-) => {
+): Promise<{ token: string; session: PrismaSession }> => {
   const sessionId = session.id || randomUUID();
   const createdToken = tokenUtils.generate(sessionId, session.expiryDurationSeconds);
   const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
@@ -86,26 +90,34 @@ async function createUserIfNotExists(prisma: PrismaClient, wallet_address: strin
   const user = await prisma.user.findUnique({
     where: {
       id: wallet_address,
-    }
-  })
-  if (!!user) {
-    return user
+    },
+  });
+  if (user) {
+    return user;
   }
-  return await prisma.user.create({
+  return prisma.user.create({
     data: {
       id: wallet_address,
-    }
-  })
-
+    },
+  });
 }
-async function createPendingSession(prisma: PrismaClient): Promise<string> {
+async function createPendingSession(prisma: PrismaClient): Promise<{ id: string; exampleMessage: string }> {
   const id = randomUUID();
   await prisma.pendingAuth.create({
     data: {
       id,
     },
   });
-  return id
+  const tmp = new SiweMessage({
+    domain: 'localhost',
+    address: '0x0000000000000000000000000000000000000000',
+    statement: 'Ecosystem',
+    uri: 'http://localhost',
+    version: '1',
+    chainId: 1,
+    nonce: id.substring(0, 8),
+  }).toMessage();
+  return { id, exampleMessage: tmp };
 }
 
 async function verifyMessageAndCreateSession(
@@ -113,18 +125,36 @@ async function verifyMessageAndCreateSession(
   message: string,
   signature: string,
   session: { expiryDurationSeconds?: number | null; name: string },
-  isUserCreated: boolean = false
-) {
-  const siweMessage = new SiweMessage(message);
+  isUserCreated: boolean = false,
+): Promise<{ token: string; session: PrismaSession }> {
+  let siweMessage: SiweMessage;
+
+  try {
+    siweMessage = new SiweMessage(message);
+  } catch (error) {
+    log.error(error, 'Error creating siwe message');
+    throw new GraphQLError('Invalid message');
+  }
+
   const userId = siweMessage.address;
-  const sessionId = siweMessage.nonce;
+  const challenge = siweMessage.nonce;
+  const pendingAuth = await prisma.pendingAuth.findFirst({
+    where: {
+      id: {
+        startsWith: challenge,
+      },
+    },
+  });
+  if (!pendingAuth) {
+    throw new GraphQLError('No such challenge has been generated.');
+  }
   try {
     await siweMessage.validate(signature);
   } catch (e) {
     throw new GraphQLError('Invalid signature');
   }
   await createUserIfNotExists(prisma, userId);
-  return generateTokenAndSession(prisma, userId, {...session, id: sessionId}, isUserCreated);
+  return generateTokenAndSession(prisma, userId, { ...session, id: pendingAuth.id }, isUserCreated);
 }
 
 export function getSessionCrud(prisma: PrismaClient) {
@@ -196,12 +226,25 @@ export function getSessionCrud(prisma: PrismaClient) {
       return session;
     },
     getChallenge: async () => {
+      const { id, exampleMessage } = await createPendingSession(prisma);
       return {
-        challenge: await createPendingSession(prisma),
+        challenge: id,
+        exampleMessage,
       };
     },
-    solveChallenge: async (message: string, signature: string) => {
-      return await verifyMessageAndCreateSession(prisma, message, signature, { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up' }, false)
-    }
+    solveChallenge: async (
+      message: string,
+      signature: string
+    ) => verifyMessageAndCreateSession(
+      prisma,
+      message,
+      signature,
+      {
+        expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000,
+        name: 'Sign up'
+      },
+      false
+    )
+    ,
   };
 }

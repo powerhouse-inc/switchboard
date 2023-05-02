@@ -65,6 +65,7 @@ export interface NexusGenScalars {
 export interface NexusGenObjects {
   Challenge: { // root type
     challenge: string; // String!
+    exampleMessage: string; // String!
   }
   CoreUnit: { // root type
     code?: string | null; // String
@@ -110,6 +111,7 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 export interface NexusGenFieldTypes {
   Challenge: { // field return type
     challenge: string; // String!
+    exampleMessage: string; // String!
   }
   CoreUnit: { // field return type
     code: string | null; // String
@@ -155,6 +157,7 @@ export interface NexusGenFieldTypes {
 export interface NexusGenFieldTypeNames {
   Challenge: { // field return type name
     challenge: 'String'
+    exampleMessage: 'String'
   }
   CoreUnit: { // field return type name
     code: 'String'
