@@ -32,7 +32,7 @@ export function getChallengeCrud(prisma: PrismaClient) {
         throw new GraphQLError('Origin is missing', { extensions: { code: 'ORIGIN_NOT_FOUND' } });
       }
       const nonce = randomUUID().replace(/-/g, '');
-      const message = new SiweMessage({
+      const textMessage = new SiweMessage({
         address,
         nonce,
         uri: origin,
@@ -40,14 +40,17 @@ export function getChallengeCrud(prisma: PrismaClient) {
         version: '1',
         chainId: 1,
       }).prepareMessage();
-      const challenge = {
-        nonce,
-        message,
-      };
+      const hexMessage = `0x${Buffer.from(textMessage, 'utf8').toString('hex')}`;
       await prisma.challenge.create({
-        data: challenge,
+        data: {
+          nonce,
+          message: textMessage,
+        },
       });
-      return challenge;
+      return {
+        nonce,
+        message: hexMessage,
+      };
     },
 
     async solveChallenge(origin: string | undefined, nonce: string, signature: string) {
@@ -74,12 +77,13 @@ export function getChallengeCrud(prisma: PrismaClient) {
       console.log('parsedMessage', parsedMessage);
 
       try {
-        await parsedMessage.verify({
-          domain,
-          nonce,
-          time: new Date().toISOString(),
+        const response = await parsedMessage.verify({
+          // domain,
+          // nonce,
+          // time: new Date().toISOString(),
           signature,
         });
+        console.log('response', response);
       } catch (error) {
         console.error('Invalid signature', error, nonce, signature);
         throw new GraphQLError('Invalid signature');
