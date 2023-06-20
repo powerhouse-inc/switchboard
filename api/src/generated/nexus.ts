@@ -45,10 +45,6 @@ export interface NexusGenInputs {
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
   }
-  UserNamePass: { // input type
-    password: string; // String!
-    username: string; // String!
-  }
 }
 
 export interface NexusGenEnums {
@@ -67,6 +63,11 @@ export interface NexusGenObjects {
   AuthPayload: { // root type
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
+  }
+  Challenge: { // root type
+    address: string; // String!
+    message: string; // String!
+    nonce: string; // String!
   }
   CoreUnit: { // root type
     code?: string | null; // String
@@ -97,8 +98,6 @@ export interface NexusGenObjects {
   }
   User: { // root type
     id: string; // String!
-    password: string; // String!
-    username: string; // String!
   }
 }
 
@@ -117,6 +116,11 @@ export interface NexusGenFieldTypes {
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
   }
+  Challenge: { // field return type
+    address: string; // String!
+    message: string; // String!
+    nonce: string; // String!
+  }
   CoreUnit: { // field return type
     code: string | null; // String
     descriptionParagraph: string | null; // String
@@ -128,10 +132,10 @@ export interface NexusGenFieldTypes {
     shortCode: string | null; // String
   }
   Mutation: { // field return type
+    createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionCreateOutput'] | null; // SessionCreateOutput
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
-    signIn: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
-    signUp: NexusGenRootTypes['AuthPayload'] | null; // AuthPayload
+    solveChallenge: NexusGenRootTypes['SessionCreateOutput'] | null; // SessionCreateOutput
   }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
@@ -156,8 +160,6 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     id: string; // String!
-    password: string; // String!
-    username: string; // String!
   }
 }
 
@@ -165,6 +167,11 @@ export interface NexusGenFieldTypeNames {
   AuthPayload: { // field return type name
     session: 'Session'
     token: 'String'
+  }
+  Challenge: { // field return type name
+    address: 'String'
+    message: 'String'
+    nonce: 'String'
   }
   CoreUnit: { // field return type name
     code: 'String'
@@ -177,10 +184,10 @@ export interface NexusGenFieldTypeNames {
     shortCode: 'String'
   }
   Mutation: { // field return type name
+    createChallenge: 'Challenge'
     createSession: 'SessionCreateOutput'
     revokeSession: 'Session'
-    signIn: 'AuthPayload'
-    signUp: 'AuthPayload'
+    solveChallenge: 'SessionCreateOutput'
   }
   Query: { // field return type name
     coreUnit: 'CoreUnit'
@@ -205,24 +212,23 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     id: 'String'
-    password: 'String'
-    username: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createChallenge: { // args
+      address: string; // String!
+    }
     createSession: { // args
       session: NexusGenInputs['SessionCreate']; // SessionCreate!
     }
     revokeSession: { // args
       sessionId: string; // String!
     }
-    signIn: { // args
-      user: NexusGenInputs['UserNamePass']; // UserNamePass!
-    }
-    signUp: { // args
-      user: NexusGenInputs['UserNamePass']; // UserNamePass!
+    solveChallenge: { // args
+      nonce: string; // String!
+      signature: string; // String!
     }
   }
   Query: {

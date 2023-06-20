@@ -20,9 +20,8 @@ model CoreUnit {
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String @unique
-  password String
+  id      String @id @default(uuid())
+  address String @unique
 
   sessions Session[]
 }
@@ -41,4 +40,10 @@ model Session {
   creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 
   @@unique([createdBy, id])
+}
+
+model Challenge {
+  nonce     String   @id
+  message   String   @unique
+  createdAt DateTime @default(now())
 }

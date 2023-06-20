@@ -7,6 +7,12 @@ type AuthPayload {
   token: String!
 }
 
+type Challenge {
+  address: String!
+  message: String!
+  nonce: String!
+}
+
 type CoreUnit {
   code: String
   descriptionParagraph: String
@@ -22,10 +28,10 @@ type CoreUnit {
 scalar GQLDateBase
 
 type Mutation {
+  createChallenge(address: String!): Challenge
   createSession(session: SessionCreate!): SessionCreateOutput
   revokeSession(sessionId: String!): Session
-  signIn(user: UserNamePass!): AuthPayload
-  signUp(user: UserNamePass!): AuthPayload
+  solveChallenge(nonce: String!, signature: String!): SessionCreateOutput
 }
 
 type Query {
@@ -60,11 +66,4 @@ type SessionCreateOutput {
 
 type User {
   id: String!
-  password: String!
-  username: String!
-}
-
-input UserNamePass {
-  password: String!
-  username: String!
 }
