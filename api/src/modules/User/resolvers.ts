@@ -1,4 +1,11 @@
-import { queryField } from 'nexus/dist';
+import { queryField, objectType } from 'nexus/dist';
+
+export const User = objectType({
+  name: 'User',
+  definition(t) {
+    t.nonNull.string('address');
+  },
+});
 
 export const me = queryField('me', {
   type: 'User',
@@ -6,7 +13,7 @@ export const me = queryField('me', {
     const { createdBy } = await ctx.getSession();
     return ctx.prisma.user.findUnique({
       where: {
-        id: createdBy,
+        address: createdBy,
       },
     });
   },

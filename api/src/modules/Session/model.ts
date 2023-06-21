@@ -1,50 +1,9 @@
 import type { PrismaClient } from '@prisma/client';
-import { inputObjectType, objectType } from 'nexus/dist';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { token as tokenUtils } from '../../helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
 import { validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
-
-export const Session = objectType({
-  name: 'Session',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.date('createdAt');
-    t.nonNull.string('createdBy');
-    t.date('referenceExpiryDate');
-    t.nonNull.string('referenceTokenId');
-    t.nonNull.boolean('isUserCreated');
-    t.string('name');
-    t.date('revokedAt');
-    t.string('allowedOrigins');
-  },
-});
-
-export const SessionCreate = inputObjectType({
-  name: 'SessionCreate',
-  definition(t) {
-    t.int('expiryDurationSeconds');
-    t.nonNull.string('name');
-    t.nonNull.string('allowedOrigins');
-  },
-});
-
-export const SessionCreateOutput = objectType({
-  name: 'SessionCreateOutput',
-  definition(t) {
-    t.nonNull.field('session', { type: 'Session' });
-    t.nonNull.string('token');
-  },
-});
-
-export const TokenAndSession = objectType({
-  name: 'TokenAndSession',
-  definition(t) {
-    t.nonNull.string('token');
-    t.nonNull.field('session', { type: 'Session' });
-  },
-});
 
 export function getSessionCrud(
   prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>,

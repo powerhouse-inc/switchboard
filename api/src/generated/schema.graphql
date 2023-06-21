@@ -23,9 +23,9 @@ scalar GQLDateBase
 
 type Mutation {
   createChallenge(address: String!): Challenge
-  createSession(session: SessionCreate!): SessionCreateOutput
+  createSession(session: SessionInput!): SessionOutput
   revokeSession(sessionId: String!): Session
-  solveChallenge(nonce: String!, signature: String!): SessionCreateOutput
+  solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
 
 type Query {
@@ -47,22 +47,17 @@ type Session {
   revokedAt: GQLDateBase
 }
 
-input SessionCreate {
+input SessionInput {
   allowedOrigins: String!
   expiryDurationSeconds: Int
   name: String!
 }
 
-type SessionCreateOutput {
-  session: Session!
-  token: String!
-}
-
-type TokenAndSession {
+type SessionOutput {
   session: Session!
   token: String!
 }
 
 type User {
-  id: String!
+  address: String!
 }

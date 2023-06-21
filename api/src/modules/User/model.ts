@@ -1,31 +1,29 @@
-import { objectType } from 'nexus/dist';
 import { PrismaClient } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
   AUTH_SIGNUP_ENABLED,
 } from '../../env';
+import { getChildLogger } from '../../logger';
 
-export const User = objectType({
-  name: 'User',
-  definition(t) {
-    t.nonNull.string('id');
-  },
-});
+const logger = getChildLogger({ msgPrefix: 'User' });
 
 export function getUserCrud(prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>) {
   return {
 
     async createUserIfNotExists(user: { address: string }) {
       if (!AUTH_SIGNUP_ENABLED) {
+        logger.error('User tried to sign in, while sign up is disabled', user.address, AUTH_SIGNUP_ENABLED);
         throw new GraphQLError('Sign up is disabled');
       }
-      return prisma.user.upsert({
+      const usertedUser = await prisma.user.upsert({
         where: {
           address: user.address,
         },
         update: {},
         create: { ...user },
       });
+      logger.error('Upserted user', usertedUser);
+      return usertedUser;
     },
 
   };

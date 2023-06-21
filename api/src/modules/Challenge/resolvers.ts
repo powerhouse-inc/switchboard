@@ -17,7 +17,7 @@ export const createChallenge = mutationField('createChallenge', {
 });
 
 export const solveChallenge = mutationField('solveChallenge', {
-  type: 'SessionCreateOutput',
+  type: 'SessionOutput',
   args: {
     nonce: nonNull('String'),
     signature: nonNull('String'),

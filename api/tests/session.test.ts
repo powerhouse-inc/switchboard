@@ -9,7 +9,9 @@ cleanDatabaseBeforeAfterEachTest();
 
 const listSessionsQuery = builder.query({
   operation: 'sessions',
-  fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated'],
+  fields: [
+    'id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated',
+  ],
 });
 
 const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
@@ -20,7 +22,9 @@ const getRevokeSessionMutation = (sessionId: string) => builder.mutation({
       type: 'String!',
     },
   },
-  fields: ['id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated'],
+  fields: [
+    'id', 'name', 'createdAt', 'createdBy', 'referenceExpiryDate', 'revokedAt', 'referenceTokenId', 'isUserCreated',
+  ],
 });
 
 const getCreateSessionMutation = (

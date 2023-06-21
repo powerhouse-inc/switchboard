@@ -5,12 +5,15 @@ import url from 'url';
 import { randomUUID } from 'crypto';
 import { getUserCrud } from '../User';
 import { getSessionCrud } from '../Session';
+import { getChildLogger } from '../../logger';
+
+const logger = getChildLogger({ msgPrefix: 'Challenge' });
 
 const parseMessage = (message: string) => {
   try {
     return new SiweMessage(message);
   } catch (error) {
-    console.error('Provided message has invalid format', error);
+    logger.error('Provided message has invalid format', error);
     throw new GraphQLError('Provided message has invalid format');
   }
 };
@@ -21,10 +24,10 @@ const verifySignature = async (parsedMessage: SiweMessage, signature: string) =>
       time: new Date().toISOString(),
       signature,
     });
-    console.log('response', response);
+    logger.debug('verifySignature', response);
     return response;
   } catch (error) {
-    console.error('Invalid signature', parsedMessage, signature);
+    logger.error('Invalid signature', parsedMessage, signature);
     throw new GraphQLError('Invalid signature');
   }
 };
@@ -35,11 +38,14 @@ export function getChallengeCrud(prisma: PrismaClient) {
   return {
 
     async createChallenge(origin: string | undefined, address: string) {
+      logger.debug('createChallenge: received', origin, address);
+
       const domain = origin ? url.parse(origin).hostname : undefined;
       if (!domain) {
         throw new GraphQLError('Origin is missing');
       }
       // TODO: check domain
+
       const nonce = randomUUID().replace(/-/g, '');
       const textMessage = new SiweMessage({
         address,
@@ -50,6 +56,8 @@ export function getChallengeCrud(prisma: PrismaClient) {
         chainId: 1,
       }).prepareMessage();
       const hexMessage = textToHex(textMessage);
+      logger.debug('createChallenge: created message', textMessage, hexMessage);
+
       await prisma.challenge.create({
         data: {
           nonce,
@@ -63,6 +71,8 @@ export function getChallengeCrud(prisma: PrismaClient) {
     },
 
     async solveChallenge(origin: string | undefined, nonce: string, signature: string) {
+      logger.debug('solveChallenge: received', origin, nonce, signature);
+
       const domain = origin ? url.parse(origin).hostname : undefined;
       if (!domain) {
         throw new GraphQLError('Origin is missing');
@@ -70,7 +80,6 @@ export function getChallengeCrud(prisma: PrismaClient) {
 
       // transaction is used to avoid race condition
       return prisma.$transaction(async (tx) => {
-        // find existing challange
         const challenge = await tx.challenge.findFirst({
           where: {
             nonce: {
@@ -78,8 +87,8 @@ export function getChallengeCrud(prisma: PrismaClient) {
             },
           },
         });
+        logger.debug('solveChallenge: found challange', challenge);
 
-        console.log('solveChallenge', challenge, origin, nonce, signature);
         // check that challenge with this nonce exists
         if (!challenge) {
           throw new GraphQLError('The nonce is not known');
@@ -90,16 +99,9 @@ export function getChallengeCrud(prisma: PrismaClient) {
           throw new GraphQLError('The challance was already used');
         }
 
+        // verify signature
         const parsedMessage = parseMessage(challenge.message);
-        console.log('parsedMessage', parsedMessage);
-
         await verifySignature(parsedMessage, signature);
-
-        // create new user
-        const user = await getUserCrud(tx).createUserIfNotExists({ address: parsedMessage.address });
-
-        // create new token and session
-        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address, origin);
 
         // mark challenge as used
         await tx.challenge.update({
@@ -110,6 +112,11 @@ export function getChallengeCrud(prisma: PrismaClient) {
             signature,
           },
         });
+
+        // create user and session
+        const user = await getUserCrud(tx).createUserIfNotExists({ address: parsedMessage.address });
+        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address, origin);
+
         return tokenAndsession;
       });
     },

@@ -40,7 +40,7 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  SessionCreate: { // input type
+  SessionInput: { // input type
     allowedOrigins: string; // String!
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
@@ -87,16 +87,12 @@ export interface NexusGenObjects {
     referenceTokenId: string; // String!
     revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
-  SessionCreateOutput: { // root type
-    session: NexusGenRootTypes['Session']; // Session!
-    token: string; // String!
-  }
-  TokenAndSession: { // root type
+  SessionOutput: { // root type
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
   }
   User: { // root type
-    id: string; // String!
+    address: string; // String!
   }
 }
 
@@ -127,9 +123,9 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
-    createSession: NexusGenRootTypes['SessionCreateOutput'] | null; // SessionCreateOutput
+    createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
-    solveChallenge: NexusGenRootTypes['SessionCreateOutput'] | null; // SessionCreateOutput
+    solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
@@ -148,16 +144,12 @@ export interface NexusGenFieldTypes {
     referenceTokenId: string; // String!
     revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
   }
-  SessionCreateOutput: { // field return type
-    session: NexusGenRootTypes['Session']; // Session!
-    token: string; // String!
-  }
-  TokenAndSession: { // field return type
+  SessionOutput: { // field return type
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
   }
   User: { // field return type
-    id: string; // String!
+    address: string; // String!
   }
 }
 
@@ -178,9 +170,9 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createChallenge: 'Challenge'
-    createSession: 'SessionCreateOutput'
+    createSession: 'SessionOutput'
     revokeSession: 'Session'
-    solveChallenge: 'SessionCreateOutput'
+    solveChallenge: 'SessionOutput'
   }
   Query: { // field return type name
     coreUnit: 'CoreUnit'
@@ -199,16 +191,12 @@ export interface NexusGenFieldTypeNames {
     referenceTokenId: 'String'
     revokedAt: 'GQLDateBase'
   }
-  SessionCreateOutput: { // field return type name
-    session: 'Session'
-    token: 'String'
-  }
-  TokenAndSession: { // field return type name
+  SessionOutput: { // field return type name
     session: 'Session'
     token: 'String'
   }
   User: { // field return type name
-    id: 'String'
+    address: 'String'
   }
 }
 
@@ -218,7 +206,7 @@ export interface NexusGenArgTypes {
       address: string; // String!
     }
     createSession: { // args
-      session: NexusGenInputs['SessionCreate']; // SessionCreate!
+      session: NexusGenInputs['SessionInput']; // SessionInput!
     }
     revokeSession: { // args
       sessionId: string; // String!

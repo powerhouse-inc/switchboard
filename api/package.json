@@ -33,6 +33,7 @@
         "pino": "^8.11.0",
         "pino-http": "^8.3.3",
         "pino-pretty": "^10.0.0",
+        "siwe": "^2.1.4",
         "vite-node": "^0.29.2",
         "vitest": "^0.29.2",
         "wildcard-match": "^5.1.2",
@@ -54,7 +55,6 @@
         "gql-query-builder": "^3.8.0",
         "graphql-request": "^5.2.0",
         "prisma": "^4.11.0",
-        "siwe": "^2.1.4",
         "typescript": "^4.9.5",
         "vitest-mock-extended": "^1.1.3"
     }
