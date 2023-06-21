@@ -2,13 +2,7 @@
 ### Do not make changes to this file directly
 
 
-type AuthPayload {
-  session: Session!
-  token: String!
-}
-
 type Challenge {
-  address: String!
   message: String!
   nonce: String!
 }
@@ -60,6 +54,11 @@ input SessionCreate {
 }
 
 type SessionCreateOutput {
+  session: Session!
+  token: String!
+}
+
+type TokenAndSession {
   session: Session!
   token: String!
 }

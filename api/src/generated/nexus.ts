@@ -60,12 +60,7 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  AuthPayload: { // root type
-    session: NexusGenRootTypes['Session']; // Session!
-    token: string; // String!
-  }
   Challenge: { // root type
-    address: string; // String!
     message: string; // String!
     nonce: string; // String!
   }
@@ -96,6 +91,10 @@ export interface NexusGenObjects {
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
   }
+  TokenAndSession: { // root type
+    session: NexusGenRootTypes['Session']; // Session!
+    token: string; // String!
+  }
   User: { // root type
     id: string; // String!
   }
@@ -112,12 +111,7 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
-  AuthPayload: { // field return type
-    session: NexusGenRootTypes['Session']; // Session!
-    token: string; // String!
-  }
   Challenge: { // field return type
-    address: string; // String!
     message: string; // String!
     nonce: string; // String!
   }
@@ -158,18 +152,17 @@ export interface NexusGenFieldTypes {
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
   }
+  TokenAndSession: { // field return type
+    session: NexusGenRootTypes['Session']; // Session!
+    token: string; // String!
+  }
   User: { // field return type
     id: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
-  AuthPayload: { // field return type name
-    session: 'Session'
-    token: 'String'
-  }
   Challenge: { // field return type name
-    address: 'String'
     message: 'String'
     nonce: 'String'
   }
@@ -207,6 +200,10 @@ export interface NexusGenFieldTypeNames {
     revokedAt: 'GQLDateBase'
   }
   SessionCreateOutput: { // field return type name
+    session: 'Session'
+    token: 'String'
+  }
+  TokenAndSession: { // field return type name
     session: 'Session'
     token: 'String'
   }

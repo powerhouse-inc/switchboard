@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
@@ -40,42 +40,34 @@ export function validateOriginAgainstAllowed(
   }
 }
 
-async function newSession(
-  prisma: PrismaClient,
-  session: Prisma.SessionCreateInput,
-) {
-  return prisma.session.create({
-    data: session,
-  });
-}
-
 export const generateTokenAndSession = async (
-  prisma: PrismaClient,
+  prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>,
   userId: string,
   session: { expiryDurationSeconds?: number | null; name: string; allowedOrigins: string },
   isUserCreated: boolean = false,
 ) => {
-  const createId = randomUUID();
-  const createdToken = tokenUtils.generate(createId, session.expiryDurationSeconds);
-  const expiryDate = tokenUtils.getExpiryDateFromToken(createdToken);
-  const formattedToken = tokenUtils.format(createdToken);
-  const parsedAllowedOrigins = parseOriginMarkup(session.allowedOrigins);
-  const createData = {
-    allowedOrigins: parsedAllowedOrigins,
-    name: session.name,
-    referenceExpiryDate: expiryDate,
-    id: createId,
-    referenceTokenId: formattedToken,
-    isUserCreated,
-    creator: {
-      connect: {
-        id: userId,
+  const sessionId = randomUUID();
+  const generatedToken = tokenUtils.generate(sessionId, session.expiryDurationSeconds);
+  const referenceExpiryDate = tokenUtils.getExpiryDateFromToken(generatedToken);
+  const referenceTokenId = tokenUtils.format(generatedToken);
+  const allowedOrigins = parseOriginMarkup(session.allowedOrigins);
+  const createdSession = await prisma.session.create({
+    data: {
+      id: sessionId,
+      name: session.name,
+      allowedOrigins,
+      referenceExpiryDate,
+      referenceTokenId,
+      isUserCreated,
+      creator: {
+        connect: {
+          address: userId,
+        },
       },
     },
-  };
-  const createdSession = await newSession(prisma, createData);
+  });
   return {
-    token: createdToken,
+    token: generatedToken,
     session: createdSession,
   };
 };

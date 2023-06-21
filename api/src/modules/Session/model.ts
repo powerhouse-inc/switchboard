@@ -38,14 +38,24 @@ export const SessionCreateOutput = objectType({
   },
 });
 
-export function getSessionCrud(prisma: PrismaClient) {
+export const TokenAndSession = objectType({
+  name: 'TokenAndSession',
+  definition(t) {
+    t.nonNull.string('token');
+    t.nonNull.field('session', { type: 'Session' });
+  },
+});
+
+export function getSessionCrud(
+  prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>,
+) {
   return {
 
-    async createFrontendSession(userId: string, origin: string = '*') {
+    async createAuthenticationSession(userId: string, allowedOrigins: string = '*') {
       return generateTokenAndSession(
         prisma,
         userId,
-        { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: origin },
+        { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in/Sign up', allowedOrigins },
       );
     },
 

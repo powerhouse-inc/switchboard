@@ -1,18 +1,10 @@
 import type { PrismaClient } from '@prisma/client';
 import { SiweMessage } from 'siwe';
-import { objectType } from 'nexus/dist';
 import { GraphQLError } from 'graphql';
 import url from 'url';
 import { randomUUID } from 'crypto';
-
-export const Challenge = objectType({
-  name: 'Challenge',
-  definition(t) {
-    t.nonNull.string('nonce');
-    t.nonNull.string('address');
-    t.nonNull.string('message');
-  },
-});
+import { getUserCrud } from '../User';
+import { getSessionCrud } from '../Session';
 
 const parseMessage = (message: string) => {
   try {
@@ -76,28 +68,50 @@ export function getChallengeCrud(prisma: PrismaClient) {
         throw new GraphQLError('Origin is missing');
       }
 
-      const challenge = await prisma.challenge.findFirst({
-        where: {
-          nonce: {
-            equals: nonce,
+      // transaction is used to avoid race condition
+      return prisma.$transaction(async (tx) => {
+        // find existing challange
+        const challenge = await tx.challenge.findFirst({
+          where: {
+            nonce: {
+              equals: nonce,
+            },
           },
-        },
+        });
+
+        console.log('solveChallenge', challenge, origin, nonce, signature);
+        // check that challenge with this nonce exists
+        if (!challenge) {
+          throw new GraphQLError('The nonce is not known');
+        }
+
+        // check that challenge is not used
+        if (challenge.signature) {
+          throw new GraphQLError('The challance was already used');
+        }
+
+        const parsedMessage = parseMessage(challenge.message);
+        console.log('parsedMessage', parsedMessage);
+
+        await verifySignature(parsedMessage, signature);
+
+        // create new user
+        const user = await getUserCrud(tx).createUserIfNotExists({ address: parsedMessage.address });
+
+        // create new token and session
+        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address, origin);
+
+        // mark challenge as used
+        await tx.challenge.update({
+          where: {
+            nonce,
+          },
+          data: {
+            signature,
+          },
+        });
+        return tokenAndsession;
       });
-
-      console.log('solveChallenge', challenge, origin, nonce, signature);
-      // check that challenge with this nonce exists
-      if (!challenge) {
-        throw new GraphQLError('The nonce is not known');
-      }
-
-      const parsedMessage = parseMessage(challenge.message);
-      console.log('parsedMessage', parsedMessage);
-
-      await verifySignature(parsedMessage, signature);
-
-      // TODO: add transaction to mark challenge as used and create new user/session
-      // await createUserIfNotExists(prisma, userId);
-      // return generateTokenAndSession(prisma, userId, { ...session, id: pendingAuth.id }, isUserCreated);
     },
 
   };
