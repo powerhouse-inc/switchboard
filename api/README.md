@@ -54,6 +54,64 @@ npx prisma studio
 
 The configuration is received from the `logger.config.ts` file at the root of the project. Adjust the file parameters to control the logger behaviour.
 
+## Authentication
+
+The API authentication is implemented using "Sign-In with Ethereum" standard described in [EIP-4361](https://eips.ethereum.org/EIPS/eip-4361). Basically, in order to get a usual JWT token, one have to sign a message provided by the API using their etherium wallet. In practice it means:
+
+1. Create challenge via executing `createChallenge` graphql mutation
+    - Example request (that have to contain your public etherium address)
+        ```gql
+        mutation {
+            createChallenge(
+                address: "paste_your_ethereum_address"
+            ) {
+                nonce
+                message
+            }
+        }
+        ```
+    - Example response (that contains hex-encoded message)
+        ```json
+        {
+            "data": {
+                "createChallenge": {
+                    "nonce": "6f4c7f7cd61a499290e68a2740957407",
+                    "message": "0x6c6f63616c686f73742077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078333139386235354434393732393346373333463236333137353563373636653131636535363866350a0a0a5552493a20687474703a2f2f6c6f63616c686f73743a333030300a56657273696f6e3a20310a436861696e2049443a20310a4e6f6e63653a2036663463376637636436316134393932393065363861323734303935373430370a4973737565642041743a20323032332d30362d32305431373a34353a35362e3435385a"
+                }
+            }
+        }
+        ```
+2. Sign provided message
+    - Either [using your metamask wallet](https://docs.metamask.io/wallet/how-to/use-siwe/)
+        ```js
+        // this should be executed at the browser console of the graphql playground
+        await ethereum.request({
+            method: 'personal_sign',
+            params: [
+                'paste_message_from_above',
+                'paste_your_ethereum_address'
+            ]
+        });
+        ```
+    - Or using foundry command line tool called `cast`
+        ```sh
+        $ cast wallet sign -i "message_from_above"
+        ```
+        (note: you will be asked for your private key; for other auth methods, [read the docs](https://book.getfoundry.sh/reference/cast/cast-wallet-sign))
+3. Provide signature back to the API to get usual JWT token back
+    - Example request
+        ```gql
+        mutation {
+            solveChallenge(
+                nonce: "paste_nonce_from_above"
+                signature: "paste_signature_generated_in_step_2"
+            ) {
+                token
+            }
+        }
+        ```
+4. Use JWT token to make requests
+
 ## Health endpoint
 
 Endpoint available at `/healthz` path. Provides response if api is currently running and prisma (orm) is able to execute queries.
