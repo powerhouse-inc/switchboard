@@ -2,7 +2,7 @@ name: Deploy Switchboard Staging
 
 on:
   push:
-    # branches: [ main ]
+    branches: [ main ]
 jobs:
   build:
     name: build and push to ghcr
