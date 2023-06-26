@@ -1,10 +1,13 @@
 <template>
-  <div class="flex flex-col gap-3 w-80">
+  <div class="flex flex-col">
     <NButton
       type="primary"
       :loading="isLoading"
       @click="signInAndAwait"
     >
+      <template #icon>
+        <n-icon :component="LogInOutline" class="-ml-1" />
+      </template>
       Sign in with Ethereum
     </NButton>
   </div>
@@ -12,8 +15,7 @@
 
 <script lang="ts" setup>
 import { useMessage } from 'naive-ui'
-//   import { LogInOutline, PersonCircle } from '@vicons/ionicons5'
-//   import { LockClosed24Filled, FormNew24Regular } from '@vicons/fluent'
+import { LogInOutline } from '@vicons/ionicons5'
 
 const message = useMessage()
 
