@@ -20,9 +20,6 @@ const useAuth = function () {
   }
 
   const checkAuthValidity = async () => {
-    if (user.value) {
-      return
-    }
     try {
       const { data, error } = await useAsyncGql('me')
       if (error.value || !data.value?.me) {
