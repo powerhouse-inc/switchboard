@@ -16,8 +16,8 @@ const shortenAddress = computed(() => {
   if (!props.address) {
     return ''
   }
-  const start = props.address.substr(0, TRIM_LENGTH + 1)
-  const end = props.address.substr(-TRIM_LENGTH)
+  const start = props.address.substring(0, TRIM_LENGTH + 1)
+  const end = props.address.substring(props.address.length - TRIM_LENGTH)
   return `${start}...${end}`
 })
 </script>
