@@ -3,15 +3,14 @@ import { useStorage } from '@vueuse/core'
 import decode from 'jwt-decode'
 
 export declare interface User {
-    id: string;
-    username: string;
+    address: string;
 }
 
 const user = ref(undefined as User | undefined)
 const authStorage = useStorage('auth', {} as { token?: string })
 const isLoading = ref(true)
 const isAuthorized = computed(() => {
-  return Boolean(authStorage.value.token && user.value?.id)
+  return Boolean(authStorage.value.token && user.value?.address)
 })
 
 const useAuth = function () {
@@ -35,24 +34,17 @@ const useAuth = function () {
     }
   }
 
-  const signIn = async (username: string, password: string) => {
-    const { data, error } = await useAsyncGql('signIn', { username, password })
-    if (error.value || !data.value?.signIn?.token) {
+  const signIn = async () => {
+    const address = '0x0'
+    const { data, error } = await useAsyncGql('createChallenge', { address })
+    if (error.value || !data.value?.createChallenge?.message) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    useGqlToken(data.value?.signIn?.token)
-    authStorage.value.token = data.value?.signIn?.token
+    // useGqlToken(data.value?.signIn?.token)
+    // authStorage.value.token = data.value?.signIn?.token
     await checkAuthValidity()
   }
-  const signUp = async (username: string, password: string) => {
-    const { data, error } = await useAsyncGql('signUp', { username, password })
-    if (error.value || !data.value?.signUp?.token) {
-      throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
-    }
-    useGqlToken(data.value?.signUp?.token)
-    authStorage.value.token = data.value?.signUp?.token
-    await checkAuthValidity()
-  }
+
   const createSession = async (name: string, expiryDurationSeconds: number | null, allowedOrigins: string) => {
     const { data, error } = await useAsyncGql('createSession', { name, expiryDurationSeconds, allowedOrigins })
     if (error.value || !data.value?.createSession?.token) {
@@ -60,6 +52,7 @@ const useAuth = function () {
     }
     return data.value?.createSession?.token
   }
+
   const revokeSession = async (sessionId: string) => {
     const { data, error } = await useAsyncGql('revokeSession', { sessionId })
     if (error.value || !data.value?.revokeSession?.id) {
@@ -74,6 +67,7 @@ const useAuth = function () {
     }
     return data.value?.revokeSession?.referenceTokenId
   }
+
   const signOut = async () => {
     if (!authStorage.value?.token) {
       throw new Error('No user token provided')
@@ -90,7 +84,7 @@ const useAuth = function () {
     checkAuthValidity()
   })
 
-  return { isLoading, isAuthorized, user, checkAuthValidity, signIn, signUp, signOut, createSession, revokeSession }
+  return { isLoading, isAuthorized, user, checkAuthValidity, signIn, signOut, createSession, revokeSession }
 }
 
 export default useAuth

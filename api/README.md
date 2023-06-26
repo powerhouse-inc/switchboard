@@ -119,7 +119,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
         {
             "data": {
                 "solveChallenge": {
-                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI5ZGM1NjI3Mi1hMjBjLTRmM2YtYjM5MC1kZDc2NjE1NTA0YTYiLCJpYXQiOjE2ODczMzc2MDEsImV4cCI6MTY4Nzk0MjQwMX0.z1lJlKXnCbcex59JkU9j7hfRGhR2EBrnUE8phwPN7C0"
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uSWQiOiI5ZGM1NjI3Mi1hMjBjLTRmM2YtYjM5MC1kZDc2NjE1NTA0YTYiLCJpYXQiOjE2ODczMzc2MDEsImV4cCI6MTY4Nzk0MjQwMX0.z1lJlKXnCbcex59JkU9j7hfRGhR2EBrnUE8phwPN7C0"
                 }
             }
         }
@@ -127,7 +127,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
 
 4. Use provided JWT token to make subsequent API requests
     - Either sent as `Authorization: Bearer paste_your_token_from_above`
-    - Or as `Authorization` cookie
+    - Or set as `Authorization` cookie
 
 ## Health endpoint
 

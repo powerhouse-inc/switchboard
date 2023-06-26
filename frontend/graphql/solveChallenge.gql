@@ -1,0 +1,5 @@
+mutation solveChallenge($nonce: String!, $signature: String!) {
+    solveChallenge(nonce: $nonce, signature: $signature) {
+        token
+    }
+}
