@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import decode from 'jwt-decode'
+import useWallet from './useWallet'
 
 export declare interface User {
     address: string;
@@ -34,14 +35,33 @@ const useAuth = function () {
     }
   }
 
-  const signIn = async () => {
-    const address = '0x0'
+  const createChallance = async function (address: string) {
     const { data, error } = await useAsyncGql('createChallenge', { address })
     if (error.value || !data.value?.createChallenge?.message) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    // useGqlToken(data.value?.signIn?.token)
-    // authStorage.value.token = data.value?.signIn?.token
+    return data.value?.createChallenge
+  }
+
+  const solveChallenge = async function (nonce: string, signature: string) {
+    const { data, error } = await useAsyncGql('solveChallenge', { nonce, signature })
+    if (error.value || !data.value?.solveChallenge?.token) {
+      throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
+    }
+    return data.value?.solveChallenge.token
+  }
+
+  const signIn = async () => {
+    const { connectWallet, signMessage } = useWallet()
+    const address = await connectWallet()
+
+    const { nonce, message } = await createChallance(address)
+    const signature = await signMessage(message)
+
+    const token = await solveChallenge(nonce, signature)
+    useGqlToken(token)
+    authStorage.value.token = token
+
     await checkAuthValidity()
   }
 
