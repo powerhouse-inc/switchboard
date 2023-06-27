@@ -1,16 +1,21 @@
 import {
   vi, test, expect, describe,
 } from 'vitest';
+import { computeAddress, Wallet } from 'ethers';
 import { restoreEnvAfterEach } from './helpers/env';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { createChallenge, solveChallenge, me } from './helpers/gql';
-import { PUBLIC_KEY, signer } from './helpers/const';
+import {
+  PRIVATE_KEY, PUBLIC_KEY, signer, provider,
+} from './helpers/const';
 import { ctx } from './helpers/server';
 import * as env from '../src/env';
 
-export const signIn = async () => {
-  const challengeResponse = await createChallenge(PUBLIC_KEY);
-  const signature = await signer.signMessage(challengeResponse.message);
+export const signIn = async (privateKey = PRIVATE_KEY) => {
+  const publicKey = computeAddress(privateKey);
+  const challengeResponse = await createChallenge(publicKey);
+  const localSigner = new Wallet(PRIVATE_KEY, provider);
+  const signature = await localSigner.signMessage(challengeResponse.message);
   const response = await solveChallenge(challengeResponse.nonce, signature);
   ctx.client.setHeader('Authorization', `Bearer ${response.token}`);
   return response;

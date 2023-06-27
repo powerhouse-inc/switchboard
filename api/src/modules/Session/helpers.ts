@@ -34,7 +34,7 @@ export function validateOriginAgainstAllowed(
   }
   const allowedOriginsSplit = allowedOrigins.split(',');
   if (!wildcard(allowedOriginsSplit)(originReceived)) {
-    throw new GraphQLError('Access denied due to origin restriction', {
+    throw new GraphQLError(`Access denied due to origin restriction: ${allowedOrigins}, ${originReceived}`, {
       extensions: { code: 'ORIGIN_FORBIDDEN' },
     });
   }

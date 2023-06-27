@@ -24,7 +24,7 @@ function getGraphqlTestContext() {
       const { port } = serverAddress;
       baseUrl = `http://0.0.0.0:${port}`;
       const requestConfig = {
-        headers: { origin: baseUrl },
+        headers: { Origin: baseUrl },
       };
       return { client: new GraphQLClient(`${baseUrl}/graphql`, requestConfig), baseUrl };
     },
