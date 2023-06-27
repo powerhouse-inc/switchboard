@@ -31,10 +31,11 @@ Some environment variables are pre-configured for the development. You can copy 
 
 - `DATABASE_URL` (required): path to the database file
 - `JWT_SECRET` (required): server's jwt secret
-- `PORT` (optional, default: 3000): port on which the server will run
-- `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up mutation is allowed (i.e. user creation via endpoint is enabled)
-- `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon the signed jwt token will expire
-- `DEBUG` (optional): if set, enables the different more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
+- `PORT` (optional, default `3000`): port on which the server will run
+- `API_ORIGIN` (optional, default `http://0.0.0.0:${PORT}`): the URL at which the API is running. it's important to provide this variable in production since it influences the message signed during authorization
+- `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up is allowed. In case it's not set, no new users can be created, but old users can still sign up
+- `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon JWT token will expire
+- `DEBUG` (optional, default not set): if set, enables more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
 
 ### Database
 
@@ -67,6 +68,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
             ) {
                 nonce
                 message
+                hex
             }
         }
         ```
@@ -77,7 +79,8 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
             "data": {
                 "createChallenge": {
                     "nonce": "6f4c7f7cd61a499290e68a2740957407",
-                    "message": "0x6c6f63616c686f73742077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078333139386235354434393732393346373333463236333137353563373636653131636535363866350a0a0a5552493a20687474703a2f2f6c6f63616c686f73743a333030300a56657273696f6e3a20310a436861696e2049443a20310a4e6f6e63653a2036663463376637636436316134393932393065363861323734303935373430370a4973737565642041743a20323032332d30362d32305431373a34353a35362e3435385a"
+                    "message": "Text of the message to be signed...",
+                    "hex": "0x12345"
                 }
             }
         }
@@ -90,7 +93,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
         await ethereum.request({
             method: 'personal_sign',
             params: [
-                'paste_message_from_above',
+                'paste_hex_from_above',
                 'paste_your_ethereum_address'
             ]
         });
@@ -98,7 +101,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
 
     - Or using foundry command line tool called `cast` (note: you will be asked for your private key; for other auth methods, [read the cli docs](https://book.getfoundry.sh/reference/cast/cast-wallet-sign))
         ```sh
-        $ cast wallet sign -i "message_from_above"
+        $ cast wallet sign -i "hex_from_above"
         ```
 
 3. Provide signature back to the API to get usual JWT token back

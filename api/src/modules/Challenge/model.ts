@@ -104,7 +104,7 @@ export function getChallengeCrud(prisma: PrismaClient) {
 
         // create user and session
         const user = await getUserCrud(tx).createUserIfNotExists({ address: parsedMessage.address });
-        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address, API_ORIGIN);
+        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address);
 
         return tokenAndsession;
       });
