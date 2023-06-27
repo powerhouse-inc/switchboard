@@ -39,7 +39,10 @@ export function getSessionCrud(
     async revoke(sessionId: string, userId: string) {
       const session = await prisma.session.findUnique({
         where: {
-          id: sessionId,
+          createdBy_id: {
+            id: sessionId,
+            createdBy: userId,
+          },
         },
       });
       if (!session) {
@@ -50,10 +53,7 @@ export function getSessionCrud(
       }
       return prisma.session.update({
         where: {
-          createdBy_id: {
-            id: sessionId,
-            createdBy: userId,
-          },
+          id: session.id,
         },
         data: {
           revokedAt: new Date(),

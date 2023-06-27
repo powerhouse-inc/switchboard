@@ -1,12 +1,12 @@
 import { test, expect } from 'vitest';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { isRecent } from './helpers/time';
-import { ctx, executeGraphQlQuery } from './helpers/server';
+import { ctx } from './helpers/server';
 import { signIn } from './auth.test';
 import {
   me, sessions, createSession, revokeSession,
 } from './helpers/gql';
-import { PUBLIC_KEY } from './helpers/const';
+import { PUBLIC_KEY, SECOND_PRIVATE_KEY } from './helpers/const';
 
 cleanDatabaseBeforeAfterEachTest();
 
@@ -90,9 +90,11 @@ test('Auth session: revoked session no longer works', async () => {
   ).rejects.toThrowError('Session expired');
 });
 
-// test('Auth session: can not create without auth', async () => {
-//   const createResponse = await createSession('Without auth', '*', 3600);
-// });
+test('Auth session: can not create without auth', async () => {
+  await expect(
+    () => createSession('Without auth', '*', 3600),
+  ).rejects.toThrowError('Not authenticated');
+});
 
 test('Auth session: cant revoke twice', async () => {
   await signIn();
@@ -104,17 +106,14 @@ test('Auth session: cant revoke twice', async () => {
   ).rejects.toThrowError('Session already revoked');
 });
 
-// test('Auth session: revoke sessions of other users', async () => {
-//   await signIn();
-//   const sessionsResponse = await sessions();
-//   const session = sessionsResponse[0];
-//   const { token: secondUserToken } = (await executeGraphQlQuery(getSignUpMutation('scott', 'malcinson')) as any).signUp;
-//   ctx.client.setHeader('Authorization', `Bearer ${secondUserToken}`);
-//   ctx.client.setHeader('Origin', 'http://localhost:3000');
-//   const mutation = revokeSession(session.id);
-//   const revokeResponse = (await executeGraphQlQuery(mutation)) as any;
-//   expect(revokeResponse.errors[0].message).toBe('Failed to revoke session');
-// });
+test('Auth session: revoke sessions of other users', async () => {
+  const firstSignIn = await signIn();
+  const secondSignIn = await signIn(SECOND_PRIVATE_KEY);
+  ctx.client.setHeader('Authorization', `Bearer ${secondSignIn.token}`);
+  await expect(
+    () => revokeSession(firstSignIn.session.id),
+  ).rejects.toThrowError('Session not found');
+});
 
 test('Auth session: origin restriction wrong origin', async () => {
   await signIn();

@@ -14,7 +14,7 @@ import * as env from '../src/env';
 export const signIn = async (privateKey = PRIVATE_KEY) => {
   const publicKey = utils.computeAddress(privateKey);
   const challengeResponse = await createChallenge(publicKey);
-  const localSigner = new Wallet(PRIVATE_KEY, provider);
+  const localSigner = new Wallet(privateKey, provider);
   const signature = await localSigner.signMessage(challengeResponse.message);
   const response = await solveChallenge(challengeResponse.nonce, signature);
   ctx.client.setHeader('Authorization', `Bearer ${response.token}`);
