@@ -6,17 +6,9 @@ import { randomUUID } from 'crypto';
 import { getUserCrud } from '../User';
 import { getSessionCrud } from '../Session';
 import { getChildLogger } from '../../logger';
+import { API_ORIGIN } from '../../env';
 
 const logger = getChildLogger({ msgPrefix: 'Challenge' });
-
-const parseMessage = (message: string) => {
-  try {
-    return new SiweMessage(message);
-  } catch (error) {
-    logger.error('Provided message has invalid format', error);
-    throw new GraphQLError('Provided message has invalid format');
-  }
-};
 
 const verifySignature = async (parsedMessage: SiweMessage, signature: string) => {
   try {
@@ -37,14 +29,11 @@ const textToHex = (textMessage: string) => `0x${Buffer.from(textMessage, 'utf8')
 export function getChallengeCrud(prisma: PrismaClient) {
   return {
 
-    async createChallenge(origin: string | undefined, address: string) {
-      logger.debug('createChallenge: received', origin, address);
+    async createChallenge(address: string) {
+      logger.debug('createChallenge: received', address);
 
-      const domain = origin ? url.parse(origin).hostname : undefined;
-      if (!domain) {
-        throw new GraphQLError('Origin is missing');
-      }
-      // TODO: check domain
+      const origin = API_ORIGIN;
+      const domain = url.parse(origin).hostname!;
 
       const nonce = randomUUID().replace(/-/g, '');
       const textMessage = new SiweMessage({
@@ -66,17 +55,13 @@ export function getChallengeCrud(prisma: PrismaClient) {
       });
       return {
         nonce,
-        message: hexMessage,
+        message: textMessage,
+        hex: hexMessage,
       };
     },
 
-    async solveChallenge(origin: string | undefined, nonce: string, signature: string) {
-      logger.debug('solveChallenge: received', origin, nonce, signature);
-
-      const domain = origin ? url.parse(origin).hostname : undefined;
-      if (!domain) {
-        throw new GraphQLError('Origin is missing');
-      }
+    async solveChallenge(nonce: string, signature: string) {
+      logger.debug('solveChallenge: received', nonce, signature);
 
       // transaction is used to avoid race condition
       return prisma.$transaction(async (tx) => {
@@ -94,13 +79,13 @@ export function getChallengeCrud(prisma: PrismaClient) {
           throw new GraphQLError('The nonce is not known');
         }
 
-        // check that challenge is not used
+        // check that challenge was not used
         if (challenge.signature) {
-          throw new GraphQLError('The challance was already used');
+          throw new GraphQLError('The signature was already used');
         }
 
         // verify signature
-        const parsedMessage = parseMessage(challenge.message);
+        const parsedMessage = new SiweMessage(challenge.message);
         await verifySignature(parsedMessage, signature);
 
         // mark challenge as used
@@ -115,7 +100,7 @@ export function getChallengeCrud(prisma: PrismaClient) {
 
         // create user and session
         const user = await getUserCrud(tx).createUserIfNotExists({ address: parsedMessage.address });
-        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address, origin);
+        const tokenAndsession = await getSessionCrud(tx).createAuthenticationSession(user.address, API_ORIGIN);
 
         return tokenAndsession;
       });
