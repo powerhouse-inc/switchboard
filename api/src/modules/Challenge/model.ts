@@ -86,7 +86,11 @@ export function getChallengeCrud(prisma: PrismaClient) {
 
         // verify signature
         const parsedMessage = new SiweMessage(challenge.message);
-        await verifySignature(parsedMessage, signature);
+        try {
+          await verifySignature(parsedMessage, signature);
+        } catch (error) {
+          throw new GraphQLError('Signature validation has failed');
+        }
 
         // mark challenge as used
         await tx.challenge.update({

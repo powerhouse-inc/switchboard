@@ -40,7 +40,7 @@ const getCreateSessionMutation = (
         expiryDurationSeconds,
         allowedOrigins,
       },
-      type: 'SessionCreate',
+      type: 'SessionInput',
       required: true,
     },
   },
