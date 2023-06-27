@@ -1,7 +1,7 @@
 import {
   vi, test, expect, describe,
 } from 'vitest';
-import { computeAddress, Wallet } from 'ethers';
+import { utils, Wallet } from 'ethers';
 import { restoreEnvAfterEach } from './helpers/env';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { createChallenge, solveChallenge, me } from './helpers/gql';
@@ -12,7 +12,7 @@ import { ctx } from './helpers/server';
 import * as env from '../src/env';
 
 export const signIn = async (privateKey = PRIVATE_KEY) => {
-  const publicKey = computeAddress(privateKey);
+  const publicKey = utils.computeAddress(privateKey);
   const challengeResponse = await createChallenge(publicKey);
   const localSigner = new Wallet(PRIVATE_KEY, provider);
   const signature = await localSigner.signMessage(challengeResponse.message);
