@@ -4,7 +4,7 @@ export const User = objectType({
   name: 'User',
   definition(t) {
     t.nonNull.string('address');
-    t.nonNull.string('createdAt');
+    t.nonNull.date('createdAt');
   },
 });
 

@@ -94,7 +94,7 @@ export interface NexusGenObjects {
   }
   User: { // root type
     address: string; // String!
-    createdAt: string; // String!
+    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
   }
 }
 
@@ -153,7 +153,7 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     address: string; // String!
-    createdAt: string; // String!
+    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
   }
 }
 
@@ -202,7 +202,7 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     address: 'String'
-    createdAt: 'String'
+    createdAt: 'GQLDateBase'
   }
 }
 

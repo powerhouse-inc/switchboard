@@ -61,5 +61,5 @@ type SessionOutput {
 
 type User {
   address: String!
-  createdAt: String!
+  createdAt: GQLDateBase!
 }
