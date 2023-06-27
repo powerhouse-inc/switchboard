@@ -61,6 +61,7 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   Challenge: { // root type
+    hex: string; // String!
     message: string; // String!
     nonce: string; // String!
   }
@@ -93,6 +94,7 @@ export interface NexusGenObjects {
   }
   User: { // root type
     address: string; // String!
+    createdAt: string; // String!
   }
 }
 
@@ -108,6 +110,7 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   Challenge: { // field return type
+    hex: string; // String!
     message: string; // String!
     nonce: string; // String!
   }
@@ -150,11 +153,13 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     address: string; // String!
+    createdAt: string; // String!
   }
 }
 
 export interface NexusGenFieldTypeNames {
   Challenge: { // field return type name
+    hex: 'String'
     message: 'String'
     nonce: 'String'
   }
@@ -197,6 +202,7 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     address: 'String'
+    createdAt: 'String'
   }
 }
 

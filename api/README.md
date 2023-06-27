@@ -79,12 +79,13 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
             "data": {
                 "createChallenge": {
                     "nonce": "6f4c7f7cd61a499290e68a2740957407",
-                    "message": "Text of the message to be signed...",
-                    "hex": "0x12345"
+                    "message": "example.com wants you to sign in with your Ethereum account...",
+                    "hex": "0x302e302e302e302077616e74732029..."
                 }
             }
         }
         ```
+        Where `hex` is just hex-encoded `message` that actually needs to be signed
 
 2. Sign provided message
     - Either [using your metamask wallet](https://docs.metamask.io/wallet/how-to/use-siwe/)
@@ -93,7 +94,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
         await ethereum.request({
             method: 'personal_sign',
             params: [
-                'paste_hex_from_above',
+                'paste_hex_from_the_above',
                 'paste_your_ethereum_address'
             ]
         });
@@ -101,7 +102,7 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
 
     - Or using foundry command line tool called `cast` (note: you will be asked for your private key; for other auth methods, [read the cli docs](https://book.getfoundry.sh/reference/cast/cast-wallet-sign))
         ```sh
-        $ cast wallet sign -i "hex_from_above"
+        $ cast wallet sign -i "hex_from_the_above"
         ```
 
 3. Provide signature back to the API to get usual JWT token back
@@ -109,8 +110,8 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
         ```gql
         mutation {
             solveChallenge(
-                nonce: "paste_nonce_from_above"
-                signature: "paste_signature_generated_in_step_2"
+                nonce: "paste_nonce_from_step_1"
+                signature: "paste_signature_from_step_2"
             ) {
                 token
             }
@@ -129,8 +130,16 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
         ```
 
 4. Use provided JWT token to make subsequent API requests
-    - Either sent as `Authorization: Bearer paste_your_token_from_above`
+    - Either sent as `Authorization: Bearer paste_token_from_step_3`
     - Or set as `Authorization` cookie
+    - Example request
+        ```gql
+        query {
+            me {
+                address
+            }
+        }
+        ```
 
 ## Health endpoint
 

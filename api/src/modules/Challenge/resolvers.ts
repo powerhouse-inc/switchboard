@@ -5,6 +5,7 @@ export const Challenge = objectType({
   definition(t) {
     t.nonNull.string('nonce');
     t.nonNull.string('message');
+    t.nonNull.string('hex');
   },
 });
 

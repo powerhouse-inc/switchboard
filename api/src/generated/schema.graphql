@@ -3,6 +3,7 @@
 
 
 type Challenge {
+  hex: String!
   message: String!
   nonce: String!
 }
@@ -60,4 +61,5 @@ type SessionOutput {
 
 type User {
   address: String!
+  createdAt: String!
 }
