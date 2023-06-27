@@ -1,9 +1,8 @@
 import type { PrismaClient } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
-import { token as tokenUtils } from '../../helpers';
+import { verifyToken, validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
 
 export function getSessionCrud(
   prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>,
@@ -71,7 +70,7 @@ export function getSessionCrud(
           extensions: { code: 'NOT_AUTHENTICATED' },
         });
       }
-      const verificationTokenResult = tokenUtils.verify(token);
+      const verificationTokenResult = verifyToken(token);
       const { sessionId } = verificationTokenResult;
       const session = await prisma.session.findUniqueOrThrow({
         where: {

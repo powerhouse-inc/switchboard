@@ -1,8 +1,59 @@
+import ms from 'ms';
+import z from 'zod';
 import type { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
-import { token as tokenUtils } from '../../helpers';
+import { sign, verify as jwtVerify } from 'jsonwebtoken';
+import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../../env';
+
+const jwtSchema = z.object({
+  sessionId: z.string(),
+  exp: z.optional(z.number()),
+});
+
+export const formatToken = (token: string) => `${token.slice(0, 4)}...${token.slice(-4)}`;
+
+/** Generate a JWT token
+ * - If expiryDurationSeconds is null, the token will never expire
+ * - If expiryDurationSeconds is undefined, the token will expire after the default expiry period
+ */
+const generateToken = (
+  sessionId: string,
+  expiryDurationSeconds?: number | null,
+) => {
+  if (expiryDurationSeconds === null) {
+    return sign({ sessionId }, JWT_SECRET);
+  }
+  const expiresIn = typeof expiryDurationSeconds !== 'undefined'
+    ? ms(expiryDurationSeconds * 1000)
+    : JWT_EXPIRATION_PERIOD;
+  return sign({ sessionId }, JWT_SECRET, { expiresIn });
+};
+
+const getExpiryDateFromToken = (token: string) => {
+  const { exp } = jwtSchema.parse(jwtVerify(token, JWT_SECRET));
+  if (!exp) {
+    return null;
+  }
+  return new Date(exp * 1000);
+};
+
+export const verifyToken = (token: string) => {
+  const verified = jwtVerify(token, JWT_SECRET, (err, decoded) => {
+    if (err) {
+      throw new GraphQLError(
+        err.name === 'TokenExpiredError'
+          ? 'Token expired'
+          : 'Invalid authentication token',
+        { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } },
+      );
+    }
+    return decoded;
+  }) as any;
+  const validated = jwtSchema.parse(verified);
+  return validated;
+};
 
 function parseOriginMarkup(originParam: string): string {
   if (originParam === '*') {
@@ -47,9 +98,9 @@ export const generateTokenAndSession = async (
   isUserCreated: boolean = false,
 ) => {
   const sessionId = randomUUID();
-  const generatedToken = tokenUtils.generate(sessionId, session.expiryDurationSeconds);
-  const referenceExpiryDate = tokenUtils.getExpiryDateFromToken(generatedToken);
-  const referenceTokenId = tokenUtils.format(generatedToken);
+  const generatedToken = generateToken(sessionId, session.expiryDurationSeconds);
+  const referenceExpiryDate = getExpiryDateFromToken(generatedToken);
+  const referenceTokenId = formatToken(generatedToken);
   const allowedOrigins = parseOriginMarkup(session.allowedOrigins);
   const createdSession = await prisma.session.create({
     data: {
