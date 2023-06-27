@@ -32,20 +32,20 @@ describe('Authentication', () => {
   });
 
   test('Challange creation fails if address is invalid', async () => {
-    expect(
+    await expect(
       () => createChallenge('0x123'),
     ).rejects.toThrowError('invalid address');
   });
 
   test('Challange can not use random nonce', async () => {
-    expect(
+    await expect(
       () => solveChallenge('nonce', 'signature'),
     ).rejects.toThrowError('The nonce is not known');
   });
 
   test('Challange can be solved incorrectly', async () => {
     const challengeResponse = (await createChallenge(PUBLIC_KEY));
-    expect(
+    await expect(
       () => solveChallenge(challengeResponse.nonce, '0x12345'),
     ).rejects.toThrowError('Signature validation has failed');
   });
@@ -54,17 +54,18 @@ describe('Authentication', () => {
     const challengeResponse = await createChallenge(PUBLIC_KEY);
     const signature = await signer.signMessage(challengeResponse.message);
     await solveChallenge(challengeResponse.nonce, signature);
-    expect(
+    await expect(
       () => solveChallenge(challengeResponse.nonce, signature),
     ).rejects.toThrowError('The signature was already used');
   });
 
-  // test('Sign up throws error if disabled', async () => {
-  //   vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
-  //   expect(
-  //     () => signIn(),
-  //   ).rejects.toThrowError('Sign up is disabled');
-  // });
+  test('Sign up throws error if disabled', async () => {
+    vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
+    await expect(
+      () => signIn(),
+    ).rejects.toThrowError('Sign up is disabled');
+    vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(true);
+  });
 
   test('Sign up works', async () => {
     const response = await signIn();
@@ -74,7 +75,7 @@ describe('Authentication', () => {
 
   test('Protected endpoint fails without sign in', async () => {
     ctx.client.setHeader('Authorization', 'Bearer heavy');
-    expect(
+    await expect(
       () => me(),
     ).rejects.toThrowError('Invalid authentication token');
   });
@@ -90,7 +91,7 @@ describe('Authentication', () => {
     const response = await signIn();
     expect(response.token).not.toBeNull();
     await new Promise((resolve) => { setTimeout(resolve, 2000); });
-    expect(
+    await expect(
       () => me(),
     ).rejects.toThrowError('Token expired');
   });

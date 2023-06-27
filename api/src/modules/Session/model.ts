@@ -49,21 +49,17 @@ export function getSessionCrud(
       if (session.revokedAt !== null) {
         throw new GraphQLError('Session already revoked', { extensions: { code: 'SESSION_ALREADY_REVOKED' } });
       }
-      try {
-        return await prisma.session.update({
-          where: {
-            createdBy_id: {
-              id: sessionId,
-              createdBy: userId,
-            },
+      return prisma.session.update({
+        where: {
+          createdBy_id: {
+            id: sessionId,
+            createdBy: userId,
           },
-          data: {
-            revokedAt: new Date(),
-          },
-        });
-      } catch (e) {
-        throw new GraphQLError('Failed to revoke session', { extensions: { code: 'REVOKE_SESSION_FAILED' } });
-      }
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
     },
 
     async getSessionByToken(
