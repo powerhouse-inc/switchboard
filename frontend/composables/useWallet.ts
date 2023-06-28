@@ -1,7 +1,7 @@
 import { BrowserProvider, getAddress } from 'ethers'
 
 const walletAddress = ref(undefined as string | undefined)
-const isConnected = computed(() => Boolean(walletAddress))
+const isConnected = computed(() => Boolean(walletAddress.value))
 
 const useWallet = function () {
   const provider = new BrowserProvider((window as any).ethereum)
