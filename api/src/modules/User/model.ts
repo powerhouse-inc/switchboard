@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
   AUTH_SIGNUP_ENABLED,
@@ -7,7 +7,7 @@ import { getChildLogger } from '../../logger';
 
 const logger = getChildLogger({ msgPrefix: 'User' });
 
-export function getUserCrud(prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>) {
+export function getUserCrud(prisma: Prisma.TransactionClient) {
   return {
 
     async createUserIfNotExists(user: { address: string }) {
@@ -15,15 +15,15 @@ export function getUserCrud(prisma: Omit<PrismaClient, '$connect' | '$disconnect
         logger.error('User tried to sign in, while sign up is disabled', user.address, AUTH_SIGNUP_ENABLED);
         throw new GraphQLError('Sign up is disabled');
       }
-      const usertedUser = await prisma.user.upsert({
+      const upsertedUser = await prisma.user.upsert({
         where: {
           address: user.address,
         },
         update: {},
         create: { ...user },
       });
-      logger.error('Upserted user', usertedUser);
-      return usertedUser;
+      logger.error('Upserted user', upsertedUser);
+      return upsertedUser;
     },
 
   };

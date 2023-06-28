@@ -32,7 +32,7 @@ const useAuth = function () {
     }
   }
 
-  const createChallance = async function (address: string) {
+  const createChallenge = async function (address: string) {
     const { data, error } = await useAsyncGql('createChallenge', { address })
     if (error.value || !data.value?.createChallenge?.message) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
@@ -52,7 +52,7 @@ const useAuth = function () {
     const { connectWallet, signMessage } = useWallet()
     const address = await connectWallet()
 
-    const { nonce, message } = await createChallance(address)
+    const { nonce, message } = await createChallenge(address)
     const signature = await signMessage(message)
 
     const token = await solveChallenge(nonce, signature)

@@ -72,7 +72,7 @@ export function getChallengeCrud(prisma: PrismaClient) {
             },
           },
         });
-        logger.debug('solveChallenge: found challange', challenge);
+        logger.debug('solveChallenge: found challenge', challenge);
 
         // check that challenge with this nonce exists
         if (!challenge) {

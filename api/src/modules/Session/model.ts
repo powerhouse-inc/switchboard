@@ -1,11 +1,11 @@
-import type { PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { verifyToken, validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
 
 export function getSessionCrud(
-  prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>,
+  prisma: Prisma.TransactionClient,
 ) {
   return {
 

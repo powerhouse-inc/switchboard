@@ -1,6 +1,6 @@
 import ms from 'ms';
 import z from 'zod';
-import type { PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
@@ -92,7 +92,7 @@ export function validateOriginAgainstAllowed(
 }
 
 export const generateTokenAndSession = async (
-  prisma: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>,
+  prisma: Prisma.TransactionClient,
   userId: string,
   session: { expiryDurationSeconds?: number | null; name: string; allowedOrigins: string },
   isUserCreated: boolean = false,

@@ -33,7 +33,7 @@ Some environment variables are pre-configured for the development. You can copy 
 - `JWT_SECRET` (required): server's jwt secret
 - `PORT` (optional, default `3000`): port on which the server will run
 - `API_ORIGIN` (optional, default `http://0.0.0.0:${PORT}`): the URL at which the API is running. it's important to provide this variable in production since it influences the message signed during authorization
-- `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up is allowed. In case it's not set, no new users can be created, but old users can still sign up
+- `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up is allowed. In case it's not set, new users _cannot_ be created, but old users _can_ still sign in
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon JWT token will expire
 - `DEBUG` (optional, default not set): if set, enables more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
 
@@ -90,12 +90,13 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
 2. Sign provided message
     - Either [using your metamask wallet](https://docs.metamask.io/wallet/how-to/use-siwe/)
         ```js
-        // this should be executed at the browser console of the graphql playground
+        // those commands should be executed in the browser console of the graphql playground
+        const addresses = await provider.send('eth_requestAccounts', [])
         await ethereum.request({
             method: 'personal_sign',
             params: [
                 'paste_hex_from_the_above',
-                'paste_your_ethereum_address'
+                addresses[0]
             ]
         });
         ```

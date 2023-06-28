@@ -25,25 +25,25 @@ describe('Authentication', () => {
   cleanDatabaseBeforeAfterEachTest();
   restoreEnvAfterEach();
 
-  test('Challange can be created correctly', async () => {
+  test('Challenge can be created correctly', async () => {
     const challengeResponse = await createChallenge(PUBLIC_KEY);
     expect(challengeResponse.message).not.toBeNull();
     expect(challengeResponse.nonce).not.toBeNull();
   });
 
-  test('Challange creation fails if address is invalid', async () => {
+  test('Challenge creation fails if address is invalid', async () => {
     await expect(
       () => createChallenge('0x123'),
     ).rejects.toThrowError('invalid address');
   });
 
-  test('Challange can not use random nonce', async () => {
+  test('Challenge can not use random nonce', async () => {
     await expect(
       () => solveChallenge('nonce', 'signature'),
     ).rejects.toThrowError('The nonce is not known');
   });
 
-  test('Challange can be solved incorrectly', async () => {
+  test('Challenge can be solved incorrectly', async () => {
     const challengeResponse = (await createChallenge(PUBLIC_KEY));
     await expect(
       () => solveChallenge(challengeResponse.nonce, '0x12345'),
