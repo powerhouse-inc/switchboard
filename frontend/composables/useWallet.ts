@@ -1,14 +1,14 @@
-import { BrowserProvider, getAddress } from 'ethers'
+import { providers, utils } from 'ethers'
 
 const walletAddress = ref(undefined as string | undefined)
 const isConnected = computed(() => Boolean(walletAddress.value))
 
 const useWallet = function () {
-  const provider = new BrowserProvider((window as any).ethereum)
+  const provider = new providers.Web3Provider((window as any).ethereum)
 
   const connectWallet = async function () {
     const addresses = await provider.send('eth_requestAccounts', [])
-    walletAddress.value = getAddress(addresses[0])
+    walletAddress.value = utils.getAddress(addresses[0])
     return walletAddress.value
   }
 
