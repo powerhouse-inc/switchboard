@@ -1,4 +1,4 @@
-name: deploy switchboard staging
+name: Deploy Switchboard Staging
 
 on:
   push:
@@ -23,8 +23,8 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: ghcr.io
-        username: ${{ secrets.GH_WORKFLOW_USER }}
-        password: ${{ secrets.GH_WORKFLOW_TOKEN }}
+        username: ${{ secrets.GH_SIDSTRM_BUILD_AND_DEPLOY_USER }}
+        password: ${{ secrets.GH_SIDSTRM_BUILD_AND_DEPLOY_TOKEN }}
 
     - name: Set outputs
       id: vars
@@ -56,27 +56,42 @@ jobs:
         cache-to: type=gha,mode=max
 
   deploy:
-    name: deploy staging to cluster
+    name: deploy staging to sidestream cluster
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: deusavalon/aws-chamber-helmsman:0.1.0
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_FOR_K8S }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_FOR_K8S }}
-        AWS_DEFAULT_REGION: "eu-central-1"
-        SIDECHART_USERNAME: ${{ secrets.GH_WORKFLOW_USER }}
-        SIDECHART_TOKEN: ${{ secrets.GH_WORKFLOW_TOKEN }}
-        GITHUB_PACKAGES_TOKEN: ${{ secrets.GH_WORKFLOW_TOKEN }}
-        SHORT_COMMIT_SHA: ${{ steps.vars.outputs.git_hash_short }}
-        COMMIT_SHA: ${{ github.sha }}
     steps:
-      - name: Checkout
+      - name: Checkout k8s-projects Repo
         uses: actions/checkout@v3
+        with:
+          repository: sidestream-tech/k8s-projects
+          token: ${{ secrets.GH_SIDSTRM_BUILD_AND_DEPLOY_TOKEN }}
+          path: k8s-projects
+          ref: main
 
-      - name: deploy to staging
-        run:  |
-            cd kubernetes/main.switchboard.k8s.sidestream.tech
-            chamber export switchboard/dev --format dotenv > .env
-            aws eks update-kubeconfig --name eks-cluster-sidestream
-            helmsman --apply --debug -f helmsman.yml
+      - uses: benjlevesque/short-sha@v2.2
+        id: short-sha
+        with:
+          length: 6
+
+      - name: Update Value File API
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '(.image.tag ="${{ github.sha }}") | (.commitShortSHA ="${{ github.sha }}") | (.releaseTag ="${{ github.ref_name }}")' $VALUES_FILE
+        env:
+          VALUES_FILE: "k8s-projects/switchboard-api/staging/values-api.yml"
+      
+      - name: Update Value File Frontend
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '(.image.tag ="${{ github.sha }}") | (.commitShortSHA ="${{ github.sha }}") | (.releaseTag ="${{ github.ref_name }}")' $VALUES_FILE
+        env:
+          VALUES_FILE: "k8s-projects/switchboard-api/staging/values-frontend.yml"
+
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GH_SIDSTRM_BUILD_AND_DEPLOY_TOKEN }}
+          repository: sidestream-tech/k8s-projects
+          branch: main
+          message: "[ArgoCD]: ${{ github.workflow }} to `${{ steps.short-sha.outputs.sha }}` :rocket:"
+          directory: k8s-projects
