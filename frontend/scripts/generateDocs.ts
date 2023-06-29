@@ -13,7 +13,7 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
   })
   const dirname = path.dirname(outputFilePath)
   if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname)
+    fs.mkdirSync(dirname, {recursive: true})
   }
   fs.writeFileSync(outputFilePath, content, { encoding: 'utf8' })
 }

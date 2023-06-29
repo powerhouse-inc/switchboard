@@ -10,6 +10,7 @@ WORKDIR /app/frontend
 # copy the app, note .dockerignore
 COPY frontend/package.json .
 COPY frontend/package-lock.json .
+COPY frontend/scripts ./scripts
 RUN npm ci
 
 FROM dependency-base AS production-base
