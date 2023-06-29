@@ -1,42 +1,9 @@
-import builder from 'gql-query-builder';
+import { providers, utils, Wallet } from 'ethers';
 
-export const USERNAME = 'usernametest';
-export const PASSWORD = 'passwordTest';
+export const PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'; // Hardhat Account #0
+export const PUBLIC_KEY = utils.computeAddress(PRIVATE_KEY);
+export const SECOND_PRIVATE_KEY = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
+export const SECOND_PUBLIC_KEY = utils.computeAddress(SECOND_PRIVATE_KEY);
 
-export const getSignUpMutation = (
-  username: string = USERNAME,
-  password: string = PASSWORD,
-) => builder.mutation({
-  operation: 'signUp',
-  variables: {
-    user: {
-      value: {
-        username,
-        password,
-      },
-      type: 'UserNamePass',
-      required: true,
-    },
-  },
-  fields: ['session{id, referenceExpiryDate, isUserCreated}', 'token'],
-});
-
-export const signInMutation = builder.mutation({
-  operation: 'signIn',
-  variables: {
-    user: {
-      value: {
-        username: USERNAME,
-        password: PASSWORD,
-      },
-      type: 'UserNamePass',
-      required: true,
-    },
-  },
-  fields: ['session{id, referenceExpiryDate, isUserCreated}', 'token'],
-});
-
-export const meQuery = builder.query({
-  operation: 'me',
-  fields: ['id', 'username'],
-});
+export const provider = providers.getDefaultProvider();
+export const signer = new Wallet(PRIVATE_KEY, provider);

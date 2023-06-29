@@ -20,11 +20,10 @@ model CoreUnit {
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String @unique
-  password String
-
-  sessions Session[]
+  address   String    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sessions  Session[]
 }
 
 model Session {
@@ -37,8 +36,15 @@ model Session {
   referenceTokenId    String
   isUserCreated       Boolean   @default(false)
   allowedOrigins      String // comma separated strings
-
-  creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  creator             User      @relation(fields: [createdBy], references: [address], onDelete: Cascade)
 
   @@unique([createdBy, id])
+}
+
+model Challenge {
+  nonce     String   @id
+  message   String   @unique
+  signature String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -18,6 +18,16 @@ services:
       timeout: 5s
       retries: 5
 
+  db_migrations:
+    build:
+      context: ./api
+    command: "npx --yes prisma db push --accept-data-loss"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@database:5432/postgres?sslmode=disable&connect_timeout=30"
+    depends_on:
+      database:
+        condition: service_healthy
+
   api:
     restart: unless-stopped
     expose:
@@ -25,12 +35,14 @@ services:
     build:
       context: ./api
     environment:
-      DATABASE_URL: postgres://postgres:postgres@database:5432/postgres?sslmode=disable
+      DATABASE_URL: "postgres://postgres:postgres@database:5432/postgres?sslmode=disable&connect_timeout=30"
+      API_ORIGIN: http://localhost
       AUTH_SIGNUP_ENABLED: "1"
       JWT_SECRET: replace_in_production_with_actual_secret
       JWT_EXPIRATION_PERIOD_SECONDS: 3600
     depends_on:
-      - database
+      database:
+        condition: service_healthy
 
   frontend:
     restart: unless-stopped
