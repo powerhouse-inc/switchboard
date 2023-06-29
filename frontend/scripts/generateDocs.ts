@@ -1,15 +1,18 @@
 import fs from 'fs'
 import path from 'path'
 import { concatMdSync } from 'concat-md'
+import { execSync } from 'child_process';
 
 const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', '@acaldas', 'document-model-libs', 'dist', 'docs')
-console.log(DOCS_DIR);
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
   const content = concatMdSync(pathToDir, {
     fileNameAsTitle: true
   })
-  fs.mkdirSync(path.dirname(outputFilePath))
+  const dirname = path.dirname(outputFilePath)
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname)
+  }
   fs.writeFileSync(outputFilePath, content, { encoding: 'utf8' })
 }
 
