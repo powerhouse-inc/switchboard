@@ -1,6 +1,6 @@
 import fs from 'fs'
 const API_ORIGIN = process.env.API_ORIGIN ?? '/backend'
-function getDocumentationVersion() {
+function getDocumentationVersion () {
   try {
     return fs.readFileSync('./content/documentation/.version', 'utf8').trim()
   } catch (e) {
