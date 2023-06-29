@@ -14,6 +14,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare && npm run generateDocs",
+    "postupdate": "npm run generateDocs",
     "lint": "eslint --max-warnings 0 .",
     "typecheck": "nuxt typecheck",
     "start": "NODE_ENV=production node .",
