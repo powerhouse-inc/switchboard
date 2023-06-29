@@ -34,8 +34,8 @@ function main () {
   if (!fs.existsSync(outputVersionPath) || fs.readFileSync(outputVersionPath, { encoding: 'utf8' }).toString() !== DOCS_VERSION) {
     console.info('Generating docs...')
     generateMdDocs(DOCS_DIR, outputFilePath)
+    fs.writeFileSync(outputVersionPath, DOCS_VERSION, { encoding: 'utf8' })
   }
-  fs.writeFileSync(outputVersionPath, DOCS_VERSION, { encoding: 'utf8' })
 }
 
 main()
