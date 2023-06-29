@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 
+import { concatMdSync } from 'concat-md'
+
 const PACAKGE_NAME = '@acaldas/document-model-libs'
 
 try {
@@ -9,8 +11,6 @@ try {
 } catch (e) {
   throw new Error(`Failed to generate documentation from the dependency (${PACAKGE_NAME}), did you run \`npm install\`?`)
 }
-
-import { concatMdSync } from 'concat-md'
 
 const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', '@acaldas', 'document-model-libs', 'dist', 'docs')
 const DOCS_VERSION = execSync(`npm view ${PACAKGE_NAME} version`).toString()
