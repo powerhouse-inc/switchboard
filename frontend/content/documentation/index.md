@@ -1,5 +1,3 @@
-
-
 # README
 
 @acaldas/document-model-libs / [Exports](#modules)
@@ -148,7 +146,6 @@ A Budget statement follows the following data structure:
             title: "Sustainable Ecosystem Scaling"
         },
         month: "2023/01",
-        status: "Draft" | "Review" | "Final" | "Escalated",
         quoteCurrency: "DAI",
         auditReports: [
             {
@@ -161,19 +158,6 @@ A Budget statement follows the following data structure:
             {
                 address: "eth:0xb5eB779cE300024EDB3dF9b6C007E312584f6F4f",
                 name: "Grants Program",
-                accountBalance: {
-                    timestamp: "2023-02-21 11:22:09",
-                    value: 4048.02
-                },
-                targetBalance: {
-                    comment: "3 months of operational runway",
-                    value: 5048.02
-                },
-                topupTransaction: {
-                    id: "eth:0x3F23D0E301C458B095A02b12E3bC4c752a844eD9",
-                    requestedValue: 1000,
-                    value: 1000
-                },
                 lineItems: [
                     {
                         category: {
@@ -216,45 +200,6 @@ A Budget statement follows the following data structure:
 
 ▸ For more information on Budget Statement actions, please refer to the [complete documentation](markdown/modules/BudgetStatement.actions.md).
 
-#### Account
-
-A budget statement might have multiple accounts, each with its own expenses.
-
--   `ADD_ACCOUNT`: Adds an account to the budget. This action accepts an array of accounts, so multiple accounts can be added in one action. The account can be initialized with all attributes but the only required attribute is an unique account address, which should follow a Gnosis-like format: `eth:0x...`.
-
-```javascript
-addAccount([{ address: string }]);
-```
-
--   `UPDATE_ACCOUNT`: Edits existing accounts. Accounts are referenced by their address.
-
-```javascript
-updateAccount([{ address: string, ...account }]);
-```
-
--   `DELETE_ACCOUNT`: Deletes the accounts with the provided addresses.
-
-```javascript
-deleteAccount(accounts: string[]);
-```
-
-#### Status
-
-The budget goes through various status as it is reviewed by auditors.
-It starts as a `Draft` which can then be submitted for `Review`. The auditor then either approves with or raises issues.
-
--   `SUBMIT_FOR_REVIEW`: Sets the budget as ready to be reviewed.
-
-```javascript
-submitForReview();
-```
-
--   `ESCALATE`: Used by the auditor if there is any issue during the review
-
-```javascript
-escalate();
-```
-
 # Budget Statement Budget Statement
 
 [@acaldas/document-model-libs](#readme) / [Exports](#modules) / [BudgetStatement](#budget-statement) / BudgetStatement
@@ -292,86 +237,6 @@ A - The type of action the document can take.
 
   ↳ **`BudgetStatement`**
 
-## Table of contents
-
-### Constructors
-
-- [constructor](#constructor)
-
-### Properties
-
-- [state](#state)
-- [fileExtension](#fileextension)
-
-### Account
-
-- [accounts](#accounts)
-- [addAccount](#addaccount)
-- [deleteAccount](#deleteaccount)
-- [getAccount](#getaccount)
-- [updateAccount](#updateaccount)
-
-### Budget Statement Accessors
-
-- [month](#month)
-- [owner](#owner)
-- [quoteCurrency](#quotecurrency)
-
-### Other Accessors
-
-- [created](#created)
-- [documentType](#documenttype)
-- [initialState](#initialstate)
-- [lastModified](#lastmodified)
-- [name](#name)
-- [operations](#operations)
-- [revision](#revision)
-
-### Status
-
-- [status](#status)
-- [approve](#approve)
-- [escalate](#escalate)
-- [reopenToDraft](#reopentodraft)
-- [reopenToReview](#reopentoreview)
-- [submitForReview](#submitforreview)
-
-### Audit
-
-- [addAuditReport](#addauditreport)
-- [deleteAuditReport](#deleteauditreport)
-- [getAuditReport](#getauditreport)
-- [getAuditReports](#getauditreports)
-
-### Line Item
-
-- [addLineItem](#addlineitem)
-- [deleteLineItem](#deletelineitem)
-- [getLineItem](#getlineitem)
-- [getLineItems](#getlineitems)
-- [updateLineItem](#updatelineitem)
-
-### Methods
-
-- [dispatch](#dispatch)
-- [getAttachment](#getattachment)
-- [init](#init)
-- [loadFromFile](#loadfromfile)
-- [loadState](#loadstate)
-- [prune](#prune)
-- [redo](#redo)
-- [saveToFile](#savetofile)
-- [setName](#setname)
-- [undo](#undo)
-- [fromFile](#fromfile)
-- [stateFromFile](#statefromfile)
-
-### Topup
-
-- [getTopupTransaction](#gettopuptransaction)
-- [requestTopup](#requesttopup)
-- [transferTopup](#transfertopup)
-
 ## Constructors
 
 ### constructor
@@ -384,7 +249,7 @@ Creates a new BudgetStatement instance.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `initialState?` | `Partial`<`Omit`<[`BudgetStatementDocument`](#budgetstatementdocument), ``"data"``\> & { `data`: `Partial`<[`State`](#state)\>  }\> | An optional object representing the initial state of the BudgetStatement. |
+| `initialState?` | `Partial`<`Omit`<[`BudgetStatementDocument`](#budgetstatementdocument), ``"data"``\> & { `data`: `Partial`<`BudgetStatementData`\>  }\> | An optional object representing the initial state of the BudgetStatement. |
 
 #### Inherited from
 
@@ -392,13 +257,13 @@ Creates a new BudgetStatement instance.
 
 #### Defined in
 
-[budget-statement/gen/object.ts:45](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L45)
+[src/budget-statement/gen/object.ts:45](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/object.ts#L45)
 
 ## Properties
 
 ### state
 
-• `Protected` **state**: [`Document`](#document)<[`State`](#state), [`BudgetStatementAction`](#budgetstatementaction)\>
+• `Protected` **state**: [`Document`](#document)<`BudgetStatementData`, [`BudgetStatementAction`](#budgetstatementaction)\>
 
 #### Inherited from
 
@@ -406,7 +271,7 @@ Creates a new BudgetStatement instance.
 
 #### Defined in
 
-[document/object.ts:13](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L13)
+[src/document/object.ts:13](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L13)
 
 ___
 
@@ -418,7 +283,7 @@ The file extension used to save budget statements.
 
 #### Defined in
 
-[budget-statement/gen/object.ts:38](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L38)
+[src/budget-statement/gen/object.ts:38](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/object.ts#L38)
 
 ## Account
 
@@ -438,7 +303,7 @@ AccountObject.accounts
 
 #### Defined in
 
-[budget-statement/gen/account/object.ts:52](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/object.ts#L52)
+[src/budget-statement/gen/account/object.ts:69](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/object.ts#L69)
 
 ___
 
@@ -464,7 +329,7 @@ AccountObject.addAccount
 
 #### Defined in
 
-[budget-statement/gen/account/object.ts:23](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/object.ts#L23)
+[src/budget-statement/gen/account/object.ts:29](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/object.ts#L29)
 
 ___
 
@@ -476,9 +341,9 @@ Deletes one or more accounts from the budget statement.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `accounts` | `string`[] |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `accounts` | `string`[] | An array of addresses of the accounts to delete. |
 
 #### Returns
 
@@ -490,7 +355,7 @@ AccountObject.deleteAccount
 
 #### Defined in
 
-[budget-statement/gen/account/object.ts:43](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/object.ts#L43)
+[src/budget-statement/gen/account/object.ts:50](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/object.ts#L50)
 
 ___
 
@@ -516,7 +381,33 @@ AccountObject.getAccount
 
 #### Defined in
 
-[budget-statement/gen/account/object.ts:62](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/object.ts#L62)
+[src/budget-statement/gen/account/object.ts:79](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/object.ts#L79)
+
+___
+
+### sortAccounts
+
+▸ **sortAccounts**(`accounts`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+Sorts the accounts inthe budget statement.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `accounts` | `string`[] | An array of addresses of the accounts to sort. |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+AccountObject.sortAccounts
+
+#### Defined in
+
+[src/budget-statement/gen/account/object.ts:60](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/object.ts#L60)
 
 ___
 
@@ -530,7 +421,7 @@ Updates one or more existing accounts in the budget statement.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accounts` | [`AccountInput`](#accountinput)[] | An array of AccountInput objects to update. |
+| `accounts` | `AccountUpdateInput`[] | An array of AccountInput objects to update. |
 
 #### Returns
 
@@ -542,65 +433,89 @@ AccountObject.updateAccount
 
 #### Defined in
 
-[budget-statement/gen/account/object.ts:33](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/object.ts#L33)
+[src/budget-statement/gen/account/object.ts:40](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/object.ts#L40)
 
 ## Budget Statement Accessors
 
 ### month
 
-• `get` **month**(): ``null`` \| `string`
+• `get` **month**(): `Maybe`<`string`\>
 
 Gets the month of the budget statement.
 
 #### Returns
 
-``null`` \| `string`
+`Maybe`<`string`\>
+
+#### Inherited from
+
+BaseObject.month
 
 #### Defined in
 
-[budget-statement/gen/object.ts:59](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L59)
+[src/budget-statement/gen/base/object.ts:18](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L18)
 
 ___
 
 ### owner
 
-• `get` **owner**(): `Object`
+• `get` **owner**(): `Maybe`<[`Owner`](#owner)\>
 
 Gets the owner of the budget statement.
 
 #### Returns
 
-`Object`
+`Maybe`<[`Owner`](#owner)\>
 
-| Name | Type |
-| :------ | :------ |
-| `id` | ``null`` \| `string` |
-| `ref` | ``null`` \| `string` |
-| `title` | ``null`` \| `string` |
+#### Inherited from
+
+BaseObject.owner
 
 #### Defined in
 
-[budget-statement/gen/object.ts:67](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L67)
+[src/budget-statement/gen/base/object.ts:26](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L26)
 
 ___
 
 ### quoteCurrency
 
-• `get` **quoteCurrency**(): ``null`` \| `string`
+• `get` **quoteCurrency**(): `Maybe`<`string`\>
 
 Gets the quote currency of the budget statement.
 
 #### Returns
 
-``null`` \| `string`
+`Maybe`<`string`\>
+
+#### Inherited from
+
+BaseObject.quoteCurrency
 
 #### Defined in
 
-[budget-statement/gen/object.ts:75](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L75)
+[src/budget-statement/gen/base/object.ts:34](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L34)
 
 ___
 
 ## Other Accessors
+
+### comments
+
+• `get` **comments**(): [`Comment`](#comment)[]
+
+#### Returns
+
+[`Comment`](#comment)[]
+
+#### Inherited from
+
+CommentObject.comments
+
+#### Defined in
+
+[src/budget-statement/gen/comment/object.ts:22](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/object.ts#L22)
+
+___
 
 ### created
 
@@ -618,7 +533,7 @@ AccountObject.created
 
 #### Defined in
 
-[document/object.ts:88](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L88)
+[src/document/object.ts:88](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L88)
 
 ___
 
@@ -638,7 +553,25 @@ AccountObject.documentType
 
 #### Defined in
 
-[document/object.ts:81](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L81)
+[src/document/object.ts:81](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L81)
+
+___
+
+### ftes
+
+• `get` **ftes**(): `Maybe`<[`Ftes`](#ftes)\>
+
+#### Returns
+
+`Maybe`<[`Ftes`](#ftes)\>
+
+#### Inherited from
+
+BaseObject.ftes
+
+#### Defined in
+
+[src/budget-statement/gen/base/object.ts:38](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L38)
 
 ___
 
@@ -658,7 +591,7 @@ AccountObject.initialState
 
 #### Defined in
 
-[document/object.ts:109](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L109)
+[src/document/object.ts:109](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L109)
 
 ___
 
@@ -678,7 +611,7 @@ AccountObject.lastModified
 
 #### Defined in
 
-[document/object.ts:95](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L95)
+[src/document/object.ts:95](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L95)
 
 ___
 
@@ -698,7 +631,7 @@ AccountObject.name
 
 #### Defined in
 
-[document/object.ts:74](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L74)
+[src/document/object.ts:74](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L74)
 
 ___
 
@@ -718,7 +651,7 @@ AccountObject.operations
 
 #### Defined in
 
-[document/object.ts:116](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L116)
+[src/document/object.ts:116](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L116)
 
 ___
 
@@ -738,133 +671,25 @@ AccountObject.revision
 
 #### Defined in
 
-[document/object.ts:102](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L102)
-
-## Status
-
-### status
-
-• `get` **status**(): [`BudgetStatus`](#budgetstatus)
-
-Gets the current status of the budget statement.
-
-#### Returns
-
-[`BudgetStatus`](#budgetstatus)
-
-The status of the budget statement.
-
-#### Inherited from
-
-StatusObject.status
-
-#### Defined in
-
-[budget-statement/gen/status/object.ts:68](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/object.ts#L68)
+[src/document/object.ts:102](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L102)
 
 ___
 
-### approve
+### vesting
 
-▸ **approve**(): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Approves the budget statement.
+• `get` **vesting**(): [`Vesting`](#vesting)[]
 
 #### Returns
 
-[`BudgetStatement`](#budget-statement-budget-statement)
+[`Vesting`](#vesting)[]
 
 #### Inherited from
 
-StatusObject.approve
+VestingObject.vesting
 
 #### Defined in
 
-[budget-statement/gen/status/object.ts:38](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/object.ts#L38)
-
-___
-
-### escalate
-
-▸ **escalate**(): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Escalates the budget statement.
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-#### Inherited from
-
-StatusObject.escalate
-
-#### Defined in
-
-[budget-statement/gen/status/object.ts:29](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/object.ts#L29)
-
-___
-
-### reopenToDraft
-
-▸ **reopenToDraft**(): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Reopens the budget statement to draft status.
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-A promise that resolves when the action is complete.
-
-#### Inherited from
-
-StatusObject.reopenToDraft
-
-#### Defined in
-
-[budget-statement/gen/status/object.ts:48](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/object.ts#L48)
-
-___
-
-### reopenToReview
-
-▸ **reopenToReview**(): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Reopens the budget statement to review status.
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-A promise that resolves when the action is complete.
-
-#### Inherited from
-
-StatusObject.reopenToReview
-
-#### Defined in
-
-[budget-statement/gen/status/object.ts:58](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/object.ts#L58)
-
-___
-
-### submitForReview
-
-▸ **submitForReview**(): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Submits the budget statement for review.
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-#### Inherited from
-
-StatusObject.submitForReview
-
-#### Defined in
-
-[budget-statement/gen/status/object.ts:20](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/object.ts#L20)
+[src/budget-statement/gen/vesting/object.ts:26](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/object.ts#L26)
 
 ## Audit
 
@@ -890,7 +715,7 @@ AuditObject.addAuditReport
 
 #### Defined in
 
-[budget-statement/gen/audit/object.ts:20](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/audit/object.ts#L20)
+[src/budget-statement/gen/audit/object.ts:21](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/audit/object.ts#L21)
 
 ___
 
@@ -904,7 +729,7 @@ Deletes audit reports from the budget statement.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `reports` | \`attachment://audits/${string}\`[] | An array of objects that contain the report attachment name of the audits items to be deleted. |
+| `reports` | `string`[] | An array of objects that contain the report attachment name of the audits items to be deleted. |
 
 #### Returns
 
@@ -916,7 +741,7 @@ AuditObject.deleteAuditReport
 
 #### Defined in
 
-[budget-statement/gen/audit/object.ts:36](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/audit/object.ts#L36)
+[src/budget-statement/gen/audit/object.ts:37](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/audit/object.ts#L37)
 
 ___
 
@@ -930,7 +755,7 @@ Retrieves a specific audit report from the budget statement.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `report` | \`attachment://audits/${string}\` | The name of the attachment of the report to be retrieved. |
+| `report` | `string` | The name of the attachment of the report to be retrieved. |
 
 #### Returns
 
@@ -944,7 +769,7 @@ AuditObject.getAuditReport
 
 #### Defined in
 
-[budget-statement/gen/audit/object.ts:57](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/audit/object.ts#L57)
+[src/budget-statement/gen/audit/object.ts:58](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/audit/object.ts#L58)
 
 ___
 
@@ -966,149 +791,105 @@ AuditObject.getAuditReports
 
 #### Defined in
 
-[budget-statement/gen/audit/object.ts:46](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/audit/object.ts#L46)
-
-## Line Item
-
-### addLineItem
-
-▸ **addLineItem**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Adds a line item to the specified account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account to which the line item will be added. |
-| `lineItems` | `Partial`<[`LineItem`](#lineitem)\> & `Pick`<[`LineItem`](#lineitem), ``"category"`` \| ``"group"``\>[] | An array of line item objects to be added to the account. |
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-#### Inherited from
-
-LineItemObject.addLineItem
-
-#### Defined in
-
-[budget-statement/gen/line-item/object.ts:22](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/object.ts#L22)
-
-___
-
-### deleteLineItem
-
-▸ **deleteLineItem**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Deletes line items for the specified account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account for which line items will be deleted. |
-| `lineItems` | { `category`: `string` ; `group`: `string`  }[] | An array of objects that contain the category and group of the line items to be deleted. |
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-#### Inherited from
-
-LineItemObject.deleteLineItem
-
-#### Defined in
-
-[budget-statement/gen/line-item/object.ts:50](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/object.ts#L50)
-
-___
-
-### getLineItem
-
-▸ **getLineItem**(`account`, `lineItem`): `undefined` \| [`LineItem`](#lineitem)
-
-Retrieves a specific line item for the specified account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account for which the line item will be retrieved. |
-| `lineItem` | `Object` | An object that contains the category and group of the line item to be retrieved. |
-| `lineItem.category` | `string` | - |
-| `lineItem.group` | `string` | - |
-
-#### Returns
-
-`undefined` \| [`LineItem`](#lineitem)
-
-The line item object that matches the specified category and group, or undefined if it does not exist.
-
-#### Inherited from
-
-LineItemObject.getLineItem
-
-#### Defined in
-
-[budget-statement/gen/line-item/object.ts:78](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/object.ts#L78)
-
-___
-
-### getLineItems
-
-▸ **getLineItems**(`account`): `undefined` \| [`LineItem`](#lineitem)[]
-
-Retrieves line items for the specified account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account for which line items will be retrieved. |
-
-#### Returns
-
-`undefined` \| [`LineItem`](#lineitem)[]
-
-An array of line item objects for the specified account, or undefined if the account does not exist.
-
-#### Inherited from
-
-LineItemObject.getLineItems
-
-#### Defined in
-
-[budget-statement/gen/line-item/object.ts:64](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/object.ts#L64)
-
-___
-
-### updateLineItem
-
-▸ **updateLineItem**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Updates line items for the specified account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account for which line items will be updated. |
-| `lineItems` | [`LineItemInput`](#lineiteminput)[] | An array of line item input objects to be updated. |
-
-#### Returns
-
-[`BudgetStatement`](#budget-statement-budget-statement)
-
-#### Inherited from
-
-LineItemObject.updateLineItem
-
-#### Defined in
-
-[budget-statement/gen/line-item/object.ts:36](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/object.ts#L36)
+[src/budget-statement/gen/audit/object.ts:47](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/audit/object.ts#L47)
 
 ## Methods
+
+### addComment
+
+▸ **addComment**(`comments`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `comments` | [`CommentInput`](#commentinput)[] |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+CommentObject.addComment
+
+#### Defined in
+
+[src/budget-statement/gen/comment/object.ts:10](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/object.ts#L10)
+
+___
+
+### addVesting
+
+▸ **addVesting**(`vesting`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `vesting` | [`VestingInput`](#vestinginput)[] |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+VestingObject.addVesting
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/object.ts:14](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/object.ts#L14)
+
+___
+
+### deleteComment
+
+▸ **deleteComment**(`comments`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `comments` | `string`[] |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+CommentObject.deleteComment
+
+#### Defined in
+
+[src/budget-statement/gen/comment/object.ts:18](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/object.ts#L18)
+
+___
+
+### deleteVesting
+
+▸ **deleteVesting**(`vesting`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `vesting` | `string`[] |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+VestingObject.deleteVesting
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/object.ts:22](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/object.ts#L22)
+
+___
 
 ### dispatch
 
@@ -1134,7 +915,7 @@ The Document instance.
 
 #### Defined in
 
-[document/object.ts:34](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L34)
+[src/document/object.ts:34](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L34)
 
 ___
 
@@ -1148,7 +929,7 @@ Gets the attachment associated with the given key.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `attachment` | \`attachment://${string}\` | The key of the attachment to retrieve. |
+| `attachment` | `string` | The key of the attachment to retrieve. |
 
 #### Returns
 
@@ -1160,33 +941,55 @@ Gets the attachment associated with the given key.
 
 #### Defined in
 
-[document/object.ts:124](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L124)
+[src/document/object.ts:124](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L124)
 
 ___
 
-### init
+### getComment
 
-▸ **init**(`budgetStatement`): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Initializes the state of the budget statement with the provided partial object.
+▸ **getComment**(`key`): `undefined` \| [`Comment`](#comment)
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `budgetStatement` | `Partial`<`Omit`<[`BudgetStatementDocument`](#budgetstatementdocument), ``"data"``\> & { `data`: `Partial`<[`State`](#state)\>  }\> | A partial object of the budget statement to initialize. |
+| Name | Type |
+| :------ | :------ |
+| `key` | `string` |
 
 #### Returns
 
-[`BudgetStatement`](#budget-statement-budget-statement)
+`undefined` \| [`Comment`](#comment)
 
 #### Inherited from
 
-InitObject.init
+CommentObject.getComment
 
 #### Defined in
 
-[budget-statement/gen/init/object.ts:18](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/init/object.ts#L18)
+[src/budget-statement/gen/comment/object.ts:26](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/object.ts#L26)
+
+___
+
+### getVesting
+
+▸ **getVesting**(`key`): `undefined` \| [`Vesting`](#vesting)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `key` | `string` |
+
+#### Returns
+
+`undefined` \| [`Vesting`](#vesting)
+
+#### Inherited from
+
+VestingObject.getVesting
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/object.ts:30](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/object.ts#L30)
 
 ___
 
@@ -1214,7 +1017,7 @@ A promise that resolves with the loaded `BudgetStatement` instance.
 
 #### Defined in
 
-[budget-statement/gen/object.ts:95](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L95)
+[src/budget-statement/gen/object.ts:71](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/object.ts#L71)
 
 ___
 
@@ -1228,7 +1031,7 @@ Loads a document state and a set of operations.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `state` | `Pick`<[`Document`](#document)<[`State`](#state), [`BudgetStatementAction`](#budgetstatementaction)\>, ``"name"`` \| ``"data"``\> | The state to load. |
+| `state` | `Pick`<[`Document`](#document)<`BudgetStatementData`, [`BudgetStatementAction`](#budgetstatementaction)\>, ``"name"`` \| ``"data"``\> | The state to load. |
 | `operations` | `number` | The operations to apply to the document. |
 
 #### Returns
@@ -1241,7 +1044,7 @@ Loads a document state and a set of operations.
 
 #### Defined in
 
-[document/object.ts:165](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L165)
+[src/document/object.ts:165](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L165)
 
 ___
 
@@ -1268,7 +1071,7 @@ Removes a range of operations from the document.
 
 #### Defined in
 
-[document/object.ts:156](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L156)
+[src/document/object.ts:156](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L156)
 
 ___
 
@@ -1294,13 +1097,13 @@ Reapplies a number of actions to the document.
 
 #### Defined in
 
-[document/object.ts:148](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L148)
+[src/document/object.ts:148](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L148)
 
 ___
 
 ### saveToFile
 
-▸ **saveToFile**(`path`): `Promise`<`string`\>
+▸ **saveToFile**(`path`, `name?`): `Promise`<`string`\>
 
 Saves the budget statement to a file.
 
@@ -1309,6 +1112,7 @@ Saves the budget statement to a file.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `path` | `string` | The path to the file to save. |
+| `name?` | `string` | - |
 
 #### Returns
 
@@ -1322,7 +1126,55 @@ A promise that resolves when the save operation completes.
 
 #### Defined in
 
-[budget-statement/gen/object.ts:85](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L85)
+[src/budget-statement/gen/object.ts:61](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/object.ts#L61)
+
+___
+
+### setFtes
+
+▸ **setFtes**(`ftes`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ftes` | [`FtesInput`](#ftesinput) |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+BaseObject.setFtes
+
+#### Defined in
+
+[src/budget-statement/gen/base/object.ts:54](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L54)
+
+___
+
+### setMonth
+
+▸ **setMonth**(`month`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `month` | `string` |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+BaseObject.setMonth
+
+#### Defined in
+
+[src/budget-statement/gen/base/object.ts:46](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L46)
 
 ___
 
@@ -1348,7 +1200,55 @@ Sets the name of the document.
 
 #### Defined in
 
-[document/object.ts:132](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L132)
+[src/document/object.ts:132](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L132)
+
+___
+
+### setOwner
+
+▸ **setOwner**(`owner`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `owner` | [`OwnerInput`](#ownerinput) |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+BaseObject.setOwner
+
+#### Defined in
+
+[src/budget-statement/gen/base/object.ts:42](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L42)
+
+___
+
+### setQuoteCurrency
+
+▸ **setQuoteCurrency**(`currency`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `currency` | `string` |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+BaseObject.setQuoteCurrency
+
+#### Defined in
+
+[src/budget-statement/gen/base/object.ts:50](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/object.ts#L50)
 
 ___
 
@@ -1374,7 +1274,55 @@ Reverts a number of actions from the document.
 
 #### Defined in
 
-[document/object.ts:140](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L140)
+[src/document/object.ts:140](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L140)
+
+___
+
+### updateComment
+
+▸ **updateComment**(`comments`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `comments` | `CommentUpdateInput`[] |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+CommentObject.updateComment
+
+#### Defined in
+
+[src/budget-statement/gen/comment/object.ts:14](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/object.ts#L14)
+
+___
+
+### updateVesting
+
+▸ **updateVesting**(`vesting`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `vesting` | [`VestingUpdateInput`](#vestingupdateinput)[] |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+VestingObject.updateVesting
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/object.ts:18](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/object.ts#L18)
 
 ___
 
@@ -1398,7 +1346,7 @@ A promise that resolves with the loaded `BudgetStatement` instance.
 
 #### Defined in
 
-[budget-statement/gen/object.ts:105](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/object.ts#L105)
+[src/budget-statement/gen/object.ts:81](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/object.ts#L81)
 
 ___
 
@@ -1434,50 +1382,22 @@ The state of the document.
 
 #### Defined in
 
-[document/object.ts:63](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L63)
+[src/document/object.ts:63](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L63)
 
-## Topup
+## Line Item
 
-### getTopupTransaction
+### addLineItem
 
-▸ **getTopupTransaction**(`account`): `undefined` \| { `id`: ``null`` \| `string` ; `requestedValue`: ``null`` \| `number` ; `value`: ``null`` \| `number`  }
+▸ **addLineItem**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
 
-Gets the top-up transaction for the specified account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account to get the top-up transaction for. |
-
-#### Returns
-
-`undefined` \| { `id`: ``null`` \| `string` ; `requestedValue`: ``null`` \| `number` ; `value`: ``null`` \| `number`  }
-
-The top-up transaction for the specified account, if it exists.
-
-#### Inherited from
-
-TopupObject.getTopupTransaction
-
-#### Defined in
-
-[budget-statement/gen/topup/object.ts:47](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/object.ts#L47)
-
-___
-
-### requestTopup
-
-▸ **requestTopup**(`account`, `value`): [`BudgetStatement`](#budget-statement-budget-statement)
-
-Adds a top-up request for the specified account.
+Adds a line item to the specified account.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` | The address of the account to add the top-up request. |
-| `value` | `number` | The value of the top-up request. |
+| `account` | `string` | The address of the account to which the line item will be added. |
+| `lineItems` | `Partial`<[`LineItem`](#lineitem)\> & `Pick`<[`LineItem`](#lineitem), ``"category"`` \| ``"group"``\>[] | An array of line item objects to be added to the account. |
 
 #### Returns
 
@@ -1485,27 +1405,26 @@ Adds a top-up request for the specified account.
 
 #### Inherited from
 
-TopupObject.requestTopup
+LineItemObject.addLineItem
 
 #### Defined in
 
-[budget-statement/gen/topup/object.ts:17](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/object.ts#L17)
+[src/budget-statement/gen/line-item/object.ts:26](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/object.ts#L26)
 
 ___
 
-### transferTopup
+### deleteLineItem
 
-▸ **transferTopup**(`account`, `value`, `transaction`): [`BudgetStatement`](#budget-statement-budget-statement)
+▸ **deleteLineItem**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
 
-Adds a top-up transer to the specified account.
+Deletes line items for the specified account.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `account` | `string` | The address of the account to add the top-up transfer. |
-| `value` | `number` | The value of the top-up transfer. |
-| `transaction` | `string` | The transaction ID of the transfer. |
+| `account` | `string` | The address of the account for which line items will be deleted. |
+| `lineItems` | `LineItemDeleteInput`[] | An array of objects that contain the category and group of the line items to be deleted. |
 
 #### Returns
 
@@ -1513,11 +1432,122 @@ Adds a top-up transer to the specified account.
 
 #### Inherited from
 
-TopupObject.transferTopup
+LineItemObject.deleteLineItem
 
 #### Defined in
 
-[budget-statement/gen/topup/object.ts:31](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/object.ts#L31)
+[src/budget-statement/gen/line-item/object.ts:54](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/object.ts#L54)
+
+___
+
+### getLineItem
+
+▸ **getLineItem**(`account`, `lineItem`): `undefined` \| [`LineItem`](#lineitem)
+
+Retrieves a specific line item for the specified account.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `account` | `string` | The address of the account for which the line item will be retrieved. |
+| `lineItem` | `LineItemDeleteInput` | An object that contains the category and group of the line item to be retrieved. |
+
+#### Returns
+
+`undefined` \| [`LineItem`](#lineitem)
+
+The line item object that matches the specified category and group, or undefined if it does not exist.
+
+#### Inherited from
+
+LineItemObject.getLineItem
+
+#### Defined in
+
+[src/budget-statement/gen/line-item/object.ts:96](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/object.ts#L96)
+
+___
+
+### getLineItems
+
+▸ **getLineItems**(`account`): `undefined` \| [`LineItem`](#lineitem)[]
+
+Retrieves line items for the specified account.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `account` | `string` | The address of the account for which line items will be retrieved. |
+
+#### Returns
+
+`undefined` \| [`LineItem`](#lineitem)[]
+
+An array of line item objects for the specified account, or undefined if the account does not exist.
+
+#### Inherited from
+
+LineItemObject.getLineItems
+
+#### Defined in
+
+[src/budget-statement/gen/line-item/object.ts:82](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/object.ts#L82)
+
+___
+
+### sortLineItems
+
+▸ **sortLineItems**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+Sorts the line items of an account.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `account` | `string` | The account containing the line items to sort. |
+| `lineItems` | `LineItemsSortInput`[] | An array of line items to sort. |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+LineItemObject.sortLineItems
+
+#### Defined in
+
+[src/budget-statement/gen/line-item/object.ts:68](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/object.ts#L68)
+
+___
+
+### updateLineItem
+
+▸ **updateLineItem**(`account`, `lineItems`): [`BudgetStatement`](#budget-statement-budget-statement)
+
+Updates line items for the specified account.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `account` | `string` | The address of the account for which line items will be updated. |
+| `lineItems` | `LineItemUpdateInput`[] | An array of line item input objects to be updated. |
+
+#### Returns
+
+[`BudgetStatement`](#budget-statement-budget-statement)
+
+#### Inherited from
+
+LineItemObject.updateLineItem
+
+#### Defined in
+
+[src/budget-statement/gen/line-item/object.ts:40](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/object.ts#L40)
 
 # Document Base Document
 
@@ -1551,40 +1581,6 @@ A - The type of action the document can take.
 
   ↳ [`BudgetStatement`](#budget-statement-budget-statement)
 
-## Table of contents
-
-### Constructors
-
-- [constructor](#constructor)
-
-### Properties
-
-- [reducer](#reducer)
-- [state](#state)
-
-### Accessors
-
-- [created](#created)
-- [documentType](#documenttype)
-- [initialState](#initialstate)
-- [lastModified](#lastmodified)
-- [name](#name)
-- [operations](#operations)
-- [revision](#revision)
-
-### Methods
-
-- [dispatch](#dispatch)
-- [getAttachment](#getattachment)
-- [loadFromFile](#loadfromfile)
-- [loadState](#loadstate)
-- [prune](#prune)
-- [redo](#redo)
-- [saveToFile](#savetofile)
-- [setName](#setname)
-- [undo](#undo)
-- [stateFromFile](#statefromfile)
-
 ## Constructors
 
 ### constructor
@@ -1609,7 +1605,7 @@ Constructs a BaseDocument instance with an initial state.
 
 #### Defined in
 
-[document/object.ts:21](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L21)
+[src/document/object.ts:21](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L21)
 
 ## Properties
 
@@ -1619,7 +1615,7 @@ Constructs a BaseDocument instance with an initial state.
 
 #### Defined in
 
-[document/object.ts:14](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L14)
+[src/document/object.ts:14](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L14)
 
 ___
 
@@ -1629,7 +1625,7 @@ ___
 
 #### Defined in
 
-[document/object.ts:13](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L13)
+[src/document/object.ts:13](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L13)
 
 ## Accessors
 
@@ -1645,7 +1641,7 @@ Gets the timestamp of the date the document was created.
 
 #### Defined in
 
-[document/object.ts:88](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L88)
+[src/document/object.ts:88](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L88)
 
 ___
 
@@ -1661,7 +1657,7 @@ Gets the type of document.
 
 #### Defined in
 
-[document/object.ts:81](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L81)
+[src/document/object.ts:81](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L81)
 
 ___
 
@@ -1677,7 +1673,7 @@ Gets the initial state of the document.
 
 #### Defined in
 
-[document/object.ts:109](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L109)
+[src/document/object.ts:109](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L109)
 
 ___
 
@@ -1693,7 +1689,7 @@ Gets the timestamp of the date the document was last modified.
 
 #### Defined in
 
-[document/object.ts:95](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L95)
+[src/document/object.ts:95](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L95)
 
 ___
 
@@ -1709,7 +1705,7 @@ Gets the name of the document.
 
 #### Defined in
 
-[document/object.ts:74](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L74)
+[src/document/object.ts:74](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L74)
 
 ___
 
@@ -1725,7 +1721,7 @@ Gets the list of operations performed on the document.
 
 #### Defined in
 
-[document/object.ts:116](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L116)
+[src/document/object.ts:116](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L116)
 
 ___
 
@@ -1741,7 +1737,7 @@ Gets the revision number of the document.
 
 #### Defined in
 
-[document/object.ts:102](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L102)
+[src/document/object.ts:102](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L102)
 
 ## Methods
 
@@ -1765,7 +1761,7 @@ The Document instance.
 
 #### Defined in
 
-[document/object.ts:34](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L34)
+[src/document/object.ts:34](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L34)
 
 ___
 
@@ -1779,7 +1775,7 @@ Gets the attachment associated with the given key.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `attachment` | \`attachment://${string}\` | The key of the attachment to retrieve. |
+| `attachment` | `string` | The key of the attachment to retrieve. |
 
 #### Returns
 
@@ -1787,7 +1783,7 @@ Gets the attachment associated with the given key.
 
 #### Defined in
 
-[document/object.ts:124](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L124)
+[src/document/object.ts:124](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L124)
 
 ___
 
@@ -1809,7 +1805,7 @@ Loads the state of the document from a file.
 
 #### Defined in
 
-[document/object.ts:53](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L53)
+[src/document/object.ts:53](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L53)
 
 ___
 
@@ -1832,7 +1828,7 @@ Loads a document state and a set of operations.
 
 #### Defined in
 
-[document/object.ts:165](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L165)
+[src/document/object.ts:165](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L165)
 
 ___
 
@@ -1855,7 +1851,7 @@ Removes a range of operations from the document.
 
 #### Defined in
 
-[document/object.ts:156](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L156)
+[src/document/object.ts:156](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L156)
 
 ___
 
@@ -1877,13 +1873,13 @@ Reapplies a number of actions to the document.
 
 #### Defined in
 
-[document/object.ts:148](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L148)
+[src/document/object.ts:148](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L148)
 
 ___
 
 ### saveToFile
 
-▸ `Protected` **saveToFile**(`path`, `extension`): `Promise`<`string`\>
+▸ `Protected` **saveToFile**(`path`, `extension`, `name?`): `Promise`<`string`\>
 
 Saves the state of the document to a file.
 
@@ -1893,6 +1889,7 @@ Saves the state of the document to a file.
 | :------ | :------ | :------ |
 | `path` | `string` | The file path where the state should be saved. |
 | `extension` | `string` | The file extension to use when saving the state. |
+| `name?` | `string` | - |
 
 #### Returns
 
@@ -1902,7 +1899,7 @@ The file path where the state was saved.
 
 #### Defined in
 
-[document/object.ts:45](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L45)
+[src/document/object.ts:45](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L45)
 
 ___
 
@@ -1924,7 +1921,7 @@ Sets the name of the document.
 
 #### Defined in
 
-[document/object.ts:132](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L132)
+[src/document/object.ts:132](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L132)
 
 ___
 
@@ -1946,7 +1943,7 @@ Reverts a number of actions from the document.
 
 #### Defined in
 
-[document/object.ts:140](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L140)
+[src/document/object.ts:140](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L140)
 
 ___
 
@@ -1978,7 +1975,7 @@ The state of the document.
 
 #### Defined in
 
-[document/object.ts:63](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L63)
+[src/document/object.ts:63](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L63)
 
 # Modules
 
@@ -1986,16 +1983,10 @@ The state of the document.
 
 # @acaldas/document-model-libs
 
-## Table of contents
-
-### Namespaces
+## Namespaces
 
 - [BudgetStatement](#budget-statement)
 - [Document](#document)
-
-### Variables
-
-- [default](#default)
 
 ## Variables
 
@@ -2005,14 +1996,14 @@ The state of the document.
 
 #### Type declaration
 
-| Name              | Type                                            |
-| :---------------- | :---------------------------------------------- |
+| Name | Type |
+| :------ | :------ |
 | `BudgetStatement` | [`BudgetStatement`](#budget-statement) |
-| `Document`        | [`Document`](#document)               |
+| `Document` | [`Document`](#document) |
 
 #### Defined in
 
-[index.doc.ts:35](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/index.doc.ts#L35)
+[src/index.doc.ts:35](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/index.doc.ts#L35)
 
 # Budget Statement Actions
 
@@ -2021,42 +2012,6 @@ The state of the document.
 # Namespace: actions
 
 [BudgetStatement](#budget-statement).actions
-
-## Table of contents
-
-### Account
-
-- [addAccount](#addaccount)
-- [deleteAccount](#deleteaccount)
-- [updateAccount](#updateaccount)
-
-### Audit
-
-- [addAuditReport](#addauditreport)
-- [deleteAuditReport](#deleteauditreport)
-
-### Line Item
-
-- [addLineItem](#addlineitem)
-- [deleteLineItem](#deletelineitem)
-- [updateLineItem](#updatelineitem)
-
-### Status
-
-- [approve](#approve)
-- [escalate](#escalate)
-- [reopenToDraft](#reopentodraft)
-- [reopenToReview](#reopentoreview)
-- [submitForReview](#submitforreview)
-
-### Init
-
-- [init](#init)
-
-### Topup
-
-- [requestTopup](#requesttopup)
-- [transferTopup](#transfertopup)
 
 ## Account
 
@@ -2078,7 +2033,7 @@ Action creator for adding accounts to the budget statement.
 
 #### Defined in
 
-[budget-statement/gen/account/creators.ts:24](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/creators.ts#L24)
+[src/budget-statement/gen/account/creators.ts:25](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/creators.ts#L25)
 
 ___
 
@@ -2100,7 +2055,29 @@ Action creator for deleting accounts from the budget statement.
 
 #### Defined in
 
-[budget-statement/gen/account/creators.ts:42](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/creators.ts#L42)
+[src/budget-statement/gen/account/creators.ts:51](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/creators.ts#L51)
+
+___
+
+### sortAccounts
+
+▸ **sortAccounts**(`accounts`): `SortAccountsAction`
+
+Action creator for sorting accounts in the budget statement.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `accounts` | `string`[] | Array of addresses of the accounts to sort. |
+
+#### Returns
+
+`SortAccountsAction`
+
+#### Defined in
+
+[src/budget-statement/gen/account/creators.ts:63](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/creators.ts#L63)
 
 ___
 
@@ -2114,7 +2091,7 @@ Action creator for updating accounts in the budget statement.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `accounts` | [`AccountInput`](#accountinput)[] | Array of account inputs to be updated. |
+| `accounts` | `AccountUpdateInput`[] | Array of account inputs to be updated. |
 
 #### Returns
 
@@ -2122,7 +2099,7 @@ Action creator for updating accounts in the budget statement.
 
 #### Defined in
 
-[budget-statement/gen/account/creators.ts:34](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/account/creators.ts#L34)
+[src/budget-statement/gen/account/creators.ts:39](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/account/creators.ts#L39)
 
 ## Audit
 
@@ -2148,7 +2125,7 @@ The `timestamp` property in each report is optional. If not provided, the curren
 
 #### Defined in
 
-[budget-statement/gen/audit/creators.ts:21](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/audit/creators.ts#L21)
+[src/budget-statement/gen/audit/creators.ts:22](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/audit/creators.ts#L22)
 
 ___
 
@@ -2162,7 +2139,7 @@ Creates an action to delete one or more audit reports from the state.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `reports` | \`attachment://audits/${string}\`[] | An array of reports to be deleted. |
+| `reports` | `string`[] | An array of reports to be deleted. |
 
 #### Returns
 
@@ -2172,7 +2149,207 @@ The created action.
 
 #### Defined in
 
-[budget-statement/gen/audit/creators.ts:46](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/audit/creators.ts#L46)
+[src/budget-statement/gen/audit/creators.ts:51](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/audit/creators.ts#L51)
+
+## Functions
+
+### addComment
+
+▸ **addComment**(`comments`): `AddCommentAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `comments` | [`CommentInput`](#commentinput)[] |
+
+#### Returns
+
+`AddCommentAction`
+
+#### Defined in
+
+[src/budget-statement/gen/comment/creators.ts:16](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/creators.ts#L16)
+
+___
+
+### addVesting
+
+▸ **addVesting**(`vesting`): `AddVestingAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `vesting` | [`VestingInput`](#vestinginput)[] |
+
+#### Returns
+
+`AddVestingAction`
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/creators.ts:13](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/creators.ts#L13)
+
+___
+
+### deleteComment
+
+▸ **deleteComment**(`comments`): `DeleteCommentAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `comments` | `string`[] |
+
+#### Returns
+
+`DeleteCommentAction`
+
+#### Defined in
+
+[src/budget-statement/gen/comment/creators.ts:30](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/creators.ts#L30)
+
+___
+
+### deleteVesting
+
+▸ **deleteVesting**(`vesting`): `DeleteVestingAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `vesting` | `string`[] |
+
+#### Returns
+
+`DeleteVestingAction`
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/creators.ts:27](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/creators.ts#L27)
+
+___
+
+### setFtes
+
+▸ **setFtes**(`ftes`): `SetFtesAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ftes` | [`FtesInput`](#ftesinput) |
+
+#### Returns
+
+`SetFtesAction`
+
+#### Defined in
+
+[src/budget-statement/gen/base/creators.ts:28](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/creators.ts#L28)
+
+___
+
+### setMonth
+
+▸ **setMonth**(`month`): `SetMonthAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `month` | `string` |
+
+#### Returns
+
+`SetMonthAction`
+
+#### Defined in
+
+[src/budget-statement/gen/base/creators.ts:18](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/creators.ts#L18)
+
+___
+
+### setOwner
+
+▸ **setOwner**(`owner`): `SetOwnerAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `owner` | [`OwnerInput`](#ownerinput) |
+
+#### Returns
+
+`SetOwnerAction`
+
+#### Defined in
+
+[src/budget-statement/gen/base/creators.ts:15](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/creators.ts#L15)
+
+___
+
+### setQuoteCurrency
+
+▸ **setQuoteCurrency**(`currency`): `SetQuoteCurrencyAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `currency` | `string` |
+
+#### Returns
+
+`SetQuoteCurrencyAction`
+
+#### Defined in
+
+[src/budget-statement/gen/base/creators.ts:21](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/base/creators.ts#L21)
+
+___
+
+### updateComment
+
+▸ **updateComment**(`comments`): `UpdateCommentAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `comments` | `CommentUpdateInput`[] |
+
+#### Returns
+
+`UpdateCommentAction`
+
+#### Defined in
+
+[src/budget-statement/gen/comment/creators.ts:23](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/comment/creators.ts#L23)
+
+___
+
+### updateVesting
+
+▸ **updateVesting**(`vesting`): `UpdateVestingAction`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `vesting` | [`VestingUpdateInput`](#vestingupdateinput)[] |
+
+#### Returns
+
+`UpdateVestingAction`
+
+#### Defined in
+
+[src/budget-statement/gen/vesting/creators.ts:20](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/vesting/creators.ts#L20)
 
 ## Line Item
 
@@ -2195,7 +2372,7 @@ Creates an action to add one or more line items to an account.
 
 #### Defined in
 
-[budget-statement/gen/line-item/creators.ts:21](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/creators.ts#L21)
+[src/budget-statement/gen/line-item/creators.ts:29](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/creators.ts#L29)
 
 ___
 
@@ -2210,7 +2387,7 @@ Creates an action to delete one or more line items from an account.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `account` | `string` | The account containing the line items to delete. |
-| `lineItems` | { `category`: `string` ; `group`: `string`  }[] | An array of line items to delete from the account. |
+| `lineItems` | `LineItemDeleteInput`[] | An array of line items to delete from the account. |
 
 #### Returns
 
@@ -2218,7 +2395,30 @@ Creates an action to delete one or more line items from an account.
 
 #### Defined in
 
-[budget-statement/gen/line-item/creators.ts:53](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/creators.ts#L53)
+[src/budget-statement/gen/line-item/creators.ts:69](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/creators.ts#L69)
+
+___
+
+### sortLineItems
+
+▸ **sortLineItems**(`account`, `lineItems`): `SortLineItemsAction`
+
+Creates an action to sort the line items of an account.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `account` | `string` | The account containing the line items to sort. |
+| `lineItems` | `LineItemsSortInput`[] | An array of line items to sort. |
+
+#### Returns
+
+`SortLineItemsAction`
+
+#### Defined in
+
+[src/budget-statement/gen/line-item/creators.ts:89](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/creators.ts#L89)
 
 ___
 
@@ -2233,7 +2433,7 @@ Creates an action to update one or more line items in an account.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `account` | `string` | The account containing the line items to update. |
-| `lineItems` | [`LineItemInput`](#lineiteminput)[] | An array of line items to update in the account. |
+| `lineItems` | `LineItemUpdateInput`[] | An array of line items to update in the account. |
 
 #### Returns
 
@@ -2241,156 +2441,7 @@ Creates an action to update one or more line items in an account.
 
 #### Defined in
 
-[budget-statement/gen/line-item/creators.ts:37](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/line-item/creators.ts#L37)
-
-## Status
-
-### approve
-
-▸ **approve**(): `ApproveAction`
-
-Approves the budget statement.
-
-#### Returns
-
-`ApproveAction`
-
-#### Defined in
-
-[budget-statement/gen/status/creators.ts:35](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/creators.ts#L35)
-
-___
-
-### escalate
-
-▸ **escalate**(): `EscalateAction`
-
-Escalates the budget statement if there is any issue.
-
-#### Returns
-
-`EscalateAction`
-
-#### Defined in
-
-[budget-statement/gen/status/creators.ts:28](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/creators.ts#L28)
-
-___
-
-### reopenToDraft
-
-▸ **reopenToDraft**(): `ReopenToDraftAction`
-
-Reopens the budget statement to draft state.
-
-#### Returns
-
-`ReopenToDraftAction`
-
-#### Defined in
-
-[budget-statement/gen/status/creators.ts:42](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/creators.ts#L42)
-
-___
-
-### reopenToReview
-
-▸ **reopenToReview**(): `ReopenToReviewAction`
-
-Reopens the budget statement to review state.
-
-#### Returns
-
-`ReopenToReviewAction`
-
-#### Defined in
-
-[budget-statement/gen/status/creators.ts:50](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/creators.ts#L50)
-
-___
-
-### submitForReview
-
-▸ **submitForReview**(): `SubmitForReviewAction`
-
-Submits the budget statement for review.
-
-#### Returns
-
-`SubmitForReviewAction`
-
-#### Defined in
-
-[budget-statement/gen/status/creators.ts:20](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/status/creators.ts#L20)
-
-## Init
-
-### init
-
-▸ **init**(`budgetStatement`): `InitAction`
-
-Initializes the budget statement state with the provided data.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `budgetStatement` | `Partial`<`Omit`<[`BudgetStatementDocument`](#budgetstatementdocument), ``"data"``\> & { `data`: `Partial`<[`State`](#state)\>  }\> | Partial budget statement data to initialize the state with. |
-
-#### Returns
-
-`InitAction`
-
-#### Defined in
-
-[budget-statement/gen/init/creators.ts:11](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/init/creators.ts#L11)
-
-## Topup
-
-### requestTopup
-
-▸ **requestTopup**(`account`, `value`): `RequestTopupAction`
-
-Action creator for requesting a top-up for an account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account to top-up. |
-| `value` | `number` | The amount to top-up the account by. |
-
-#### Returns
-
-`RequestTopupAction`
-
-#### Defined in
-
-[budget-statement/gen/topup/creators.ts:18](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/creators.ts#L18)
-
-___
-
-### transferTopup
-
-▸ **transferTopup**(`account`, `value`, `transaction`): `TransferTopupAction`
-
-Action creator for transferring top-up to an account.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `account` | `string` | The address of the account to transfer top-up to. |
-| `value` | `number` | The amount of top-up to transfer. |
-| `transaction` | `string` | The transaction ID of the transfer. |
-
-#### Returns
-
-`TransferTopupAction`
-
-#### Defined in
-
-[budget-statement/gen/topup/creators.ts:30](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/gen/topup/creators.ts#L30)
+[src/budget-statement/gen/line-item/creators.ts:49](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/gen/line-item/creators.ts#L49)
 
 # Budget Statement
 
@@ -2408,35 +2459,14 @@ This module exports the following:
 - BudgetStatement: A class representing a budget statement object, to manage a budget statement in an imperative way.
 - Utility functions to create Budget Statements and load/save to file.
 
-## Table of contents
-
-### Namespaces
+## Namespaces
 
 - [actions](#budget-statement-actions)
 - [utils](#budget-statement-utils)
 
-### Classes
+## Classes
 
 - [BudgetStatement](#budget-statement-budget-statement)
-
-### Type Aliases
-
-- [Account](#account)
-- [AccountInput](#accountinput)
-- [AuditAttachment](#auditattachment)
-- [AuditReport](#auditreport)
-- [AuditReportInput](#auditreportinput)
-- [AuditReportStatus](#auditreportstatus)
-- [BudgetStatementAction](#budgetstatementaction)
-- [BudgetStatementDocument](#budgetstatementdocument)
-- [BudgetStatus](#budgetstatus)
-- [LineItem](#lineitem)
-- [LineItemInput](#lineiteminput)
-- [State](#state)
-
-### Functions
-
-- [reducer](#reducer)
 
 ## Type Aliases
 
@@ -2444,58 +2474,36 @@ This module exports the following:
 
 Ƭ **Account**: `Object`
 
-Represents an account for which expenses are managed in a budget statement.
-
 #### Type declaration
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `accountBalance` | { `timestamp`: `string` \| ``null`` ; `value`: `number` \| ``null``  } | The balance of the account. |
-| `accountBalance.timestamp` | `string` \| ``null`` | The timestamp for which the balance is recorded. |
-| `accountBalance.value` | `number` \| ``null`` | The balance value. |
-| `address` | `string` | The wallet address associated with the account. |
-| `lineItems` | [`LineItem`](#lineitem)[] | The line items associated with the account. |
-| `name` | `string` | The name of the account. |
-| `targetBalance` | { `comment`: `string` \| ``null`` ; `value`: `number` \| ``null``  } | The target balance of the account. |
-| `targetBalance.comment` | `string` \| ``null`` | Any comment associated with the target balance. |
-| `targetBalance.value` | `number` \| ``null`` | The target balance value. |
-| `topupTransaction` | { `id`: `string` \| ``null`` ; `requestedValue`: `number` \| ``null`` ; `value`: `number` \| ``null``  } | The topup transaction associated with the account. |
-| `topupTransaction.id` | `string` \| ``null`` | The ID of the topup transaction. |
-| `topupTransaction.requestedValue` | `number` \| ``null`` | The requested value for the topup transaction. |
-| `topupTransaction.value` | `number` \| ``null`` | The actual value transferred in the topup transaction. |
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"Account"`` |
+| `address` | `Scalars`[``"String"``] |
+| `lineItems` | [`LineItem`](#lineitem)[] |
+| `name` | `Scalars`[``"String"``] |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:59](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L59)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:29
 
 ___
 
 ### AccountInput
 
-Ƭ **AccountInput**: `Partial`<[`Account`](#account)\> & `Pick`<[`Account`](#account), ``"address"``\>
+Ƭ **AccountInput**: `Object`
 
-Represents the input for creating or updating an account.
+#### Type declaration
 
-**`Remarks`**
-
-The only necessary attribute is the account address,
-as it is an unique attribute used to identify the account.
-
-#### Defined in
-
-[budget-statement/custom/types.ts:97](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L97)
-
-___
-
-### AuditAttachment
-
-Ƭ **AuditAttachment**: \`attachment://audits/${string}\`
-
-A string literal type representing the format for attaching audit reports to a budget statement.
+| Name | Type |
+| :------ | :------ |
+| `address` | `Scalars`[``"String"``] |
+| `lineItems?` | `InputMaybe`<[`LineItemInput`](#lineiteminput)[]\> |
+| `name?` | `InputMaybe`<`Scalars`[``"String"``]\> |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:116](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L116)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:35
 
 ___
 
@@ -2503,19 +2511,18 @@ ___
 
 Ƭ **AuditReport**: `Object`
 
-Represents an audit report for a budget statement.
-
 #### Type declaration
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `report` | [`AuditAttachment`](#auditattachment) | The attachment for the audit report. |
-| `status` | [`AuditReportStatus`](#auditreportstatus) | The status of the audit report. |
-| `timestamp` | `string` | The timestamp of the audit report. |
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"AuditReport"`` |
+| `report` | `Scalars`[``"String"``] |
+| `status` | [`AuditReportStatus`](#auditreportstatus) \| \`${AuditReportStatus}\` |
+| `timestamp` | `Scalars`[``"DateTime"``] |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:121](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L121)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:81
 
 ___
 
@@ -2523,43 +2530,37 @@ ___
 
 Ƭ **AuditReportInput**: `Object`
 
-Represents the input for an audit report to be added to a budget statement.
-
 #### Type declaration
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `report` | [`DocumentFile`](#documentfile) | The data for the audit report. |
-| `status` | [`AuditReportStatus`](#auditreportstatus) | The status of the audit report. |
-| `timestamp` | `string` | The timestamp for the audit report. |
+| Name | Type |
+| :------ | :------ |
+| `report` | `DocumentFileInput` |
+| `status` | [`AuditReportStatus`](#auditreportstatus) \| \`${AuditReportStatus}\` |
+| `timestamp?` | `InputMaybe`<`Scalars`[``"DateTime"``]\> |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:133](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L133)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:87
 
 ___
 
 ### AuditReportStatus
 
-Ƭ **AuditReportStatus**: ``"Approved"`` \| ``"ApprovedWithComments"`` \| ``"NeedsAction"`` \| ``"Escalated"``
-
-Represents the status of an audit report: 'Approved', 'ApprovedWithComments', 'NeedsAction', or 'Escalated'.
+Ƭ **AuditReportStatus**: ``"Approved"`` \| ``"ApprovedWithComments"`` \| ``"Escalated"`` \| ``"NeedsAction"``
 
 #### Defined in
 
-[budget-statement/custom/types.ts:107](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L107)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:92
 
 ___
 
 ### BudgetStatementAction
 
-Ƭ **BudgetStatementAction**: `BudgetStatementAccountAction` \| `BudgetStatementInitAction` \| `BudgetStatementLineItemAction` \| `BudgetStatementStatusAction` \| `BudgetStatementTopupAction` \| `BudgetStatementAuditReportAction`
-
-Represents the possible actions that can be performed on a budget statement.
+Ƭ **BudgetStatementAction**: `AddAccountAction` \| `AddAuditReportAction` \| `AddCommentAction` \| `AddLineItemAction` \| `AddVestingAction` \| `DeleteAccountAction` \| `DeleteAuditReportAction` \| `DeleteCommentAction` \| `DeleteLineItemAction` \| `DeleteVestingAction` \| `SetFtesAction` \| `SetMonthAction` \| `SetOwnerAction` \| `SetQuoteCurrencyAction` \| `SortAccountsAction` \| `SortLineItemsAction` \| `UpdateAccountAction` \| `UpdateCommentAction` \| `UpdateLineItemAction` \| `UpdateVestingAction`
 
 #### Defined in
 
-[budget-statement/custom/types.ts:185](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L185)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:104
 
 ___
 
@@ -2571,19 +2572,93 @@ Represents a budget statement document, which extends the base Document type.
 
 #### Defined in
 
-[budget-statement/custom/types.ts:196](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L196)
+[src/budget-statement/custom/types.ts:53](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/types.ts#L53)
 
 ___
 
 ### BudgetStatus
 
-Ƭ **BudgetStatus**: ``"Draft"`` \| ``"Review"`` \| ``"Final"`` \| ``"Escalated"``
-
-Represents the status of the budget statement: 'Draft', 'Review', 'Final', or 'Escalated'.
+Ƭ **BudgetStatus**: ``"Draft"`` \| ``"Escalated"`` \| ``"Final"`` \| ``"Review"``
 
 #### Defined in
 
-[budget-statement/custom/types.ts:102](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L102)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:134
+
+___
+
+### Comment
+
+Ƭ **Comment**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"Comment"`` |
+| `author` | `CommentAuthor` |
+| `comment` | `Scalars`[``"String"``] |
+| `key` | `Scalars`[``"String"``] |
+| `status` | [`BudgetStatus`](#budgetstatus) \| \`${BudgetStatus}\` |
+| `timestamp` | `Scalars`[``"DateTime"``] |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:135
+
+___
+
+### CommentInput
+
+Ƭ **CommentInput**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `author?` | `InputMaybe`<`CommentAuthorInput`\> |
+| `comment` | `Scalars`[``"String"``] |
+| `key?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `status?` | `InputMaybe`<[`BudgetStatus`](#budgetstatus) \| \`${BudgetStatus}\`\> |
+| `timestamp?` | `InputMaybe`<`Scalars`[``"DateTime"``]\> |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:156
+
+___
+
+### Ftes
+
+Ƭ **Ftes**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"Ftes"`` |
+| `forecast` | `FtesForecast`[] |
+| `value` | `Scalars`[``"Float"``] |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:217
+
+___
+
+### FtesInput
+
+Ƭ **FtesInput**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `forecast` | `FtesForecastInput`[] |
+| `value` | `Scalars`[``"Float"``] |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:231
 
 ___
 
@@ -2591,85 +2666,175 @@ ___
 
 Ƭ **LineItem**: `Object`
 
-Represents an expense item for a specific account.
-
 #### Type declaration
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `actual` | `number` \| ``null`` | The actual value of the expense. |
-| `budgetCap` | `number` \| ``null`` | The budget cap for the expense. |
-| `category` | { `headcountExpense`: `boolean` ; `id`: `string` ; `ref`: `string` ; `title`: `string`  } | The reference to the category of the expense. |
-| `category.headcountExpense` | `boolean` | - |
-| `category.id` | `string` | - |
-| `category.ref` | `string` | - |
-| `category.title` | `string` | - |
-| `forecast` | { `month`: `string` ; `value`: `number`  }[] | The forecast for the next 3 months for that expense. |
-| `group` | { `id`: `string` ; `ref`: `string` ; `title`: `string`  } | The reference to the group of the expense. |
-| `group.id` | `string` | - |
-| `group.ref` | `string` | - |
-| `group.title` | `string` | - |
-| `payment` | `number` \| ``null`` | The payment done to the wallet in that month. |
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"LineItem"`` |
+| `actual` | `Maybe`<`Scalars`[``"Float"``]\> |
+| `budgetCap` | `Maybe`<`Scalars`[``"Float"``]\> |
+| `category` | `Maybe`<`LineItemCategory`\> |
+| `comment` | `Maybe`<`Scalars`[``"String"``]\> |
+| `forecast` | `LineItemForecast`[] |
+| `group` | `Maybe`<`LineItemGroup`\> |
+| `headcountExpense` | `Scalars`[``"Boolean"``] |
+| `payment` | `Maybe`<`Scalars`[``"Float"``]\> |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:12](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L12)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:250
 
 ___
 
 ### LineItemInput
 
-Ƭ **LineItemInput**: `Partial`<`Omit`<[`LineItem`](#lineitem), ``"category"`` \| ``"group"``\>\> & { `category`: `string` ; `group`: `string`  }
+Ƭ **LineItemInput**: `Object`
 
-Represents the input for creating or updating a line item.
+#### Type declaration
 
-**`Remarks`**
-
-The only necessary attributes are the category and the group
-as they are used to identify the line item.
+| Name | Type |
+| :------ | :------ |
+| `actual?` | `InputMaybe`<`Scalars`[``"Float"``]\> |
+| `budgetCap?` | `InputMaybe`<`Scalars`[``"Float"``]\> |
+| `category?` | `InputMaybe`<`LineItemCategory`\> |
+| `comment?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `forecast?` | `InputMaybe`<`LineItemForecast`[]\> |
+| `group?` | `InputMaybe`<`LineItemGroup`\> |
+| `headcountExpense?` | `InputMaybe`<`Scalars`[``"Boolean"``]\> |
+| `payment?` | `InputMaybe`<`Scalars`[``"Float"``]\> |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:46](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L46)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:283
+
+___
+
+### Owner
+
+Ƭ **Owner**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"Owner"`` |
+| `id` | `Maybe`<`Scalars`[``"String"``]\> |
+| `ref` | `Maybe`<`Scalars`[``"String"``]\> |
+| `title` | `Maybe`<`Scalars`[``"String"``]\> |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:421
+
+___
+
+### OwnerInput
+
+Ƭ **OwnerInput**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `id?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `ref?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `title?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:427
 
 ___
 
 ### State
 
-Ƭ **State**: `Object`
+Ƭ **State**: `BudgetStatementData`
 
 Represents the state of a budget statement.
 
+#### Defined in
+
+[src/budget-statement/custom/types.ts:48](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/types.ts#L48)
+
+___
+
+### Vesting
+
+Ƭ **Vesting**: `Object`
+
 #### Type declaration
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `accounts` | [`Account`](#account)[] | The list of accounts in the budget statement. |
-| `auditReports` | [`AuditReport`](#auditreport)[] | The list of audit reports for the budget statement. |
-| `month` | `string` \| ``null`` | The month that the budget statement refers to. |
-| `owner` | { `id`: `string` \| ``null`` ; `ref`: `string` \| ``null`` ; `title`: `string` \| ``null``  } | A reference to the owner of the budget statement. |
-| `owner.id` | `string` \| ``null`` | - |
-| `owner.ref` | `string` \| ``null`` | - |
-| `owner.title` | `string` \| ``null`` | - |
-| `quoteCurrency` | `string` \| ``null`` | The quote currency for the budget statement. |
-| `status` | [`BudgetStatus`](#budgetstatus) | The status of the budget statement. |
+| Name | Type |
+| :------ | :------ |
+| `__typename?` | ``"Vesting"`` |
+| `amount` | `Scalars`[``"String"``] |
+| `amountOld` | `Scalars`[``"String"``] |
+| `comment` | `Scalars`[``"String"``] |
+| `currency` | `Scalars`[``"String"``] |
+| `date` | `Scalars`[``"String"``] |
+| `key` | `Scalars`[``"String"``] |
+| `vested` | `Scalars`[``"Boolean"``] |
 
 #### Defined in
 
-[budget-statement/custom/types.ts:151](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/types.ts#L151)
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:539
+
+___
+
+### VestingInput
+
+Ƭ **VestingInput**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `amount?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `amountOld?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `comment?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `currency?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `date?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `key?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `vested?` | `InputMaybe`<`Scalars`[``"Boolean"``]\> |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:549
+
+___
+
+### VestingUpdateInput
+
+Ƭ **VestingUpdateInput**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `amount?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `amountOld?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `comment?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `currency?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `date?` | `InputMaybe`<`Scalars`[``"String"``]\> |
+| `key` | `Scalars`[``"String"``] |
+| `vested?` | `InputMaybe`<`Scalars`[``"Boolean"``]\> |
+
+#### Defined in
+
+node_modules/@acaldas/document-model-graphql/dist/budget-statement/types.d.ts:558
 
 ## Functions
 
 ### reducer
 
-▸ **reducer**(`state`, `action`): [`Document`](#document)<[`State`](#state), [`BudgetStatementAction`](#budgetstatementaction)\>
+▸ **reducer**(`state`, `action`): [`Document`](#document)<`BudgetStatementData`, [`BudgetStatementAction`](#budgetstatementaction)\>
 
 Reducer for the BudgetStatement module, which handles operations related to budget statements.
 
 **`Remarks`**
 
 This reducer handles the following actions:
-- `INIT: initializes the state of the module.
+- `INIT`: initializes the state of the module.
 - `ADD_ACCOUNT`: adds an account to the state.
 - `UPDATE_ACCOUNT`: updates an account in the state.
 - `DELETE_ACCOUNT`: removes an account from the state.
@@ -2681,8 +2846,6 @@ This reducer handles the following actions:
 - `APPROVE`: approves the budget statement.
 - `REOPEN_TO_DRAFT`: changes the status of the budget statement to "Draft".
 - `REOPEN_TO_REVIEW`: changes the status of the budget statement to "Under Review".
-- `REQUEST_TOPUP`: requests a top-up of an account.
-- `TRANSFER_TOPUP`: transfers a top-up to an account.
 - `ADD_AUDIT_REPORT`: adds an audit report to an account in the state.
 - `DELETE_AUDIT_REPORT`: removes an audit report from an account in the state.
 
@@ -2690,18 +2853,18 @@ This reducer handles the following actions:
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `state` | [`Document`](#document)<[`State`](#state), `BaseAction` \| [`BudgetStatementAction`](#budgetstatementaction)\> | The current state of the module. |
+| `state` | [`Document`](#document)<`BudgetStatementData`, `BaseAction` \| [`BudgetStatementAction`](#budgetstatementaction)\> | The current state of the module. |
 | `action` | `BaseAction` \| [`BudgetStatementAction`](#budgetstatementaction) | The action to be performed on the state. |
 
 #### Returns
 
-[`Document`](#document)<[`State`](#state), [`BudgetStatementAction`](#budgetstatementaction)\>
+[`Document`](#document)<`BudgetStatementData`, [`BudgetStatementAction`](#budgetstatementaction)\>
 
 The new state after applying the action.
 
 #### Defined in
 
-[document/utils/base.ts:59](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/base.ts#L59)
+[src/document/utils/base.ts:64](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/base.ts#L64)
 
 # Budget Statement Utils
 
@@ -2710,16 +2873,6 @@ The new state after applying the action.
 # Namespace: utils
 
 [BudgetStatement](#budget-statement).utils
-
-## Table of contents
-
-### Functions
-
-- [createAccount](#createaccount)
-- [createBudgetStatement](#createbudgetstatement)
-- [createLineItem](#createlineitem)
-- [loadBudgetStatementFromFile](#loadbudgetstatementfromfile)
-- [saveBudgetStatementToFile](#savebudgetstatementtofile)
 
 ## Functions
 
@@ -2743,7 +2896,7 @@ The new Account object.
 
 #### Defined in
 
-[budget-statement/custom/utils.ts:50](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/utils.ts#L50)
+[src/budget-statement/custom/utils.ts:60](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L60)
 
 ___
 
@@ -2757,7 +2910,7 @@ Creates a new BudgetStatement document with an initial state.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `initialState?` | `Partial`<`Omit`<[`BudgetStatementDocument`](#budgetstatementdocument), ``"data"``\> & { `data`: `Partial`<[`State`](#state)\>  }\> | The initial state of the document. |
+| `initialState?` | `Partial`<`Omit`<[`BudgetStatementDocument`](#budgetstatementdocument), ``"data"``\> & { `data`: `Partial`<`BudgetStatementData`\>  }\> | The initial state of the document. |
 
 #### Returns
 
@@ -2767,7 +2920,7 @@ The new BudgetStatement document.
 
 #### Defined in
 
-[budget-statement/custom/utils.ts:20](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/utils.ts#L20)
+[src/budget-statement/custom/utils.ts:28](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L28)
 
 ___
 
@@ -2781,7 +2934,7 @@ Creates a new LineItem with default properties and the given input properties.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `input` | `Partial`<[`LineItem`](#lineitem)\> & `Pick`<[`LineItem`](#lineitem), ``"category"`` \| ``"group"``\> | The input properties of the line item. |
+| `input` | [`LineItemInput`](#lineiteminput) | The input properties of the line item. |
 
 #### Returns
 
@@ -2791,7 +2944,7 @@ The new LineItem object.
 
 #### Defined in
 
-[budget-statement/custom/utils.ts:74](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/utils.ts#L74)
+[src/budget-statement/custom/utils.ts:71](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L71)
 
 ___
 
@@ -2815,13 +2968,33 @@ A promise that resolves with the loaded BudgetStatement document.
 
 #### Defined in
 
-[budget-statement/custom/utils.ts:102](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/utils.ts#L102)
+[src/budget-statement/custom/utils.ts:104](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L104)
+
+___
+
+### loadBudgetStatementFromInput
+
+▸ **loadBudgetStatementFromInput**(`input`): `Promise`<[`BudgetStatementDocument`](#budgetstatementdocument)\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `input` | `FileInput` |
+
+#### Returns
+
+`Promise`<[`BudgetStatementDocument`](#budgetstatementdocument)\>
+
+#### Defined in
+
+[src/budget-statement/custom/utils.ts:141](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L141)
 
 ___
 
 ### saveBudgetStatementToFile
 
-▸ **saveBudgetStatementToFile**(`document`, `path`): `Promise`<`string`\>
+▸ **saveBudgetStatementToFile**(`document`, `path`, `name?`): `Promise`<`string`\>
 
 Saves the BudgetStatement document to the specified file path.
 
@@ -2831,6 +3004,7 @@ Saves the BudgetStatement document to the specified file path.
 | :------ | :------ | :------ |
 | `document` | [`BudgetStatementDocument`](#budgetstatementdocument) | The BudgetStatement document to save. |
 | `path` | `string` | The file path to save the document to. |
+| `name?` | `string` | - |
 
 #### Returns
 
@@ -2840,7 +3014,28 @@ A promise that resolves with the saved file path.
 
 #### Defined in
 
-[budget-statement/custom/utils.ts:90](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/budget-statement/custom/utils.ts#L90)
+[src/budget-statement/custom/utils.ts:91](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L91)
+
+___
+
+### saveBudgetStatementToFileHandle
+
+▸ **saveBudgetStatementToFileHandle**(`document`, `input`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `document` | [`BudgetStatementDocument`](#budgetstatementdocument) |
+| `input` | `FileSystemFileHandle` |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Defined in
+
+[src/budget-statement/custom/utils.ts:177](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/budget-statement/custom/utils.ts#L177)
 
 # Document Actions
 
@@ -2849,16 +3044,6 @@ A promise that resolves with the saved file path.
 # Namespace: actions
 
 [Document](#document).actions
-
-## Table of contents
-
-### Actions Functions
-
-- [loadState](#loadstate)
-- [prune](#prune)
-- [redo](#redo)
-- [setName](#setname)
-- [undo](#undo)
 
 ## Actions Functions
 
@@ -2885,7 +3070,7 @@ This action shouldn't be used directly. It is dispatched by the [prune](#prune) 
 
 #### Defined in
 
-[document/actions/creators.ts:65](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/actions/creators.ts#L65)
+[src/document/actions/creators.ts:63](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/actions/creators.ts#L63)
 
 ___
 
@@ -2913,7 +3098,7 @@ similar to the [slice](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 #### Defined in
 
-[document/actions/creators.ts:52](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/actions/creators.ts#L52)
+[src/document/actions/creators.ts:50](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/actions/creators.ts#L50)
 
 ___
 
@@ -2935,7 +3120,7 @@ Cancels the last `count` [UNDO](#undo) operations.
 
 #### Defined in
 
-[document/actions/creators.ts:39](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/actions/creators.ts#L39)
+[src/document/actions/creators.ts:36](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/actions/creators.ts#L36)
 
 ___
 
@@ -2957,7 +3142,7 @@ Changes the name of the document.
 
 #### Defined in
 
-[document/actions/creators.ts:22](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/actions/creators.ts#L22)
+[src/document/actions/creators.ts:18](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/actions/creators.ts#L18)
 
 ___
 
@@ -2979,7 +3164,7 @@ Cancels the last `count` operations.
 
 #### Defined in
 
-[document/actions/creators.ts:31](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/actions/creators.ts#L31)
+[src/document/actions/creators.ts:27](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/actions/creators.ts#L27)
 
 # Document
 
@@ -2998,33 +3183,14 @@ manipulating documents in an object-oriented way.
 documents
 - Various utility functions to be used by Document Models.
 
-## Table of contents
-
-### Namespaces
+## Namespaces
 
 - [actions](#document-actions)
 - [utils](#document-utils)
 
-### Classes
+## Classes
 
 - [BaseDocument](#document-base-document)
-
-### Type Aliases
-
-- [Action](#action)
-- [Attachment](#attachment)
-- [Document](#document)
-- [DocumentFile](#documentfile)
-- [DocumentHeader](#documentheader)
-- [FileRegistry](#fileregistry)
-- [ImmutableReducer](#immutablereducer)
-- [Operation](#operation)
-- [Reducer](#reducer)
-
-### Functions
-
-- [applyMixins](#applymixins)
-- [baseReducer](#basereducer)
 
 ## Type Aliases
 
@@ -3049,13 +3215,13 @@ Defines the basic structure of an action.
 
 #### Defined in
 
-[document/types.ts:9](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L9)
+[src/document/types.ts:9](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L9)
 
 ___
 
 ### Attachment
 
-Ƭ **Attachment**: \`attachment://${string}\`
+Ƭ **Attachment**: `string`
 
 String type representing an attachment in a Document.
 
@@ -3065,7 +3231,7 @@ Attachment string is formatted as `attachment://<filename>`.
 
 #### Defined in
 
-[document/types.ts:126](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L126)
+[src/document/types.ts:133](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L133)
 
 ___
 
@@ -3088,7 +3254,7 @@ This type is extended by all Document models.
 
 #### Defined in
 
-[document/types.ts:106](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L106)
+[src/document/types.ts:113](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L113)
 
 ___
 
@@ -3103,13 +3269,13 @@ The attributes stored for a file. Namely, attachments of a document.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `data` | `string` | The binary data of the attachment in Base64 |
-| `extension?` | `string` | - |
-| `fileName?` | `string` | - |
+| `extension?` | `string` \| ``null`` | - |
+| `fileName?` | `string` \| ``null`` | - |
 | `mimeType` | `string` | The MIME type of the attachment |
 
 #### Defined in
 
-[document/types.ts:76](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L76)
+[src/document/types.ts:83](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L83)
 
 ___
 
@@ -3131,7 +3297,7 @@ The base attributes of a [Document](#document).
 
 #### Defined in
 
-[document/types.ts:60](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L60)
+[src/document/types.ts:67](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L67)
 
 ___
 
@@ -3148,7 +3314,7 @@ multiple instances of the binary data of the attachments.
 
 #### Defined in
 
-[document/types.ts:95](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L95)
+[src/document/types.ts:102](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L102)
 
 ___
 
@@ -3189,13 +3355,13 @@ The returned state will always be a new object.
 
 #### Defined in
 
-[document/types.ts:40](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L40)
+[src/document/types.ts:40](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L40)
 
 ___
 
 ### Operation
 
-Ƭ **Operation**<`A`\>: `A` & { `index`: `number`  }
+Ƭ **Operation**<`A`\>: `A` & { `hash`: `string` ; `index`: `number` ; `timestamp`: `string`  }
 
 An operation that was applied to a [Document](#document).
 
@@ -3213,7 +3379,7 @@ document's history from the beginning.
 
 #### Defined in
 
-[document/types.ts:55](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L55)
+[src/document/types.ts:55](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L55)
 
 ___
 
@@ -3248,7 +3414,7 @@ of the document and returns the new state.
 
 #### Defined in
 
-[document/types.ts:23](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/types.ts#L23)
+[src/document/types.ts:23](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/types.ts#L23)
 
 ## Functions
 
@@ -3276,7 +3442,7 @@ Used to have separate mixins to group methods by actions.
 
 #### Defined in
 
-[document/object.ts:183](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/object.ts#L183)
+[src/document/object.ts:183](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/object.ts#L183)
 
 ___
 
@@ -3310,7 +3476,7 @@ The new state of the document.
 
 #### Defined in
 
-[document/reducer.ts:149](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/reducer.ts#L149)
+[src/document/reducer.ts:157](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/reducer.ts#L157)
 
 # Document Utils
 
@@ -3320,24 +3486,11 @@ The new state of the document.
 
 [Document](#document).utils
 
-## Table of contents
-
-### Functions
-
-- [createAction](#createaction)
-- [createDocument](#createdocument)
-- [createReducer](#createreducer)
-- [getLocalFile](#getlocalfile)
-- [getRemoteFile](#getremotefile)
-- [hashAttachment](#hashattachment)
-- [loadFromFile](#loadfromfile)
-- [saveToFile](#savetofile)
-
 ## Functions
 
 ### createAction
 
-▸ **createAction**<`A`\>(`type`, `input?`): `A`
+▸ **createAction**<`A`\>(`type`, `input?`, `validator?`): `A`
 
 Helper function to be used by action creators.
 
@@ -3361,7 +3514,8 @@ Error if the type is empty or not a string.
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `type` | `A`[``"type"``] | The type of the action. |
-| `input` | `A`[``"input"``] | The input properties of the action. |
+| `input?` | `A`[``"input"``] | The input properties of the action. |
+| `validator?` | () => { `parse`: (`v`: `unknown`) => `A`  } | - |
 
 #### Returns
 
@@ -3371,7 +3525,7 @@ The new action.
 
 #### Defined in
 
-[document/utils/base.ts:22](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/base.ts#L22)
+[src/document/utils/base.ts:23](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/base.ts#L23)
 
 ___
 
@@ -3402,7 +3556,7 @@ The new document state.
 
 #### Defined in
 
-[document/utils/base.ts:93](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/base.ts#L93)
+[src/document/utils/base.ts:80](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/base.ts#L80)
 
 ___
 
@@ -3458,7 +3612,27 @@ The new reducer.
 
 #### Defined in
 
-[document/utils/base.ts:55](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/base.ts#L55)
+[src/document/utils/base.ts:60](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/base.ts#L60)
+
+___
+
+### createZip
+
+▸ **createZip**(`document`): `Promise`<`JSZip`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `document` | [`Document`](#document)<`unknown`, [`Action`](#action)<`string`\>\> |
+
+#### Returns
+
+`Promise`<`JSZip`\>
+
+#### Defined in
+
+[src/document/utils/file.ts:17](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L17)
 
 ___
 
@@ -3482,7 +3656,7 @@ A Promise that resolves to an object containing the base64-encoded data and MIME
 
 #### Defined in
 
-[document/utils/file.ts:123](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/file.ts#L123)
+[src/document/utils/file.ts:191](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L191)
 
 ___
 
@@ -3506,7 +3680,7 @@ A Promise that resolves to an object containing the base64-encoded data and MIME
 
 #### Defined in
 
-[document/utils/file.ts:106](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/file.ts#L106)
+[src/document/utils/file.ts:174](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L174)
 
 ___
 
@@ -3530,7 +3704,48 @@ The hash of the attachment data.
 
 #### Defined in
 
-[document/utils/file.ts:135](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/file.ts#L135)
+[src/document/utils/file.ts:203](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L203)
+
+___
+
+### hashDocument
+
+▸ **hashDocument**(`state`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `state` | [`Document`](#document)<`unknown`, [`Action`](#action)<`string`\>\> |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[src/document/utils/base.ts:103](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/base.ts#L103)
+
+___
+
+### hashKey
+
+▸ **hashKey**(`date?`, `randomLimit?`): `string`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `date?` | `Date` | `undefined` |
+| `randomLimit` | `number` | `1000` |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[src/document/utils/base.ts:107](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/base.ts#L107)
 
 ___
 
@@ -3571,13 +3786,41 @@ A promise that resolves to the document state after applying all the operations.
 
 #### Defined in
 
-[document/utils/file.ts:61](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/file.ts#L61)
+[src/document/utils/file.ts:100](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L100)
+
+___
+
+### loadFromInput
+
+▸ **loadFromInput**<`S`, `A`\>(`input`, `reducer`): `Promise`<[`Document`](#document)<`S`, `BaseAction` \| `A`\>\>
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `S` | `S` |
+| `A` | extends [`Action`](#action)<`string`\> |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `input` | `FileInput` |
+| `reducer` | [`Reducer`](#reducer)<`S`, `BaseAction` \| `A`\> |
+
+#### Returns
+
+`Promise`<[`Document`](#document)<`S`, `BaseAction` \| `A`\>\>
+
+#### Defined in
+
+[src/document/utils/file.ts:108](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L108)
 
 ___
 
 ### saveToFile
 
-▸ **saveToFile**(`document`, `path`, `extension`): `Promise`<`string`\>
+▸ **saveToFile**(`document`, `path`, `extension`, `name?`): `Promise`<`string`\>
 
 Saves a document to a ZIP file.
 
@@ -3593,6 +3836,7 @@ and file attachments. The file is saved to the specified path.
 | `document` | [`Document`](#document)<`unknown`, [`Action`](#action)<`string`\>\> | The document to save to the file. |
 | `path` | `string` | The path to save the file to. |
 | `extension` | `string` | The extension to use for the file. |
+| `name?` | `string` | - |
 
 #### Returns
 
@@ -3602,4 +3846,4 @@ A promise that resolves to the path of the saved file.
 
 #### Defined in
 
-[document/utils/file.ts:19](https://github.com/acaldas/document-model-libs/blob/4ee6940/src/document/utils/file.ts#L19)
+[src/document/utils/file.ts:61](https://github.com/acaldas/document-model-libs/blob/3a0f0da/src/document/utils/file.ts#L61)
