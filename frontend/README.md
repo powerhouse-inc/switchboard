@@ -25,8 +25,13 @@ Endpoint available at `/healthz` path. Provides response if frontend is currentl
 ## Documentation page
 
 One of the frontend's features is displaying the documentation about document model.
-The documentation is provided to the service externally as raw typedoc output in markdown format.
+The documentation is provided to the service externally as part of the npm package.
 
 To display the documentation on the frontend the provided data has to be processed and represented in the form of a single file.
 
-TODO: add the precise process in separate issue
+The documentation gets updated along with the package initially containing it (postinstall and postupdate hooks).
+To run the generation, use the following command:
+
+```sh
+$ npm run generateDocs
+```
