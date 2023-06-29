@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "nuxt build",
+    "predev": "npm run generateDocs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -17,6 +18,7 @@
     "postupdate": "npm run generateDocs",
     "lint": "eslint --max-warnings 0 .",
     "typecheck": "nuxt typecheck",
+    "prestart": "npm run generateDocs",
     "start": "NODE_ENV=production node .",
     "generateDocs": "vite-node ./scripts/generateDocs.ts"
   },
