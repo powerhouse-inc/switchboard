@@ -29,7 +29,9 @@ The documentation is provided to the service externally as part of the npm packa
 
 To display the documentation on the frontend the provided data has to be processed and represented in the form of a single file.
 
-The documentation gets updated along with the package initially containing it (postinstall and postupdate hooks).
+The documentation gets updated or generated along with the package initially containing it: on install or update (postinstall and postupdate hooks).
+The documentation gets updated or generated before `npm run dev` and `npm run start`.
+
 To run the generation, use the following command:
 
 ```sh
