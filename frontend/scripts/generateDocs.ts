@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
-import { concatMdSync } from 'concat-md'
 import { execSync } from 'child_process'
+import { concatMdSync } from 'concat-md'
 
 const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', '@acaldas', 'document-model-libs', 'dist', 'docs')
 const PACAKGE_NAME = '@acaldas/document-model-libs'
@@ -13,7 +13,7 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
   })
   const dirname = path.dirname(outputFilePath)
   if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname, {recursive: true})
+    fs.mkdirSync(dirname, { recursive: true })
   }
   fs.writeFileSync(outputFilePath, content, { encoding: 'utf8' })
 }
