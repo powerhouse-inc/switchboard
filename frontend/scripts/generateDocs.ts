@@ -13,7 +13,7 @@ try {
 // eslint-disable-next-line import/first
 import { concatMdSync } from 'concat-md'
 
-const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', '@acaldas', 'document-model-libs', 'dist', 'docs')
+const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', ...PACKAGE_NAME.split('/'), 'dist', 'docs')
 const DOCS_VERSION = execSync(`npm view ${PACKAGE_NAME} version`).toString()
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
