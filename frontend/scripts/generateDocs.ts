@@ -2,19 +2,19 @@ import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
 
-const PACAKGE_NAME = '@acaldas/document-model-libs'
+const PACKAGE_NAME = '@acaldas/document-model-libs'
 
 try {
-  execSync(`npm ls ${PACAKGE_NAME}`)
+  execSync(`npm ls ${PACKAGE_NAME}`)
 } catch (e) {
-  throw new Error(`Failed to generate documentation from the dependency (${PACAKGE_NAME}), did you run \`npm install\`?`)
+  throw new Error(`Failed to generate documentation from the dependency (${PACKAGE_NAME}), did you run \`npm install\`?`)
 }
 
 // eslint-disable-next-line import/first
 import { concatMdSync } from 'concat-md'
 
 const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', '@acaldas', 'document-model-libs', 'dist', 'docs')
-const DOCS_VERSION = execSync(`npm view ${PACAKGE_NAME} version`).toString()
+const DOCS_VERSION = execSync(`npm view ${PACKAGE_NAME} version`).toString()
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
   const content = concatMdSync(pathToDir, {
