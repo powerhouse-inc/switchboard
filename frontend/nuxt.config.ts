@@ -1,4 +1,6 @@
+import fs from 'fs'
 const API_ORIGIN = process.env.API_ORIGIN ?? '/backend'
+const DOCUMENTATION_VERSION = fs.readFileSync('./content/documentation/.version', 'utf8').trim()
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -12,7 +14,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      GQL_PLAYGROUND: `${API_ORIGIN}/`
+      GQL_PLAYGROUND: `${API_ORIGIN}/`,
+      DOCUMENTATION_VERSION
     }
   },
   modules: [

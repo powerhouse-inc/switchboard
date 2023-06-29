@@ -15,11 +15,14 @@ import {
   Play24Regular
 } from '@vicons/fluent'
 
+const config = useRuntimeConfig()
+const version = config.public.DOCUMENTATION_VERSION
+
 const links = [
   {
     id: '/documentation',
     icon: DocumentText24Regular,
-    label: 'Documentation'
+    label: `Documentation v${version}`
   },
   {
     id: '/user',
