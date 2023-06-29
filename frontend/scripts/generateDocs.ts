@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 import { concatMdSync } from 'concat-md'
-import { execSync } from 'child_process';
 
 const DOCS_DIR = path.resolve(__dirname, '..', 'node_modules', '@acaldas', 'document-model-libs', 'dist', 'docs')
 
