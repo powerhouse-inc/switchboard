@@ -1,6 +1,13 @@
 import fs from 'fs'
 const API_ORIGIN = process.env.API_ORIGIN ?? '/backend'
-const DOCUMENTATION_VERSION = fs.readFileSync('./content/documentation/.version', 'utf8').trim()
+function getDocumentationVersion() {
+  try {
+    return fs.readFileSync('./content/documentation/.version', 'utf8').trim()
+  } catch (e) {
+    return undefined
+  }
+}
+const DOCUMENTATION_VERSION = getDocumentationVersion()
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
