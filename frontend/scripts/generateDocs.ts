@@ -7,7 +7,7 @@ const PACKAGE_NAME = '@acaldas/document-model-libs'
 try {
   execSync(`npm ls ${PACKAGE_NAME}`)
 } catch (e) {
-  throw new Error(`Failed to generate documentation from the dependency (${PACKAGE_NAME}), did you run \`npm install\`?`)
+  console.warn(`Package ${PACKAGE_NAME} not found. Skipping docs generation.`)
 }
 
 // eslint-disable-next-line import/first
