@@ -49,6 +49,10 @@ onMounted(trackCurrentlyActiveId)
 useHead({
   title: 'Makerdao Document Model Documentation'
 })
+
+const config = useRuntimeConfig()
+const version = config.public.DOCUMENTATION_VERSION
+const documentationLabel = version ? `Documentation of the package version ${version}` : null
 </script>
 
 <template>
@@ -58,6 +62,7 @@ useHead({
         <DocTableOfContents :toc-links="tocLinks" :currently-active-id="currentlyActiveId" class="pb-14" />
       </div>
       <div class="flex-grow !w-[calc(100%-18rem)] p-4 pt-2 mt-4 bg-white w-full">
+        <span v-if="documentationLabel" class="!text-gray-400"> {{ documentationLabel }} </span>
         <ContentRendererMarkdown v-if="documentation" :value="documentation" class="markdown-body w-full" />
       </div>
     </div>
