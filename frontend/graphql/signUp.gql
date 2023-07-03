@@ -1,5 +1,0 @@
-mutation signUp($username: String!, $password: String!) {
-    signUp(user: { username: $username, password: $password }) {
-        token
-    }
-}

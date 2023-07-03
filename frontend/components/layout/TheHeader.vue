@@ -26,7 +26,7 @@
           class="gap-1 !pl-2 px-0 lg:!pl-5"
           icon-placement="right"
         >
-          <span class="hidden lg:block capitalize">{{ user?.username }}</span>
+          <span class="hidden lg:block"><FormatAddress :address="user?.address" /></span>
           <template #icon>
             <n-icon :component="PersonCircleOutline" />
           </template>

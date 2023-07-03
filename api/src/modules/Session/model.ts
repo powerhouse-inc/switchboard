@@ -1,57 +1,48 @@
-import type { PrismaClient } from '@prisma/client';
-import { inputObjectType, objectType } from 'nexus/dist';
+import type { Prisma } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
-import { token as tokenUtils } from '../../helpers';
+import { verifyToken, validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
 import { JWT_EXPIRATION_PERIOD } from '../../env';
-import { validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
 
-export const Session = objectType({
-  name: 'Session',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.date('createdAt');
-    t.nonNull.string('createdBy');
-    t.date('referenceExpiryDate');
-    t.nonNull.string('referenceTokenId');
-    t.nonNull.boolean('isUserCreated');
-    t.string('name');
-    t.date('revokedAt');
-    t.string('allowedOrigins');
-  },
-});
-
-export const SessionCreate = inputObjectType({
-  name: 'SessionCreate',
-  definition(t) {
-    t.int('expiryDurationSeconds');
-    t.nonNull.string('name');
-    t.nonNull.string('allowedOrigins');
-  },
-});
-
-export const SessionCreateOutput = objectType({
-  name: 'SessionCreateOutput',
-  definition(t) {
-    t.nonNull.field('session', { type: 'Session' });
-    t.nonNull.string('token');
-  },
-});
-
-export function getSessionCrud(prisma: PrismaClient) {
+export function getSessionCrud(
+  prisma: Prisma.TransactionClient,
+) {
   return {
-    listSessions: async (userId: string) => prisma.session.findMany({
-      where: {
-        createdBy: userId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    }),
-    revoke: async (sessionId: string, userId: string) => {
+
+    async createAuthenticationSession(userId: string, allowedOrigins: string = '*') {
+      return generateTokenAndSession(
+        prisma,
+        userId,
+        { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in/Sign up', allowedOrigins },
+      );
+    },
+
+    async createCustomSession(
+      userId: string,
+      session: { expiryDurationSeconds?: number | null; name: string, allowedOrigins: string },
+      isUserCreated: boolean = false,
+    ) {
+      return generateTokenAndSession(prisma, userId, session, isUserCreated);
+    },
+
+    async listSessions(userId: string) {
+      return prisma.session.findMany({
+        where: {
+          createdBy: userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+    },
+
+    async revoke(sessionId: string, userId: string) {
       const session = await prisma.session.findUnique({
         where: {
-          id: sessionId,
+          createdBy_id: {
+            id: sessionId,
+            createdBy: userId,
+          },
         },
       });
       if (!session) {
@@ -60,37 +51,16 @@ export function getSessionCrud(prisma: PrismaClient) {
       if (session.revokedAt !== null) {
         throw new GraphQLError('Session already revoked', { extensions: { code: 'SESSION_ALREADY_REVOKED' } });
       }
-      try {
-        return await prisma.session.update({
-          where: {
-            createdBy_id: {
-              id: sessionId,
-              createdBy: userId,
-            },
-          },
-          data: {
-            revokedAt: new Date(),
-          },
-        });
-      } catch (e) {
-        throw new GraphQLError('Failed to revoke session', { extensions: { code: 'REVOKE_SESSION_FAILED' } });
-      }
+      return prisma.session.update({
+        where: {
+          id: session.id,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
     },
-    createSignInSession: async (userId: string, origin: string = '*') => generateTokenAndSession(
-      prisma,
-      userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign in', allowedOrigins: origin },
-    ),
-    createSignUpSession: async (userId: string, origin: string = '*') => generateTokenAndSession(
-      prisma,
-      userId,
-      { expiryDurationSeconds: ms(JWT_EXPIRATION_PERIOD) / 1000, name: 'Sign up', allowedOrigins: origin },
-    ),
-    createCustomSession: async (
-      userId: string,
-      session: { expiryDurationSeconds?: number | null; name: string, allowedOrigins: string },
-      isUserCreated: boolean = false,
-    ) => generateTokenAndSession(prisma, userId, session, isUserCreated),
+
     async getSessionByToken(
       origin?: string,
       token?: string,
@@ -100,7 +70,7 @@ export function getSessionCrud(prisma: PrismaClient) {
           extensions: { code: 'NOT_AUTHENTICATED' },
         });
       }
-      const verificationTokenResult = tokenUtils.verify(token);
+      const verificationTokenResult = verifyToken(token);
       const { sessionId } = verificationTokenResult;
       const session = await prisma.session.findUniqueOrThrow({
         where: {
@@ -118,6 +88,5 @@ export function getSessionCrud(prisma: PrismaClient) {
       validateOriginAgainstAllowed(session.allowedOrigins, origin);
       return session;
     },
-
   };
 }

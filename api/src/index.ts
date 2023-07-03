@@ -13,7 +13,9 @@ startServer(application)
     if (err instanceof Error) {
       logger.error(err);
     } else {
-      logger.error('An unknown error has occurred. Please open an issue on github (https://github.com/makerdao-ses/switchboard-boilerplate/issues/new) with the below context:');
+      logger.error(`An unknown error has occurred.
+Please open an issue on github (https://github.com/makerdao-ses/switchboard-boilerplate/issues/new)
+with the below context:`);
       logger.info(err);
     }
     process.exit(1);

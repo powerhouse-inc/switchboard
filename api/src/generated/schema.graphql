@@ -2,9 +2,10 @@
 ### Do not make changes to this file directly
 
 
-type AuthPayload {
-  session: Session!
-  token: String!
+type Challenge {
+  hex: String!
+  message: String!
+  nonce: String!
 }
 
 type CoreUnit {
@@ -22,10 +23,10 @@ type CoreUnit {
 scalar GQLDateBase
 
 type Mutation {
-  createSession(session: SessionCreate!): SessionCreateOutput
+  createChallenge(address: String!): Challenge
+  createSession(session: SessionInput!): SessionOutput
   revokeSession(sessionId: String!): Session
-  signIn(user: UserNamePass!): AuthPayload
-  signUp(user: UserNamePass!): AuthPayload
+  solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
 
 type Query {
@@ -47,24 +48,18 @@ type Session {
   revokedAt: GQLDateBase
 }
 
-input SessionCreate {
+input SessionInput {
   allowedOrigins: String!
   expiryDurationSeconds: Int
   name: String!
 }
 
-type SessionCreateOutput {
+type SessionOutput {
   session: Session!
   token: String!
 }
 
 type User {
-  id: String!
-  password: String!
-  username: String!
-}
-
-input UserNamePass {
-  password: String!
-  username: String!
+  address: String!
+  createdAt: GQLDateBase!
 }

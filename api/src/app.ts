@@ -32,7 +32,7 @@ export const createApp = (): Express => {
   app.get(
     '/',
     expressPlayground({
-      endpoint: '/api/graphql',
+      endpoint: '/backend/graphql',
       settings: {
         'editor.theme': 'light',
         'request.credentials': 'include',
