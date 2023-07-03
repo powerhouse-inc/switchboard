@@ -61,11 +61,11 @@ const documentationLabel = version ? `Documentation of the package version ${ver
       <div class="flex-shrink-0 w-56 py-3 hidden md:block h-screen overflow-x-scroll sticky top-14">
         <DocTableOfContents :toc-links="tocLinks" :currently-active-id="currentlyActiveId" class="pb-14" />
       </div>
-      <div class="flex-grow !w-[calc(100%-18rem)] p-4 pt-2 mt-4 bg-white w-full">
-        <div v-if="documentationLabel" class="bg-gray-200 p-2 mb-2">
+      <div class="flex-grow !w-[calc(100%-18rem)] p-4 pt-2 mt-4 w-full">
+        <div v-if="documentationLabel" class="pb-2">
           <span> {{ documentationLabel }} </span>
         </div>
-        <div>
+        <div class="bg-white">
           <ContentRendererMarkdown v-if="documentation" :value="documentation" class="markdown-body w-full" />
         </div>
       </div>
