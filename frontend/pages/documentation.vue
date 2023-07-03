@@ -63,7 +63,7 @@ const documentationLabel = version ? `Documentation of the package version ${ver
       </div>
       <div class="flex-grow !w-[calc(100%-18rem)] p-4 pt-2 mt-4 w-full">
         <div v-if="documentationLabel" class="pb-2">
-          <span> {{ documentationLabel }} </span>
+          <span class="text-gray-400"> {{ documentationLabel }} </span>
         </div>
         <div class="bg-white">
           <ContentRendererMarkdown v-if="documentation" :value="documentation" class="markdown-body w-full" />
