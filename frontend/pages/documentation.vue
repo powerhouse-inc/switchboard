@@ -52,7 +52,7 @@ useHead({
 
 const config = useRuntimeConfig()
 const version = config.public.DOCUMENTATION_VERSION
-const documentationLabel = version ? `Documentation of the package version ${version}` : null
+const documentationLabel = version ? `Documentation of the package version: ${version}` : null
 </script>
 
 <template>
