@@ -10,12 +10,10 @@
   },
   "scripts": {
     "build": "nuxt build",
-    "predev": "npm run generateDocs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare && npm run generateDocs",
-    "postupdate": "npm run generateDocs",
+    "postinstall": "nuxt prepare",
     "lint": "eslint --max-warnings 0 .",
     "typecheck": "nuxt typecheck",
     "prestart": "npm run generateDocs",
@@ -39,7 +37,7 @@
     "vue-tsc": "^1.0.24"
   },
   "dependencies": {
-    "@acaldas/document-model-libs": "^1.0.15",
+    "@acaldas/document-model-libs": "file:../api/node_modules/@acaldas/document-model-libs/",
     "@vueuse/core": "^9.13.0",
     "date-fns": "^2.29.3",
     "ethers": "^5.7.2",
