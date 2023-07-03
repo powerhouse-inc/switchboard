@@ -19,6 +19,8 @@ FROM dependency-base AS production-base
 # if necessary
 COPY frontend /app/frontend
 COPY api /app/api
+WORKDIR /app/api
+RUN npm ci
 WORKDIR /app/frontend
 RUN npm run build
 

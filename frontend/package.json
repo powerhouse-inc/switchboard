@@ -10,13 +10,13 @@
   },
   "scripts": {
     "build": "nuxt build",
+    "prebuild": "npm run generateDocs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint --max-warnings 0 .",
     "typecheck": "nuxt typecheck",
-    "prestart": "npm run generateDocs",
     "start": "NODE_ENV=production node .",
     "generateDocs": "vite-node ./scripts/generateDocs.ts"
   },
