@@ -3,12 +3,14 @@ import path from 'path'
 import { execSync } from 'child_process'
 
 const PACKAGE_NAME = '@acaldas/document-model-libs'
+// https://www.gnu.org/software/bash/manual/html_node/Exit-Status.html#:~:text=If%20a%20command%20is%20not,status%20is%20greater%20than%20zero.
+const FOUND_BUT_NOT_EXECUTABLE = 126
 
 try {
   execSync(`npm ls ${PACKAGE_NAME}`)
 } catch (e) {
   console.warn(`Package ${PACKAGE_NAME} not found. Skipping docs generation.`)
-  process.exit(0)
+  process.exit(FOUND_BUT_NOT_EXECUTABLE)
 }
 
 // eslint-disable-next-line import/first
