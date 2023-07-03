@@ -8,6 +8,7 @@ try {
   execSync(`npm ls ${PACKAGE_NAME}`)
 } catch (e) {
   console.warn(`Package ${PACKAGE_NAME} not found. Skipping docs generation.`)
+  process.exit(0)
 }
 
 // eslint-disable-next-line import/first
