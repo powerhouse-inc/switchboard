@@ -1,3 +1,10 @@
+/*
+  * This script generates the documentation for the document-model-libs package.
+  * The documentation is displayed on the frontend.
+  * The initial version of the documentation is residing in the package of the `api/` direcotry.
+  * The output of this script is a single file with docs and a dot-file with the doc version.
+  * The direcotry where the files will be placed should be placed in the `.dockerignore` file.
+  */
 import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
