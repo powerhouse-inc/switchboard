@@ -4,4 +4,4 @@ npm-debug*
 dist
 tests
 .output
-./content/documentation/**
+content/documentation/**

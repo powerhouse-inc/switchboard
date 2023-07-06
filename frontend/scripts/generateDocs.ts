@@ -8,7 +8,7 @@ const PACKAGE_NAME = '@acaldas/document-model-libs'
 import { concatMdSync } from 'concat-md'
 
 const API_DIR = path.resolve(__dirname, '../../api')
-const DOCS_DIR = path.resolve(API_DIR, '/node_modules', PACKAGE_NAME, 'dist/docs')
+const DOCS_DIR = path.join(API_DIR, path.resolve('/node_modules', PACKAGE_NAME, 'dist/docs'))
 const DOCS_VERSION = execSync(`npm view ${PACKAGE_NAME} version`).toString()
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
