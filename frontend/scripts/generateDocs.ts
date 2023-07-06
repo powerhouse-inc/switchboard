@@ -7,7 +7,8 @@ const PACKAGE_NAME = '@acaldas/document-model-libs'
 // eslint-disable-next-line import/first
 import { concatMdSync } from 'concat-md'
 
-const DOCS_DIR = path.resolve(__dirname, '../../api/node_modules', PACKAGE_NAME, 'dist/docs')
+const API_DIR = path.resolve(__dirname, '../../api')
+const DOCS_DIR = path.resolve(API_DIR, '/node_modules', PACKAGE_NAME, 'dist/docs')
 const DOCS_VERSION = execSync(`npm view ${PACKAGE_NAME} version`).toString()
 
 function generateMdDocs (pathToDir: string, outputFilePath: string) {
@@ -24,7 +25,7 @@ function generateMdDocs (pathToDir: string, outputFilePath: string) {
 function main () {
   // make sure package exists
   try {
-    execSync(`npm ls ${PACKAGE_NAME}`)
+    execSync(`cd ${API_DIR} && npm ls ${PACKAGE_NAME}`)
   } catch (e) {
     console.warn(`Package ${PACKAGE_NAME} not found. Skipping docs generation.`)
     return
