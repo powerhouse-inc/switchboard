@@ -65,8 +65,11 @@ const documentationLabel = version ? `Documentation of the package version: ${ve
         <div v-if="documentationLabel" class="pb-2">
           <span class="text-gray-400"> {{ documentationLabel }} </span>
         </div>
-        <div class="bg-white p-4">
-          <ContentRendererMarkdown v-if="documentation" :value="documentation" class="markdown-body w-full" />
+        <div v-if="documentation" class="bg-white p-4">
+          <ContentRendererMarkdown :value="documentation" class="markdown-body w-full" />
+        </div>
+        <div v-else-if="config.public.IS_DEV_MODE">
+          <span> Follow the instructions in the frontend/README to generate the docs </span>
         </div>
       </div>
     </div>
