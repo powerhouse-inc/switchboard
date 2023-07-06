@@ -49,6 +49,10 @@ onMounted(trackCurrentlyActiveId)
 useHead({
   title: 'Makerdao Document Model Documentation'
 })
+
+const config = useRuntimeConfig()
+const version = config.public.DOCUMENTATION_VERSION
+const documentationLabel = version ? `Documentation of the package version: ${version}` : null
 </script>
 
 <template>
@@ -57,8 +61,16 @@ useHead({
       <div class="flex-shrink-0 w-56 py-3 hidden md:block h-screen overflow-x-scroll sticky top-14">
         <DocTableOfContents :toc-links="tocLinks" :currently-active-id="currentlyActiveId" class="pb-14" />
       </div>
-      <div class="flex-grow !w-[calc(100%-18rem)] p-4 pt-2 mt-4 bg-white w-full">
-        <ContentRendererMarkdown v-if="documentation" :value="documentation" class="markdown-body w-full" />
+      <div class="flex-grow !w-[calc(100%-18rem)] mt-4 w-full">
+        <div v-if="documentationLabel" class="pb-2">
+          <span class="text-gray-400"> {{ documentationLabel }} </span>
+        </div>
+        <div v-if="documentation" class="bg-white p-4">
+          <ContentRendererMarkdown :value="documentation" class="markdown-body w-full" />
+        </div>
+        <div v-else-if="config.public.IS_DEV_MODE">
+          <span> Follow the instructions in the frontend/README to generate the docs </span>
+        </div>
       </div>
     </div>
   </div>

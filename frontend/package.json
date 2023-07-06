@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "nuxt build",
+    "prebuild": "npm run generateDocs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
