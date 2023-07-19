@@ -2,36 +2,30 @@
 
 The core of the system that wraps around the [business logic](https://github.com/makerdao-ses/document-model-libs) developed in a separate repository.
 
-## Development
+## Development Setup
 
-We use TypeScript and Node 18 (LTS) to develop this project. Commands:
-```sh
-# Set the required environment variables
-cp .env.development .env
+0. `node -v` to check that your Node is LTS (currently version 18.*)
+1. Set up required environment variables [outlined below](#environment-variables)
+    - `cp developer.env .env` to copy default values
+2. `npm install` to install dependencies
+3. `npx prisma db push` to create/update database structure
+4. `npm run dev` to run application in development mode
+5. Open `http://localhost:3001` to see graphql explorer
+  - Set server to `http://localhost:3001/graphql`
+  - Execute `query { coreUnits { id } }` to see a result
 
-# Install all required dependencies
-npm i
-
-# Run application in development mode
-npm run dev
-
-# Typechecking (via TypeScript / tsc)
-npm run typecheck
-
-# Linting (via eslint)
-npm run lint
-
-# Testing via vitest
-npm run test
-```
+Other commands include:
+- `npm run typecheck` for typechecking
+- `npm run lint` for linting
+- `npm run test` for testing via vitest
 
 ### Environment variables
 
-Some environment variables are pre-configured for the development. You can copy them over to your `.env` file by running `cp developer.env .env`
+Some environment variables are pre-configured for development. You can copy them over to your `.env` file by running `cp developer.env .env`
 
 - `DATABASE_URL` (required): path to the database file
 - `JWT_SECRET` (required): server's jwt secret
-- `PORT` (optional, default `3000`): port on which the server will run
+- `PORT` (optional, default `3001`): port on which the server will run
 - `API_ORIGIN` (optional, default `http://0.0.0.0:${PORT}`): the URL at which the API is running. it's important to provide this variable in production since it influences the message signed during authorization
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up is allowed. In case it's not set, new users _cannot_ be created, but old users _can_ still sign in
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon JWT token will expire

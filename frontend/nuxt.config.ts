@@ -1,14 +1,14 @@
 import fs from 'fs'
-const API_ORIGIN = process.env.API_ORIGIN ?? '/backend'
-function getDocumentationVersion () {
+
+const API_ORIGIN = process.env.API_ORIGIN ?? 'http://localhost:3001'
+const IS_DEV_MODE = process.env.NODE_ENV === 'development'
+const DOCUMENTATION_VERSION = (() => {
   try {
     return fs.readFileSync('./content/documentation/.version', 'utf8').trim()
   } catch (e) {
     return undefined
   }
-}
-const DOCUMENTATION_VERSION = getDocumentationVersion()
-const IS_DEV_MODE = process.env.NODE_ENV === 'development'
+})()
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

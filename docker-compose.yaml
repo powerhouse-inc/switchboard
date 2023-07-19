@@ -31,7 +31,7 @@ services:
   api:
     restart: unless-stopped
     expose:
-      - 3000
+      - 3001
     build:
       context: ./api
     environment:
