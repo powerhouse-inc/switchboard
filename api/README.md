@@ -2,36 +2,31 @@
 
 The core of the system that wraps around the [business logic](https://github.com/makerdao-ses/document-model-libs) developed in a separate repository.
 
-## Development
+## Development Setup
 
-We use TypeScript and Node 18 (LTS) to develop this project. Commands:
-```sh
-# Set the required environment variables
-cp .env.development .env
+0. `node -v` to check that your Node is LTS (currently version 18.*)
+1. Set up required environment variables [outlined below](#environment-variables)
+    - `cp developer.env .env` to copy default values
+2. `npm install` to install dependencies
+3. `npx prisma db push` to create/update database structure
+4. `npm run dev` to run application in development mode
+5. Open `http://localhost:3001` to see graphql explorer
+  - Set server to `http://localhost:3001/graphql`
+  - Execute `query { coreUnits { id } }` to see a result
 
-# Install all required dependencies
-npm i
-
-# Run application in development mode
-npm run dev
-
-# Typechecking (via TypeScript / tsc)
-npm run typecheck
-
-# Linting (via eslint)
-npm run lint
-
-# Testing via vitest
-npm run test
-```
+Other commands include:
+- `npm run typecheck` for typechecking
+- `npm run lint` for linting
+- `npm run test` for testing via vitest
 
 ### Environment variables
 
-Some environment variables are pre-configured for the development. You can copy them over to your `.env` file by running `cp developer.env .env`
+Note: you can set environment variables directly or define them in the `api/.env` file. Default values for developement can be found in `developer.env` file, to copy them, run: `cp developer.env .env`
 
 - `DATABASE_URL` (required): path to the database file
+    - Note: in order to use postgres, one have to 1) provide valid postgres url here 2) edit the primsa schema (eg: `sed --in-place 's/sqlite/postgresql/g' ../prisma/schema.prisma`)
 - `JWT_SECRET` (required): server's jwt secret
-- `PORT` (optional, default `3000`): port on which the server will run
+- `PORT` (optional, default `3001`): port on which the server will run
 - `API_ORIGIN` (optional, default `http://0.0.0.0:${PORT}`): the URL at which the API is running. it's important to provide this variable in production since it influences the message signed during authorization
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up is allowed. In case it's not set, new users _cannot_ be created, but old users _can_ still sign in
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon JWT token will expire
@@ -40,16 +35,12 @@ Some environment variables are pre-configured for the development. You can copy 
 ### Database
 
 We use [Prisma ORM](prisma.io/) as an ORM for this project. It is installed when you run `npm i`. Here are some useful commands for development:
-```sh
-# Push the current database schema to the database. This will also automatically generate the prisma client
-npx prisma db push
 
-# Create the typescript database client from the `schema.prisma` file
-npx prisma generate
+- `npx prisma db push` – push the current database schema to the database. This will also automatically generate the prisma client
+- `npx prisma generate` - create the typescript database client from the `schema.prisma` file
+- `npx prisma studio` – get a live-view of the database, useful for development and testing
 
-# Get a live-view of the database, useful for development and testing
-npx prisma studio
-```
+Note: we use sqlite in this project during development, but automatically switch it to postgres inside docker. In order to use postges, one have to 1) set `DATABASE_URL` to be valid postgres url 2) change `provider = "sqlite"` to `provider = "postgresql"` inside [prisma schema](./prisma/schema.prisma)
 
 ### Logging configuration
 

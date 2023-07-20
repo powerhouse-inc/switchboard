@@ -4,15 +4,21 @@ The UI part of the system that intends to provide user-friendly wrapper over the
 
 ## Development Setup
 
-1. Install project dependencies via `npm install`
-2. Start development server via `npm run dev`
-3. View hot-reloaded UI on [http://localhost:3000](http://localhost:3000)
+0. `node -v` to check that your Node is LTS (currently version 18.*)
+1. Set up _required_ environment variables [outlined below](#environment-variables) (if there any)
+2. `npm install` to install dependencies
+4. `npm run dev` to run application in development mode (make sure api service is already running)
+5. View hot-reloaded UI on [http://localhost:3000](http://localhost:3000)
 
-Please refer to the root readme to learn more about general development setup.
+Other commands include:
+- `npm run typecheck` for typechecking
+- `npm run lint` for linting
 
 ### Environment variables
 
-- `API_ORIGIN` (optional, default `/api`): relative path or the url under which `api` service is running. For example, if the `api` service is running on port 4000, the value should be `http://localhost:4000`. However, if the `api` is sharing the origin with the `frontend` service via reverse-proxy, providing relative path is enough (e.g.: `/api`)
+Note: you can set environment variables directly or define them in the `frontend/.env` file.
+
+- `API_BASE` (optional, default `http://localhost:3001`): relative path or the url under which `api` service is running. For example, if the `api` service is running on port 4000, the value should be `http://localhost:4000`. However, if the `api` is sharing the origin with the `frontend` service via reverse-proxy, providing relative path is enough (e.g.: `/backend`)
 
 ## Production
 
@@ -24,19 +30,10 @@ Endpoint available at `/healthz` path. Provides response if frontend is currentl
 
 ## Documentation page
 
-One of the frontend's features is displaying the documentation about document model.
-The documentation is provided to the service externally as part of the npm package.
+One of the frontend's features is to display documentation about document model package. The documentation is generated using `scripts/generateDocs.ts` script from the `@acaldas/document-model-libs` npm package installed by the API service. Meaning that whenever the API updates the `@acaldas/document-model-libs` package, the documentation will be automatcially updated during build (before `npm run build`). To run the generation manually:
 
-To display the documentation on the frontend the provided data has to be processed and represented in the form of a single file.
-
-The documentation gets updated or generated before `npm run build`.
-
-To run the generation manually:
-
-1. Run `npm install` in the `/api` directory of the project.
-2. Run `npm install` in the `/frontend` direcotry of the project.
-3. Run the following command:
-
-```sh
-$ npm run generateDocs
-```
+1. `(cd ../api && npm install)` to install api dependencies including `@acaldas/document-model-libs` package
+2. `npm install` to install frontend dependencies
+3. Generate documentation file that will be served by the frontend using `npm run generateDocs`
+4. Start frontend via `npm run dev` (see [Development Setup](#development-setup) section above)
+5. Open http://localhost:3000/documentation

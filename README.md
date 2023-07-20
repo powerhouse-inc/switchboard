@@ -9,9 +9,15 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
 
 ![app](./.github/app.png)
 
+## Project structure
+- [`/api`](./api) directory contains the core logic that creates the API over the database
+- [`/frontend`](./frontend) directory contains the frontend-related code
+
 ## Quick start
 
-1. Set up [required enviourment variables](./api/#environment-variables) for the API
+### Using docker (recommended)
+
+1. Set up [required environment variables](./api/#environment-variables) for the API
     - Default values can be copied via `cp ./api/developer.env ./api/.env`
 2. Start the project via a single docker-compose command
     ```sh
@@ -19,11 +25,9 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
     ```
 3. Open [http://localhost](http://localhost) to view the frontend
 
-## Project structure
-- [`/api`](./api) directory contains the core logic that creates the API over the database
-- [`/frontend`](./frontend) directory contains the frontend-related code
+### Using plain Node.js (for the development)
 
-Please navigate to the respective directories to read concrete instructions on how to start them separately and develop them further.
+In order to develop the project further, please navigate to the [`/api`](./api#development-setup) and then to the [`/frontend`](./frontend#development-setup) directories to follow concrete instructions how to start those services separately on two different ports.
 
 ## Project requirements
 
