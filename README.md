@@ -27,7 +27,7 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
 
 ### Using plain Node.js (for the development)
 
-In order to develop the project further, please navigate to the [`/api`](./api) and then to the [`/frontend`](./frontend) directories to follow concrete instructions how to start those services separately on two different ports.
+In order to develop the project further, please navigate to the [`/api`](./api#development-setup) and then to the [`/frontend`](./frontend#development-setup) directories to follow concrete instructions how to start those services separately on two different ports.
 
 ## Project requirements
 
