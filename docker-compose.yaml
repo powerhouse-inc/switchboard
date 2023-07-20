@@ -35,7 +35,6 @@ services:
     build:
       context: ./api
     environment:
-      PORT: 3000
       DATABASE_URL: "postgres://postgres:postgres@database:5432/postgres?sslmode=disable&connect_timeout=30"
       API_ORIGIN: http://localhost
       AUTH_SIGNUP_ENABLED: "1"
@@ -50,8 +49,6 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
-      args:
-        API_BASE: http://localhost/backend
     expose:
       - 3000
 

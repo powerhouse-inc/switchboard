@@ -24,7 +24,7 @@ RUN npm ci
 WORKDIR /app/frontend
 
 # Set env vars before build
-ARG API_BASE
+ARG API_BASE=/backend
 ENV API_BASE=${API_BASE}
 
 RUN npm run build
