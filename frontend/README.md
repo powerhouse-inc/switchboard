@@ -10,9 +10,13 @@ The UI part of the system that intends to provide user-friendly wrapper over the
 4. `npm run dev` to run application in development mode (make sure api service is already running)
 5. View hot-reloaded UI on [http://localhost:3000](http://localhost:3000)
 
-Please refer to the root readme to learn more about general development setup.
+Other commands include:
+- `npm run typecheck` for typechecking
+- `npm run lint` for linting
 
 ### Environment variables
+
+Note: you can set environment variables directly or define them in the `frontend/.env` file.
 
 - `API_BASE` (optional, default `http://localhost:3001`): relative path or the url under which `api` service is running. For example, if the `api` service is running on port 4000, the value should be `http://localhost:4000`. However, if the `api` is sharing the origin with the `frontend` service via reverse-proxy, providing relative path is enough (e.g.: `/backend`)
 

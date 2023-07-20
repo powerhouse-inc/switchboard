@@ -21,9 +21,10 @@ Other commands include:
 
 ### Environment variables
 
-Some environment variables are pre-configured for development. You can copy them over to your `.env` file by running `cp developer.env .env`
+Note: you can set environment variables directly or define them in the `api/.env` file. Default values for developement can be found in `developer.env` file, to copy them, run: `cp developer.env .env`
 
 - `DATABASE_URL` (required): path to the database file
+    - Note: in order to use postgres, one have to 1) provide valid postgres url here 2) edit the primsa schema (eg: `sed --in-place 's/sqlite/postgresql/g' ../prisma/schema.prisma`)
 - `JWT_SECRET` (required): server's jwt secret
 - `PORT` (optional, default `3001`): port on which the server will run
 - `API_ORIGIN` (optional, default `http://0.0.0.0:${PORT}`): the URL at which the API is running. it's important to provide this variable in production since it influences the message signed during authorization
@@ -34,16 +35,12 @@ Some environment variables are pre-configured for development. You can copy them
 ### Database
 
 We use [Prisma ORM](prisma.io/) as an ORM for this project. It is installed when you run `npm i`. Here are some useful commands for development:
-```sh
-# Push the current database schema to the database. This will also automatically generate the prisma client
-npx prisma db push
 
-# Create the typescript database client from the `schema.prisma` file
-npx prisma generate
+- `npx prisma db push` – push the current database schema to the database. This will also automatically generate the prisma client
+- `npx prisma generate` - create the typescript database client from the `schema.prisma` file
+- `npx prisma studio` – get a live-view of the database, useful for development and testing
 
-# Get a live-view of the database, useful for development and testing
-npx prisma studio
-```
+Note: we use sqlite in this project during development, but automatically switch it to postgres inside docker. In order to use postges, one have to 1) set `DATABASE_URL` to be valid postgres url 2) change `provider = "sqlite"` to `provider = "postgresql"` inside [prisma schema](./prisma/schema.prisma)
 
 ### Logging configuration
 
