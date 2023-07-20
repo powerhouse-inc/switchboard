@@ -22,6 +22,11 @@ COPY api /app/api
 WORKDIR /app/api
 RUN npm ci
 WORKDIR /app/frontend
+
+# Set env vars before build
+ARG API_BASE
+ENV API_BASE=${API_BASE}
+
 RUN npm run build
 
 FROM $NODE_VERSION AS production
