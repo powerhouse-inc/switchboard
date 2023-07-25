@@ -12,13 +12,15 @@
         "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",
         "typecheck": "tsc --noEmit",
         "test": "vitest run && vitest run --config ./vitest.modules.config.ts",
-        "watch": "vitest watch"
+        "watch": "vitest watch",
+        "wg": "wunderctl up --logs"
     },
     "dependencies": {
         "@acaldas/document-model-libs": "^1.0.15",
         "@apollo/server": "^4.5.0",
         "@prisma/client": "^4.11.0",
         "@types/cookie-parser": "^1.4.3",
+        "@wundergraph/sdk": "^0.170.1",
         "body-parser": "^1.20.2",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
@@ -57,6 +59,7 @@
         "gql-query-builder": "^3.8.0",
         "graphql-request": "^5.2.0",
         "node-fetch": "^3.3.1",
+        "npm-run-all": "^4.1.5",
         "prisma": "^4.11.0",
         "typescript": "^4.9.5",
         "vitest-mock-extended": "^1.1.3"

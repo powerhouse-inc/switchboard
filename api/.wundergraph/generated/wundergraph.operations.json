@@ -1,0 +1,11 @@
+{
+"graphql_operation_files": null,
+"typescript_operation_files": [
+{
+"operation_name": "SwitchboardGet",
+"api_mount_path": "switchboard/get",
+"file_path": "switchboard/get.ts",
+"module_path": "generated/bundle/operations/switchboard/get"
+}
+]
+}
