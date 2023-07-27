@@ -21,31 +21,31 @@ const useAuth = function () {
 
   const checkAuthValidity = async () => {
     try {
-      const { data, error } = await useAsyncGql('me')
-      if (error.value || !data.value?.me) {
+      const { data, error } = await useAsyncGql('switchboard_me')
+      if (error.value || !data.value?.switchboard_me) {
         user.value = undefined
         return
       }
-      user.value = data.value?.me
+      user.value = data.value?.switchboard_me
     } finally {
       isLoading.value = false
     }
   }
 
   const createChallenge = async function (address: string) {
-    const { data, error } = await useAsyncGql('createChallenge', { address })
-    if (error.value || !data.value?.createChallenge?.message) {
+    const { data, error } = await useAsyncGql('switchboard_createChallenge', { address })
+    if (error.value || !data.value?.switchboard_createChallenge?.message) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    return data.value?.createChallenge
+    return data.value?.switchboard_createChallenge
   }
 
   const solveChallenge = async function (nonce: string, signature: string) {
-    const { data, error } = await useAsyncGql('solveChallenge', { nonce, signature })
-    if (error.value || !data.value?.solveChallenge?.token) {
+    const { data, error } = await useAsyncGql('switchboard_solveChallenge', { nonce, signature })
+    if (error.value || !data.value?.switchboard_solveChallenge?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    return data.value?.solveChallenge.token
+    return data.value?.switchboard_solveChallenge.token
   }
 
   const signIn = async () => {
@@ -63,16 +63,16 @@ const useAuth = function () {
   }
 
   const createSession = async (name: string, expiryDurationSeconds: number | null, allowedOrigins: string) => {
-    const { data, error } = await useAsyncGql('createSession', { name, expiryDurationSeconds, allowedOrigins })
+    const { data, error } = await useAsyncGql('switchboard_createSession', { name, expiryDurationSeconds, allowedOrigins })
     if (error.value || !data.value?.createSession?.token) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
-    return data.value?.createSession?.token
+    return data.value?.switchboard_createSession?.token
   }
 
   const revokeSession = async (sessionId: string) => {
-    const { data, error } = await useAsyncGql('revokeSession', { sessionId })
-    if (error.value || !data.value?.revokeSession?.id) {
+    const { data, error } = await useAsyncGql('switchboard_revokeSession', { sessionId })
+    if (error.value || !data.value?.switchboard_revokeSession?.id) {
       throw new Error(error.value?.gqlErrors?.[0]?.message ?? 'Unknown error')
     }
     if (authStorage.value?.token) {
@@ -82,7 +82,7 @@ const useAuth = function () {
         await checkAuthValidity()
       }
     }
-    return data.value?.revokeSession?.referenceTokenId
+    return data.value?.switchboard_revokeSession?.referenceTokenId
   }
 
   const signOut = async () => {

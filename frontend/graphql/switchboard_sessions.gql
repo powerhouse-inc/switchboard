@@ -1,5 +1,5 @@
-query getSessions {
-    sessions {
+query switchboard_getSessions {
+    switchboard_sessions {
         id
         createdAt
         createdBy

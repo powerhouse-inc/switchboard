@@ -1,0 +1,5 @@
+mutation switchboard_solveChallenge($nonce: String!, $signature: String!) {
+    switchboard_solveChallenge(nonce: $nonce, signature: $signature) {
+        token
+    }
+}

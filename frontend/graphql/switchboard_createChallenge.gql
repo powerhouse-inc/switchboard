@@ -1,0 +1,6 @@
+mutation switchboard_createChallenge($address: String!) {
+    switchboard_createChallenge(address: $address) {
+        nonce
+        message
+    }
+}

@@ -1,0 +1,6 @@
+mutation switchboard_revokeSession($sessionId: String!) {
+    switchboard_revokeSession(sessionId: $sessionId) {
+        id
+        referenceTokenId
+    }
+}

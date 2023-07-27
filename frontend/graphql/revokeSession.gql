@@ -1,6 +1,0 @@
-mutation revokeSession($sessionId: String!) {
-    revokeSession(sessionId: $sessionId) {
-        id
-        referenceTokenId
-    }
-}

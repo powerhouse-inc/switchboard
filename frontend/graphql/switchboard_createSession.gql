@@ -1,0 +1,10 @@
+mutation switchboard_createSession($name: String!, $expiryDurationSeconds: Int, $allowedOrigins: String!) {
+    switchboard_createSession(session: { name: $name, expiryDurationSeconds: $expiryDurationSeconds, allowedOrigins: $allowedOrigins }) {
+        token
+        session {
+            id
+            referenceExpiryDate
+            allowedOrigins
+        }
+    }
+}

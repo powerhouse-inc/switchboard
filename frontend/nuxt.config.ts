@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-const API_BASE = process.env.API_BASE ?? 'http://localhost:3001'
+const API_BASE = process.env.API_BASE ?? 'http://localhost:9991'
 const IS_DEV_MODE = process.env.NODE_ENV === 'development'
 const DOCUMENTATION_VERSION = (() => {
   try {
@@ -65,8 +65,7 @@ export default defineNuxtConfig({
   'graphql-client': {
     clients: {
       default: {
-        host: `${API_BASE}/graphql`,
-        schema: '../api/src/generated/schema.graphql'
+        host: `${API_BASE}/graphql`
       }
     }
   }

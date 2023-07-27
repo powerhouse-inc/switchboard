@@ -29,11 +29,11 @@ const areSessionsLoading = ref(true)
 const getSessions = async () => {
   try {
     errorMessage.value = ''
-    const { data, error } = await useAsyncGql('getSessions')
-    if (error.value || !data.value?.sessions) {
+    const { data, error } = await useAsyncGql('switchboard_getSessions')
+    if (error.value || !data.value?.switchboard_sessions) {
       errorMessage.value = error.value?.gqlErrors?.[0]?.message ?? 'Unknown error'
     }
-    sessions.value = data.value?.sessions as Session[]
+    sessions.value = data.value?.switchboard_sessions as Session[]
   } finally {
     areSessionsLoading.value = false
   }

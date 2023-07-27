@@ -1,0 +1,5 @@
+query switchboard_me {
+    switchboard_me {
+        address
+    }
+}
