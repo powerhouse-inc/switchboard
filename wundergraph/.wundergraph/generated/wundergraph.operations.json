@@ -1,0 +1,36 @@
+{
+"graphql_operation_files": [
+{
+"operation_name": "Continents",
+"api_mount_path": "Continents",
+"file_path": "Continents.graphql",
+"content": "query Continents {countries_continents {name code}}"
+},
+{
+"operation_name": "Countries",
+"api_mount_path": "Countries",
+"file_path": "Countries.graphql",
+"content": "query Countries($filter: countries_CountryFilterInput){countries_countries(filter: $filter){code name capital}}"
+}
+],
+"typescript_operation_files": [
+{
+"operation_name": "UsersGet",
+"api_mount_path": "users/get",
+"file_path": "users/get.ts",
+"module_path": "generated/bundle/operations/users/get"
+},
+{
+"operation_name": "UsersSubscribe",
+"api_mount_path": "users/subscribe",
+"file_path": "users/subscribe.ts",
+"module_path": "generated/bundle/operations/users/subscribe"
+},
+{
+"operation_name": "UsersUpdate",
+"api_mount_path": "users/update",
+"file_path": "users/update.ts",
+"module_path": "generated/bundle/operations/users/update"
+}
+]
+}
