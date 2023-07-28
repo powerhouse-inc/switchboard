@@ -97,27 +97,6 @@ interface TargetTypes {
 		| "_join";
 	switchboard_SessionOutput: "session" | "token" | "_join";
 	switchboard_User: "address" | "createdAt" | "_join";
-	ecosystem_Continent: "code" | "countries" | "name" | "_join";
-	ecosystem_Country:
-		| "awsRegion"
-		| "capital"
-		| "code"
-		| "continent"
-		| "currencies"
-		| "currency"
-		| "emoji"
-		| "emojiU"
-		| "languages"
-		| "name"
-		| "native"
-		| "phone"
-		| "phones"
-		| "states"
-		| "subdivisions"
-		| "_join";
-	ecosystem_Language: "code" | "name" | "native" | "rtl" | "_join";
-	ecosystem_State: "code" | "country" | "name" | "_join";
-	ecosystem_Subdivision: "code" | "emoji" | "name" | "_join";
 }
 
 interface SourceFields {
@@ -127,24 +106,6 @@ interface SourceFields {
 	switchboard_coreUnits: {};
 	switchboard_me: {};
 	switchboard_sessions: {};
-	ecosystem_continent: {
-		code: null;
-	};
-	ecosystem_continents: {
-		filter: null;
-	};
-	ecosystem_countries: {
-		filter: null;
-	};
-	ecosystem_country: {
-		code: null;
-	};
-	ecosystem_language: {
-		code: null;
-	};
-	ecosystem_languages: {
-		filter: null;
-	};
 }
 
 const linkBuilder = sourceStep<SourceFields, TargetTypes>();

@@ -306,12 +306,6 @@ type Query {
   switchboard_coreUnits: [switchboard_CoreUnit]
   switchboard_me: switchboard_User
   switchboard_sessions: [switchboard_Session]
-  ecosystem_continent(code: ID!): ecosystem_Continent
-  ecosystem_continents(filter: ecosystem_ContinentFilterInput = {}): [ecosystem_Continent!]!
-  ecosystem_countries(filter: ecosystem_CountryFilterInput = {}): [ecosystem_Country!]!
-  ecosystem_country(code: ID!): ecosystem_Country
-  ecosystem_language(code: ID!): ecosystem_Language
-  ecosystem_languages(filter: ecosystem_LanguageFilterInput = {}): [ecosystem_Language!]!
 }
 
 type switchboard_Session {
@@ -342,76 +336,6 @@ type switchboard_SessionOutput {
 type switchboard_User {
   address: String!
   createdAt: switchboard_GQLDateBase!
-  _join: Query!
-}
-
-type ecosystem_Continent {
-  code: ID!
-  countries: [ecosystem_Country!]!
-  name: String!
-  _join: Query!
-}
-
-input ecosystem_ContinentFilterInput {
-  code: ecosystem_StringQueryOperatorInput
-}
-
-type ecosystem_Country {
-  awsRegion: String!
-  capital: String
-  code: ID!
-  continent: ecosystem_Continent!
-  currencies: [String!]!
-  currency: String
-  emoji: String!
-  emojiU: String!
-  languages: [ecosystem_Language!]!
-  name(lang: String): String!
-  native: String!
-  phone: String!
-  phones: [String!]!
-  states: [ecosystem_State!]!
-  subdivisions: [ecosystem_Subdivision!]!
-  _join: Query!
-}
-
-input ecosystem_CountryFilterInput {
-  code: ecosystem_StringQueryOperatorInput
-  continent: ecosystem_StringQueryOperatorInput
-  currency: ecosystem_StringQueryOperatorInput
-}
-
-type ecosystem_Language {
-  code: ID!
-  name: String!
-  native: String!
-  rtl: Boolean!
-  _join: Query!
-}
-
-input ecosystem_LanguageFilterInput {
-  code: ecosystem_StringQueryOperatorInput
-}
-
-type ecosystem_State {
-  code: String
-  country: ecosystem_Country!
-  name: String!
-  _join: Query!
-}
-
-input ecosystem_StringQueryOperatorInput {
-  eq: String
-  in: [String!]
-  ne: String
-  nin: [String!]
-  regex: String
-}
-
-type ecosystem_Subdivision {
-  code: ID!
-  emoji: String
-  name: String!
   _join: Query!
 }
 
