@@ -6,7 +6,7 @@
   "scripts": {
     "start": "wunderctl up",
     "dev": "run-p dev:wundergraph open",
-    "dev:wundergraph": "wunderctl up",
+    "dev:wundergraph": "wunderctl up --logs",
     "build:wundergraph": "wunderctl generate --debug",
     "open": "wait-on -d 500 http://localhost:9991 && open-cli http://localhost:3000"
   },

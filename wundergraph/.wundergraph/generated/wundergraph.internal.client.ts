@@ -2,42 +2,10 @@
 
 import type { OperationArgsWithInput, InternalClient as BaseClient } from "@wundergraph/sdk/server";
 import type { OperationErrors } from "./ts-operation-errors";
-import {
-	ContinentsResponse,
-	ContinentsResponseData,
-	CountriesResponse,
-	CountriesInput,
-	CountriesInputInternal,
-	CountriesInputInjected,
-	CountriesResponseData,
-	UsersGetResponse,
-	UsersGetInput,
-	UsersGetInputInternal,
-	UsersGetResponseData,
-	UsersSubscribeResponse,
-	UsersSubscribeInput,
-	UsersSubscribeInputInternal,
-	UsersSubscribeResponseData,
-	UsersUpdateResponse,
-	UsersUpdateInput,
-	UsersUpdateInputInternal,
-	UsersUpdateResponseData,
-} from "./models";
+import {} from "./models";
 
-export interface Queries {
-	Continents: () => Promise<{ data?: ContinentsResponse["data"]; errors?: Required<ContinentsResponse>["errors"] }>;
-	Countries: (
-		options: OperationArgsWithInput<CountriesInputInternal>
-	) => Promise<{ data?: CountriesResponse["data"]; errors?: Required<CountriesResponse>["errors"] }>;
-	UsersGet: (
-		options: OperationArgsWithInput<UsersGetInputInternal>
-	) => Promise<{ data?: UsersGetResponseData; errors?: OperationErrors["users/get"][] }>;
-}
+export interface Queries {}
 
-export interface Mutations {
-	UsersUpdate: (
-		options: OperationArgsWithInput<UsersUpdateInputInternal>
-	) => Promise<{ data?: UsersUpdateResponseData; errors?: OperationErrors["users/update"][] }>;
-}
+export interface Mutations {}
 
 export interface InternalClient extends BaseClient<Queries, Mutations> {}

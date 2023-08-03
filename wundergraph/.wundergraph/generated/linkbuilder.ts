@@ -73,8 +73,32 @@ const targetStep = <T, F extends keyof T, R>(field: F) => ({
 });
 
 interface TargetTypes {
-	countries_Continent: "code" | "countries" | "name" | "_join";
-	countries_Country:
+	Challenge: "hex" | "message" | "nonce" | "_join";
+	CoreUnit:
+		| "code"
+		| "descriptionParagraph"
+		| "descriptionParagraphImageSource"
+		| "descriptionSentence"
+		| "id"
+		| "imageSource"
+		| "name"
+		| "shortCode"
+		| "_join";
+	Session:
+		| "allowedOrigins"
+		| "createdAt"
+		| "createdBy"
+		| "id"
+		| "isUserCreated"
+		| "name"
+		| "referenceExpiryDate"
+		| "referenceTokenId"
+		| "revokedAt"
+		| "_join";
+	SessionOutput: "session" | "token" | "_join";
+	User: "address" | "createdAt" | "_join";
+	ecosystem_Continent: "code" | "countries" | "name" | "_join";
+	ecosystem_Country:
 		| "awsRegion"
 		| "capital"
 		| "code"
@@ -91,28 +115,34 @@ interface TargetTypes {
 		| "states"
 		| "subdivisions"
 		| "_join";
-	countries_Language: "code" | "name" | "native" | "rtl" | "_join";
-	countries_State: "code" | "country" | "name" | "_join";
-	countries_Subdivision: "code" | "emoji" | "name" | "_join";
+	ecosystem_Language: "code" | "name" | "native" | "rtl" | "_join";
+	ecosystem_State: "code" | "country" | "name" | "_join";
+	ecosystem_Subdivision: "code" | "emoji" | "name" | "_join";
 }
 
 interface SourceFields {
-	countries_continent: {
+	coreUnit: {
+		id: null;
+	};
+	coreUnits: {};
+	me: {};
+	sessions: {};
+	ecosystem_continent: {
 		code: null;
 	};
-	countries_continents: {
+	ecosystem_continents: {
 		filter: null;
 	};
-	countries_countries: {
+	ecosystem_countries: {
 		filter: null;
 	};
-	countries_country: {
+	ecosystem_country: {
 		code: null;
 	};
-	countries_language: {
+	ecosystem_language: {
 		code: null;
 	};
-	countries_languages: {
+	ecosystem_languages: {
 		filter: null;
 	};
 }

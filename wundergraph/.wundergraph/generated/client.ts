@@ -21,50 +21,19 @@ import { Client } from "@wundergraph/sdk/client";
 import type { OperationErrors } from "./ts-operation-errors";
 
 import type { PublicCustomClaims } from "./claims";
-import type {
-	ContinentsResponse,
-	ContinentsResponseData,
-	CountriesResponse,
-	CountriesInput,
-	CountriesResponseData,
-	UsersGetResponse,
-	UsersGetInput,
-	UsersGetResponseData,
-	UsersSubscribeResponse,
-	UsersSubscribeInput,
-	UsersSubscribeResponseData,
-	UsersUpdateResponse,
-	UsersUpdateInput,
-	UsersUpdateResponseData,
-} from "./models";
+import type {} from "./models";
 export type UserRole = "admin" | "user";
 
 export const WUNDERGRAPH_S3_ENABLED = false;
 export const WUNDERGRAPH_AUTH_ENABLED = false;
 
 export const defaultClientConfig: ClientConfig = {
-	applicationHash: "ced69a5b",
+	applicationHash: "fe4f030f",
 	baseURL: "http://localhost:9991",
 	sdkVersion: "0.170.1",
 };
 
-export const operationMetadata: OperationMetadata = {
-	Continents: {
-		requiresAuthentication: false,
-	},
-	Countries: {
-		requiresAuthentication: false,
-	},
-	"users/get": {
-		requiresAuthentication: false,
-	},
-	"users/subscribe": {
-		requiresAuthentication: false,
-	},
-	"users/update": {
-		requiresAuthentication: false,
-	},
-};
+export const operationMetadata: OperationMetadata = {};
 
 export type PublicUser = User<UserRole, PublicCustomClaims>;
 
@@ -114,81 +83,13 @@ export const createClient = (config?: CreateClientConfig) => {
 	});
 };
 
-export type Queries = {
-	Continents: {
-		input?: undefined;
-		response: { data?: ContinentsResponse["data"]; error?: ClientOperationErrors };
-		requiresAuthentication: false;
-		liveQuery: boolean;
-	};
-	Countries: {
-		input: CountriesInput;
-		response: { data?: CountriesResponse["data"]; error?: ClientOperationErrors };
-		requiresAuthentication: false;
-		liveQuery: boolean;
-	};
-	"users/get": {
-		input: UsersGetInput;
-		response: { data?: UsersGetResponseData; error?: OperationErrors["users/get"] };
-		requiresAuthentication: false;
-		liveQuery: boolean;
-	};
-};
+export type Queries = {};
 
-export type Mutations = {
-	"users/update": {
-		input: UsersUpdateInput;
-		response: { data?: UsersUpdateResponseData; error?: OperationErrors["users/update"] };
-		requiresAuthentication: false;
-	};
-};
+export type Mutations = {};
 
-export type Subscriptions = {
-	"users/subscribe": {
-		input: UsersSubscribeInput;
-		response: { data?: UsersSubscribeResponseData; error?: OperationErrors["users/subscribe"] };
-		requiresAuthentication: false;
-	};
-	Continents: {
-		input?: undefined;
-		response: { data?: ContinentsResponse["data"]; error?: ClientOperationErrors };
-		liveQuery: true;
-		requiresAuthentication: false;
-	};
-	Countries: {
-		input: CountriesInput;
-		response: { data?: CountriesResponse["data"]; error?: ClientOperationErrors };
-		liveQuery: true;
-		requiresAuthentication: false;
-	};
-	"users/get": {
-		input: UsersGetInput;
-		response: { data?: UsersGetResponse["data"]; error?: ClientOperationErrors };
-		liveQuery: true;
-		requiresAuthentication: false;
-	};
-};
+export type Subscriptions = {};
 
-export type LiveQueries = {
-	Continents: {
-		input?: undefined;
-		response: { data?: ContinentsResponse["data"]; error?: ClientOperationErrors };
-		liveQuery: true;
-		requiresAuthentication: false;
-	};
-	Countries: {
-		input: CountriesInput;
-		response: { data?: CountriesResponse["data"]; error?: ClientOperationErrors };
-		liveQuery: true;
-		requiresAuthentication: false;
-	};
-	"users/get": {
-		input: UsersGetInput;
-		response: { data?: UsersGetResponse["data"]; error?: ClientOperationErrors };
-		liveQuery: true;
-		requiresAuthentication: false;
-	};
-};
+export type LiveQueries = {};
 
 export interface Operations
 	extends OperationsDefinition<Queries, Mutations, Subscriptions, LiveQueries, UserRole, {}> {}

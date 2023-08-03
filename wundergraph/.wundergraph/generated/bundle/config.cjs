@@ -48,12 +48,16 @@ var wundergraph_operations_default = (0, import_sdk.configureWunderGraphOperatio
 });
 
 // wundergraph.config.ts
-var countries = import_sdk2.introspect.graphql({
-  apiNamespace: "countries",
+var ecosystem = import_sdk2.introspect.graphql({
+  apiNamespace: "ecosystem",
   url: "https://countries.trevorblades.com/"
 });
+var switchboard = import_sdk2.introspect.graphql({
+  apiNamespace: void 0,
+  url: process.env.SWITCHBOARD_URL || "http://localhost:3001/graphql"
+});
 (0, import_sdk2.configureWunderGraphApplication)({
-  apis: [countries],
+  apis: [switchboard, ecosystem],
   server: wundergraph_server_default,
   operations: wundergraph_operations_default,
   generate: {
@@ -62,11 +66,12 @@ var countries = import_sdk2.introspect.graphql({
   cors: {
     ...import_sdk2.cors.allowAll,
     allowedOrigins: process.env.NODE_ENV === "production" ? [
-      "http://localhost:3000"
-    ] : ["http://localhost:3000", new import_sdk2.EnvironmentVariable("WG_ALLOWED_ORIGIN")]
+      "http://localhost:3000/",
+      "http://localhost:3001/"
+    ] : ["http://localhost:3000/", "http://localhost:3001/", new import_sdk2.EnvironmentVariable("WG_ALLOWED_ORIGIN")]
   },
   security: {
-    enableGraphQLEndpoint: process.env.NODE_ENV !== "production" || process.env.GITPOD_WORKSPACE_ID !== void 0
+    enableGraphQLEndpoint: true
   }
 });
 //# sourceMappingURL=config.cjs.map

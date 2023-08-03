@@ -17,9 +17,9 @@
     "release": "21.5.0"
   },
   "stats": {
-    "totalApis": 1,
+    "totalApis": 2,
     "hasUploadProvider": false,
-    "totalOperations": 5,
+    "totalOperations": 0,
     "totalWebhooks": 0,
     "hasAuthenticationProvider": false
   }

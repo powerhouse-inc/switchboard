@@ -3,56 +3,13 @@
 import type { OperationsClient, InternalOperationsDefinition } from "@wundergraph/sdk/server";
 import type { ClientOperationErrors } from "@wundergraph/sdk/client";
 import type { OperationErrors } from "./ts-operation-errors";
-import {
-	ContinentsResponse,
-	ContinentsResponseData,
-	CountriesResponse,
-	CountriesInput,
-	CountriesInputInternal,
-	CountriesInputInjected,
-	CountriesResponseData,
-	UsersGetResponse,
-	UsersGetInput,
-	UsersGetInputInternal,
-	UsersGetResponseData,
-	UsersSubscribeResponse,
-	UsersSubscribeInput,
-	UsersSubscribeInputInternal,
-	UsersSubscribeResponseData,
-	UsersUpdateResponse,
-	UsersUpdateInput,
-	UsersUpdateInputInternal,
-	UsersUpdateResponseData,
-} from "./models";
+import {} from "./models";
 
-export type Queries = {
-	Continents: {
-		input: undefined;
-		response: { data?: ContinentsResponse["data"]; error?: ClientOperationErrors };
-	};
-	Countries: {
-		input: CountriesInputInternal;
-		response: { data?: CountriesResponse["data"]; error?: ClientOperationErrors };
-	};
-	"users/get": {
-		input: UsersGetInputInternal;
-		response: { data?: UsersGetResponseData; error?: OperationErrors["users/get"] };
-	};
-};
+export type Queries = {};
 
-export type Mutations = {
-	"users/update": {
-		input: UsersUpdateInputInternal;
-		response: { data?: UsersUpdateResponseData; error?: OperationErrors["users/update"] };
-	};
-};
+export type Mutations = {};
 
-export type Subscriptions = {
-	"users/subscribe": {
-		input: UsersSubscribeInputInternal;
-		response: { data?: UsersSubscribeResponseData; error?: OperationErrors["users/subscribe"] };
-	};
-};
+export type Subscriptions = {};
 
 export type InternalOperations = InternalOperationsDefinition<Queries, Mutations, Subscriptions>;
 

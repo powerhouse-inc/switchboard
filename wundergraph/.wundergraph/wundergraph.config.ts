@@ -2,14 +2,19 @@ import { configureWunderGraphApplication, cors, EnvironmentVariable, introspect,
 import server from './wundergraph.server';
 import operations from './wundergraph.operations';
 
-const countries = introspect.graphql({
-	apiNamespace: 'countries',
+const ecosystem = introspect.graphql({
+	apiNamespace: 'ecosystem',
 	url: 'https://countries.trevorblades.com/',
+});
+
+const switchboard = introspect.graphql({
+	apiNamespace: undefined,
+	url: process.env.SWITCHBOARD_URL || 'http://localhost:3001/graphql',
 });
 
 // configureWunderGraph emits the configuration
 configureWunderGraphApplication({
-	apis: [countries],
+	apis: [switchboard, ecosystem],
 	server,
 	operations,
 	generate: {
@@ -21,11 +26,12 @@ configureWunderGraphApplication({
 			process.env.NODE_ENV === 'production'
 				? [
 						// change this before deploying to production to the actual domain where you're deploying your app
-						'http://localhost:3000',
+						'http://localhost:3000/',
+						'http://localhost:3001/',
 				  ]
-				: ['http://localhost:3000', new EnvironmentVariable('WG_ALLOWED_ORIGIN')],
+				: ['http://localhost:3000/','http://localhost:3001/', new EnvironmentVariable('WG_ALLOWED_ORIGIN')],
 	},
 	security: {
-		enableGraphQLEndpoint: process.env.NODE_ENV !== 'production' || process.env.GITPOD_WORKSPACE_ID !== undefined,
+		enableGraphQLEndpoint: true,
 	},
 });

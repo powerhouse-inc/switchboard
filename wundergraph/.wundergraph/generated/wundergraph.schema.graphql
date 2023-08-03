@@ -2,6 +2,7 @@
 
 schema {
   query: Query
+  mutation: Mutation
 }
 
 """
@@ -271,43 +272,116 @@ Without authentication, the operation will return an Unauthorized error with sta
 """
 directive @requireAuthentication on QUERY | MUTATION | SUBSCRIPTION
 
-type countries_Continent {
+type Challenge {
+  hex: String!
+  message: String!
+  nonce: String!
+  _join: Query!
+}
+
+type CoreUnit {
+  code: String
+  descriptionParagraph: String
+  descriptionParagraphImageSource: String
+  descriptionSentence: String
+  id: String
+  imageSource: String
+  name: String
+  shortCode: String
+  _join: Query!
+}
+
+"""Date custom scalar type"""
+scalar GQLDateBase
+
+type Mutation {
+  createChallenge(address: String!): Challenge
+  createSession(session: SessionInput!): SessionOutput
+  revokeSession(sessionId: String!): Session
+  solveChallenge(nonce: String!, signature: String!): SessionOutput
+}
+
+type Query {
+  coreUnit(id: String): CoreUnit
+  coreUnits: [CoreUnit]
+  me: User
+  sessions: [Session]
+  ecosystem_continent(code: ID!): ecosystem_Continent
+  ecosystem_continents(filter: ecosystem_ContinentFilterInput = {}): [ecosystem_Continent!]!
+  ecosystem_countries(filter: ecosystem_CountryFilterInput = {}): [ecosystem_Country!]!
+  ecosystem_country(code: ID!): ecosystem_Country
+  ecosystem_language(code: ID!): ecosystem_Language
+  ecosystem_languages(filter: ecosystem_LanguageFilterInput = {}): [ecosystem_Language!]!
+}
+
+type Session {
+  allowedOrigins: String
+  createdAt: GQLDateBase!
+  createdBy: String!
+  id: String!
+  isUserCreated: Boolean!
+  name: String
+  referenceExpiryDate: GQLDateBase
+  referenceTokenId: String!
+  revokedAt: GQLDateBase
+  _join: Query!
+}
+
+input SessionInput {
+  allowedOrigins: String!
+  expiryDurationSeconds: Int
+  name: String!
+}
+
+type SessionOutput {
+  session: Session!
+  token: String!
+  _join: Query!
+}
+
+type User {
+  address: String!
+  createdAt: GQLDateBase!
+  _join: Query!
+}
+
+type ecosystem_Continent {
   code: ID!
-  countries: [countries_Country!]!
+  countries: [ecosystem_Country!]!
   name: String!
   _join: Query!
 }
 
-input countries_ContinentFilterInput {
-  code: countries_StringQueryOperatorInput
+input ecosystem_ContinentFilterInput {
+  code: ecosystem_StringQueryOperatorInput
 }
 
-type countries_Country {
+type ecosystem_Country {
   awsRegion: String!
   capital: String
   code: ID!
-  continent: countries_Continent!
+  continent: ecosystem_Continent!
   currencies: [String!]!
   currency: String
   emoji: String!
   emojiU: String!
-  languages: [countries_Language!]!
+  languages: [ecosystem_Language!]!
   name(lang: String): String!
   native: String!
   phone: String!
   phones: [String!]!
-  states: [countries_State!]!
-  subdivisions: [countries_Subdivision!]!
+  states: [ecosystem_State!]!
+  subdivisions: [ecosystem_Subdivision!]!
   _join: Query!
 }
 
-input countries_CountryFilterInput {
-  code: countries_StringQueryOperatorInput
-  continent: countries_StringQueryOperatorInput
-  currency: countries_StringQueryOperatorInput
+input ecosystem_CountryFilterInput {
+  code: ecosystem_StringQueryOperatorInput
+  continent: ecosystem_StringQueryOperatorInput
+  currency: ecosystem_StringQueryOperatorInput
 }
 
-type countries_Language {
+type ecosystem_Language {
   code: ID!
   name: String!
   native: String!
@@ -315,27 +389,18 @@ type countries_Language {
   _join: Query!
 }
 
-input countries_LanguageFilterInput {
-  code: countries_StringQueryOperatorInput
+input ecosystem_LanguageFilterInput {
+  code: ecosystem_StringQueryOperatorInput
 }
 
-type Query {
-  countries_continent(code: ID!): countries_Continent
-  countries_continents(filter: countries_ContinentFilterInput = {}): [countries_Continent!]!
-  countries_countries(filter: countries_CountryFilterInput = {}): [countries_Country!]!
-  countries_country(code: ID!): countries_Country
-  countries_language(code: ID!): countries_Language
-  countries_languages(filter: countries_LanguageFilterInput = {}): [countries_Language!]!
-}
-
-type countries_State {
+type ecosystem_State {
   code: String
-  country: countries_Country!
+  country: ecosystem_Country!
   name: String!
   _join: Query!
 }
 
-input countries_StringQueryOperatorInput {
+input ecosystem_StringQueryOperatorInput {
   eq: String
   in: [String!]
   ne: String
@@ -343,7 +408,7 @@ input countries_StringQueryOperatorInput {
   regex: String
 }
 
-type countries_Subdivision {
+type ecosystem_Subdivision {
   code: ID!
   emoji: String
   name: String!
