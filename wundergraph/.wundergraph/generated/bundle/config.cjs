@@ -50,11 +50,12 @@ var wundergraph_operations_default = (0, import_sdk.configureWunderGraphOperatio
 // wundergraph.config.ts
 var ecosystem = import_sdk2.introspect.graphql({
   apiNamespace: "ecosystem",
-  url: "https://countries.trevorblades.com/"
+  url: "http://localhost:4000/graphql"
 });
 var switchboard = import_sdk2.introspect.graphql({
-  apiNamespace: void 0,
-  url: process.env.SWITCHBOARD_URL || "http://localhost:3001/graphql"
+  apiNamespace: "asdf",
+  url: process.env.SWITCHBOARD_URL || "http://localhost:3001/graphql",
+  headers: (builder) => builder.addClientRequestHeader("Authorization", "Authorization")
 });
 (0, import_sdk2.configureWunderGraphApplication)({
   apis: [switchboard, ecosystem],
@@ -67,8 +68,9 @@ var switchboard = import_sdk2.introspect.graphql({
     ...import_sdk2.cors.allowAll,
     allowedOrigins: process.env.NODE_ENV === "production" ? [
       "http://localhost:3000/",
-      "http://localhost:3001/"
-    ] : ["http://localhost:3000/", "http://localhost:3001/", new import_sdk2.EnvironmentVariable("WG_ALLOWED_ORIGIN")]
+      "http://localhost:3001/",
+      "http://localhost:4000/"
+    ] : ["http://localhost:3000/", "http://localhost:3001/", "http://localhost:4000/", new import_sdk2.EnvironmentVariable("WG_ALLOWED_ORIGIN")]
   },
   security: {
     enableGraphQLEndpoint: true

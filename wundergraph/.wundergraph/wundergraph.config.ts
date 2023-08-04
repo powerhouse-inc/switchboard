@@ -4,11 +4,11 @@ import operations from './wundergraph.operations';
 
 const ecosystem = introspect.graphql({
 	apiNamespace: 'ecosystem',
-	url: 'https://countries.trevorblades.com/',
+	url: 'http://localhost:4000/graphql',
 });
 
 const switchboard = introspect.graphql({
-	apiNamespace: undefined,
+	apiNamespace: 'asdf',
 	url: process.env.SWITCHBOARD_URL || 'http://localhost:3001/graphql',
   headers: (builder) => builder.addClientRequestHeader('Authorization', 'Authorization')
 });
