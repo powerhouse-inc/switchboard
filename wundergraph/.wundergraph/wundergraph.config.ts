@@ -10,6 +10,7 @@ const ecosystem = introspect.graphql({
 const switchboard = introspect.graphql({
 	apiNamespace: undefined,
 	url: process.env.SWITCHBOARD_URL || 'http://localhost:3001/graphql',
+  headers: (builder) => builder.addClientRequestHeader('Authorization', 'Authorization')
 });
 
 // configureWunderGraph emits the configuration
