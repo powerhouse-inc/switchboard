@@ -1,7 +1,0 @@
-{
-"graphql_operation_files": null,
-"typescript_operation_files": null,
-"errors": [
-"lstat /Users/kirilldogadin/work/switchboard-boilerplate/wundergraph/.wundergraph/operations: no such file or directory"
-]
-}
