@@ -52,6 +52,15 @@ services:
     expose:
       - 3000
 
+  wundergraph:
+    restart: unless-stopped
+    expose:
+      - 9991
+    build:
+      context: ./wundergraph
+    environment:
+      SWITCHBOARD_URL: "http://api:3000/graphql"
+
   reverse-proxy:
     restart: unless-stopped
     image: nginx:stable

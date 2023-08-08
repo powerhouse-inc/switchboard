@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "wunderctl up",
+    "start": "wunderctl up --logs",
     "dev": "run-p dev:wundergraph open",
     "dev:wundergraph": "wunderctl up --logs",
     "build:wundergraph": "wunderctl generate --debug",
