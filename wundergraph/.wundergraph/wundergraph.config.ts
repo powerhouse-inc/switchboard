@@ -4,7 +4,7 @@ import operations from './wundergraph.operations';
 
 const ecosystem = introspect.graphql({
 	apiNamespace: 'ecosystem',
-	url: 'http://localhost:4000/graphql',
+	url: process.env.ECOSYSTEM_URL || 'http://localhost:4000/graphql',
 });
 
 const switchboard = introspect.graphql({
