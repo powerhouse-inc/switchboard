@@ -10,6 +10,10 @@ if (!process.env.ECOSYSTEM_URL) {
 if (!process.env.SWITCHBOARD_URL) {
   throw new Error('SWITCHBOARD_URL environment variable is not set');
 }
+if (!process.env.ALLOWED_ORIGINS) {
+  throw new Error('ALLOWED_ORIGINS environment variable is not set');
+}
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
 const ecosystem = introspect.graphql({
 	apiNamespace: 'ecosystem',
@@ -32,14 +36,7 @@ configureWunderGraphApplication({
 	},
 	cors: {
 		...cors.allowAll,
-		allowedOrigins:
-			process.env.NODE_ENV === 'production'
-				? [
-						// change this before deploying to production to the actual domain where you're deploying your app
-						'http://localhost:3000/',
-						'http://localhost:3001/',
-				  ]
-				: ['http://localhost:3000/','http://localhost:3001/'],
+		allowedOrigins
 	},
 	security: {
 		enableGraphQLEndpoint: true,
