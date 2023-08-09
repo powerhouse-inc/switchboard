@@ -30,7 +30,7 @@ configureWunderGraphApplication({
 						'http://localhost:3000/',
 						'http://localhost:3001/',
 				  ]
-				: ['http://localhost:3000/','http://localhost:3001/', new EnvironmentVariable('WG_ALLOWED_ORIGIN')],
+				: ['http://localhost:3000/','http://localhost:3001/'],
 	},
 	security: {
 		enableGraphQLEndpoint: true,

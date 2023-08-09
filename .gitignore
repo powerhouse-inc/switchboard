@@ -18,6 +18,3 @@ coverage
 
 # system-related
 .DS_Store
-
-# wundergraph
-wundergraph/.wundergraph/generated
