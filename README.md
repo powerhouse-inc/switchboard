@@ -12,6 +12,7 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
 ## Project structure
 - [`/api`](./api) directory contains the core logic that creates the API over the database
 - [`/frontend`](./frontend) directory contains the frontend-related code
+- [`./wundergraph`](./wundergraph) directory contains service that allows to expose multiple graphql endpoints under the same one.
 
 ## Quick start
 
