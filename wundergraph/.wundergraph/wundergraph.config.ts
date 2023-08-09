@@ -4,25 +4,21 @@ import operations from './wundergraph.operations';
 import dotenv from 'dotenv';
 
 dotenv.config();
-if (!process.env.ECOSYSTEM_URL) {
-  throw new Error('ECOSYSTEM_URL environment variable is not set');
+const ecosystemGqlEndpoint = process.env.ECOSYSTEM_GQL_ENDPOINT;
+if (!ecosystemGqlEndpoint) {
+  throw new Error('ECOSYSTEM_GQL_ENDPOINT environment variable is not set');
 }
-if (!process.env.SWITCHBOARD_URL) {
-  throw new Error('SWITCHBOARD_URL environment variable is not set');
-}
-if (!process.env.ALLOWED_ORIGINS) {
-  throw new Error('ALLOWED_ORIGINS environment variable is not set');
-}
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+const switchboardGqlEndpoint = process.env.SWITCHBOARD_GQL_ENDPOINT || 'localhost:3001/graphql';
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3001,http://localhost:3000').split(',');
 
 const ecosystem = introspect.graphql({
 	apiNamespace: 'ecosystem',
-	url: process.env.ECOSYSTEM_URL,
+	url: ecosystemGqlEndpoint,
 });
 
 const switchboard = introspect.graphql({
 	apiNamespace: '',
-	url: process.env.SWITCHBOARD_URL,
+	url: switchboardGqlEndpoint,
   headers: (builder) => builder.addClientRequestHeader('Authorization', 'Authorization')
 });
 
