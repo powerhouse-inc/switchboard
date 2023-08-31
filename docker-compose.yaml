@@ -43,6 +43,7 @@ services:
       - 3000
 
   wundergraph:
+    platform: linux/amd64
     restart: unless-stopped
     expose:
       - 3002
