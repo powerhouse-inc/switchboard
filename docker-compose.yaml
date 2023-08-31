@@ -18,16 +18,6 @@ services:
       timeout: 5s
       retries: 5
 
-  db_migrations:
-    build:
-      context: ./api
-    command: "npx --yes prisma db push --accept-data-loss"
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@database:5432/postgres?sslmode=disable&connect_timeout=30"
-    depends_on:
-      database:
-        condition: service_healthy
-
   api:
     restart: unless-stopped
     expose:
@@ -55,11 +45,13 @@ services:
   wundergraph:
     restart: unless-stopped
     expose:
-      - 9991
+      - 3002
     build:
       context: ./wundergraph
     environment:
-      SWITCHBOARD_URL: "http://api:3000/graphql"
+      SWITCHBOARD_GQL_ENDPOINT: "http://api:3000/graphql"
+    depends_on:
+      - api
 
   reverse-proxy:
     restart: unless-stopped

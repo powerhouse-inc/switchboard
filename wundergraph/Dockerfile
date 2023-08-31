@@ -20,4 +20,4 @@ COPY . .
 ENV NODE_ENV=production
 
 # initialize db and start the app
-CMD npm run start
+CMD npm run build:wundergraph && npm run start

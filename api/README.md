@@ -28,6 +28,7 @@ Note: you can set environment variables directly or define them in the `api/.env
 - `JWT_SECRET` (required): server's jwt secret
 - `PORT` (optional, default `3001`): port on which the server will run
 - `API_ORIGIN` (optional, default `http://0.0.0.0:${PORT}`): the URL at which the API is running. it's important to provide this variable in production since it influences the message signed during authorization
+- `API_GQL_ENDPOINT` (optional, default `${API_ORIGIN}/graphql`): the graphql URL which will be used in the graphql playground as a server address
 - `AUTH_SIGNUP_ENABLED` (optional, default: `false`): if signing up is allowed. In case it's not set, new users _cannot_ be created, but old users _can_ still sign in
 - `JWT_EXPIRATION_PERIOD` (optional, default: `'7d'`): how soon JWT token will expire
 - `DEBUG` (optional, default not set): if set, enables more explicit logging mode where debug levels are set to `debug` for the app's logger and `query` for db logger
