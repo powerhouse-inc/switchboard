@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "wunderctl generate --debug",
     "start": "wunderctl up --logs",
-    "dev": "run-p dev:wundergraph open",
-    "dev:wundergraph": "wunderctl up --logs",
-    "build:wundergraph": "wunderctl generate --debug",
+    "dev": "npm run build && npm run start",
     "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0"
   },
   "author": "",
