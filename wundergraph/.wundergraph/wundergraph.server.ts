@@ -1,4 +1,4 @@
-import { configureWunderGraphServer, EnvironmentVariable, LoggerLevel } from '@wundergraph/sdk/server'
+import { configureWunderGraphServer, EnvironmentVariable, LoggerLevel } from '@wundergraph/sdk/server';
 
 export default configureWunderGraphServer(() => ({
   options: {
@@ -14,4 +14,4 @@ export default configureWunderGraphServer(() => ({
     queries: {},
     mutations: {},
   },
-}))
+}));

@@ -1,5 +1,5 @@
 import {
-  configureWunderGraphApplication, cors, introspect, EnvironmentVariable, LoggerLevel
+  configureWunderGraphApplication, cors, introspect, EnvironmentVariable, LoggerLevel,
 } from '@wundergraph/sdk';
 import dotenv from 'dotenv';
 import server from './wundergraph.server';
