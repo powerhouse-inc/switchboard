@@ -42,6 +42,18 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
+    - name: Build and Push switchboard-wundergraph
+      uses: docker/build-push-action@v3
+      with:
+        context: ./wundergraph
+        platforms: linux/amd64
+        push: true
+        tags: |
+          ghcr.io/sidestream-tech/switchboard/api:main
+          ghcr.io/sidestream-tech/switchboard/api:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
     - name: Build and Push switchboard-frontend
       uses: docker/build-push-action@v3
       with:
@@ -79,7 +91,14 @@ jobs:
           cmd: yq -i '(.image.tag ="${{ github.sha }}") | (.commitShortSHA ="${{ github.sha }}") | (.releaseTag ="${{ github.ref_name }}")' $VALUES_FILE
         env:
           VALUES_FILE: "k8s-projects/switchboard-api/staging/values-api.yml"
-      
+
+      - name: Update Value File Wundergraph
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '(.image.tag ="${{ github.sha }}") | (.commitShortSHA ="${{ github.sha }}") | (.releaseTag ="${{ github.ref_name }}")' $VALUES_FILE
+        env:
+          VALUES_FILE: "k8s-projects/switchboard-api/staging/values-wundergraph.yml"
+
       - name: Update Value File Frontend
         uses: mikefarah/yq@master
         with:
