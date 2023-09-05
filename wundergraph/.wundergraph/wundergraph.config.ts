@@ -16,12 +16,18 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3001,ht
 const ecosystem = introspect.graphql({
   apiNamespace: 'ecosystem',
   url: ecosystemGqlEndpoint,
+  introspection: {
+    disableCache: true,
+  },
 });
 
 const switchboard = introspect.graphql({
   apiNamespace: '',
   url: switchboardGqlEndpoint,
   headers: (builder) => builder.addClientRequestHeader('Authorization', 'Authorization'),
+  introspection: {
+    disableCache: true,
+  },
 });
 
 // configureWunderGraph emits the configuration
