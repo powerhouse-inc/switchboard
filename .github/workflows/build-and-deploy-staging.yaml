@@ -49,8 +49,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: |
-          ghcr.io/sidestream-tech/switchboard/api:main
-          ghcr.io/sidestream-tech/switchboard/api:${{ github.sha }}
+          ghcr.io/sidestream-tech/switchboard/wundergraph:main
+          ghcr.io/sidestream-tech/switchboard/wundergraph:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
