@@ -1,16 +1,15 @@
 {
-  "name": "@sidestream/wundergraph",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "powerhouse-switchboard-wundergraph",
+  "version": "0.0.1",
+  "description": "Service to compose multiple graphql endpoints together",
+  "author": "makerdao",
+  "license": "AGPL-3",
   "scripts": {
     "build": "wunderctl generate --debug",
     "start": "wunderctl up --logs",
     "dev": "npm run build && npm run start",
     "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@wundergraph/sdk": "^0.170.1",
     "dotenv": "^16.3.1"
