@@ -3,7 +3,7 @@ import express from 'express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { getChildLogger } from './logger';
 import prisma from './database';
-import { API_ORIGIN } from './env';
+import { API_GQL_ENDPOINT } from './env';
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
@@ -33,7 +33,7 @@ export const createApp = (): Express => {
   app.get(
     '/',
     expressPlayground({
-      endpoint: `${API_ORIGIN}/backend/graphql`,
+      endpoint: API_GQL_ENDPOINT,
       settings: {
         'editor.theme': 'light',
         'request.credentials': 'include',

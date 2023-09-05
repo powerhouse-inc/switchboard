@@ -46,3 +46,18 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build
+
+  wundergraph-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'wundergraph'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node 18.14.2
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.2
+      - run: npm install
+      - run: npm run lint
+

@@ -26,6 +26,8 @@ WORKDIR /app/frontend
 # Set env vars before build
 ARG API_BASE=/backend
 ENV API_BASE=${API_BASE}
+ARG API_GQL_ENDPOINT=/wundergraph/graphql
+ENV API_GQL_ENDPOINT=${API_BASE}
 
 RUN npm run build
 
