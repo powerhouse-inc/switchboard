@@ -5,8 +5,6 @@ import { applyMiddleware } from 'graphql-middleware';
 import * as types from '../modules';
 import { GQLDateBase } from './dateSchema';
 import * as demoTypes from 'powerhouse-switchboard-plugin-demo';
-import prisma from '../database';
-import { getUserCrud, getSessionCrud } from '../modules';
 
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({

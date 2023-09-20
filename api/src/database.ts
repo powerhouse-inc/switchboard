@@ -3,7 +3,9 @@ import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
 import { getUserCrud, getSessionCrud } from './modules';
 import { getChallengeCrud } from 'powerhouse-switchboard-plugin-demo'
+import { setupAll } from './setupPlugins'
 
+setupAll();
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
 // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging#log-to-stdout

@@ -1,6 +1,3 @@
-import {setupAll} from './setupPlugins'
-setupAll();
-
 import { createApp } from './app';
 import { startServer } from './graphql/server';
 import { getChildLogger } from './logger';
