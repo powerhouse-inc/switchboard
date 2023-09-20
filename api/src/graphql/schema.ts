@@ -5,10 +5,11 @@ import { applyMiddleware } from 'graphql-middleware';
 import * as types from '../modules';
 import { GQLDateBase } from './dateSchema';
 import * as demoTypes from 'powerhouse-switchboard-plugin-demo';
+import * as anotherDemoTypes from 'powerhouse-switchboard-plugin-demo-2';
 
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
-  types: { GQLDateBase, ...types, ...demoTypes },
+  types: { GQLDateBase, ...types, ...demoTypes, ...anotherDemoTypes },
   plugins: [
     fieldAuthorizePlugin({
       formatError: (authConfig) => authConfig.error,
