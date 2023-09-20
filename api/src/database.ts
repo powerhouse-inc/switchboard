@@ -1,7 +1,8 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
-import { getUserCrud, getSessionCrud, getChallengeCrud } from './modules';
+import { getUserCrud, getSessionCrud } from './modules';
+import { getChallengeCrud } from 'powerhouse-switchboard-plugin-demo'
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
