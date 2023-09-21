@@ -75,6 +75,10 @@ export interface NexusGenObjects {
     name?: string | null; // String
     shortCode?: string | null; // String
   }
+  Counter: { // root type
+    count: string; // String!
+    message: string; // String!
+  }
   Mutation: {};
   Query: {};
   Session: { // root type
@@ -124,6 +128,10 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     shortCode: string | null; // String
   }
+  Counter: { // field return type
+    count: string; // String!
+    message: string; // String!
+  }
   Mutation: { // field return type
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
@@ -133,6 +141,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
+    countUsers: NexusGenRootTypes['Counter'] | null; // Counter
     me: NexusGenRootTypes['User'] | null; // User
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
@@ -173,6 +182,10 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     shortCode: 'String'
   }
+  Counter: { // field return type name
+    count: 'String'
+    message: 'String'
+  }
   Mutation: { // field return type name
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
@@ -182,6 +195,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
+    countUsers: 'Counter'
     me: 'User'
     sessions: 'Session'
   }
@@ -225,6 +239,9 @@ export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
       id?: string | null; // String
+    }
+    countUsers: { // args
+      message: string; // String!
     }
   }
 }

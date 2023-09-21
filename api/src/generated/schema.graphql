@@ -19,6 +19,11 @@ type CoreUnit {
   shortCode: String
 }
 
+type Counter {
+  count: String!
+  message: String!
+}
+
 """Date custom scalar type"""
 scalar GQLDateBase
 
@@ -32,6 +37,7 @@ type Mutation {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
+  countUsers(message: String!): Counter
   me: User
   sessions: [Session]
 }

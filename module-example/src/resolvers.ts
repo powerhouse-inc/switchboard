@@ -1,27 +1,16 @@
-import { mutationField, nonNull, objectType } from 'nexus/dist';
+import { queryField, nonNull } from 'nexus/dist';
 
-export const Challenge = objectType({
-  name: 'Challenge',
-  definition(t) {
-    t.nonNull.string('nonce');
-    t.nonNull.string('message');
-    t.nonNull.string('hex');
-  },
-});
-
-export const createChallenge = mutationField('createChallenge', {
-  type: 'Challenge',
+export const countUsers = queryField('countUsers', {
+  type: 'Counter',
   args: {
-    address: nonNull('String'),
+    message: nonNull('String'),
   },
-  resolve: async (_root, args, ctx) => ctx.prisma.challenge.createChallenge(args.address),
-});
-
-export const solveChallenge = mutationField('solveChallenge', {
-  type: 'SessionOutput',
-  args: {
-    nonce: nonNull('String'),
-    signature: nonNull('String'),
+  resolve: async (_root, args, ctx) => {
+    const aggr = await ctx.prisma.user.aggregate({_count: {address: true}})
+    const message = args.message;
+    return {
+      count: aggr['_count'].address,
+      message
+    }
   },
-  resolve: async (_root, args, ctx) => ctx.prisma.challenge.solveChallenge(args.nonce, args.signature),
 });

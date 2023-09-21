@@ -4,12 +4,13 @@ import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import * as types from '../modules';
 import { GQLDateBase } from './dateSchema';
-import * as demoTypes from 'powerhouse-switchboard-plugin-demo';
-import * as anotherDemoTypes from 'powerhouse-switchboard-plugin-demo-2';
+import {setup} from 'powerhouse-switchboard-plugin-demo';
+
+const demoTypes = setup();
 
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
-  types: { GQLDateBase, ...types, ...demoTypes, ...anotherDemoTypes },
+  types: { GQLDateBase, ...types, ...demoTypes },
   plugins: [
     fieldAuthorizePlugin({
       formatError: (authConfig) => authConfig.error,

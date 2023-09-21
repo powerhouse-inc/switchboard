@@ -36,7 +36,6 @@
         "pino-http": "^8.3.3",
         "pino-pretty": "^10.0.0",
         "powerhouse-switchboard-plugin-demo": "file:../module-example",
-        "powerhouse-switchboard-plugin-demo-2": "file:../module-example-2",
         "siwe": "^2.1.4",
         "vite-node": "^0.29.2",
         "vitest": "^0.29.2",
