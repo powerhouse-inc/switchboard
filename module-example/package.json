@@ -13,11 +13,13 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "@prisma/client": "^4.11.0",
         "nexus": "^1.3.0"
     },
     "devDependencies": {
         "@types/node": "^18.14.2",
         "eslint": "^8.35.0",
+        "prisma": "^4.11.0",
         "typescript": "^4.9.5"
     }
 }
