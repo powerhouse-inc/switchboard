@@ -20,7 +20,7 @@ type CoreUnit {
 }
 
 type Counter {
-  count: String!
+  count: Int!
   message: String!
 }
 

@@ -76,7 +76,7 @@ export interface NexusGenObjects {
     shortCode?: string | null; // String
   }
   Counter: { // root type
-    count: string; // String!
+    count: number; // Int!
     message: string; // String!
   }
   Mutation: {};
@@ -129,7 +129,7 @@ export interface NexusGenFieldTypes {
     shortCode: string | null; // String
   }
   Counter: { // field return type
-    count: string; // String!
+    count: number; // Int!
     message: string; // String!
   }
   Mutation: { // field return type
@@ -183,7 +183,7 @@ export interface NexusGenFieldTypeNames {
     shortCode: 'String'
   }
   Counter: { // field return type name
-    count: 'String'
+    count: 'Int'
     message: 'String'
   }
   Mutation: { // field return type name

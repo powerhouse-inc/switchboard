@@ -4,7 +4,7 @@ import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import * as types from '../modules';
 import { GQLDateBase } from './dateSchema';
-import {setup} from 'powerhouse-switchboard-plugin-demo';
+import {setup} from 'module-example';
 
 const demoTypes = setup();
 
