@@ -30,4 +30,6 @@ export const schema = makeSchema({
     export: 'Context',
   },
 });
+
+// @ts-ignore
 export const schemaWithMiddleware = applyMiddleware(schema);

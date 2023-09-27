@@ -2,7 +2,7 @@ import type express from 'express';
 import pino from 'pino';
 import { Session } from '@prisma/client';
 import { getChildLogger } from '../logger';
-import {getPrisma} from './setupPluggedModules';
+import { getPrisma } from './setupPluggedModules';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(

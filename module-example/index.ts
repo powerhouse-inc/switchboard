@@ -13,13 +13,11 @@ const getUserCrud = (prisma: PrismaClient) => ({
 })
 
 export const setup = (prisma: PrismaClient) => {
-  console.log('Setting up Prisma')
   const extended = prisma.$extends({
     model: {
       user: getUserCrud(prisma),
     },
   })
-  console.log('Prisma setup complete')
   return {types, prisma: extended}
 };
 
