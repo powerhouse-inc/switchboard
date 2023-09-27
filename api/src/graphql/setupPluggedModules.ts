@@ -7,16 +7,18 @@ const SETUP_FUNCTIONS = [
 ];
 
 let prismaModded = prismaCore;
-const setupComplete = false;
+let pluggedTypes: Record<string, any> = {};
+let setupComplete = false;
 
-export function setupAll() {
+export function setupAllModules() {
   const types: any = [];
   SETUP_FUNCTIONS.forEach((setup) => {
     const { types: extraTypes, prisma: extraPrisma } = setup(prismaModded);
     prismaModded = extraPrisma;
     types.push(extraTypes);
   });
-  return Object.assign({}, ...types);
+  pluggedTypes = Object.assign({}, ...types);
+  setupComplete = true;
 }
 
 export function getPrisma() {
@@ -24,4 +26,11 @@ export function getPrisma() {
     throw new Error('setupAll() must be called before getPrisma()');
   }
   return prismaModded;
+}
+
+export function getTypes() {
+  if (!setupComplete) {
+    throw new Error('setupAll() must be called before getTypes()');
+  }
+  return pluggedTypes;
 }

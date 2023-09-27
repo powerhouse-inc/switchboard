@@ -4,9 +4,10 @@ import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import * as types from '../modules';
 import { GQLDateBase } from './dateSchema';
-import { setupAll } from './setupPluggedModules';
+import { getTypes, setupAllModules } from './setupPluggedModules';
 
-const pluggedTypes = setupAll();
+setupAllModules();
+const pluggedTypes = getTypes();
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
   types: { GQLDateBase, ...types, ...pluggedTypes },
