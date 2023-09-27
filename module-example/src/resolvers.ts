@@ -17,5 +17,5 @@ export const countUsers = queryField('countUsers', {
 
 export const countUsersPrisma = queryField('countUsersPrisma', {
   type: 'Counter',
-  resolve: async (_root, _args, ctx) => await ctx.prisma.user.doCount(),
+  resolve: async (_root, _args, ctx) => ctx.prisma.user.doCount(),
 });

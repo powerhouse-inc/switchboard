@@ -22,7 +22,8 @@
             "error"
         ],
         "max-len": ["error", { "code": 120 }],
-        "quotes": "off"
+        "quotes": "off",
+        "no-underscore-dangle": "off"
     }
 }
 
