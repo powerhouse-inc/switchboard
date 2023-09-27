@@ -7,4 +7,3 @@ export const Counter = objectType({
     t.nonNull.int('count');
   },
 });
-

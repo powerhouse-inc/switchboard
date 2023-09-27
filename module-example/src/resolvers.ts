@@ -6,12 +6,12 @@ export const countUsers = queryField('countUsers', {
     message: nonNull('String'),
   },
   resolve: async (_root, args, ctx) => {
-    const aggr = await ctx.prisma.user.aggregate({_count: {address: true}})
-    const message = args.message;
+    const aggr = await ctx.prisma.user.aggregate({ _count: { address: true } });
+    const { message } = args;
     return {
-      count: aggr['_count'].address,
-      message
-    }
+      count: aggr._count.address,
+      message,
+    };
   },
 });
 
