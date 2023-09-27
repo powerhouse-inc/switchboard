@@ -2,8 +2,7 @@ import type { Express } from 'express';
 import express from 'express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { getChildLogger } from './logger';
-import { getPrisma } from './graphql/setupPluggedModules';
-import basePrisma from './database'
+import basePrisma from './database';
 import { API_GQL_ENDPOINT } from './env';
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
@@ -12,7 +11,6 @@ const startupTime = new Date();
 export const createApp = (): Express => {
   logger.debug('Creating app');
   const app = express();
-  const prisma = getPrisma();
 
   app.get('/healthz', async (_req, res) => {
     try {
