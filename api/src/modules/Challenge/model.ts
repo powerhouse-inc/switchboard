@@ -1,4 +1,5 @@
 import type { PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { SiweMessage } from 'siwe';
 import { GraphQLError } from 'graphql';
 import url from 'url';
@@ -112,3 +113,9 @@ export function getChallengeCrud(prisma: PrismaClient) {
 
   };
 }
+
+export const challengeCrudExtension = Prisma.defineExtension((client: PrismaClient) => client.$extends({
+  model: {
+    challenge: getChallengeCrud(client),
+  },
+}));

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
   AUTH_SIGNUP_ENABLED,
@@ -28,3 +28,9 @@ export function getUserCrud(prisma: Prisma.TransactionClient) {
 
   };
 }
+export const userCrudExtension = Prisma.defineExtension((client: PrismaClient) => client.$extends({
+  name: 'user-crud-extesnsion',
+  model: {
+    user: getUserCrud(client),
+  },
+}));

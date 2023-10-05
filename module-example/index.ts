@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
-import { prismaExtension } from './prisma/extesion';
+import { extend } from './prisma/extesion';
 import * as types from './src/index';
 
 export const setup = (prisma: PrismaClient) => {
-  const extended = prisma.$extends(prismaExtension);
+  const extended = extend(prisma);
   return { types, prisma: extended };
 };

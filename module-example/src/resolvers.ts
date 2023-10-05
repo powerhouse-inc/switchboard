@@ -1,8 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { queryField, nonNull } from 'nexus/dist';
+import { ExtendedPrismaClient } from '../prisma/extesion'
 
 interface Context {
-  prisma: PrismaClient;
+  prisma: ExtendedPrismaClient;
 }
 
 export const countUsers = queryField('countUsers', {

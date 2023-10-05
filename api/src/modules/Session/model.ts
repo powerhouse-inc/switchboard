@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import ms from 'ms';
 import { verifyToken, validateOriginAgainstAllowed, generateTokenAndSession } from './helpers';
@@ -90,3 +90,9 @@ export function getSessionCrud(
     },
   };
 }
+
+export const sessionCrudExtesnsion = Prisma.defineExtension((client: PrismaClient) => client.$extends({
+  model: {
+    session: getSessionCrud(client),
+  }
+}))

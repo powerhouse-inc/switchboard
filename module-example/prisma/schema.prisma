@@ -1,0 +1,50 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model CoreUnit {
+  id                              String @id @default(uuid())
+  code                            String
+  shortCode                       String
+  name                            String
+  imageSource                     String
+  descriptionSentence             String
+  descriptionParagraph            String
+  descriptionParagraphImageSource String
+}
+
+model User {
+  address   String    @id
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sessions  Session[]
+}
+
+model Session {
+  id                  String    @id @default(uuid())
+  createdAt           DateTime  @default(now())
+  createdBy           String
+  referenceExpiryDate DateTime?
+  name                String?
+  revokedAt           DateTime?
+  referenceTokenId    String
+  isUserCreated       Boolean   @default(false)
+  allowedOrigins      String // comma separated strings
+  creator             User      @relation(fields: [createdBy], references: [address], onDelete: Cascade)
+
+  @@unique([createdBy, id])
+}
+
+model Challenge {
+  nonce     String   @id
+  message   String   @unique
+  signature String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

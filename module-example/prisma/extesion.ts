@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
-export const prismaExtension = Prisma.defineExtension((client: any) => client.$extends({
+export const prismaExtension = Prisma.defineExtension((client) => client.$extends({
   name: 'prisma-extension-user-counter',
   model: {
     user: {
@@ -15,3 +15,6 @@ export const prismaExtension = Prisma.defineExtension((client: any) => client.$e
     },
   },
 }));
+
+export const extend = (prisma: PrismaClient) => prisma.$extends(prismaExtension);
+export type ExtendedPrismaClient = ReturnType<typeof extend>;
