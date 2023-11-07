@@ -1,0 +1,15 @@
+# project-related
+src/generated/nexus.ts
+
+# node-related
+node_modules
+*.log*
+.nitro
+.cache
+.output
+.env
+dist
+coverage
+
+# system-related
+.DS_Store
