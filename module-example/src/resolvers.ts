@@ -1,26 +1,32 @@
 import { PrismaClient } from '@prisma/client';
-import { queryField, nonNull } from 'nexus/dist';
+import { queryField, nonNull, objectType } from 'nexus/dist';
 
 interface Context {
   prisma: PrismaClient;
 }
 
+// New graphql types can be defined here
+export const Counter = objectType({
+  name: 'Counter',
+  definition(t) {
+    t.nonNull.string('message');
+    t.nonNull.int('count');
+  },
+});
+
+// New graphql resolvers can be defined here
 export const countUsers = queryField('countUsers', {
   type: 'Counter',
   args: {
     message: nonNull('String'),
   },
   resolve: async (_root, args, ctx: Context) => {
-    const aggr = await ctx.prisma.user.aggregate({ _count: { address: true } });
-    const { message } = args;
+    // Note that prisma client received here is fully extended
+    // (both with core modules, but also with extension defined in the `model.ts`)
+    const count = await ctx.prisma.user.getCount();
     return {
-      count: aggr._count.address,
-      message,
+      message: args.message, // example of a required argument
+      count, // example of local prisma extention
     };
   },
-});
-
-export const countUsersPrisma = queryField('countUsersPrisma', {
-  type: 'Counter',
-  resolve: async (_root, _args, ctx: Context) => ctx.prisma.user.doCount(),
 });

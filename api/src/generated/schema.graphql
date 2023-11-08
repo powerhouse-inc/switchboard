@@ -38,7 +38,6 @@ type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   countUsers(message: String!): Counter
-  countUsersPrisma: Counter
   me: User
   sessions: [Session]
 }

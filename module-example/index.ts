@@ -1,8 +1,12 @@
 import { PrismaClient } from '@prisma/client';
-import { prismaExtension } from './prisma/extesion';
-import * as types from './src/index';
+import { prismaExtension } from './src/model';
+import * as resolvers from './src/resolvers';
 
-export const setup = (prisma: PrismaClient) => {
-  const extended = prisma.$extends(prismaExtension);
-  return { types, prisma: extended };
+const setup = (prisma: PrismaClient) => {
+  // Received prisma client is extended with new methods defined in this module
+  // To later be received inside `ctx` of each resolver
+  const extendedPrisma = prisma.$extends(prismaExtension);
+  return { resolvers, extendedPrisma };
 };
+
+export default setup;
