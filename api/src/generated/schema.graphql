@@ -19,8 +19,13 @@ type CoreUnit {
   shortCode: String
 }
 
+type Counter {
+  count: Int!
+  message: String!
+}
+
 """Date custom scalar type"""
-scalar GQLDateBase
+scalar Date
 
 type Mutation {
   createChallenge(address: String!): Challenge
@@ -32,20 +37,21 @@ type Mutation {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
+  countUsers(message: String!): Counter
   me: User
   sessions: [Session]
 }
 
 type Session {
   allowedOrigins: String
-  createdAt: GQLDateBase!
+  createdAt: Date!
   createdBy: String!
   id: String!
   isUserCreated: Boolean!
   name: String
-  referenceExpiryDate: GQLDateBase
+  referenceExpiryDate: Date
   referenceTokenId: String!
-  revokedAt: GQLDateBase
+  revokedAt: Date
 }
 
 input SessionInput {
@@ -61,5 +67,5 @@ type SessionOutput {
 
 type User {
   address: String!
-  createdAt: GQLDateBase!
+  createdAt: Date!
 }

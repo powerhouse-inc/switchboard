@@ -2,7 +2,7 @@ import type express from 'express';
 import pino from 'pino';
 import { Session } from '@prisma/client';
 import { getChildLogger } from '../logger';
-import prisma from '../database';
+import { getExtendedPrisma } from '../importedModules';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
@@ -12,7 +12,7 @@ const apolloLogger = getChildLogger(
 
 export interface Context {
   request: { req: express.Request };
-  prisma: typeof prisma;
+  prisma: ReturnType<typeof getExtendedPrisma>;
   getSession: () => Promise<Session>;
   apolloLogger: pino.Logger;
   origin: string | undefined;
@@ -31,6 +31,7 @@ export function createContext(params: CreateContextParams): Context {
   const cookieAuthHeader = req.cookies['gql:default'];
   const token = authorizationHeader?.replace('Bearer ', '');
   const origin = req.get('Origin');
+  const prisma = getExtendedPrisma();
 
   return {
     request: params,

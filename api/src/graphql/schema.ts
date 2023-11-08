@@ -2,12 +2,13 @@ import * as path from 'path';
 import { connectionPlugin, fieldAuthorizePlugin, makeSchema } from 'nexus/dist';
 import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
-import * as types from '../modules';
 import { GQLDateBase } from './dateSchema';
+import * as resolvers from '../modules';
+import { getExtraResolvers } from '../importedModules';
 
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
-  types: { GQLDateBase, ...types },
+  types: { GQLDateBase, ...resolvers, ...getExtraResolvers() },
   plugins: [
     fieldAuthorizePlugin({
       formatError: (authConfig) => authConfig.error,
@@ -28,4 +29,5 @@ export const schema = makeSchema({
     export: 'Context',
   },
 });
+
 export const schemaWithMiddleware = applyMiddleware(schema);

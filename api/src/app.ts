@@ -2,7 +2,7 @@ import type { Express } from 'express';
 import express from 'express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { getChildLogger } from './logger';
-import prisma from './database';
+import basePrisma from './database';
 import { API_GQL_ENDPOINT } from './env';
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
@@ -15,7 +15,7 @@ export const createApp = (): Express => {
   app.get('/healthz', async (_req, res) => {
     try {
       // TODO: after migration to postgres, do SELECT 1
-      await prisma.user.findFirst();
+      await basePrisma.user.findFirst();
     } catch (error: any) {
       return res.status(500).json({
         status: `Failed database initialization check with error: ${error?.message}`,

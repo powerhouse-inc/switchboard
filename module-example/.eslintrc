@@ -1,0 +1,29 @@
+{
+    // From: https://github.com/airbnb/javascript/issues/451 - we want airbnb, but not it's react rules (because we don't use react)
+    "extends": [
+        "airbnb-base",
+        "airbnb-typescript/base"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "ignorePatterns": ["**/generated/*"],
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "root": true,
+    "rules": {
+        "no-return-await": [
+            "error"
+        ],
+        "import/prefer-default-export": "off",
+        "no-console": [
+            "error"
+        ],
+        "max-len": ["error", { "code": 120 }],
+        "quotes": "off",
+        "no-underscore-dangle": "off"
+    }
+}
+

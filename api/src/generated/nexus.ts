@@ -13,7 +13,7 @@ declare global {
     /**
      * Date custom scalar type
      */
-    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "GQLDateBase";
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
   }
 }
 declare global {
@@ -21,7 +21,7 @@ declare global {
     /**
      * Date custom scalar type
      */
-    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "GQLDateBase";
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
     /**
      * Adds a Relay-style connection to the type, with numerous options for configuration
      *
@@ -56,7 +56,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
-  GQLDateBase: any
+  Date: any
 }
 
 export interface NexusGenObjects {
@@ -75,18 +75,22 @@ export interface NexusGenObjects {
     name?: string | null; // String
     shortCode?: string | null; // String
   }
+  Counter: { // root type
+    count: number; // Int!
+    message: string; // String!
+  }
   Mutation: {};
   Query: {};
   Session: { // root type
     allowedOrigins?: string | null; // String
-    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdAt: NexusGenScalars['Date']; // Date!
     createdBy: string; // String!
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name?: string | null; // String
-    referenceExpiryDate?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    referenceExpiryDate?: NexusGenScalars['Date'] | null; // Date
     referenceTokenId: string; // String!
-    revokedAt?: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    revokedAt?: NexusGenScalars['Date'] | null; // Date
   }
   SessionOutput: { // root type
     session: NexusGenRootTypes['Session']; // Session!
@@ -94,7 +98,7 @@ export interface NexusGenObjects {
   }
   User: { // root type
     address: string; // String!
-    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdAt: NexusGenScalars['Date']; // Date!
   }
 }
 
@@ -124,6 +128,10 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     shortCode: string | null; // String
   }
+  Counter: { // field return type
+    count: number; // Int!
+    message: string; // String!
+  }
   Mutation: { // field return type
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
@@ -133,19 +141,20 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
+    countUsers: NexusGenRootTypes['Counter'] | null; // Counter
     me: NexusGenRootTypes['User'] | null; // User
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
   Session: { // field return type
     allowedOrigins: string | null; // String
-    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdAt: NexusGenScalars['Date']; // Date!
     createdBy: string; // String!
     id: string; // String!
     isUserCreated: boolean; // Boolean!
     name: string | null; // String
-    referenceExpiryDate: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    referenceExpiryDate: NexusGenScalars['Date'] | null; // Date
     referenceTokenId: string; // String!
-    revokedAt: NexusGenScalars['GQLDateBase'] | null; // GQLDateBase
+    revokedAt: NexusGenScalars['Date'] | null; // Date
   }
   SessionOutput: { // field return type
     session: NexusGenRootTypes['Session']; // Session!
@@ -153,7 +162,7 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     address: string; // String!
-    createdAt: NexusGenScalars['GQLDateBase']; // GQLDateBase!
+    createdAt: NexusGenScalars['Date']; // Date!
   }
 }
 
@@ -173,6 +182,10 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     shortCode: 'String'
   }
+  Counter: { // field return type name
+    count: 'Int'
+    message: 'String'
+  }
   Mutation: { // field return type name
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
@@ -182,19 +195,20 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
+    countUsers: 'Counter'
     me: 'User'
     sessions: 'Session'
   }
   Session: { // field return type name
     allowedOrigins: 'String'
-    createdAt: 'GQLDateBase'
+    createdAt: 'Date'
     createdBy: 'String'
     id: 'String'
     isUserCreated: 'Boolean'
     name: 'String'
-    referenceExpiryDate: 'GQLDateBase'
+    referenceExpiryDate: 'Date'
     referenceTokenId: 'String'
-    revokedAt: 'GQLDateBase'
+    revokedAt: 'Date'
   }
   SessionOutput: { // field return type name
     session: 'Session'
@@ -202,7 +216,7 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     address: 'String'
-    createdAt: 'GQLDateBase'
+    createdAt: 'Date'
   }
 }
 
@@ -225,6 +239,9 @@ export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
       id?: string | null; // String
+    }
+    countUsers: { // args
+      message: string; // String!
     }
   }
 }
