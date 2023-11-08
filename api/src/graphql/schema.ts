@@ -30,5 +30,4 @@ export const schema = makeSchema({
   },
 });
 
-// @ts-ignore
 export const schemaWithMiddleware = applyMiddleware(schema);
