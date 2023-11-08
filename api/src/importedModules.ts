@@ -33,7 +33,7 @@ export function getExtendedPrisma() {
 
 export function getExtraResolvers() {
   setupAllModules();
-  return Object.assign({}, ...importedResolvers);
+  return importedResolvers;
 }
 
 export default importedModules;
