@@ -6,7 +6,7 @@ const setup = (prisma: PrismaClient) => {
   // Received prisma client is extended with new methods defined in this module
   // To later be received inside `ctx` of each resolver
   const extendedPrisma = prisma.$extends(prismaExtension);
-  return { resolvers, extendedPrisma };
+  return { extendedPrisma, resolvers };
 };
 
 export default setup;

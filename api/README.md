@@ -137,3 +137,47 @@ The API authentication is implemented using "Sign-In with Ethereum" standard des
 ## Health endpoint
 
 Endpoint available at `/healthz` path. Provides response if api is currently running and prisma (orm) is able to execute queries.
+
+## Adding new modules
+
+The api can be extended via modules developed separately and packaged via npm. The example of this approach is the [`module-example`](../module-example) folder found in the root of the project and installed via npm into the `api`.
+
+In order to create a new external module, one have to:
+
+- Create npm package which exports a single function `setup` ([see example](../module-example/index.ts))
+    - `setup` function would receive a single parameter: `prisma` – the [prisma client](https://www.prisma.io/docs/concepts/components/prisma-client#3-importing-prisma-client)
+    - `setup` function should return an object with 2 keys `{ extendedPrisma, resolvers }`
+        - `extendedPrisma` (optional) – an object with extended prisma client (see provided example)
+            - In case you want to not only query existing tables, but extend prisma client with new functions, you can use [prisma $extensions](https://www.prisma.io/docs/concepts/components/prisma-client/client-extensions). This will allow other packages or core modules to use those new functions. Note that currently prisma do not support creating complete new tables via JS api, only adding models (functional extentions over the available methods)
+            - The prisma returned here will be later passed to the resolvers
+        - `resolvers` (optional) – an object with graphql types and resolvers defined via [`nexus`](https://www.npmjs.com/package/nexus). This allows you to define new graphq queries or mutations
+            - Note that `resolve` function inside the resolver will receive custom `ctx` object as a third parameter (i.e.: `(_root, args, ctx: Context)`). It is an object that provides (more info can be found in [`context.ts`](./src/graphql/context.ts)):
+                - `ctx.request` – pure `express` request object
+                - `ctx.prisma` – fully-extended (by all other packages) prisma client
+                - `ctx.getSession()` – function to get user session (or throw 401 error if it's not present). This function have to be called in case your resolver should only be accessible by registered users
+- Install created package into the `api` project (i.e.: run `npm install package-name` or `npm install ../package-folder` it the package is local)
+- Add default export from the created package into the `importedModules` array (inside [`importedModules.ts`](./src/importedModules.ts))
+- Modify `preinstall` script found in `./api/package.json` if your package does not ship pre-built js files
+- Start `api` as suggested above in the `Development Setup` section
+- Open graphql playground found at http://localhost:3001/
+    - Make sure your endpoint is set to query `http://localhost:3001/graphql`
+- Run a test query. In case of `module-example` that would be:
+    ```gql
+    {
+        countUsers(message: "test") {
+            message
+            count
+        }
+    }
+    ```
+- In case of `module-example`, this should result in:
+    ```json
+    {
+        "data": {
+            "countUsers": {
+                "message": "test",
+                "count": 1
+            }
+        }
+    }
+    ```

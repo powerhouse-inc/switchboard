@@ -25,7 +25,7 @@ type Counter {
 }
 
 """Date custom scalar type"""
-scalar GQLDateBase
+scalar Date
 
 type Mutation {
   createChallenge(address: String!): Challenge
@@ -44,14 +44,14 @@ type Query {
 
 type Session {
   allowedOrigins: String
-  createdAt: GQLDateBase!
+  createdAt: Date!
   createdBy: String!
   id: String!
   isUserCreated: Boolean!
   name: String
-  referenceExpiryDate: GQLDateBase
+  referenceExpiryDate: Date
   referenceTokenId: String!
-  revokedAt: GQLDateBase
+  revokedAt: Date
 }
 
 input SessionInput {
@@ -67,5 +67,5 @@ type SessionOutput {
 
 type User {
   address: String!
-  createdAt: GQLDateBase!
+  createdAt: Date!
 }
