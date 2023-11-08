@@ -7,9 +7,8 @@ import * as resolvers from '../modules';
 import { getExtraResolvers } from '../importedModules';
 
 /* istanbul ignore next @preserve */
-const extraResolvers = getExtraResolvers();
 export const schema = makeSchema({
-  types: { GQLDateBase, ...resolvers, ...extraResolvers },
+  types: { GQLDateBase, ...resolvers, ...getExtraResolvers() },
   plugins: [
     fieldAuthorizePlugin({
       formatError: (authConfig) => authConfig.error,
