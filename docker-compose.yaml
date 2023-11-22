@@ -58,7 +58,7 @@ services:
     restart: unless-stopped
     image: nginx:stable
     ports:
-      - '80:80'
+      - '8000:80'
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:

@@ -18,3 +18,5 @@ coverage
 
 # system-related
 .DS_Store
+
+.vscode
