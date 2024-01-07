@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -47,4 +47,65 @@ model Challenge {
   signature String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// Document Drive
+model Drive {
+  id        String   @id
+  createdAt DateTime @default(now())
+
+  driveDocumentId   String?
+  driveMetaDocument Document? @relation(fields: [id, driveDocumentId], references: [driveId, id], onDelete: Cascade)
+
+  @@unique([id, driveDocumentId])
+}
+
+model Document {
+  id           String
+  driveId      String
+  created      DateTime    @default(now())
+  lastModified DateTime    @default(now())
+  revision     Int
+  name         String
+  operations   Operation[]
+  initialState Json // json object with the scope as keys of the root object
+  documentType String
+
+  Drive Drive?
+
+  @@id([id, driveId])
+}
+
+model Operation {
+  driveId    String
+  Document   Document? @relation(fields: [driveId, documentId], references: [driveId, id])
+  documentId String
+  scope      String
+  branch     String
+  index      Int
+
+  hash        String
+  timestamp   DateTime
+  input       Json
+  type        String
+  attachments Attachment[]
+
+  @@id([driveId, documentId, scope, branch, index])
+}
+
+model Attachment {
+  driveId    String
+  documentId String
+  scope      String
+  branch     String
+  index      Int
+  Operation  Operation @relation(fields: [driveId, documentId, scope, branch, index], references: [driveId, documentId, scope, branch, index])
+
+  mimeType  String
+  data      String
+  filename  String
+  extension String
+  hash      String
+
+  @@id([driveId, documentId, scope, branch, index, hash])
 }

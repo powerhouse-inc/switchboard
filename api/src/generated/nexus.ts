@@ -40,10 +40,68 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  AddFileInput: { // input type
+    documentType: string; // String!
+    id: string; // ID!
+    name: string; // String!
+    parentFolder?: string | null; // ID
+  }
+  AddFolderInput: { // input type
+    id: string; // ID!
+    name: string; // String!
+    parentFolder?: string | null; // ID
+  }
+  CopyNodeInput: { // input type
+    srcId: string; // ID!
+    targetId: string; // ID!
+    targetName?: string | null; // String
+    targetParentFolder?: string | null; // ID
+  }
+  CreateDocumentInput: { // input type
+    documentType: string; // String!
+    id: string; // ID!
+  }
+  DeleteNodeInput: { // input type
+    id: string; // ID!
+  }
+  DocumentDriveLocalStateInput: { // input type
+    availableOffline: boolean; // Boolean!
+    sharingType?: string | null; // String
+  }
+  DocumentDriveStateInput: { // input type
+    icon?: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    remoteUrl?: string | null; // String
+  }
+  MoveNodeInput: { // input type
+    srcFolder: string; // ID!
+    targetParentFolder?: string | null; // ID
+  }
   SessionInput: { // input type
     allowedOrigins: string; // String!
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
+  }
+  SetAvailableOfflineInput: { // input type
+    availableOffline: boolean; // Boolean!
+  }
+  SetDriveNameInput: { // input type
+    name: string; // String!
+  }
+  SetSharingTypeInput: { // input type
+    type: string; // String!
+  }
+  UpdateFileInput: { // input type
+    documentType?: string | null; // String
+    id: string; // ID!
+    name?: string | null; // String
+    parentFolder?: string | null; // ID
+  }
+  UpdateNodeInput: { // input type
+    id: string; // ID!
+    name?: string | null; // String
+    parentFolder?: string | null; // ID
   }
 }
 
@@ -79,6 +137,12 @@ export interface NexusGenObjects {
     count: number; // Int!
     message: string; // String!
   }
+  DocumentDriveState: { // root type
+    icon?: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    remoteUrl?: string | null; // String
+  }
   Mutation: {};
   Query: {};
   Session: { // root type
@@ -103,12 +167,13 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
+  Document: any;
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
@@ -132,16 +197,39 @@ export interface NexusGenFieldTypes {
     count: number; // Int!
     message: string; // String!
   }
+  DocumentDriveState: { // field return type
+    icon: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    remoteUrl: string | null; // String
+  }
   Mutation: { // field return type
+    addDrive: boolean | null; // Boolean
+    addFile: boolean | null; // Boolean
+    addFolder: boolean | null; // Boolean
+    copyNode: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
+    createDocument: boolean | null; // Boolean
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
+    deleteDrive: boolean | null; // Boolean
+    deleteNode: boolean | null; // Boolean
+    moveNode: boolean | null; // Boolean
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
+    setAvailableOffline: boolean | null; // Boolean
+    setDriveName: boolean | null; // Boolean
+    setSharingType: boolean | null; // Boolean
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
+    updateFile: boolean | null; // Boolean
+    updateNode: boolean | null; // Boolean
   }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     countUsers: NexusGenRootTypes['Counter'] | null; // Counter
+    document: NexusGenRootTypes['Document'] | null; // Document
+    documents: Array<string | null> | null; // [String]
+    drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
+    drives: Array<string | null> | null; // [String]
     me: NexusGenRootTypes['User'] | null; // User
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
@@ -163,6 +251,14 @@ export interface NexusGenFieldTypes {
   User: { // field return type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
+  }
+  Document: { // field return type
+    created: string; // String!
+    documentType: string; // String!
+    id: string; // String!
+    lastModified: string; // String!
+    name: string; // String!
+    revision: string; // String!
   }
 }
 
@@ -186,16 +282,39 @@ export interface NexusGenFieldTypeNames {
     count: 'Int'
     message: 'String'
   }
+  DocumentDriveState: { // field return type name
+    icon: 'String'
+    id: 'ID'
+    name: 'String'
+    remoteUrl: 'String'
+  }
   Mutation: { // field return type name
+    addDrive: 'Boolean'
+    addFile: 'Boolean'
+    addFolder: 'Boolean'
+    copyNode: 'Boolean'
     createChallenge: 'Challenge'
+    createDocument: 'Boolean'
     createSession: 'SessionOutput'
+    deleteDrive: 'Boolean'
+    deleteNode: 'Boolean'
+    moveNode: 'Boolean'
     revokeSession: 'Session'
+    setAvailableOffline: 'Boolean'
+    setDriveName: 'Boolean'
+    setSharingType: 'Boolean'
     solveChallenge: 'SessionOutput'
+    updateFile: 'Boolean'
+    updateNode: 'Boolean'
   }
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
     countUsers: 'Counter'
+    document: 'Document'
+    documents: 'String'
+    drive: 'DocumentDriveState'
+    drives: 'String'
     me: 'User'
     sessions: 'Session'
   }
@@ -218,22 +337,81 @@ export interface NexusGenFieldTypeNames {
     address: 'String'
     createdAt: 'Date'
   }
+  Document: { // field return type name
+    created: 'String'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'String'
+    name: 'String'
+    revision: 'String'
+  }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
+    addDrive: { // args
+      global: NexusGenInputs['DocumentDriveStateInput']; // DocumentDriveStateInput!
+      local: NexusGenInputs['DocumentDriveLocalStateInput']; // DocumentDriveLocalStateInput!
+    }
+    addFile: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['AddFileInput']; // AddFileInput!
+    }
+    addFolder: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['AddFolderInput']; // AddFolderInput!
+    }
+    copyNode: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['CopyNodeInput']; // CopyNodeInput!
+    }
     createChallenge: { // args
       address: string; // String!
+    }
+    createDocument: { // args
+      driveId: string; // String!
+      input: NexusGenInputs['CreateDocumentInput']; // CreateDocumentInput!
     }
     createSession: { // args
       session: NexusGenInputs['SessionInput']; // SessionInput!
     }
+    deleteDrive: { // args
+      id: string; // String!
+    }
+    deleteNode: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['DeleteNodeInput']; // DeleteNodeInput!
+    }
+    moveNode: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['MoveNodeInput']; // MoveNodeInput!
+    }
     revokeSession: { // args
       sessionId: string; // String!
+    }
+    setAvailableOffline: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['SetAvailableOfflineInput']; // SetAvailableOfflineInput!
+    }
+    setDriveName: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['SetDriveNameInput']; // SetDriveNameInput!
+    }
+    setSharingType: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['SetSharingTypeInput']; // SetSharingTypeInput!
     }
     solveChallenge: { // args
       nonce: string; // String!
       signature: string; // String!
+    }
+    updateFile: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['UpdateFileInput']; // UpdateFileInput!
+    }
+    updateNode: { // args
+      drive: string; // String!
+      operation: NexusGenInputs['UpdateNodeInput']; // UpdateNodeInput!
     }
   }
   Query: {
@@ -242,6 +420,16 @@ export interface NexusGenArgTypes {
     }
     countUsers: { // args
       message: string; // String!
+    }
+    document: { // args
+      drive: string; // String!
+      id: string; // String!
+    }
+    documents: { // args
+      drive: string; // String!
+    }
+    drive: { // args
+      id: string; // String!
     }
   }
 }
@@ -258,7 +446,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -266,7 +454,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "Document";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

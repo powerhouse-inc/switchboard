@@ -2,10 +2,30 @@
 ### Do not make changes to this file directly
 
 
+input AddFileInput {
+  documentType: String!
+  id: ID!
+  name: String!
+  parentFolder: ID
+}
+
+input AddFolderInput {
+  id: ID!
+  name: String!
+  parentFolder: ID
+}
+
 type Challenge {
   hex: String!
   message: String!
   nonce: String!
+}
+
+input CopyNodeInput {
+  srcId: ID!
+  targetId: ID!
+  targetName: String
+  targetParentFolder: ID
 }
 
 type CoreUnit {
@@ -24,20 +44,79 @@ type Counter {
   message: String!
 }
 
+input CreateDocumentInput {
+  documentType: String!
+  id: ID!
+}
+
 """Date custom scalar type"""
 scalar Date
 
+input DeleteNodeInput {
+  id: ID!
+}
+
+interface Document {
+  created: String!
+  documentType: String!
+  id: String!
+  lastModified: String!
+  name: String!
+  revision: String!
+}
+
+input DocumentDriveLocalStateInput {
+  availableOffline: Boolean!
+  sharingType: String
+}
+
+type DocumentDriveState {
+  icon: String
+  id: ID!
+  name: String!
+  remoteUrl: String
+}
+
+input DocumentDriveStateInput {
+  icon: String
+  id: ID!
+  name: String!
+  remoteUrl: String
+}
+
+input MoveNodeInput {
+  srcFolder: ID!
+  targetParentFolder: ID
+}
+
 type Mutation {
+  addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): Boolean
+  addFile(drive: String!, operation: AddFileInput!): Boolean
+  addFolder(drive: String!, operation: AddFolderInput!): Boolean
+  copyNode(drive: String!, operation: CopyNodeInput!): Boolean
   createChallenge(address: String!): Challenge
+  createDocument(driveId: String!, input: CreateDocumentInput!): Boolean
   createSession(session: SessionInput!): SessionOutput
+  deleteDrive(id: String!): Boolean
+  deleteNode(drive: String!, operation: DeleteNodeInput!): Boolean
+  moveNode(drive: String!, operation: MoveNodeInput!): Boolean
   revokeSession(sessionId: String!): Session
+  setAvailableOffline(drive: String!, operation: SetAvailableOfflineInput!): Boolean
+  setDriveName(drive: String!, operation: SetDriveNameInput!): Boolean
+  setSharingType(drive: String!, operation: SetSharingTypeInput!): Boolean
   solveChallenge(nonce: String!, signature: String!): SessionOutput
+  updateFile(drive: String!, operation: UpdateFileInput!): Boolean
+  updateNode(drive: String!, operation: UpdateNodeInput!): Boolean
 }
 
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   countUsers(message: String!): Counter
+  document(drive: String!, id: String!): Document
+  documents(drive: String!): [String]
+  drive(id: String!): DocumentDriveState
+  drives: [String]
   me: User
   sessions: [Session]
 }
@@ -63,6 +142,31 @@ input SessionInput {
 type SessionOutput {
   session: Session!
   token: String!
+}
+
+input SetAvailableOfflineInput {
+  availableOffline: Boolean!
+}
+
+input SetDriveNameInput {
+  name: String!
+}
+
+input SetSharingTypeInput {
+  type: String!
+}
+
+input UpdateFileInput {
+  documentType: String
+  id: ID!
+  name: String
+  parentFolder: ID
+}
+
+input UpdateNodeInput {
+  id: ID!
+  name: String
+  parentFolder: ID
 }
 
 type User {
