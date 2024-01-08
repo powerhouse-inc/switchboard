@@ -44,11 +44,6 @@ type Counter {
   message: String!
 }
 
-input CreateDocumentInput {
-  documentType: String!
-  id: ID!
-}
-
 """Date custom scalar type"""
 scalar Date
 
@@ -56,25 +51,9 @@ input DeleteNodeInput {
   id: ID!
 }
 
-interface Document {
-  created: String!
-  documentType: String!
-  id: String!
-  lastModified: String!
-  name: String!
-  revision: String!
-}
-
 input DocumentDriveLocalStateInput {
   availableOffline: Boolean!
   sharingType: String
-}
-
-type DocumentDriveState {
-  icon: String
-  id: ID!
-  name: String!
-  remoteUrl: String
 }
 
 input DocumentDriveStateInput {
@@ -95,7 +74,6 @@ type Mutation {
   addFolder(drive: String!, operation: AddFolderInput!): Boolean
   copyNode(drive: String!, operation: CopyNodeInput!): Boolean
   createChallenge(address: String!): Challenge
-  createDocument(driveId: String!, input: CreateDocumentInput!): Boolean
   createSession(session: SessionInput!): SessionOutput
   deleteDrive(id: String!): Boolean
   deleteNode(drive: String!, operation: DeleteNodeInput!): Boolean
@@ -113,9 +91,6 @@ type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   countUsers(message: String!): Counter
-  document(drive: String!, id: String!): Document
-  documents(drive: String!): [String]
-  drive(id: String!): DocumentDriveState
   drives: [String]
   me: User
   sessions: [Session]

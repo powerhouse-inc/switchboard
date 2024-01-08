@@ -7,16 +7,6 @@ export const DocumentDriveLocalState = objectType({
     t.nonNull.boolean('availableOffline');
   },
 });
-export const DocumentDriveState = objectType({
-  name: 'DocumentDriveState',
-  definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    // t.nonNull.list.nonNull.field('nodes', { type: UnionNode });
-    t.string('icon');
-    t.string('remoteUrl');
-  },
-});
 
 export const DocumentDriveLocalStateInput = inputObjectType({
   name: 'DocumentDriveLocalStateInput',
@@ -32,26 +22,6 @@ export const DocumentDriveStateInput = inputObjectType({
     t.nonNull.string('name');
     t.string('icon');
     t.string('remoteUrl');
-  },
-});
-
-export const FileNode = objectType({
-  name: 'FileNode',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.nonNull.string('documentType');
-    t.string('parentFolder');
-  },
-});
-export const FolderNode = objectType({
-  name: 'FolderNode',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.string('parentFolder');
   },
 });
 
@@ -139,40 +109,47 @@ export const UpdateNodeInput = inputObjectType({
   },
 });
 
-export const UnionNode = unionType({
+export const FileNode = objectType({
+  name: 'FileNode',
+  definition(t) {
+    t.nonNull.string('id');
+    t.nonNull.string('name');
+    t.nonNull.string('kind');
+    t.nonNull.string('documentType');
+    t.string('parentFolder');
+  },
+});
+export const FolderNode = objectType({
+  name: 'FolderNode',
+  definition(t) {
+    t.nonNull.string('id');
+    t.nonNull.string('name');
+    t.nonNull.string('kind');
+    t.string('parentFolder');
+  },
+});
+
+export const Node = unionType({
   name: 'Node',
   resolveType(node) {
-    return node.kind === 'file' ? 'FileNode' : 'FolderNode';
+    if (node.kind === 'folder') {
+      return FolderNode;
+    }
+
+    return FileNode;
   },
   definition(t) {
-    t.members(FolderNode, FileNode);
+    t.members(FileNode, FolderNode);
   },
 });
 
-export const CreateDocumentInput = inputObjectType({
-  name: 'CreateDocumentInput',
+export const DocumentDriveState = objectType({
+  name: 'DocumentDriveState',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.string('documentType');
-  },
-});
-
-export const Document = interfaceType({
-  name: 'Document',
-  resolveType: (document) => {
-    switch (document.documentType) {
-      case 'document-drive':
-        return 'DocumentDriveDocument';
-      default:
-        return null;
-    }
-  },
-  definition(t) {
-    t.nonNull.string('id', { resolve: (doc) => doc.id });
-    t.nonNull.string('name', { resolve: (doc) => doc.name });
-    t.nonNull.string('documentType', { resolve: (doc) => doc.documentType });
-    t.nonNull.string('lastModified', { resolve: (doc) => doc.lastModified });
-    t.nonNull.string('revision', { resolve: (doc) => doc.revision });
-    t.nonNull.string('created', { resolve: (doc) => doc.created });
+    t.nonNull.string('name');
+    t.nonNull.list.field('nodes', { type: Node });
+    t.string('icon');
+    t.string('remoteUrl');
   },
 });

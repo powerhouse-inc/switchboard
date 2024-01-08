@@ -8,7 +8,16 @@ export const getDrive = queryField('drive', {
   },
   resolve: async (_parent, { id }, ctx) => {
     try {
-      return await ctx.prisma.drive.getDrive(id);
+      const drive = await ctx.prisma.drive.getDrive(id);
+      const response = {
+        id: drive.id,
+        name: drive.name,
+        icon: drive.icon,
+        remoteUrl: drive.remoteUrl,
+        nodes: drive.nodes
+      };
+
+      return drive;
     } catch (e) {
       return null;
     }
