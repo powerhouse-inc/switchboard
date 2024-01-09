@@ -1,4 +1,15 @@
-import { inputObjectType, interfaceType, objectType, unionType } from 'nexus';
+import {
+  arg,
+  enumType,
+  idArg,
+  inputObjectType,
+  interfaceType,
+  list,
+  nonNull,
+  objectType,
+  stringArg,
+  unionType,
+} from 'nexus';
 
 export const DocumentDriveLocalState = objectType({
   name: 'DocumentDriveLocalState',
@@ -152,4 +163,65 @@ export const DocumentDriveState = objectType({
     t.string('icon');
     t.string('remoteUrl');
   },
+});
+
+// v2
+export const ListenerRevision = inputObjectType({
+  name: 'InputListenerRevision',
+  definition(t) {
+    t.nonNull.string('driveId');
+    t.nonNull.string('documentId');
+    t.nonNull.string('scope');
+    t.nonNull.string('branch');
+    t.nonNull.field('status', { type: UpdateStatus });
+    t.nonNull.int('revision');
+  },
+});
+export const OperationUpdate = objectType({
+  name: 'OperationUpdate',
+  definition(t) {
+    t.nonNull.int('revision');
+    t.nonNull.int('skip');
+    t.nonNull.string('name');
+    t.nonNull.string('inputJson');
+    t.nonNull.string('stateHash');
+  },
+});
+
+export const InputOperationUpdate = inputObjectType({
+  name: 'InputOperationUpdate',
+  definition(t) {
+    t.nonNull.int('revision');
+    t.nonNull.int('skip');
+    t.nonNull.string('name');
+    t.nonNull.string('inputJson');
+    t.nonNull.string('stateHash');
+  },
+});
+
+export const StrandUpdate = objectType({
+  name: 'StrandUpdate',
+  definition(t) {
+    t.nonNull.string('driveId');
+    t.nonNull.string('documentId');
+    t.nonNull.string('scope');
+    t.nonNull.string('branch');
+    t.nonNull.list.nonNull.field('operations', { type: OperationUpdate });
+  },
+});
+
+export const InputStrandUpdate = inputObjectType({
+  name: 'InputStrandUpdate',
+  definition(t) {
+    t.nonNull.string('driveId');
+    t.nonNull.string('documentId');
+    t.nonNull.string('scope');
+    t.nonNull.string('branch');
+    t.nonNull.list.nonNull.field('operations', { type: InputOperationUpdate });
+  },
+});
+
+export const UpdateStatus = enumType({
+  name: 'UpdateStatus',
+  members: ['SUCCESS', 'MISSING', 'CONFLICT', 'ERROR'],
 });
