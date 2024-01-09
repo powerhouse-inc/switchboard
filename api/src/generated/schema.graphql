@@ -39,15 +39,6 @@ input DocumentDriveStateInput {
   remoteUrl: String
 }
 
-input InputListenerRevision {
-  branch: String!
-  documentId: String!
-  driveId: String!
-  revision: Int!
-  scope: String!
-  status: UpdateStatus!
-}
-
 input InputOperationUpdate {
   inputJson: String!
   name: String!
@@ -64,12 +55,30 @@ input InputStrandUpdate {
   scope: String!
 }
 
+type ListenerRevision {
+  branch: String!
+  documentId: String!
+  driveId: String!
+  revision: Int!
+  scope: String!
+  status: UpdateStatus!
+}
+
+input ListenerRevisionInput {
+  branch: String!
+  documentId: String!
+  driveId: String!
+  revision: Int!
+  scope: String!
+  status: UpdateStatus!
+}
+
 type Mutation {
   addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): Boolean
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
   deleteDrive(id: String!): Boolean
-  pushUpdates(strands: [InputStrandUpdate!]): Boolean
+  pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
@@ -83,14 +92,14 @@ type OperationUpdate {
 }
 
 type Query {
-  acknowledge(listenerId: ID, revisions: [InputListenerRevision]): Boolean
+  acknowledge(listenerId: ID, revisions: [ListenerRevisionInput]): Boolean
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   countUsers(message: String!): Counter
   drives: [String]
   me: User
   sessions: [Session]
-  strands(listenerId: ID, revisions: [InputListenerRevision]): [StrandUpdate]
+  strands(listenerId: ID, revisions: [ListenerRevisionInput]): [StrandUpdate]
   strandsSince(listenerId: ID, since: Date): [StrandUpdate]
 }
 

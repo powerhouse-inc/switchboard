@@ -1,11 +1,15 @@
 import { idArg, list, nonNull, queryField, stringArg } from 'nexus';
-import { ListenerRevision, StrandUpdate } from '../definitions';
+import {
+  ListenerRevision,
+  ListenerRevisionInput,
+  StrandUpdate,
+} from '../definitions';
 
 export const strands = queryField('strands', {
   type: list(StrandUpdate),
   args: {
     listenerId: idArg(),
-    revisions: list(ListenerRevision),
+    revisions: list(ListenerRevisionInput),
   },
   resolve: async (_parent, args, ctx) => {
     try {
@@ -37,7 +41,7 @@ export const acknowledge = queryField('acknowledge', {
   type: 'Boolean',
   args: {
     listenerId: idArg(),
-    revisions: list(ListenerRevision),
+    revisions: list(ListenerRevisionInput),
   },
   resolve: async (_parent, args, ctx) => {
     try {

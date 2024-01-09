@@ -166,8 +166,8 @@ export const DocumentDriveState = objectType({
 });
 
 // v2
-export const ListenerRevision = inputObjectType({
-  name: 'InputListenerRevision',
+export const ListenerRevisionInput = inputObjectType({
+  name: 'ListenerRevisionInput',
   definition(t) {
     t.nonNull.string('driveId');
     t.nonNull.string('documentId');
@@ -177,6 +177,19 @@ export const ListenerRevision = inputObjectType({
     t.nonNull.int('revision');
   },
 });
+
+export const ListenerRevision = objectType({
+  name: 'ListenerRevision',
+  definition(t) {
+    t.nonNull.string('driveId');
+    t.nonNull.string('documentId');
+    t.nonNull.string('scope');
+    t.nonNull.string('branch');
+    t.nonNull.field('status', { type: UpdateStatus });
+    t.nonNull.int('revision');
+  },
+});
+
 export const OperationUpdate = objectType({
   name: 'OperationUpdate',
   definition(t) {

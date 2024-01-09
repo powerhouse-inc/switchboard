@@ -50,14 +50,6 @@ export interface NexusGenInputs {
     name: string; // String!
     remoteUrl?: string | null; // String
   }
-  InputListenerRevision: { // input type
-    branch: string; // String!
-    documentId: string; // String!
-    driveId: string; // String!
-    revision: number; // Int!
-    scope: string; // String!
-    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
-  }
   InputOperationUpdate: { // input type
     inputJson: string; // String!
     name: string; // String!
@@ -71,6 +63,14 @@ export interface NexusGenInputs {
     driveId: string; // String!
     operations: NexusGenInputs['InputOperationUpdate'][]; // [InputOperationUpdate!]!
     scope: string; // String!
+  }
+  ListenerRevisionInput: { // input type
+    branch: string; // String!
+    documentId: string; // String!
+    driveId: string; // String!
+    revision: number; // Int!
+    scope: string; // String!
+    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   SessionInput: { // input type
     allowedOrigins: string; // String!
@@ -111,6 +111,14 @@ export interface NexusGenObjects {
   Counter: { // root type
     count: number; // Int!
     message: string; // String!
+  }
+  ListenerRevision: { // root type
+    branch: string; // String!
+    documentId: string; // String!
+    driveId: string; // String!
+    revision: number; // Int!
+    scope: string; // String!
+    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: {};
   OperationUpdate: { // root type
@@ -179,12 +187,20 @@ export interface NexusGenFieldTypes {
     count: number; // Int!
     message: string; // String!
   }
+  ListenerRevision: { // field return type
+    branch: string; // String!
+    documentId: string; // String!
+    driveId: string; // String!
+    revision: number; // Int!
+    scope: string; // String!
+    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
+  }
   Mutation: { // field return type
     addDrive: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
     deleteDrive: boolean | null; // Boolean
-    pushUpdates: boolean | null; // Boolean
+    pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
@@ -254,12 +270,20 @@ export interface NexusGenFieldTypeNames {
     count: 'Int'
     message: 'String'
   }
+  ListenerRevision: { // field return type name
+    branch: 'String'
+    documentId: 'String'
+    driveId: 'String'
+    revision: 'Int'
+    scope: 'String'
+    status: 'UpdateStatus'
+  }
   Mutation: { // field return type name
     addDrive: 'Boolean'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
     deleteDrive: 'Boolean'
-    pushUpdates: 'Boolean'
+    pushUpdates: 'ListenerRevision'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
   }
@@ -338,7 +362,7 @@ export interface NexusGenArgTypes {
   Query: {
     acknowledge: { // args
       listenerId?: string | null; // ID
-      revisions?: Array<NexusGenInputs['InputListenerRevision'] | null> | null; // [InputListenerRevision]
+      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
     }
     coreUnit: { // args
       id?: string | null; // String
@@ -348,7 +372,7 @@ export interface NexusGenArgTypes {
     }
     strands: { // args
       listenerId?: string | null; // ID
-      revisions?: Array<NexusGenInputs['InputListenerRevision'] | null> | null; // [InputListenerRevision]
+      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
     }
     strandsSince: { // args
       listenerId?: string | null; // ID
