@@ -51,11 +51,11 @@ export interface NexusGenInputs {
     remoteUrl?: string | null; // String
   }
   InputOperationUpdate: { // input type
-    inputJson: string; // String!
-    name: string; // String!
+    input: string; // String!
     revision: number; // Int!
     skip: number; // Int!
     stateHash: string; // String!
+    type: string; // String!
   }
   InputStrandUpdate: { // input type
     branch: string; // String!
@@ -93,6 +93,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AddDriveResponse: { // root type
+    global: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+    local: NexusGenRootTypes['DocumentDriveLocalState']; // DocumentDriveLocalState!
+  }
   Challenge: { // root type
     hex: string; // String!
     message: string; // String!
@@ -112,6 +116,17 @@ export interface NexusGenObjects {
     count: number; // Int!
     message: string; // String!
   }
+  DocumentDriveLocalState: { // root type
+    availableOffline: boolean; // Boolean!
+    sharingType?: string | null; // String
+  }
+  DocumentDriveState: { // root type
+    icon?: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    remoteUrl?: string | null; // String
+  }
   ListenerRevision: { // root type
     branch: string; // String!
     documentId: string; // String!
@@ -121,6 +136,13 @@ export interface NexusGenObjects {
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: {};
+  Node: { // root type
+    documentType?: string | null; // String
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder?: string | null; // String
+  }
   OperationUpdate: { // root type
     inputJson: string; // String!
     name: string; // String!
@@ -168,6 +190,10 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  AddDriveResponse: { // field return type
+    global: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+    local: NexusGenRootTypes['DocumentDriveLocalState']; // DocumentDriveLocalState!
+  }
   Challenge: { // field return type
     hex: string; // String!
     message: string; // String!
@@ -187,6 +213,17 @@ export interface NexusGenFieldTypes {
     count: number; // Int!
     message: string; // String!
   }
+  DocumentDriveLocalState: { // field return type
+    availableOffline: boolean; // Boolean!
+    sharingType: string | null; // String
+  }
+  DocumentDriveState: { // field return type
+    icon: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    remoteUrl: string | null; // String
+  }
   ListenerRevision: { // field return type
     branch: string; // String!
     documentId: string; // String!
@@ -196,13 +233,20 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: { // field return type
-    addDrive: boolean | null; // Boolean
+    addDrive: NexusGenRootTypes['AddDriveResponse'] | null; // AddDriveResponse
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
     deleteDrive: boolean | null; // Boolean
     pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
+  }
+  Node: { // field return type
+    documentType: string | null; // String
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder: string | null; // String
   }
   OperationUpdate: { // field return type
     inputJson: string; // String!
@@ -216,6 +260,7 @@ export interface NexusGenFieldTypes {
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     countUsers: NexusGenRootTypes['Counter'] | null; // Counter
+    drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     drives: Array<string | null> | null; // [String]
     me: NexusGenRootTypes['User'] | null; // User
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
@@ -251,6 +296,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AddDriveResponse: { // field return type name
+    global: 'DocumentDriveState'
+    local: 'DocumentDriveLocalState'
+  }
   Challenge: { // field return type name
     hex: 'String'
     message: 'String'
@@ -270,6 +319,17 @@ export interface NexusGenFieldTypeNames {
     count: 'Int'
     message: 'String'
   }
+  DocumentDriveLocalState: { // field return type name
+    availableOffline: 'Boolean'
+    sharingType: 'String'
+  }
+  DocumentDriveState: { // field return type name
+    icon: 'String'
+    id: 'ID'
+    name: 'String'
+    nodes: 'Node'
+    remoteUrl: 'String'
+  }
   ListenerRevision: { // field return type name
     branch: 'String'
     documentId: 'String'
@@ -279,13 +339,20 @@ export interface NexusGenFieldTypeNames {
     status: 'UpdateStatus'
   }
   Mutation: { // field return type name
-    addDrive: 'Boolean'
+    addDrive: 'AddDriveResponse'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
     deleteDrive: 'Boolean'
     pushUpdates: 'ListenerRevision'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
+  }
+  Node: { // field return type name
+    documentType: 'String'
+    id: 'String'
+    kind: 'String'
+    name: 'String'
+    parentFolder: 'String'
   }
   OperationUpdate: { // field return type name
     inputJson: 'String'
@@ -299,6 +366,7 @@ export interface NexusGenFieldTypeNames {
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
     countUsers: 'Counter'
+    drive: 'DocumentDriveState'
     drives: 'String'
     me: 'User'
     sessions: 'Session'
@@ -369,6 +437,9 @@ export interface NexusGenArgTypes {
     }
     countUsers: { // args
       message: string; // String!
+    }
+    drive: { // args
+      id: string; // String!
     }
     strands: { // args
       listenerId?: string | null; // ID

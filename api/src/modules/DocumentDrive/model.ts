@@ -5,6 +5,7 @@ import {
   DriveInput,
   FilesystemStorage,
   MemoryStorage,
+  PrismaStorage,
 } from 'document-drive';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
 import { module as DocumentModelLib } from 'document-model/document-model';
@@ -21,7 +22,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   ] as DocumentModel[];
   const driveServer = new DocumentDriveServer(
     documentModels,
-    new MemoryStorage(),
+    new PrismaStorage(prisma),
   );
 
   return {

@@ -1,12 +1,9 @@
 import moduleExample from 'module-example';
 import prismaCore from './database';
-
 // Add your main setup function to the list of all setup functions
 // Note that order of the modules in the array matters:
 // the latest would receive more extended prisma client
-const importedModules = [
-  moduleExample,
-];
+const importedModules = [moduleExample];
 
 // Below is the functionality to iterate over all importedModules
 // and run their setup logic iteratevely
@@ -21,7 +18,9 @@ export function setupAllModules() {
   importedModules.forEach((importedModule) => {
     const exported = importedModule(fullyExtendedPrisma);
     if (typeof exported !== 'object') {
-      throw new Error('function exported from a module should always return an object');
+      throw new Error(
+        'function exported from a module should always return an object',
+      );
     }
     if ('extendedPrisma' in exported) {
       fullyExtendedPrisma = exported.extendedPrisma;

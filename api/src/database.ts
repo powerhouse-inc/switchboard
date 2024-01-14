@@ -51,7 +51,7 @@ const prisma = prismaBase.$extends({
     user: getUserCrud(prismaBase),
     session: getSessionCrud(prismaBase),
     challenge: getChallengeCrud(prismaBase),
-    drive: getDocumentDriveCRUD(prismaBase),
+    document: getDocumentDriveCRUD(prismaBase),
   },
 });
 

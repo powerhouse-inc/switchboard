@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type AddDriveResponse {
+  global: DocumentDriveState!
+  local: DocumentDriveLocalState!
+}
+
 type Challenge {
   hex: String!
   message: String!
@@ -27,9 +32,22 @@ type Counter {
 """Date custom scalar type"""
 scalar Date
 
+type DocumentDriveLocalState {
+  availableOffline: Boolean!
+  sharingType: String
+}
+
 input DocumentDriveLocalStateInput {
   availableOffline: Boolean!
   sharingType: String
+}
+
+type DocumentDriveState {
+  icon: String
+  id: ID!
+  name: String!
+  nodes: [Node]!
+  remoteUrl: String
 }
 
 input DocumentDriveStateInput {
@@ -40,11 +58,11 @@ input DocumentDriveStateInput {
 }
 
 input InputOperationUpdate {
-  inputJson: String!
-  name: String!
+  input: String!
   revision: Int!
   skip: Int!
   stateHash: String!
+  type: String!
 }
 
 input InputStrandUpdate {
@@ -74,13 +92,21 @@ input ListenerRevisionInput {
 }
 
 type Mutation {
-  addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): Boolean
+  addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): AddDriveResponse
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
   deleteDrive(id: String!): Boolean
   pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
+}
+
+type Node {
+  documentType: String
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
 }
 
 type OperationUpdate {
@@ -96,6 +122,7 @@ type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   countUsers(message: String!): Counter
+  drive(id: String!): DocumentDriveState
   drives: [String]
   me: User
   sessions: [Session]
