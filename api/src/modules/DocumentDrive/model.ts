@@ -24,57 +24,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     new MemoryStorage(),
   );
 
-  // getDrives(): Promise<string[]>;
-  //   addDrive(drive: DriveInput): Promise<void>;
-  //   deleteDrive(id: string): Promise<void>;
-  //   getDrive(id: string): Promise<DocumentDriveDocument>;
-
-  //   getDocuments: (drive: string) => Promise<string[]>;
-  //   getDocument: (drive: string, id: string) => Promise<Document>;
-  //   createDocument(drive: string, document: CreateDocumentInput): Promise<void>;
-  //   deleteDocument(drive: string, id: string): Promise<void>;
-
-  //   addOperation(
-  //       drive: string,
-  //       id: string,
-  //       operation: Operation
-  //   ): Promise<IOperationResult>;
-  //   addOperations(
-  //       drive: string,
-  //       id: string,
-  //       operations: Operation[]
-  //   ): Promise<IOperationResult[]>;
-
-  //   addDriveOperation(
-  //       drive: string,
-  //       operation: Operation<DocumentDriveAction | BaseAction>
-  //   ): Promise<IOperationResult<DocumentDriveDocument>>;
-  //   addDriveOperations(
-  //       drive: string,
-  //       operations: Operation<DocumentDriveAction | BaseAction>[]
-  //   ): Promise<IOperationResult<DocumentDriveDocument>[]>;
-
   return {
     addDrive: async (args: DriveInput) => {
       await driveServer.addDrive(args);
       return {
         ...args,
       };
-    },
-    addOperation: async (args: {
-      drive: string;
-      operation: Operation<any>;
-    }) => {
-      const op: Operation<DocumentDriveAction | BaseAction> = {
-        index: 0,
-        timestamp: new Date().getTime(),
-      };
-
-      // return false;
-      driveServer.addDriveOperation(args.drive, args.operation);
-    },
-    updateDrive: () => {
-      // driveServer.
     },
     deleteDrive: async (id: string) => {
       await driveServer.deleteDrive(id);
@@ -112,10 +67,19 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       try {
         await driveServer.createDocument(driveId, input);
       } catch (e) {
+        console.log(e);
         return false;
       }
 
       return true;
+    },
+
+    addOperation: async (
+      driveId: string,
+      documentId: string,
+      operation: Operation,
+    ) => {
+      return await driveServer.addOperation(driveId, documentId, operation);
     },
   };
 }

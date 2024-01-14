@@ -120,37 +120,14 @@ export const UpdateNodeInput = inputObjectType({
   },
 });
 
-export const FileNode = objectType({
-  name: 'FileNode',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.nonNull.string('documentType');
-    t.string('parentFolder');
-  },
-});
-export const FolderNode = objectType({
-  name: 'FolderNode',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.string('parentFolder');
-  },
-});
-
-export const Node = unionType({
+export const Node = objectType({
   name: 'Node',
-  resolveType(node) {
-    if (node.kind === 'folder') {
-      return FolderNode;
-    }
-
-    return FileNode;
-  },
   definition(t) {
-    t.members(FileNode, FolderNode);
+    t.nonNull.string('id');
+    t.nonNull.string('name');
+    t.nonNull.string('kind');
+    t.string('documentType');
+    t.string('parentFolder');
   },
 });
 
@@ -206,8 +183,8 @@ export const InputOperationUpdate = inputObjectType({
   definition(t) {
     t.nonNull.int('revision');
     t.nonNull.int('skip');
-    t.nonNull.string('name');
-    t.nonNull.string('inputJson');
+    t.nonNull.string('type');
+    t.nonNull.string('input');
     t.nonNull.string('stateHash');
   },
 });
