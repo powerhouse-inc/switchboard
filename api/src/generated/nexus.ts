@@ -51,10 +51,11 @@ export interface NexusGenInputs {
     remoteUrl?: string | null; // String
   }
   InputOperationUpdate: { // input type
+    hash: string; // String!
+    index: number; // Int!
     input: string; // String!
-    revision: number; // Int!
-    skip: number; // Int!
-    stateHash: string; // String!
+    skip?: number | null; // Int
+    timestamp: string; // String!
     type: string; // String!
   }
   InputStrandUpdate: { // input type
@@ -133,7 +134,7 @@ export interface NexusGenObjects {
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
-    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
+    status: string; // String!
   }
   Mutation: {};
   Node: { // root type
@@ -230,7 +231,7 @@ export interface NexusGenFieldTypes {
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
-    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
+    status: string; // String!
   }
   Mutation: { // field return type
     addDrive: NexusGenRootTypes['AddDriveResponse'] | null; // AddDriveResponse
@@ -336,7 +337,7 @@ export interface NexusGenFieldTypeNames {
     driveId: 'String'
     revision: 'Int'
     scope: 'String'
-    status: 'UpdateStatus'
+    status: 'String'
   }
   Mutation: { // field return type name
     addDrive: 'AddDriveResponse'

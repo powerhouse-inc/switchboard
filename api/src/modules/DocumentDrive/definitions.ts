@@ -162,7 +162,7 @@ export const ListenerRevision = objectType({
     t.nonNull.string('documentId');
     t.nonNull.string('scope');
     t.nonNull.string('branch');
-    t.nonNull.field('status', { type: UpdateStatus });
+    t.nonNull.string('status');
     t.nonNull.int('revision');
   },
 });
@@ -181,11 +181,12 @@ export const OperationUpdate = objectType({
 export const InputOperationUpdate = inputObjectType({
   name: 'InputOperationUpdate',
   definition(t) {
-    t.nonNull.int('revision');
-    t.nonNull.int('skip');
+    t.nonNull.int('index');
+    t.int('skip');
     t.nonNull.string('type');
     t.nonNull.string('input');
-    t.nonNull.string('stateHash');
+    t.nonNull.string('hash');
+    t.nonNull.string('timestamp');
   },
 });
 

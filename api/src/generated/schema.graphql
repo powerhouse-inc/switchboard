@@ -58,10 +58,11 @@ input DocumentDriveStateInput {
 }
 
 input InputOperationUpdate {
+  hash: String!
+  index: Int!
   input: String!
-  revision: Int!
-  skip: Int!
-  stateHash: String!
+  skip: Int
+  timestamp: String!
   type: String!
 }
 
@@ -79,7 +80,7 @@ type ListenerRevision {
   driveId: String!
   revision: Int!
   scope: String!
-  status: UpdateStatus!
+  status: String!
 }
 
 input ListenerRevisionInput {

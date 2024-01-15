@@ -1,6 +1,4 @@
 import { mutationField, nonNull, objectType } from 'nexus';
-import { GraphQLJSONObject } from 'graphql-type-json';
-import { scalarType } from 'nexus';
 
 import {
   DocumentDriveLocalState,

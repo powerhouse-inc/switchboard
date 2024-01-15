@@ -64,7 +64,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return true;
     },
 
-    createDocument: async (driveId: string, input: CreateDocumentInput) => {
+    addDocument: async (driveId: string, input: CreateDocumentInput) => {
       try {
         await driveServer.createDocument(driveId, input);
       } catch (e) {
@@ -81,6 +81,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       operation: Operation,
     ) => {
       return await driveServer.addOperation(driveId, documentId, operation);
+    },
+
+    addDriveOperations: async (driveId: string, operations: Operation[]) => {
+      const result = await driveServer.addDriveOperations(driveId, operations);
+      return result;
     },
   };
 }
