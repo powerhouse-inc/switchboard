@@ -1,12 +1,6 @@
 import { list, mutationField, nonNull } from 'nexus';
-import {
-  InputStrandUpdate,
-  ListenerRevision,
-  UpdateStatus,
-} from '../definitions';
-import { OperationScope } from 'document-model/document';
-import { Operation } from 'document-model/dist/browser/document';
-import e from 'express';
+import { InputStrandUpdate, ListenerRevision } from '../definitions';
+import { Operation, OperationScope } from 'document-model/document';
 
 export const pushUpdates = mutationField('pushUpdates', {
   type: list(ListenerRevision),
