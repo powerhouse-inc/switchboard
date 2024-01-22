@@ -1,33 +1,29 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from "@prisma/client";
 import {
-  CreateDocumentInput,
   DocumentDriveServer,
   DriveInput,
-  FilesystemStorage,
+  ListenerRevision,
   MemoryStorage,
   PrismaStorage,
-} from 'document-drive';
-import * as DocumentModelsLibs from 'document-model-libs/document-models';
-import { module as DocumentModelLib } from 'document-model/document-model';
-import {
-  BaseAction,
-  DocumentModel,
-  Operation,
-} from 'document-model/dist/browser/document';
-import { DocumentDriveAction } from 'document-model-libs/dist/document-models/document-drive';
+} from "document-drive";
+import * as DocumentModelsLibs from "document-model-libs/document-models";
+import { module as DocumentModelLib } from "document-model/document-model";
+import { DocumentModel, Operation } from "document-model/dist/browser/document";
+import { PullResponderTransmitter } from "document-drive/src/transmitter/pull-responder";
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
     ...Object.values(DocumentModelsLibs),
   ] as DocumentModel[];
+
   const driveServer = new DocumentDriveServer(
     documentModels,
-    new PrismaStorage(prisma),
+    new MemoryStorage()
   );
 
   return {
     addDrive: async (args: DriveInput) => {
-      await driveServer.addDrive(args);
+      const drive = await driveServer.addDrive(args);
       return {
         ...args,
       };
@@ -64,9 +60,9 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return true;
     },
 
-    addDocument: async (driveId: string, input: CreateDocumentInput) => {
+    addDocument: async (input: DriveInput) => {
       try {
-        await driveServer.createDocument(driveId, input);
+        await driveServer.addDrive(input);
       } catch (e) {
         console.log(e);
         return false;
@@ -78,7 +74,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     addOperation: async (
       driveId: string,
       documentId: string,
-      operation: Operation,
+      operation: Operation
     ) => {
       return await driveServer.addOperation(driveId, documentId, operation);
     },
@@ -86,6 +82,67 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     addDriveOperations: async (driveId: string, operations: Operation[]) => {
       const result = await driveServer.addDriveOperations(driveId, operations);
       return result;
+    },
+    addOperations: async (
+      driveId: string,
+      documentId: string,
+      operations: Operation[]
+    ) => {
+      const result = await driveServer.addOperations(
+        driveId,
+        documentId,
+        operations
+      );
+      return result;
+    },
+
+    pushUpdates: async (
+      driveId: string,
+      documentId: string,
+      operations: Operation[]
+    ) => {
+      const result = await driveServer.addOperations(
+        driveId,
+        documentId,
+        operations
+      );
+      return result;
+    },
+
+    pullStrands: async (
+      driveId: string,
+      listenerId: string,
+      since?: string
+    ) => {
+      const transmitter = (await driveServer.getTransmitter(
+        driveId,
+        listenerId
+      )) as PullResponderTransmitter;
+      if (!transmitter) {
+        throw new Error(`Transmitter with id ${listenerId} not found`);
+      }
+
+      const result = await transmitter.getStrands(listenerId, since);
+      return result;
+    },
+
+    acknowledgeStrands: async (
+      driveId: string,
+      listenerId: string,
+      revisions: ListenerRevision[]
+    ) => {
+      const transmitter = (await driveServer.getTransmitter(
+        driveId,
+        listenerId
+      )) as PullResponderTransmitter;
+      if (!transmitter) {
+        throw new Error(`Transmitter with id ${listenerId} not found`);
+      }
+      return await transmitter.acknowledgeStrands(
+        listenerId,
+        driveId,
+        revisions
+      );
     },
   };
 }

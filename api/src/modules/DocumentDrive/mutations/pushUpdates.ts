@@ -1,8 +1,12 @@
-import { list, mutationField, nonNull } from 'nexus';
-import { InputStrandUpdate, ListenerRevision } from '../definitions';
-import { Operation, OperationScope } from 'document-model/document';
+import { list, mutationField, nonNull } from "nexus";
+import { InputStrandUpdate, ListenerRevision } from "../definitions";
+import { OperationScope } from "document-model/document";
+import {
+  ListenerRevision as IListenerRevision,
+  UpdateStatus,
+} from "document-drive";
 
-export const pushUpdates = mutationField('pushUpdates', {
+export const pushUpdates = mutationField("pushUpdates", {
   type: list(ListenerRevision),
   args: {
     strands: list(nonNull(InputStrandUpdate)),
@@ -10,7 +14,8 @@ export const pushUpdates = mutationField('pushUpdates', {
   resolve: async (_parent, { strands }, ctx) => {
     //@todo: get connect drive server from ctx and apply updates
 
-    if (!strands || strands?.length === 0) return [[]];
+    if (!strands || strands?.length === 0) return [];
+    const listenerRevisions: IListenerRevision[] = [];
     const results = await Promise.all(
       strands.map(async (s) => {
         const operations = s.operations?.map((o) => {
@@ -24,28 +29,26 @@ export const pushUpdates = mutationField('pushUpdates', {
           return op;
         });
         try {
-          const result = await ctx.prisma.document.addDriveOperations(
+          const result = await ctx.prisma.document.pushUpdates(
             s.driveId,
-            operations,
+            s.documentId,
+            operations
           );
-          console.log(result);
-          return result;
+
+          listenerRevisions.push({
+            branch: s.branch,
+            documentId: s.documentId,
+            driveId: s.driveId,
+            revision: result.operations.pop().revision,
+            scope: s.scope as OperationScope,
+            status: (result.error ? "ERROR" : "SUCCESS") as UpdateStatus,
+          });
         } catch (e) {
           console.log(e);
-          return null;
         }
-      }),
+      })
     );
-    return strands.map((r, i) => {
-      // if (!result) return null;
-      return {
-        driveId: r.driveId,
-        documentId: r.documentId,
-        scope: r.scope,
-        branch: r.branch,
-        status: 'SUCCESS',
-        revision: r.operations[r.operations.length - 1].index + 1,
-      };
-    });
+
+    return listenerRevisions;
   },
 });

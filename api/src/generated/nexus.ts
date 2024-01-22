@@ -134,7 +134,7 @@ export interface NexusGenObjects {
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
-    status: string; // String!
+    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: {};
   Node: { // root type
@@ -231,9 +231,10 @@ export interface NexusGenFieldTypes {
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
-    status: string; // String!
+    status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: { // field return type
+    acknowledge: boolean | null; // Boolean
     addDrive: NexusGenRootTypes['AddDriveResponse'] | null; // AddDriveResponse
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
@@ -257,7 +258,6 @@ export interface NexusGenFieldTypes {
     stateHash: string; // String!
   }
   Query: { // field return type
-    acknowledge: boolean | null; // Boolean
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     countUsers: NexusGenRootTypes['Counter'] | null; // Counter
@@ -337,9 +337,10 @@ export interface NexusGenFieldTypeNames {
     driveId: 'String'
     revision: 'Int'
     scope: 'String'
-    status: 'String'
+    status: 'UpdateStatus'
   }
   Mutation: { // field return type name
+    acknowledge: 'Boolean'
     addDrive: 'AddDriveResponse'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
@@ -363,7 +364,6 @@ export interface NexusGenFieldTypeNames {
     stateHash: 'String'
   }
   Query: { // field return type name
-    acknowledge: 'Boolean'
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
     countUsers: 'Counter'
@@ -404,6 +404,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    acknowledge: { // args
+      listenerId?: string | null; // ID
+      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
+    }
     addDrive: { // args
       global: NexusGenInputs['DocumentDriveStateInput']; // DocumentDriveStateInput!
       local: NexusGenInputs['DocumentDriveLocalStateInput']; // DocumentDriveLocalStateInput!
@@ -429,10 +433,6 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    acknowledge: { // args
-      listenerId?: string | null; // ID
-      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
-    }
     coreUnit: { // args
       id?: string | null; // String
     }
@@ -444,7 +444,6 @@ export interface NexusGenArgTypes {
     }
     strands: { // args
       listenerId?: string | null; // ID
-      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
     }
     strandsSince: { // args
       listenerId?: string | null; // ID

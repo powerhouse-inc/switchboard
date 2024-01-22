@@ -9,210 +9,210 @@ import {
   objectType,
   stringArg,
   unionType,
-} from 'nexus';
+} from "nexus";
 
 export const DocumentDriveLocalState = objectType({
-  name: 'DocumentDriveLocalState',
+  name: "DocumentDriveLocalState",
   definition(t) {
-    t.string('sharingType');
-    t.nonNull.boolean('availableOffline');
+    t.string("sharingType");
+    t.nonNull.boolean("availableOffline");
   },
 });
 
 export const DocumentDriveLocalStateInput = inputObjectType({
-  name: 'DocumentDriveLocalStateInput',
+  name: "DocumentDriveLocalStateInput",
   definition(t) {
-    t.string('sharingType');
-    t.nonNull.boolean('availableOffline');
+    t.string("sharingType");
+    t.nonNull.boolean("availableOffline");
   },
 });
 export const DocumentDriveStateInput = inputObjectType({
-  name: 'DocumentDriveStateInput',
+  name: "DocumentDriveStateInput",
   definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    t.string('icon');
-    t.string('remoteUrl');
+    t.nonNull.id("id");
+    t.nonNull.string("name");
+    t.string("icon");
+    t.string("remoteUrl");
   },
 });
 
 export const AddFileInput = inputObjectType({
-  name: 'AddFileInput',
+  name: "AddFileInput",
   definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    t.nonNull.string('documentType');
-    t.id('parentFolder');
+    t.nonNull.id("id");
+    t.nonNull.string("name");
+    t.nonNull.string("documentType");
+    t.id("parentFolder");
   },
 });
 
 export const AddFolderInput = inputObjectType({
-  name: 'AddFolderInput',
+  name: "AddFolderInput",
   definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    t.id('parentFolder');
+    t.nonNull.id("id");
+    t.nonNull.string("name");
+    t.id("parentFolder");
   },
 });
 
 export const CopyNodeInput = inputObjectType({
-  name: 'CopyNodeInput',
+  name: "CopyNodeInput",
   definition(t) {
-    t.nonNull.id('srcId');
-    t.nonNull.id('targetId');
-    t.string('targetName');
-    t.id('targetParentFolder');
+    t.nonNull.id("srcId");
+    t.nonNull.id("targetId");
+    t.string("targetName");
+    t.id("targetParentFolder");
   },
 });
 
 export const DeleteNodeInput = inputObjectType({
-  name: 'DeleteNodeInput',
+  name: "DeleteNodeInput",
   definition(t) {
-    t.nonNull.id('id');
+    t.nonNull.id("id");
   },
 });
 
 export const MoveNodeInput = inputObjectType({
-  name: 'MoveNodeInput',
+  name: "MoveNodeInput",
   definition(t) {
-    t.nonNull.id('srcFolder');
-    t.id('targetParentFolder');
+    t.nonNull.id("srcFolder");
+    t.id("targetParentFolder");
   },
 });
 
 export const SetSharingTypeInput = inputObjectType({
-  name: 'SetSharingTypeInput',
+  name: "SetSharingTypeInput",
   definition(t) {
-    t.nonNull.string('type');
+    t.nonNull.string("type");
   },
 });
 
 export const SetAvailableOfflineInput = inputObjectType({
-  name: 'SetAvailableOfflineInput',
+  name: "SetAvailableOfflineInput",
   definition(t) {
-    t.nonNull.boolean('availableOffline');
+    t.nonNull.boolean("availableOffline");
   },
 });
 
 export const SetDriveNameInput = inputObjectType({
-  name: 'SetDriveNameInput',
+  name: "SetDriveNameInput",
   definition(t) {
-    t.nonNull.string('name');
+    t.nonNull.string("name");
   },
 });
 
 export const UpdateFileInput = inputObjectType({
-  name: 'UpdateFileInput',
+  name: "UpdateFileInput",
   definition(t) {
-    t.nonNull.id('id');
-    t.id('parentFolder');
-    t.string('name');
-    t.string('documentType');
+    t.nonNull.id("id");
+    t.id("parentFolder");
+    t.string("name");
+    t.string("documentType");
   },
 });
 
 export const UpdateNodeInput = inputObjectType({
-  name: 'UpdateNodeInput',
+  name: "UpdateNodeInput",
   definition(t) {
-    t.nonNull.id('id');
-    t.id('parentFolder');
-    t.string('name');
+    t.nonNull.id("id");
+    t.id("parentFolder");
+    t.string("name");
   },
 });
 
 export const Node = objectType({
-  name: 'Node',
+  name: "Node",
   definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.string('documentType');
-    t.string('parentFolder');
+    t.nonNull.string("id");
+    t.nonNull.string("name");
+    t.nonNull.string("kind");
+    t.string("documentType");
+    t.string("parentFolder");
   },
 });
 
 export const DocumentDriveState = objectType({
-  name: 'DocumentDriveState',
+  name: "DocumentDriveState",
   definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    t.nonNull.list.field('nodes', { type: Node });
-    t.string('icon');
-    t.string('remoteUrl');
+    t.nonNull.id("id");
+    t.nonNull.string("name");
+    t.nonNull.list.field("nodes", { type: Node });
+    t.string("icon");
+    t.string("remoteUrl");
   },
 });
 
 // v2
 export const ListenerRevisionInput = inputObjectType({
-  name: 'ListenerRevisionInput',
+  name: "ListenerRevisionInput",
   definition(t) {
-    t.nonNull.string('driveId');
-    t.nonNull.string('documentId');
-    t.nonNull.string('scope');
-    t.nonNull.string('branch');
-    t.nonNull.field('status', { type: UpdateStatus });
-    t.nonNull.int('revision');
+    t.nonNull.string("driveId");
+    t.nonNull.string("documentId");
+    t.nonNull.string("scope");
+    t.nonNull.string("branch");
+    t.nonNull.field("status", { type: UpdateStatus });
+    t.nonNull.int("revision");
   },
 });
 
 export const ListenerRevision = objectType({
-  name: 'ListenerRevision',
+  name: "ListenerRevision",
   definition(t) {
-    t.nonNull.string('driveId');
-    t.nonNull.string('documentId');
-    t.nonNull.string('scope');
-    t.nonNull.string('branch');
-    t.nonNull.string('status');
-    t.nonNull.int('revision');
+    t.nonNull.string("driveId");
+    t.nonNull.string("documentId");
+    t.nonNull.string("scope");
+    t.nonNull.string("branch");
+    t.nonNull.field("status", { type: UpdateStatus });
+    t.nonNull.int("revision");
   },
 });
 
 export const OperationUpdate = objectType({
-  name: 'OperationUpdate',
+  name: "OperationUpdate",
   definition(t) {
-    t.nonNull.int('revision');
-    t.nonNull.int('skip');
-    t.nonNull.string('name');
-    t.nonNull.string('inputJson');
-    t.nonNull.string('stateHash');
+    t.nonNull.int("revision");
+    t.nonNull.int("skip");
+    t.nonNull.string("name");
+    t.nonNull.string("inputJson");
+    t.nonNull.string("stateHash");
   },
 });
 
 export const InputOperationUpdate = inputObjectType({
-  name: 'InputOperationUpdate',
+  name: "InputOperationUpdate",
   definition(t) {
-    t.nonNull.int('index');
-    t.int('skip');
-    t.nonNull.string('type');
-    t.nonNull.string('input');
-    t.nonNull.string('hash');
-    t.nonNull.string('timestamp');
+    t.nonNull.int("index");
+    t.int("skip");
+    t.nonNull.string("type");
+    t.nonNull.string("input");
+    t.nonNull.string("hash");
+    t.nonNull.string("timestamp");
   },
 });
 
 export const StrandUpdate = objectType({
-  name: 'StrandUpdate',
+  name: "StrandUpdate",
   definition(t) {
-    t.nonNull.string('driveId');
-    t.nonNull.string('documentId');
-    t.nonNull.string('scope');
-    t.nonNull.string('branch');
-    t.nonNull.list.nonNull.field('operations', { type: OperationUpdate });
+    t.nonNull.string("driveId");
+    t.nonNull.string("documentId");
+    t.nonNull.string("scope");
+    t.nonNull.string("branch");
+    t.nonNull.list.nonNull.field("operations", { type: OperationUpdate });
   },
 });
 
 export const InputStrandUpdate = inputObjectType({
-  name: 'InputStrandUpdate',
+  name: "InputStrandUpdate",
   definition(t) {
-    t.nonNull.string('driveId');
-    t.nonNull.string('documentId');
-    t.nonNull.string('scope');
-    t.nonNull.string('branch');
-    t.nonNull.list.nonNull.field('operations', { type: InputOperationUpdate });
+    t.nonNull.string("driveId");
+    t.nonNull.string("documentId");
+    t.nonNull.string("scope");
+    t.nonNull.string("branch");
+    t.nonNull.list.nonNull.field("operations", { type: InputOperationUpdate });
   },
 });
 
 export const UpdateStatus = enumType({
-  name: 'UpdateStatus',
-  members: ['SUCCESS', 'MISSING', 'CONFLICT', 'ERROR'],
+  name: "UpdateStatus",
+  members: ["SUCCESS", "MISSING", "CONFLICT", "ERROR"],
 });

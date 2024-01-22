@@ -80,7 +80,7 @@ type ListenerRevision {
   driveId: String!
   revision: Int!
   scope: String!
-  status: String!
+  status: UpdateStatus!
 }
 
 input ListenerRevisionInput {
@@ -93,6 +93,7 @@ input ListenerRevisionInput {
 }
 
 type Mutation {
+  acknowledge(listenerId: ID, revisions: [ListenerRevisionInput]): Boolean
   addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): AddDriveResponse
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
@@ -119,7 +120,6 @@ type OperationUpdate {
 }
 
 type Query {
-  acknowledge(listenerId: ID, revisions: [ListenerRevisionInput]): Boolean
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   countUsers(message: String!): Counter
@@ -127,7 +127,7 @@ type Query {
   drives: [String]
   me: User
   sessions: [Session]
-  strands(listenerId: ID, revisions: [ListenerRevisionInput]): [StrandUpdate]
+  strands(listenerId: ID): [StrandUpdate]
   strandsSince(listenerId: ID, since: Date): [StrandUpdate]
 }
 
