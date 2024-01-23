@@ -7,25 +7,6 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@acaldas/document-model-graphql@^1.0.18":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@acaldas/document-model-graphql/-/document-model-graphql-1.0.18.tgz#33e3105efdcf5a7ded32347ec7f7d1092782551a"
-  integrity sha512-G4n5veIZdhfYbamuWZ74ONJiOUucv57ZOSXt/5vCxAIT1yDBSxHMHWgw6UYZ+NIixMGLzhba/6ilH/zsduvjKg==
-  dependencies:
-    zod "^3.21.4"
-
-"@acaldas/document-model-libs@^1.0.15":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@acaldas/document-model-libs/-/document-model-libs-1.0.22.tgz#4e986b6d043a47fc7a37e0b2d3132a33bd3cd233"
-  integrity sha512-LiUyFATgp07WrDUF/MkACB886CntpfJu5D9ur6x+orZ3aPI18AaZi3M7v+E0ScfaukpEJTZqncWCvVn8c3whTA==
-  dependencies:
-    "@acaldas/document-model-graphql" "^1.0.18"
-    immer "^9.0.19"
-    json-stringify-deterministic "^1.0.8"
-    jszip "^3.10.1"
-    mime "^3.0.0"
-    sha.js "^2.4.11"
-
 "@ampproject/remapping@^2.2.0":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.2.1.tgz#99e8e11851128b8702cd57c33684f1d0f260b630"
@@ -1992,24 +1973,24 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-document-drive@powerhouse-inc/document-drive#e72a721:
+document-drive@powerhouse-inc/document-drive#8561650:
   version "0.0.22"
-  resolved "https://codeload.github.com/powerhouse-inc/document-drive/tar.gz/e72a721713bb947b0ba93be1c38797e209865e5c"
+  resolved "https://codeload.github.com/powerhouse-inc/document-drive/tar.gz/8561650d61c648294f4502db41bb6f7a87c349f2"
   dependencies:
     "@prisma/client" "5.7.1"
     graphql "^16.8.1"
     graphql-request "^6.1.0"
     sanitize-filename "^1.6.3"
 
-document-model-libs@^1.1.23:
-  version "1.1.27"
-  resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.27.tgz#a461b121e934a7f620bbcbd571ed1133fb62d200"
-  integrity sha512-p5rl9MUJHD8mGh0g6UEM7R5Jdegolo8n1E9ouCFcKpO9lbIz/F6QlXl/Bxka282NNa7M5wTFLSsgVHlVxbZZLQ==
+document-model-libs@^1.1.34:
+  version "1.1.34"
+  resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.34.tgz#a9c88d25f889380a2e94759e0d5e9f178f4a2079"
+  integrity sha512-dHpwD3u0uSH2DPBISMdcj7PKQv9K2a9Qgih63ry+pQQiPJtGlN5jBhBv55cDx2ZKhJsqsqts7RF/yooeEAmVeA==
 
-document-model@^1.0.19:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/document-model/-/document-model-1.0.20.tgz#9a4ef989e5c9e53cbaa04719c8ffcdba3fffdd15"
-  integrity sha512-bRJswH99+KDqVusnd1paYLooWCcwGRbtF6TV0flVebmy/T/23uI7eo39KsolT3x6fmgJI5OIjmPEDwPu8+ntEQ==
+document-model@^1.0.24:
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/document-model/-/document-model-1.0.24.tgz#51b190b511f841630fca5da5d96470811ac89d0e"
+  integrity sha512-Kus5anpe/WCdqgXcF5G013CMucXLXI7eTZ6u6Uey2vKlJyHTJ29/ME2z7SILvTzTHeL8YwH2p31h9gG0x1F3hA==
   dependencies:
     immer "^10.0.2"
     json-stringify-deterministic "^1.0.10"
@@ -2838,11 +2819,6 @@ immer@^10.0.2:
   resolved "https://registry.yarnpkg.com/immer/-/immer-10.0.3.tgz#a8de42065e964aa3edf6afc282dfc7f7f34ae3c9"
   integrity sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==
 
-immer@^9.0.19:
-  version "9.0.21"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.21.tgz#1e025ea31a40f24fb064f1fef23e931496330176"
-  integrity sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==
-
 import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -3105,7 +3081,7 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
-json-stringify-deterministic@^1.0.10, json-stringify-deterministic@^1.0.8:
+json-stringify-deterministic@^1.0.10:
   version "1.0.12"
   resolved "https://registry.yarnpkg.com/json-stringify-deterministic/-/json-stringify-deterministic-1.0.12.tgz#aaa3f907466ed01e3afd77b898d0a2b3b132820a"
   integrity sha512-q3PN0lbUdv0pmurkBNdJH3pfFvOTL/Zp0lquqpvcjfKzt6Y0j49EPHAmVHCAS4Ceq/Y+PejWTzyiVpoY71+D6g==
