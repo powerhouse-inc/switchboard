@@ -162,8 +162,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         throw new Error(`Transmitter with id ${listenerId} not found`);
       }
       return await transmitter.acknowledgeStrands(
-        listenerId,
         driveId,
+        listenerId,
         revisions
       );
     },
@@ -190,9 +190,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         listenerId: uuid,
         system: false,
       };
-      const action = actions.addListener({
-        listener,
-      });
+      const action = actions.addListener({ listener });
 
       await driveServer.addDriveOperations(driveId, [action]);
       return listener;

@@ -246,3 +246,42 @@ export const acknowledge = (
     })
   );
 };
+
+export const updateFile = () => {
+  return fetchOrThrow<ListenerRevision[]>(
+    builder.mutation({
+      operation: "pushUpdates",
+      variables: {
+        strands: {
+          type: "[InputStrandUpdate!]",
+          value: [
+            {
+              driveId: "1",
+              documentId: "1",
+              scope: "global",
+              branch: "main",
+              operations: [
+                {
+                  type: "ADD_FILE",
+                  input:
+                    '{"id":"1","name":"new file", "documentType": "powerhouse/budget-statement", "scopes": ["global", "local"]}',
+                  index: 1,
+                  timestamp: "2024-01-15T18:13:54.823Z",
+                  hash: "0eho6S5/g2eQnswPvq8R7p/6jpA=",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      fields: [
+        "driveId",
+        "documentId",
+        "scope",
+        "branch",
+        "status",
+        "revision",
+      ],
+    })
+  );
+};

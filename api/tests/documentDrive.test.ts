@@ -29,7 +29,7 @@ describe.only("Document Drive Server", () => {
     expect(pullResponderResponse.listenerId).not.toBeNull();
 
     // pullStrands
-    const pullStrandsResponse = await pullStrands(
+    const pull1StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
 
@@ -38,25 +38,12 @@ describe.only("Document Drive Server", () => {
       pullResponderResponse.listenerId,
       []
     );
-    console.log(ack1Response);
+    expect(ack1Response).toBe(true);
 
-    // pull again
+    // push strands - should update budget statement
 
-    // push strands
-
-    // pull again
-
-    // acknowlege
-
-    // pull again
+    // pull twice - should be same result
+    // acknowlege - should be boolean
+    // pull again - should be empty resultset
   });
-  // it("adds a file", async () => {
-  //   // const addDriveResponse = await addDrive();
-  //   // expect(pushUpdatesResponse.length).toBe(1);
-  // });
-  it.todo("adds operations");
-  it.todo("registers a listener as pull responder");
-  it.todo("syncs the latest strands to listener");
-  it.todo("listener acknowledges strands");
-  it.todo("listener pushes new operations");
 });
