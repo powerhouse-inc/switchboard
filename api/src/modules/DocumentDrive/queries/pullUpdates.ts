@@ -1,6 +1,5 @@
-import { idArg, list, mutationField, nonNull, queryField } from "nexus";
-import { ListenerRevisionInput, StrandUpdate } from "../definitions";
-import { ListenerRevision, ListenerStatus, UpdateStatus } from "document-drive";
+import { idArg, list, queryField } from "nexus";
+import { StrandUpdate } from "../definitions";
 
 export const strands = queryField("strands", {
   type: list(StrandUpdate),
@@ -67,38 +66,6 @@ export const strandsSince = queryField("strandsSince", {
     } catch (e) {
       console.log(e);
       return [];
-    }
-  },
-});
-
-export const acknowledge = mutationField("acknowledge", {
-  type: "Boolean",
-  args: {
-    listenerId: nonNull("String"),
-    revisions: nonNull(list(nonNull(ListenerRevisionInput))),
-  },
-  resolve: async (_parent, { revisions, listenerId }, ctx) => {
-    try {
-      if (!listenerId || !revisions) return false;
-      const validEntries: ListenerRevision[] = revisions
-        .filter((r) => r !== null)
-        .map((e) => ({
-          driveId: ctx.driveId ?? "1",
-          documentId: e!.documentId,
-          scope: e!.scope,
-          branch: e!.branch,
-          revision: e!.revision,
-          status: e!.status as UpdateStatus,
-        }));
-
-      return await ctx.prisma.document.acknowledgeStrands(
-        ctx.driveId ?? "1",
-        listenerId,
-        validEntries
-      );
-    } catch (e) {
-      console.log(e);
-      return false;
     }
   },
 });

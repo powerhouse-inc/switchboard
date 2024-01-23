@@ -29,7 +29,7 @@ export const addDrive = mutationField("addDrive", {
     await ctx;
     return await ctx.prisma.document.addDrive({
       global: { ...global, nodes: [] },
-      local,
+      local: { ...local, listeners: [] },
     });
   },
 });

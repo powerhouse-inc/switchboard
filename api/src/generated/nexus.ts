@@ -50,6 +50,12 @@ export interface NexusGenInputs {
     name: string; // String!
     remoteUrl?: string | null; // String
   }
+  InputListenerFilter: { // input type
+    branch?: Array<string | null> | null; // [String]
+    documentId?: Array<string | null> | null; // [String]
+    documentType?: Array<string | null> | null; // [String]
+    scope?: Array<string | null> | null; // [String]
+  }
   InputOperationUpdate: { // input type
     hash: string; // String!
     index: number; // Int!
@@ -60,7 +66,7 @@ export interface NexusGenInputs {
   }
   InputStrandUpdate: { // input type
     branch: string; // String!
-    documentId: string; // String!
+    documentId?: string | null; // String
     driveId: string; // String!
     operations: NexusGenInputs['InputOperationUpdate'][]; // [InputOperationUpdate!]!
     scope: string; // String!
@@ -81,6 +87,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
   UpdateStatus: "CONFLICT" | "ERROR" | "MISSING" | "SUCCESS"
 }
 
@@ -128,9 +135,28 @@ export interface NexusGenObjects {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     remoteUrl?: string | null; // String
   }
+  Listener: { // root type
+    block: boolean; // Boolean!
+    callInfo?: NexusGenRootTypes['ListenerCallInfo'] | null; // ListenerCallInfo
+    filter: NexusGenRootTypes['ListenerFilter']; // ListenerFilter!
+    label?: string | null; // String
+    listenerId: string; // ID!
+    system: boolean; // Boolean!
+  }
+  ListenerCallInfo: { // root type
+    data?: string | null; // String
+    name?: string | null; // String
+    transmitterType?: NexusGenEnums['TransmitterType'] | null; // TransmitterType
+  }
+  ListenerFilter: { // root type
+    branch?: string[] | null; // [String!]
+    documentId?: string[] | null; // [ID!]
+    documentType: string[]; // [String!]!
+    scope?: string[] | null; // [String!]
+  }
   ListenerRevision: { // root type
     branch: string; // String!
-    documentId: string; // String!
+    documentId?: string | null; // String
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
@@ -225,9 +251,28 @@ export interface NexusGenFieldTypes {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     remoteUrl: string | null; // String
   }
+  Listener: { // field return type
+    block: boolean; // Boolean!
+    callInfo: NexusGenRootTypes['ListenerCallInfo'] | null; // ListenerCallInfo
+    filter: NexusGenRootTypes['ListenerFilter']; // ListenerFilter!
+    label: string | null; // String
+    listenerId: string; // ID!
+    system: boolean; // Boolean!
+  }
+  ListenerCallInfo: { // field return type
+    data: string | null; // String
+    name: string | null; // String
+    transmitterType: NexusGenEnums['TransmitterType'] | null; // TransmitterType
+  }
+  ListenerFilter: { // field return type
+    branch: string[] | null; // [String!]
+    documentId: string[] | null; // [ID!]
+    documentType: string[]; // [String!]!
+    scope: string[] | null; // [String!]
+  }
   ListenerRevision: { // field return type
     branch: string; // String!
-    documentId: string; // String!
+    documentId: string | null; // String
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
@@ -240,6 +285,7 @@ export interface NexusGenFieldTypes {
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
     deleteDrive: boolean | null; // Boolean
     pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
+    registerPullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
@@ -331,6 +377,25 @@ export interface NexusGenFieldTypeNames {
     nodes: 'Node'
     remoteUrl: 'String'
   }
+  Listener: { // field return type name
+    block: 'Boolean'
+    callInfo: 'ListenerCallInfo'
+    filter: 'ListenerFilter'
+    label: 'String'
+    listenerId: 'ID'
+    system: 'Boolean'
+  }
+  ListenerCallInfo: { // field return type name
+    data: 'String'
+    name: 'String'
+    transmitterType: 'TransmitterType'
+  }
+  ListenerFilter: { // field return type name
+    branch: 'String'
+    documentId: 'ID'
+    documentType: 'String'
+    scope: 'String'
+  }
   ListenerRevision: { // field return type name
     branch: 'String'
     documentId: 'String'
@@ -346,6 +411,7 @@ export interface NexusGenFieldTypeNames {
     createSession: 'SessionOutput'
     deleteDrive: 'Boolean'
     pushUpdates: 'ListenerRevision'
+    registerPullResponderListener: 'Listener'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
   }
@@ -405,8 +471,8 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     acknowledge: { // args
-      listenerId?: string | null; // ID
-      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
+      listenerId: string; // String!
+      revisions: NexusGenInputs['ListenerRevisionInput'][]; // [ListenerRevisionInput!]!
     }
     addDrive: { // args
       global: NexusGenInputs['DocumentDriveStateInput']; // DocumentDriveStateInput!
@@ -423,6 +489,9 @@ export interface NexusGenArgTypes {
     }
     pushUpdates: { // args
       strands?: NexusGenInputs['InputStrandUpdate'][] | null; // [InputStrandUpdate!]
+    }
+    registerPullResponderListener: { // args
+      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
     }
     revokeSession: { // args
       sessionId: string; // String!

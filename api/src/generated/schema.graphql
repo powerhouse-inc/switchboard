@@ -57,6 +57,13 @@ input DocumentDriveStateInput {
   remoteUrl: String
 }
 
+input InputListenerFilter {
+  branch: [String]
+  documentId: [String]
+  documentType: [String]
+  scope: [String]
+}
+
 input InputOperationUpdate {
   hash: String!
   index: Int!
@@ -68,15 +75,37 @@ input InputOperationUpdate {
 
 input InputStrandUpdate {
   branch: String!
-  documentId: String!
+  documentId: String
   driveId: String!
   operations: [InputOperationUpdate!]!
   scope: String!
 }
 
+type Listener {
+  block: Boolean!
+  callInfo: ListenerCallInfo
+  filter: ListenerFilter!
+  label: String
+  listenerId: ID!
+  system: Boolean!
+}
+
+type ListenerCallInfo {
+  data: String
+  name: String
+  transmitterType: TransmitterType
+}
+
+type ListenerFilter {
+  branch: [String!]
+  documentId: [ID!]
+  documentType: [String!]!
+  scope: [String!]
+}
+
 type ListenerRevision {
   branch: String!
-  documentId: String!
+  documentId: String
   driveId: String!
   revision: Int!
   scope: String!
@@ -93,12 +122,13 @@ input ListenerRevisionInput {
 }
 
 type Mutation {
-  acknowledge(listenerId: ID, revisions: [ListenerRevisionInput]): Boolean
+  acknowledge(listenerId: String!, revisions: [ListenerRevisionInput!]!): Boolean
   addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): AddDriveResponse
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
   deleteDrive(id: String!): Boolean
   pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
+  registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
@@ -160,6 +190,15 @@ type StrandUpdate {
   driveId: String!
   operations: [OperationUpdate!]!
   scope: String!
+}
+
+enum TransmitterType {
+  Internal
+  MatrixConnect
+  PullResponder
+  RESTWebhook
+  SecureConnect
+  SwitchboardPush
 }
 
 enum UpdateStatus {

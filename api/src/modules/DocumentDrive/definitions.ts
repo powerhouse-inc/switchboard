@@ -159,7 +159,7 @@ export const ListenerRevision = objectType({
   name: "ListenerRevision",
   definition(t) {
     t.nonNull.string("driveId");
-    t.nonNull.string("documentId");
+    t.string("documentId");
     t.nonNull.string("scope");
     t.nonNull.string("branch");
     t.nonNull.field("status", { type: UpdateStatus });
@@ -205,7 +205,7 @@ export const InputStrandUpdate = inputObjectType({
   name: "InputStrandUpdate",
   definition(t) {
     t.nonNull.string("driveId");
-    t.nonNull.string("documentId");
+    t.string("documentId");
     t.nonNull.string("scope");
     t.nonNull.string("branch");
     t.nonNull.list.nonNull.field("operations", { type: InputOperationUpdate });
@@ -215,4 +215,55 @@ export const InputStrandUpdate = inputObjectType({
 export const UpdateStatus = enumType({
   name: "UpdateStatus",
   members: ["SUCCESS", "MISSING", "CONFLICT", "ERROR"],
+});
+
+export const InputListenerFilter = inputObjectType({
+  name: "InputListenerFilter",
+  definition(t) {
+    t.list.string("documentType");
+    t.list.string("documentId");
+    t.list.string("scope");
+    t.list.string("branch");
+  },
+});
+
+export const Listener = objectType({
+  name: "Listener",
+  definition(t) {
+    t.nonNull.id("listenerId");
+    t.string("label");
+    t.nonNull.boolean("block");
+    t.nonNull.boolean("system");
+    t.nonNull.field("filter", { type: ListenerFilter });
+    t.field("callInfo", { type: ListenerCallInfo });
+  },
+});
+export const ListenerCallInfo = objectType({
+  name: "ListenerCallInfo",
+  definition(t) {
+    t.field("transmitterType", { type: TransmitterType });
+    t.string("name");
+    t.string("data");
+  },
+});
+export const ListenerFilter = objectType({
+  name: "ListenerFilter",
+  definition(t) {
+    t.nonNull.list.nonNull.string("documentType");
+    t.list.nonNull.id("documentId");
+    t.list.nonNull.string("scope");
+    t.list.nonNull.string("branch");
+  },
+});
+
+export const TransmitterType = enumType({
+  name: "TransmitterType",
+  members: [
+    "Internal",
+    "SwitchboardPush",
+    "PullResponder",
+    "SecureConnect",
+    "MatrixConnect",
+    "RESTWebhook",
+  ],
 });

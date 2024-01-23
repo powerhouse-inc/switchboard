@@ -1,54 +1,26 @@
 import { list, mutationField, nonNull } from "nexus";
-import { InputStrandUpdate, ListenerRevision } from "../definitions";
-import { OperationScope } from "document-model/document";
 import {
-  ListenerRevision as IListenerRevision,
-  UpdateStatus,
-} from "document-drive";
+  InputListenerFilter,
+  InputStrandUpdate,
+  Listener,
+  ListenerRevision,
+} from "../definitions";
 
-export const registerListener = mutationField("registerListener", {
+export const registerListener = mutationField("registerPullResponderListener", {
   type: Listener,
   args: {
-    filter: list(nonNull(InputStrandUpdate)),
+    filter: nonNull(InputListenerFilter),
   },
   resolve: async (_parent, { filter }, ctx) => {
-    //@todo: get connect drive server from ctx and apply updates
+    try {
+      const result = await ctx.prisma.document.registerPullResponderListener(
+        ctx.driveId ?? "1",
+        filter
+      );
 
-    if (!strands || strands?.length === 0) return [];
-    const listenerRevisions: IListenerRevision[] = [];
-    const results = await Promise.all(
-      strands.map(async (s) => {
-        const operations = s.operations?.map((o) => {
-          const op = {
-            scope: s.scope as OperationScope,
-            branch: s.branch,
-            ...o,
-            input: JSON.parse(o.input),
-          };
-
-          return op;
-        });
-        try {
-          const result = await ctx.prisma.document.registerListener(
-            s.driveId,
-            s.documentId,
-            operations
-          );
-
-          listenerRevisions.push({
-            branch: s.branch,
-            documentId: s.documentId,
-            driveId: s.driveId,
-            revision: result.operations.pop().revision,
-            scope: s.scope as OperationScope,
-            status: (result.error ? "ERROR" : "SUCCESS") as UpdateStatus,
-          });
-        } catch (e) {
-          console.log(e);
-        }
-      })
-    );
-
-    return listenerRevisions;
+      return result;
+    } catch (e) {
+      console.log(e);
+    }
   },
 });

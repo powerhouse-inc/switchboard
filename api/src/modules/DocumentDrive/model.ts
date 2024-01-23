@@ -2,7 +2,6 @@ import type { Prisma } from "@prisma/client";
 import {
   DocumentDriveServer,
   DriveInput,
-  Listener,
   ListenerRevision,
   MemoryStorage,
   PrismaStorage,
@@ -10,14 +9,15 @@ import {
 } from "document-drive";
 import * as DocumentModelsLibs from "document-model-libs/document-models";
 import { module as DocumentModelLib } from "document-model/document-model";
-import { DocumentModel, Operation } from "document-model/dist/browser/document";
-import { PullResponderTransmitter } from "document-drive/src/transmitter/pull-responder";
+import { DocumentModel, Operation } from "document-model/document";
+import { PullResponderTransmitter } from "document-drive";
 import {
   utils as DocumentDriveUtils,
+  Listener,
   ListenerFilter,
   actions,
   reducer,
-} from "document-model-libs/dist/document-drive";
+} from "document-model-libs/document-drive";
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
@@ -107,22 +107,35 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
     pushUpdates: async (
       driveId: string,
-      documentId: string,
-      operations: Operation[]
+      operations: Operation[],
+      documentId?: string
     ) => {
-      const result = await driveServer.addOperations(
-        driveId,
-        documentId,
-        operations
-      );
-      return result;
+      const drives = await driveServer.getDrives();
+      console.log(drives);
+
+      if (!documentId) {
+        const result = await driveServer.addDriveOperations(
+          driveId,
+          operations
+        );
+
+        return result;
+      } else {
+        const result = await driveServer.addOperations(
+          driveId,
+          documentId,
+          operations
+        );
+
+        return result;
+      }
     },
 
     pullStrands: async (
       driveId: string,
       listenerId: string,
       since?: string
-    ) => {
+    ): Promise<ListenerRevision[]> => {
       const transmitter = (await driveServer.getTransmitter(
         driveId,
         listenerId
@@ -154,7 +167,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       );
     },
 
-    registerListener: async (driveId: string, filter: ListenerFilter) => {
+    registerPullResponderListener: async (
+      driveId: string,
+      filter: ListenerFilter
+    ): Promise<Listener> => {
       const uuid = generateUUID();
       const listener: Listener = {
         block: false,
@@ -163,7 +179,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
           name: "PullResponder",
           transmitterType: "PullResponder",
         },
-        filter,
+        filter: {
+          branch: filter.branch ?? [],
+          documentId: filter.documentId ?? [],
+          documentType: filter.documentType ?? [],
+          scope: filter.scope ?? [],
+        },
         label: `Pullresponder #${uuid}`,
         listenerId: uuid,
         system: false,
