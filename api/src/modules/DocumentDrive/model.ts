@@ -2,14 +2,23 @@ import type { Prisma } from "@prisma/client";
 import {
   DocumentDriveServer,
   DriveInput,
+  Listener,
   ListenerRevision,
   MemoryStorage,
   PrismaStorage,
+  generateUUID,
 } from "document-drive";
 import * as DocumentModelsLibs from "document-model-libs/document-models";
 import { module as DocumentModelLib } from "document-model/document-model";
 import { DocumentModel, Operation } from "document-model/dist/browser/document";
 import { PullResponderTransmitter } from "document-drive/src/transmitter/pull-responder";
+import {
+  utils as DocumentDriveUtils,
+  ListenerFilter,
+  actions,
+  reducer,
+} from "document-model-libs/dist/document-drive";
+
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
@@ -143,6 +152,28 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         driveId,
         revisions
       );
+    },
+
+    registerListener: async (driveId: string, filter: ListenerFilter) => {
+      const uuid = generateUUID();
+      const listener: Listener = {
+        block: false,
+        callInfo: {
+          data: "",
+          name: "PullResponder",
+          transmitterType: "PullResponder",
+        },
+        filter,
+        label: `Pullresponder #${uuid}`,
+        listenerId: uuid,
+        system: false,
+      };
+      const action = actions.addListener({
+        listener,
+      });
+
+      await driveServer.addDriveOperations(driveId, [action]);
+      return listener;
     },
   };
 }
