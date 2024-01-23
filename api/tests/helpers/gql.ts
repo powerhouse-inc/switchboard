@@ -205,12 +205,43 @@ export const addPullResponderListener = () => {
   );
 };
 
-export const pullStrands = () => {
+export const pullStrands = (listenerId: string) => {
   return fetchOrThrow<StrandUpdate[]>(
-    builder.mutation({
+    builder.query({
       operation: "strands",
       variables: {
-        listenerId: {},
+        listenerId: {
+          type: "ID!",
+          value: listenerId,
+        },
+      },
+      fields: [
+        "driveId",
+        "documentId",
+        "scope",
+        "branch",
+        { operations: ["revision", "skip", "name", "inputJson", "stateHash"] },
+      ],
+    })
+  );
+};
+
+export const acknowledge = (
+  listenerId: string,
+  revisions: ListenerRevision[]
+) => {
+  return fetchOrThrow<boolean>(
+    builder.mutation({
+      operation: "acknowledge",
+      variables: {
+        listenerId: {
+          type: "String!",
+          value: listenerId,
+        },
+        revisions: {
+          type: "[ListenerRevisionInput!]!",
+          value: revisions,
+        },
       },
     })
   );

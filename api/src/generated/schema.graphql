@@ -122,7 +122,7 @@ input ListenerRevisionInput {
 }
 
 type Mutation {
-  acknowledge(listenerId: String!, revisions: [ListenerRevisionInput!]!): Boolean
+  acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): AddDriveResponse
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput

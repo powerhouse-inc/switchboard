@@ -5,6 +5,7 @@ import {
   ListenerRevision,
   MemoryStorage,
   PrismaStorage,
+  StrandUpdate,
   generateUUID,
 } from "document-drive";
 import * as DocumentModelsLibs from "document-model-libs/document-models";
@@ -135,7 +136,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       driveId: string,
       listenerId: string,
       since?: string
-    ): Promise<ListenerRevision[]> => {
+    ): Promise<StrandUpdate[]> => {
       const transmitter = (await driveServer.getTransmitter(
         driveId,
         listenerId

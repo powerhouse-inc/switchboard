@@ -1,6 +1,12 @@
 import { cleanDatabase } from "./helpers/database";
 import { restoreEnvAfterEach } from "./helpers/env";
-import { addDrive, addFile, addPullResponderListener } from "./helpers/gql";
+import {
+  acknowledge,
+  addDrive,
+  addFile,
+  addPullResponderListener,
+  pullStrands,
+} from "./helpers/gql";
 import { expect, describe, it, afterAll } from "vitest";
 
 describe.only("Document Drive Server", () => {
@@ -23,9 +29,16 @@ describe.only("Document Drive Server", () => {
     expect(pullResponderResponse.listenerId).not.toBeNull();
 
     // pullStrands
-    const pullStrandsResponse = await pullStrands();
+    const pullStrandsResponse = await pullStrands(
+      pullResponderResponse.listenerId
+    );
 
     // acknowledge
+    const ack1Response = await acknowledge(
+      pullResponderResponse.listenerId,
+      []
+    );
+    console.log(ack1Response);
 
     // pull again
 

@@ -472,7 +472,7 @@ export interface NexusGenArgTypes {
   Mutation: {
     acknowledge: { // args
       listenerId: string; // String!
-      revisions: NexusGenInputs['ListenerRevisionInput'][]; // [ListenerRevisionInput!]!
+      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
     }
     addDrive: { // args
       global: NexusGenInputs['DocumentDriveStateInput']; // DocumentDriveStateInput!

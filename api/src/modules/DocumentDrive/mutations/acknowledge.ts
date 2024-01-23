@@ -6,7 +6,7 @@ export const acknowledge = mutationField("acknowledge", {
   type: "Boolean",
   args: {
     listenerId: nonNull("String"),
-    revisions: nonNull(list(nonNull(ListenerRevisionInput))),
+    revisions: list(ListenerRevisionInput),
   },
   resolve: async (_parent, { revisions, listenerId }, ctx) => {
     try {

@@ -12,21 +12,19 @@ export const strands = queryField("strands", {
         ctx.driveId ?? "1",
         listenerId!
       );
-      return result.map((e) => {
-        return {
-          driveId: e.driveId,
-          documentId: e.documentId,
-          scope: e.scope,
-          branch: e.branch,
-          operations: e.operations.map((o) => ({
-            revision: o.revision,
-            skip: o.skip,
-            name: o.operation,
-            inputJson: JSON.stringify(o.input),
-            stateHash: o.hash,
-          })),
-        };
-      });
+      return result.map((e) => ({
+        driveId: e.driveId,
+        documentId: e.documentId,
+        scope: e.scope,
+        branch: e.branch,
+        operations: e.operations.map((o) => ({
+          revision: o.revision,
+          skip: o.skip,
+          name: o.operation,
+          inputJson: JSON.stringify(o.input),
+          stateHash: o.hash,
+        })),
+      }));
     } catch (e) {
       console.log(e);
       return [];
