@@ -147,7 +147,7 @@ export const addDrive = () => {
   );
 };
 
-export const addFile = () => {
+export const addBudgetStatement = () => {
   return fetchOrThrow<ListenerRevision[]>(
     builder.mutation({
       operation: "pushUpdates",
@@ -193,7 +193,7 @@ export const addPullResponderListener = () => {
         filter: {
           type: "InputListenerFilter!",
           value: {
-            documentType: ["powerhouse/document-model"],
+            documentType: ["powerhouse/budget-statement"],
             documentId: ["1"],
             scope: ["global"],
             branch: ["main"],
@@ -247,7 +247,7 @@ export const acknowledge = (
   );
 };
 
-export const updateFile = () => {
+export const addLineItem = (address: string) => {
   return fetchOrThrow<ListenerRevision[]>(
     builder.mutation({
       operation: "pushUpdates",
@@ -262,11 +262,10 @@ export const updateFile = () => {
               branch: "main",
               operations: [
                 {
-                  type: "ADD_FILE",
-                  input:
-                    '{"id":"1","name":"new file", "documentType": "powerhouse/budget-statement", "scopes": ["global", "local"]}',
+                  type: "AddAccountInput",
+                  input: `{"address": "${address}"}`,
                   index: 1,
-                  timestamp: "2024-01-15T18:13:54.823Z",
+                  timestamp: "2024-01-16T18:13:54.823Z",
                   hash: "0eho6S5/g2eQnswPvq8R7p/6jpA=",
                 },
               ],
