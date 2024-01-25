@@ -111,9 +111,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       operations: Operation[],
       documentId?: string
     ) => {
-      const drives = await driveServer.getDrives();
-      console.log(drives);
-
       if (!documentId) {
         const result = await driveServer.addDriveOperations(
           driveId,
