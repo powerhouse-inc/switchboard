@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "Open-source API over database models made to be developer- and analyst-friendly.",
   "author": "makerdao",
-  "type": "module",
   "license": "AGPL-3",
   "scripts": {
     "dev": "vite-node -w src/index.ts",
+    "build": "npx prisma db push && tsc",
     "start": "NODE_ENV=production vite-node src/index.ts",
     "debug": "DEBUG=1 npm run dev",
     "lint": "eslint \"./**/*.{ts,tsx}\" --max-warnings=0",

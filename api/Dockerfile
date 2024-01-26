@@ -16,6 +16,7 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 COPY Procfile .
+COPY heroku.yml .
 RUN yarn install --frozen-lockfile
 
 FROM dependency-base AS production
@@ -28,4 +29,6 @@ RUN sed --in-place 's/sqlite/postgresql/g' ./prisma/schema.prisma
 RUN npx prisma generate
 
 # initialize db and start the app
-ENTRYPOINT [ "npm", "run", "start" ]
+RUN useradd -m myuser
+USER myuser
+CMD yarn start
