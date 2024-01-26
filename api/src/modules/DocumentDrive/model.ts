@@ -187,9 +187,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         listenerId: uuid,
         system: false,
       };
-      const action = actions.addListener({ listener });
-
-      await driveServer.addDriveOperations(driveId, [action]);
+      let drive = await driveServer.getDrive(driveId);
+      drive = reducer(drive,actions.addListener({ listener }))
+      const operation = drive.operations.local.slice().pop();
+      
+      await driveServer.addDriveOperations(driveId, [operation]);
       return listener;
     },
   };
