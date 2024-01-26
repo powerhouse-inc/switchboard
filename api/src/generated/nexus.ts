@@ -171,11 +171,12 @@ export interface NexusGenObjects {
     parentFolder?: string | null; // String
   }
   OperationUpdate: { // root type
-    inputJson: string; // String!
-    name: string; // String!
-    revision: number; // Int!
+    hash: string; // String!
+    index: number; // Int!
+    input: string; // String!
     skip: number; // Int!
-    stateHash: string; // String!
+    timestamp: string; // String!
+    type: string; // String!
   }
   Query: {};
   Session: { // root type
@@ -297,11 +298,12 @@ export interface NexusGenFieldTypes {
     parentFolder: string | null; // String
   }
   OperationUpdate: { // field return type
-    inputJson: string; // String!
-    name: string; // String!
-    revision: number; // Int!
+    hash: string; // String!
+    index: number; // Int!
+    input: string; // String!
     skip: number; // Int!
-    stateHash: string; // String!
+    timestamp: string; // String!
+    type: string; // String!
   }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
@@ -423,11 +425,12 @@ export interface NexusGenFieldTypeNames {
     parentFolder: 'String'
   }
   OperationUpdate: { // field return type name
-    inputJson: 'String'
-    name: 'String'
-    revision: 'Int'
+    hash: 'String'
+    index: 'Int'
+    input: 'String'
     skip: 'Int'
-    stateHash: 'String'
+    timestamp: 'String'
+    type: 'String'
   }
   Query: { // field return type name
     coreUnit: 'CoreUnit'

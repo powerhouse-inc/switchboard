@@ -142,11 +142,12 @@ type Node {
 }
 
 type OperationUpdate {
-  inputJson: String!
-  name: String!
-  revision: Int!
+  hash: String!
+  index: Int!
+  input: String!
   skip: Int!
-  stateHash: String!
+  timestamp: String!
+  type: String!
 }
 
 type Query {

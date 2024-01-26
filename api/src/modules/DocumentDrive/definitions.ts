@@ -170,11 +170,12 @@ export const ListenerRevision = objectType({
 export const OperationUpdate = objectType({
   name: "OperationUpdate",
   definition(t) {
-    t.nonNull.int("revision");
+    t.nonNull.int("index");
     t.nonNull.int("skip");
-    t.nonNull.string("name");
-    t.nonNull.string("inputJson");
-    t.nonNull.string("stateHash");
+    t.nonNull.string("type");
+    t.nonNull.string("input");
+    t.nonNull.string("hash");
+    t.nonNull.string("timestamp");
   },
 });
 

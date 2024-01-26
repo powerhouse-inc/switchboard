@@ -220,7 +220,7 @@ export const pullStrands = (listenerId: string) => {
         "documentId",
         "scope",
         "branch",
-        { operations: ["revision", "skip", "name", "inputJson", "stateHash"] },
+        { operations: ["index", "skip", "operation", "input", "hash"] },
       ],
     })
   );
