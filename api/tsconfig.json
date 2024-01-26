@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "esModuleInterop": true
-  }
+    "strict": false,
+    "esModuleInterop": true,
+    "outDir": "./build",
+    "sourceMap": true
+  },
+  "include": ["./src"]
 }

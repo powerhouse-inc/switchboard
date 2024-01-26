@@ -24,11 +24,6 @@ type CoreUnit {
   shortCode: String
 }
 
-type Counter {
-  count: Int!
-  message: String!
-}
-
 """Date custom scalar type"""
 scalar Date
 
@@ -153,7 +148,6 @@ type OperationUpdate {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
-  countUsers(message: String!): Counter
   drive(id: String!): DocumentDriveState
   drives: [String]
   me: User

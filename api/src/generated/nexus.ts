@@ -120,10 +120,6 @@ export interface NexusGenObjects {
     name?: string | null; // String
     shortCode?: string | null; // String
   }
-  Counter: { // root type
-    count: number; // Int!
-    message: string; // String!
-  }
   DocumentDriveLocalState: { // root type
     availableOffline: boolean; // Boolean!
     sharingType?: string | null; // String
@@ -237,10 +233,6 @@ export interface NexusGenFieldTypes {
     name: string | null; // String
     shortCode: string | null; // String
   }
-  Counter: { // field return type
-    count: number; // Int!
-    message: string; // String!
-  }
   DocumentDriveLocalState: { // field return type
     availableOffline: boolean; // Boolean!
     sharingType: string | null; // String
@@ -308,7 +300,6 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
-    countUsers: NexusGenRootTypes['Counter'] | null; // Counter
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     drives: Array<string | null> | null; // [String]
     me: NexusGenRootTypes['User'] | null; // User
@@ -363,10 +354,6 @@ export interface NexusGenFieldTypeNames {
     imageSource: 'String'
     name: 'String'
     shortCode: 'String'
-  }
-  Counter: { // field return type name
-    count: 'Int'
-    message: 'String'
   }
   DocumentDriveLocalState: { // field return type name
     availableOffline: 'Boolean'
@@ -435,7 +422,6 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
-    countUsers: 'Counter'
     drive: 'DocumentDriveState'
     drives: 'String'
     me: 'User'
@@ -507,9 +493,6 @@ export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
       id?: string | null; // String
-    }
-    countUsers: { // args
-      message: string; // String!
     }
     drive: { // args
       id: string; // String!
