@@ -34,27 +34,27 @@ services:
       database:
         condition: service_healthy
 
-  frontend:
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
-    expose:
-      - 3000
+  # frontend:
+  #   restart: unless-stopped
+  #   build:
+  #     context: .
+  #     dockerfile: ./frontend/Dockerfile
+  #   expose:
+  #     - 3000
 
-  wundergraph:
-    platform: linux/amd64
-    restart: unless-stopped
-    expose:
-      - 3002
-    build:
-      context: ./wundergraph
-    environment:
-      SWITCHBOARD_GQL_ENDPOINT: "http://api:3000/graphql"
-    depends_on:
-      - api
+  # wundergraph:
+  #   platform: linux/amd64
+  #   restart: unless-stopped
+  #   expose:
+  #     - 3002
+  #   build:
+  #     context: ./wundergraph
+  #   environment:
+  #     SWITCHBOARD_GQL_ENDPOINT: "http://api:3000/graphql"
+  #   depends_on:
+  #     - api
 
-  reverse-proxy:
+  web:
     restart: unless-stopped
     image: nginx:stable
     ports:
@@ -63,4 +63,4 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - api
-      - frontend
+      # - frontend

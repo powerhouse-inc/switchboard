@@ -11,7 +11,7 @@ WORKDIR /app/frontend
 COPY frontend/package.json .
 COPY frontend/package-lock.json .
 COPY frontend/scripts ./scripts
-RUN npm ci
+RUN npm install
 
 FROM dependency-base AS production-base
 
@@ -20,7 +20,7 @@ FROM dependency-base AS production-base
 COPY frontend /app/frontend
 COPY api /app/api
 WORKDIR /app/api
-RUN npm ci
+RUN npm install
 WORKDIR /app/frontend
 
 # Set env vars before build

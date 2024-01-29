@@ -1,5 +1,0 @@
-build:
-  docker:
-    switchboard-api: Dockerfile
-run:
-  switchboard-api: yarn start

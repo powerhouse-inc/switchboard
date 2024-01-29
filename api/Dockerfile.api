@@ -2,7 +2,7 @@
 ARG NODE_VERSION=node:16.14.2
 
 FROM $NODE_VERSION AS dependency-base
-ENV PORT=$PORT
+ENV PORT=3000
 ENV DATABASE_URL=$DATABASE_URL
 ENV JWT_SECRET=$JWT_SECRET
 ENV AUTH_SIGNUP_ENABLED=$AUTH_SIGNUP_ENABLED
@@ -15,8 +15,6 @@ WORKDIR /app
 # copy the app, note .dockerignore
 COPY package.json .
 COPY yarn.lock .
-COPY Procfile .
-COPY heroku.yml .
 RUN yarn install --frozen-lockfile
 
 FROM dependency-base AS production
