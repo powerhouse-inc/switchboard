@@ -54,7 +54,7 @@ export const startServer = async (
   );
 
   app.use(
-    "/:driveId/graphql",
+    "/:driveId",
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
     bodyParser.json(),
