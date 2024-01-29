@@ -41,15 +41,5 @@ export const createApp = (): Express => {
     })
   );
 
-  app.get(
-    "/:driveId",
-    expressPlayground({
-      endpoint: API_GQL_ENDPOINT,
-      settings: {
-        "editor.theme": "light",
-        "request.credentials": "include",
-      },
-    })
-  );
   return app;
 };
