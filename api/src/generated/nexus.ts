@@ -494,9 +494,6 @@ export interface NexusGenArgTypes {
     coreUnit: { // args
       id?: string | null; // String
     }
-    drive: { // args
-      id: string; // String!
-    }
     strands: { // args
       listenerId?: string | null; // ID
     }

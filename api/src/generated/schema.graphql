@@ -148,7 +148,7 @@ type OperationUpdate {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
-  drive(id: String!): DocumentDriveState
+  drive: DocumentDriveState
   drives: [String]
   me: User
   sessions: [Session]
