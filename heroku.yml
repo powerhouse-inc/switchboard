@@ -1,6 +1,0 @@
-build:
-  docker:
-    web: nginx/Dockerfile.web
-    api: api/Dockerfile.api
-run:
-  api: yarn start
