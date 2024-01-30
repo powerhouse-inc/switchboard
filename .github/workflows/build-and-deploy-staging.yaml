@@ -38,12 +38,12 @@ jobs:
           dockerfile_directory: ./
           dockerfile_name: frontend/Dockerfile
           process_type: web
-      # - name: Build, Push and Release NGINX to Heroku. # Your custom step name
-      #   uses: gonuit/heroku-docker-deploy@v1.3.3
-      #   with:
-      #     email: ${{ secrets.HEROKU_EMAIL }}
-      #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-      #     heroku_app_name: ${{ secrets.HEROKU_FRONTEND_NAME }}
-      #     dockerfile_directory: ./nginx
-      #     dockerfile_name: Dockerfile
-      #     process_type: web
+      - name: Build, Push and Release NGINX to Heroku. # Your custom step name
+        uses: gonuit/heroku-docker-deploy@v1.3.3
+        with:
+          email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_NGINX_NAME }}
+          dockerfile_directory: ./nginx
+          dockerfile_name: Dockerfile
+          process_type: web
