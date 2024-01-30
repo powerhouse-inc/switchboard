@@ -20,13 +20,13 @@ const allowedOrigins = (
   process.env.ALLOWED_ORIGINS || "http://localhost:3001,http://localhost:3000"
 ).split(",");
 
-const ecosystem = introspect.graphql({
-  apiNamespace: "ecosystem",
-  url: ecosystemGqlEndpoint,
-  introspection: {
-    disableCache: true,
-  },
-});
+// const ecosystem = introspect.graphql({
+//   apiNamespace: "ecosystem",
+//   url: ecosystemGqlEndpoint,
+//   introspection: {
+//     disableCache: true,
+//   },
+// });
 
 const switchboard = introspect.graphql({
   apiNamespace: "",
