@@ -18,6 +18,7 @@ COPY . .
 
 # Run in production mode
 ENV NODE_ENV=production
+ENV PORT=3000
 
 # initialize db and start the app
 CMD npm run build && npm run start
