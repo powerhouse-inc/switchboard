@@ -34,6 +34,9 @@ export const createApp = (): Express => {
     "/",
     expressPlayground({
       endpoint: API_GQL_ENDPOINT,
+      config: {
+        origin: "*",
+      },
       settings: {
         "editor.theme": "light",
         "request.credentials": "include",

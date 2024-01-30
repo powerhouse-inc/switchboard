@@ -46,10 +46,7 @@ export const startServer = async (
   app.use(
     "/graphql",
     cors<cors.CorsRequest>({
-      origin: [
-        "http://localhost:3000",
-        "https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com",
-      ],
+      origin: ["*"],
     }),
 
     cookierParser(undefined, { decode: (value: string) => value }),
@@ -62,10 +59,7 @@ export const startServer = async (
   app.use(
     "/:driveId",
     cors<cors.CorsRequest>({
-      origin: [
-        "http://localhost:3000",
-        "https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com",
-      ],
+      origin: ["*"],
     }),
 
     cookierParser(undefined, { decode: (value: string) => value }),
