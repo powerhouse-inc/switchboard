@@ -45,7 +45,13 @@ export const startServer = async (
   await apollo.start();
   app.use(
     "/graphql",
-    cors<cors.CorsRequest>(),
+    cors<cors.CorsRequest>({
+      origin: [
+        "http://localhost:3000",
+        "https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com",
+      ],
+    }),
+
     cookierParser(undefined, { decode: (value: string) => value }),
     bodyParser.json(),
     expressMiddleware(apollo, {
@@ -55,7 +61,13 @@ export const startServer = async (
 
   app.use(
     "/:driveId",
-    cors<cors.CorsRequest>(),
+    cors<cors.CorsRequest>({
+      origin: [
+        "http://localhost:3000",
+        "https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com",
+      ],
+    }),
+
     cookierParser(undefined, { decode: (value: string) => value }),
     bodyParser.json(),
     expressMiddleware(apollo, {
