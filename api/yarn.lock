@@ -1982,10 +1982,10 @@ document-drive@powerhouse-inc/document-drive#f139afc:
     graphql-request "^6.1.0"
     sanitize-filename "^1.6.3"
 
-document-model-libs@^1.1.34:
-  version "1.1.36"
-  resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.36.tgz#3810e8ddb6d2970c4c8788e0c8ac1a8dc9b96fa7"
-  integrity sha512-OKCnQHhWVuhvhKtymBtYcchjMOj3ck9YKo331UyABCV57N9ISAmIvA3IKUtHBcKlF/83qQXSqe10cFQDhZ1ORg==
+document-model-libs@^1.1.37:
+  version "1.1.37"
+  resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.37.tgz#0b46e7af8f00cc29ebfc7590393e6bb01553d728"
+  integrity sha512-03GyeWv+GXZUCubqJ3U66Z4PYN9GXCGFouynZQmEhUiH35wC036B0ay+eJfiahisgSMExyZOB5aYE5e9Wu0agA==
 
 document-model@^1.0.24:
   version "1.0.26"
