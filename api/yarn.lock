@@ -897,7 +897,7 @@
     "@graphql-typed-document-node/core" "^3.1.1"
     tslib "^2.4.0"
 
-"@graphql-typed-document-node/core@^3.1.1", "@graphql-typed-document-node/core@^3.2.0":
+"@graphql-typed-document-node/core@^3.1.1":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
@@ -988,11 +988,6 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
-
-"@prisma/client@5.7.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-5.7.1.tgz#a124afd05663267f7255a639a81d28303684a063"
-  integrity sha512-TUSa4nUcC4nf/e7X3jyO1pEd6XcI/TLRCA0KjkA46RDIpxUaRsBYEOqITwXRW2c0bMFyKcCRXrH4f7h4q9oOlg==
 
 "@prisma/client@^5.7.1":
   version "5.8.1"
@@ -1973,13 +1968,11 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-document-drive@powerhouse-inc/document-drive#f139afc:
-  version "0.0.23"
-  resolved "https://codeload.github.com/powerhouse-inc/document-drive/tar.gz/f139afc2f5b0245de1866ea849221f6ab1ae27d2"
+document-drive@^0.0.27:
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/document-drive/-/document-drive-0.0.27.tgz#6e49320b5740592c9a8cb5fecdcab931150dae27"
+  integrity sha512-QT2THZh605AFlzLYSCVFSAEE08KXAO8W8hEqx5+KaSiEjVkr/9U5LOc0A+h5f/dryh+qB2960whESNqcIT1Nww==
   dependencies:
-    "@prisma/client" "5.7.1"
-    graphql "^16.8.1"
-    graphql-request "^6.1.0"
     sanitize-filename "^1.6.3"
 
 document-model-libs@^1.1.37:
@@ -2690,15 +2683,7 @@ graphql-request@^5.2.0:
     extract-files "^9.0.0"
     form-data "^3.0.0"
 
-graphql-request@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-6.1.0.tgz#f4eb2107967af3c7a5907eb3131c671eac89be4f"
-  integrity sha512-p+XPfS4q7aIpKVcgmnZKhMNqhltk20hfXtkaIkTfjjmiKMJ5xrt5c743cL03y/K7y1rg3WrIC49xGiEQ4mxdNw==
-  dependencies:
-    "@graphql-typed-document-node/core" "^3.2.0"
-    cross-fetch "^3.1.5"
-
-graphql@^16.7.1, graphql@^16.8.1:
+graphql@^16.7.1:
   version "16.8.1"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.8.1.tgz#1930a965bef1170603702acdb68aedd3f3cf6f07"
   integrity sha512-59LZHPdGZVh695Ud9lRzPBVTtlX9ZCV150Er2W43ro37wVof0ctenSaskPPjN7lVTIN8mSZt8PHUNKZuNQUuxw==

@@ -28,7 +28,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
   const driveServer = new DocumentDriveServer(
     documentModels,
-    new MemoryStorage()
+    new PrismaStorage(prisma)
   );
 
   return {
@@ -188,9 +188,9 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         system: false,
       };
       let drive = await driveServer.getDrive(driveId);
-      drive = reducer(drive,actions.addListener({ listener }))
+      drive = reducer(drive, actions.addListener({ listener }));
       const operation = drive.operations.local.slice().pop();
-      
+
       await driveServer.addDriveOperations(driveId, [operation]);
       return listener;
     },
