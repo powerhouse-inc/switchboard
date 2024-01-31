@@ -11,3 +11,7 @@ export const JWT_EXPIRATION_PERIOD: string = getJwtExpirationPeriod();
 export const API_ORIGIN = process.env.API_ORIGIN || `http://0.0.0.0:${PORT}`;
 export const API_GQL_ENDPOINT =
   process.env.API_GQL_ENDPOINT || `${API_ORIGIN}/graphql`;
+export const CORS_ORIGINS = process.env.ORIGINS?.split(",") ?? [
+  "https://studio.apollographql.com",
+  "https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com",
+];

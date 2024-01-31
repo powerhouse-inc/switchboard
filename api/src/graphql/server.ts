@@ -7,7 +7,7 @@ import { ApolloServerPluginLandingPageDisabled } from "@apollo/server/plugin/dis
 import bodyParser from "body-parser";
 import cookierParser from "cookie-parser";
 import cors from "cors";
-import { PORT } from "../env";
+import { CORS_ORIGINS, PORT } from "../env";
 import { schemaWithMiddleware } from "./schema";
 import { Context, createContext } from "./context";
 import { getChildLogger } from "../logger";
@@ -46,7 +46,7 @@ export const startServer = async (
   app.use(
     "/graphql",
     cors<cors.CorsRequest>({
-      origin: ["*"],
+      origin: CORS_ORIGINS,
     }),
 
     cookierParser(undefined, { decode: (value: string) => value }),
@@ -59,7 +59,7 @@ export const startServer = async (
   app.use(
     "/:driveId",
     cors<cors.CorsRequest>({
-      origin: ["*"],
+      origin: CORS_ORIGINS,
     }),
 
     cookierParser(undefined, { decode: (value: string) => value }),
