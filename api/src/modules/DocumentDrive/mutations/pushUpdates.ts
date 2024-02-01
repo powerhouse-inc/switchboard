@@ -36,7 +36,6 @@ export const pushUpdates = mutationField("pushUpdates", {
             s.documentId ?? undefined
           );
 
-          console.log(result);
           listenerRevisions.push({
             branch: s.branch,
             documentId: s.documentId ?? "",

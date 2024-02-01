@@ -21,7 +21,7 @@
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "document-drive": "^0.0.27",
+    "document-drive": "powerhouse-inc/document-drive#ec00335",
     "document-model": "^1.0.24",
     "document-model-libs": "^1.1.37",
     "dotenv": "^16.0.3",
