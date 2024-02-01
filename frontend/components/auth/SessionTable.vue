@@ -10,7 +10,8 @@
 <script lang="ts" setup>
 import { format } from 'date-fns'
 import { useMessage, NButton } from 'naive-ui'
-import { Session } from '~/containers/SessionContainer.vue'
+import type { Session } from '~/containers/SessionContainer.vue';
+
 
 const message = useMessage()
 
