@@ -10,17 +10,16 @@
 
 <script lang="ts" setup>
 import {
-  DocumentText24Regular,
   VideoPerson24Filled,
   Play24Regular
 } from '@vicons/fluent'
 
 const links = [
-  {
-    id: '/documentation',
-    icon: DocumentText24Regular,
-    label: 'Documentation'
-  },
+  // {
+  //   id: '/documentation',
+  //   icon: DocumentText24Regular,
+  //   label: 'Documentation'
+  // },
   {
     id: '/user',
     icon: VideoPerson24Filled,

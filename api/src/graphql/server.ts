@@ -32,7 +32,7 @@ const createApolloServer = (): ApolloServer<Context> =>
   new ApolloServer<Context>({
     schema: schemaWithMiddleware,
     introspection: true,
-    plugins: [ApolloServerPluginLandingPageDisabled(), loggerPlugin()],
+    plugins: [loggerPlugin()],
   });
 
 export const startServer = async (

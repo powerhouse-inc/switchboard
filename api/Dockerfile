@@ -14,8 +14,8 @@ WORKDIR /app
 
 # copy the app, note .dockerignore
 COPY package.json .
-COPY yarn.lock .
-RUN yarn install --frozen-lockfile
+COPY package-lock.json .
+RUN npm ci
 
 FROM dependency-base AS production
 
@@ -29,4 +29,4 @@ RUN npx prisma generate
 # initialize db and start the app
 RUN useradd -m myuser
 USER myuser
-CMD yarn start
+CMD npm start
