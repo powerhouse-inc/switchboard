@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type AddDriveResponse {
+  global: DocumentDriveState!
+  local: DocumentDriveLocalState!
+}
+
 type Challenge {
   hex: String!
   message: String!
@@ -19,27 +24,136 @@ type CoreUnit {
   shortCode: String
 }
 
-type Counter {
-  count: Int!
-  message: String!
-}
-
 """Date custom scalar type"""
 scalar Date
 
+type DocumentDriveLocalState {
+  availableOffline: Boolean!
+  sharingType: String
+}
+
+input DocumentDriveLocalStateInput {
+  availableOffline: Boolean!
+  sharingType: String
+}
+
+type DocumentDriveState {
+  icon: String
+  id: ID!
+  name: String!
+  nodes: [Node]!
+  remoteUrl: String
+}
+
+input DocumentDriveStateInput {
+  icon: String
+  id: ID!
+  name: String!
+  remoteUrl: String
+}
+
+input InputListenerFilter {
+  branch: [String]
+  documentId: [String]
+  documentType: [String]
+  scope: [String]
+}
+
+input InputOperationUpdate {
+  hash: String!
+  index: Int!
+  input: String!
+  skip: Int
+  timestamp: String!
+  type: String!
+}
+
+input InputStrandUpdate {
+  branch: String!
+  documentId: String
+  driveId: String!
+  operations: [InputOperationUpdate!]!
+  scope: String!
+}
+
+type Listener {
+  block: Boolean!
+  callInfo: ListenerCallInfo
+  filter: ListenerFilter!
+  label: String
+  listenerId: ID!
+  system: Boolean!
+}
+
+type ListenerCallInfo {
+  data: String
+  name: String
+  transmitterType: TransmitterType
+}
+
+type ListenerFilter {
+  branch: [String!]
+  documentId: [ID!]
+  documentType: [String!]!
+  scope: [String!]
+}
+
+type ListenerRevision {
+  branch: String!
+  documentId: String
+  driveId: String!
+  revision: Int!
+  scope: String!
+  status: UpdateStatus!
+}
+
+input ListenerRevisionInput {
+  branch: String!
+  documentId: String!
+  driveId: String!
+  revision: Int!
+  scope: String!
+  status: UpdateStatus!
+}
+
 type Mutation {
+  acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
+  addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): AddDriveResponse
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
+  deleteDrive(id: String!): Boolean
+  pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
+  registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
+}
+
+type Node {
+  documentType: String
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
+}
+
+type OperationUpdate {
+  hash: String!
+  index: Int!
+  input: String!
+  skip: Int!
+  timestamp: String!
+  type: String!
 }
 
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
-  countUsers(message: String!): Counter
+  drive: DocumentDriveState
+  drives: [String]
   me: User
   sessions: [Session]
+  strands(listenerId: ID): [StrandUpdate]
+  strandsSince(listenerId: ID, since: Date): [StrandUpdate]
 }
 
 type Session {
@@ -63,6 +177,30 @@ input SessionInput {
 type SessionOutput {
   session: Session!
   token: String!
+}
+
+type StrandUpdate {
+  branch: String!
+  documentId: String!
+  driveId: String!
+  operations: [OperationUpdate!]!
+  scope: String!
+}
+
+enum TransmitterType {
+  Internal
+  MatrixConnect
+  PullResponder
+  RESTWebhook
+  SecureConnect
+  SwitchboardPush
+}
+
+enum UpdateStatus {
+  CONFLICT
+  ERROR
+  MISSING
+  SUCCESS
 }
 
 type User {

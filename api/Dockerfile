@@ -19,7 +19,9 @@ COPY . .
 # Run in production mode
 ENV NODE_ENV=production
 RUN sed --in-place 's/sqlite/postgresql/g' ./prisma/schema.prisma
-ENV PORT=3000
+RUN npx prisma generate
 
 # initialize db and start the app
-CMD npx prisma db push && npm run start
+RUN useradd -m myuser
+USER myuser
+CMD npm start

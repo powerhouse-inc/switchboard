@@ -35,7 +35,7 @@ configureWunderGraphApplication({
   options: {
     listen: {
       host: new EnvironmentVariable('NODE_HOST', '0.0.0.0'),
-      port: new EnvironmentVariable('NODE_PORT', '3002'),
+      port: new EnvironmentVariable('NODE_PORT', process.env.PORT ?? '3002'),
     },
     logger: {
       level: new EnvironmentVariable<LoggerLevel>('NODE_LOG_LEVEL', 'debug'),
