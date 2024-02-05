@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
 import { sign, verify as jwtVerify } from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../../env';
+import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../../../env';
 
 const jwtSchema = z.object({
   sessionId: z.string(),

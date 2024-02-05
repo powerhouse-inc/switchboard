@@ -3,10 +3,10 @@ import { SiweMessage } from 'siwe';
 import { GraphQLError } from 'graphql';
 import url from 'url';
 import { randomUUID } from 'crypto';
-import { getUserCrud } from '../User';
-import { getSessionCrud } from '../Session';
-import { getChildLogger } from '../../logger';
-import { API_ORIGIN } from '../../env';
+import { getUserCrud } from '../user';
+import { getSessionCrud } from '../session';
+import { getChildLogger } from '../../../logger';
+import { API_ORIGIN } from '../../../env';
 
 const logger = getChildLogger({ msgPrefix: 'Challenge' });
 

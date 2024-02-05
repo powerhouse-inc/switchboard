@@ -2,8 +2,8 @@ import { Prisma } from '@prisma/client';
 import { GraphQLError } from 'graphql';
 import {
   AUTH_SIGNUP_ENABLED,
-} from '../../env';
-import { getChildLogger } from '../../logger';
+} from '../../../env';
+import { getChildLogger } from '../../../logger';
 
 const logger = getChildLogger({ msgPrefix: 'User' });
 

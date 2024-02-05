@@ -1,8 +1,8 @@
-import { createApp } from "./app";
-import { startServer } from "./graphql/server";
-import { getChildLogger } from "./logger";
+import { createApp } from './app';
+import { startServer } from './graphql/server';
+import { getChildLogger } from './logger';
 
-const logger = getChildLogger({ msgPrefix: "SERVER" });
+const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
 const application = createApp();
 
@@ -17,7 +17,7 @@ startServer(application)
     }
   })
   .catch((err) => {
-    logger.warn("Shutting down...");
+    logger.warn('Shutting down...');
     if (err instanceof Error) {
       logger.error(err);
     } else {

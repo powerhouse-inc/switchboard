@@ -3,12 +3,15 @@ import { connectionPlugin, fieldAuthorizePlugin, makeSchema } from 'nexus/dist';
 import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import { GQLDateBase } from './dateSchema';
-import * as resolvers from '../modules';
-import { getExtraResolvers } from '../importedModules';
+import * as systemResolver from '../../../modules/system';
+import * as drivesResolver from '../../../modules/drives';
+import { getExtraResolvers } from '../../../importedModules';
 
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
-  types: { GQLDateBase, ...resolvers, ...getExtraResolvers() },
+  types: {
+    GQLDateBase, ...systemResolver, ...drivesResolver, ...getExtraResolvers(),
+  },
   plugins: [
     fieldAuthorizePlugin({
       formatError: (authConfig) => authConfig.error,
@@ -21,8 +24,8 @@ export const schema = makeSchema({
     validationPlugin(),
   ],
   outputs: {
-    schema: path.join(__dirname, '../generated/schema.graphql'),
-    typegen: path.join(__dirname, '../generated/nexus.ts'),
+    schema: path.join(__dirname, '../../generated/index/schema.graphql'),
+    typegen: path.join(__dirname, '../../generated/index/nexus.ts'),
   },
   contextType: {
     module: path.join(__dirname, './context.ts'),
