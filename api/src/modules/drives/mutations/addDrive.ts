@@ -1,25 +1,25 @@
-import { mutationField, nonNull, objectType } from "nexus";
+import { mutationField, nonNull, objectType } from 'nexus';
 
 import {
   DocumentDriveLocalState,
   DocumentDriveLocalStateInput,
-  DocumentDriveState,
   DocumentDriveStateInput,
-} from "../definitions";
+} from '../definitions';
+import { DocumentDriveState } from '../../drive/definitions';
 
 const addDriveResponseDefinition = objectType({
-  name: "AddDriveResponse",
+  name: 'AddDriveResponse',
   definition(t) {
-    t.nonNull.field("global", {
+    t.nonNull.field('global', {
       type: DocumentDriveState,
     });
-    t.nonNull.field("local", {
+    t.nonNull.field('local', {
       type: DocumentDriveLocalState,
     });
   },
 });
 
-export const addDrive = mutationField("addDrive", {
+export const addDrive = mutationField('addDrive', {
   type: addDriveResponseDefinition,
   args: {
     global: nonNull(DocumentDriveStateInput),
@@ -27,7 +27,7 @@ export const addDrive = mutationField("addDrive", {
   },
   resolve: async (_parent, { global, local }, ctx) => {
     await ctx;
-    return await ctx.prisma.document.addDrive({
+    return ctx.prisma.document.addDrive({
       global: { ...global, nodes: [] },
       local: { ...local, listeners: [] },
     });
