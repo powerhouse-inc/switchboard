@@ -7,12 +7,11 @@ import {
   generateUUID,
   PullResponderTransmitter
 } from "document-drive";
-import { MemoryStorage } from "document-drive/storage/memory";
+import { PrismaStorage } from "document-drive/storage/prisma";
 import * as DocumentModelsLibs from "document-model-libs/document-models";
 import { module as DocumentModelLib } from "document-model/document-model";
 import { DocumentModel, Operation } from "document-model/document";
 import {
-  utils as DocumentDriveUtils,
   Listener,
   ListenerFilter,
   actions,

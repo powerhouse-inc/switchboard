@@ -59,6 +59,7 @@ model Document {
   operations   Operation[]
   initialState Json // json object with the scope as keys of the root object
   documentType String
+  syncronizationUnits SyncronizationUnit[]
 
   @@id([id, driveId])
 }
@@ -70,6 +71,7 @@ model Operation {
   scope      String
   branch     String
   index      Int
+  skip       Int
 
   hash        String
   timestamp   DateTime
@@ -77,10 +79,28 @@ model Operation {
   type        String
   attachments Attachment[]
 
+  syncId String?
+
+  SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId])
+
   @@id([driveId, documentId, scope, branch, index])
 }
 
+model SyncronizationUnit {
+  id         String
+  driveId    String
+  documentId String
+
+  Document   Document    @relation(fields: [documentId, driveId], references: [id, driveId])
+  scope      String
+  branch     String
+  operations Operation[]
+
+  @@id([id, driveId])
+}
+
 model Attachment {
+  id         String    @id @default(uuid())
   driveId    String
   documentId String
   scope      String
@@ -93,6 +113,16 @@ model Attachment {
   filename  String
   extension String
   hash      String
+}
 
-  @@id([driveId, documentId, scope, branch, index, hash])
+model Listener {
+  listenerId String @id @default(uuid())
+  driveId    String
+
+  label  String?
+  block  Boolean
+  system Boolean
+
+  filter   Json
+  callInfo Json
 }

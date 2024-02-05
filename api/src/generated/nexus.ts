@@ -48,7 +48,7 @@ export interface NexusGenInputs {
     icon?: string | null; // String
     id: string; // ID!
     name: string; // String!
-    remoteUrl?: string | null; // String
+    slug?: string | null; // String
   }
   InputListenerFilter: { // input type
     branch?: Array<string | null> | null; // [String]
@@ -129,7 +129,7 @@ export interface NexusGenObjects {
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
-    remoteUrl?: string | null; // String
+    slug?: string | null; // String
   }
   Listener: { // root type
     block: boolean; // Boolean!
@@ -242,7 +242,7 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
-    remoteUrl: string | null; // String
+    slug: string | null; // String
   }
   Listener: { // field return type
     block: boolean; // Boolean!
@@ -364,7 +364,7 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     name: 'String'
     nodes: 'Node'
-    remoteUrl: 'String'
+    slug: 'String'
   }
   Listener: { // field return type name
     block: 'Boolean'
