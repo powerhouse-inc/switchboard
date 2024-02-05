@@ -2,7 +2,7 @@ name: Deploy Switchboard Staging
 
 on:
   push:
-    branches: [main, feat/documentDrive]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
