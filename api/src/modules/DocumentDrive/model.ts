@@ -3,17 +3,15 @@ import {
   DocumentDriveServer,
   DriveInput,
   ListenerRevision,
-  MemoryStorage,
-  PrismaStorage,
   StrandUpdate,
   generateUUID,
+  PullResponderTransmitter
 } from "document-drive";
+import { PrismaStorage } from "document-drive/storage/prisma";
 import * as DocumentModelsLibs from "document-model-libs/document-models";
 import { module as DocumentModelLib } from "document-model/document-model";
 import { DocumentModel, Operation } from "document-model/document";
-import { PullResponderTransmitter } from "document-drive";
 import {
-  utils as DocumentDriveUtils,
   Listener,
   ListenerFilter,
   actions,
@@ -146,7 +144,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return result;
     },
 
-    acknowledgeStrands: async (
+    processAcknowledge: async (
       driveId: string,
       listenerId: string,
       revisions: ListenerRevision[]
@@ -158,7 +156,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       if (!transmitter) {
         throw new Error(`Transmitter with id ${listenerId} not found`);
       }
-      return await transmitter.acknowledgeStrands(
+      return await transmitter.processAcknowledge(
         driveId,
         listenerId,
         revisions

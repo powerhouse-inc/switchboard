@@ -22,7 +22,7 @@ export const acknowledge = mutationField("acknowledge", {
           status: e!.status as UpdateStatus,
         }));
 
-      return await ctx.prisma.document.acknowledgeStrands(
+      return await ctx.prisma.document.processAcknowledge(
         ctx.driveId ?? "1",
         listenerId,
         validEntries
