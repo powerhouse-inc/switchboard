@@ -53,7 +53,7 @@ export const startServer = async (
   await apolloDrive.start();
 
   app.use(
-    '/graphql',
+    '/drives',
     cors<cors.CorsRequest>({
       origin: CORS_ORIGINS,
     }),
@@ -66,7 +66,7 @@ export const startServer = async (
   );
 
   app.use(
-    '/:driveId/graphql',
+    '/d/:driveId',
     cors<cors.CorsRequest>({
       origin: CORS_ORIGINS,
     }),
