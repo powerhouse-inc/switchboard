@@ -36,14 +36,14 @@ type DocumentDriveState {
   id: ID!
   name: String!
   nodes: [Node]!
-  remoteUrl: String
+  slug: String
 }
 
 input DocumentDriveStateInput {
   icon: String
   id: ID!
   name: String!
-  remoteUrl: String
+  slug: String
 }
 
 type Mutation {

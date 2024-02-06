@@ -24,7 +24,6 @@ export const DocumentDriveStateInput = inputObjectType({
     t.nonNull.id('id');
     t.nonNull.string('name');
     t.string('icon');
-    t.string('remoteUrl');
+    t.string('slug');
   },
 });
-

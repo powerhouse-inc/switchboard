@@ -48,7 +48,7 @@ export interface NexusGenInputs {
     icon?: string | null; // String
     id: string; // ID!
     name: string; // String!
-    remoteUrl?: string | null; // String
+    slug?: string | null; // String
   }
   SessionInput: { // input type
     allowedOrigins: string; // String!
@@ -89,7 +89,7 @@ export interface NexusGenObjects {
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
-    remoteUrl?: string | null; // String
+    slug?: string | null; // String
   }
   Mutation: {};
   Node: { // root type
@@ -156,7 +156,7 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
-    remoteUrl: string | null; // String
+    slug: string | null; // String
   }
   Mutation: { // field return type
     addDrive: NexusGenRootTypes['AddDriveResponse'] | null; // AddDriveResponse
@@ -227,7 +227,7 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     name: 'String'
     nodes: 'Node'
-    remoteUrl: 'String'
+    slug: 'String'
   }
   Mutation: { // field return type name
     addDrive: 'AddDriveResponse'

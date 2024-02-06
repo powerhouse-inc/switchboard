@@ -102,7 +102,7 @@ export interface NexusGenObjects {
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
-    remoteUrl?: string | null; // String
+    slug?: string | null; // String
   }
   DriveSystem: {};
   Listener: { // root type
@@ -204,7 +204,7 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
-    remoteUrl: string | null; // String
+    slug: string | null; // String
   }
   DriveSystem: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -315,7 +315,7 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     name: 'String'
     nodes: 'Node'
-    remoteUrl: 'String'
+    slug: 'String'
   }
   DriveSystem: { // field return type name
     auth: 'Auth'

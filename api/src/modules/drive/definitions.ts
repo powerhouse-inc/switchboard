@@ -22,7 +22,7 @@ export const DocumentDriveState = objectType({
     t.nonNull.string('name');
     t.nonNull.list.field('nodes', { type: Node });
     t.string('icon');
-    t.string('remoteUrl');
+    t.string('slug');
   },
 });
 

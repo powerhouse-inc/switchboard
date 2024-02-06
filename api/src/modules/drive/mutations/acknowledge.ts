@@ -22,13 +22,14 @@ export const acknowledge = mutationField('acknowledge', {
           status: e!.status as UpdateStatus,
         }));
 
-      return await ctx.prisma.document.acknowledgeStrands(
+      const result = await ctx.prisma.document.processAcknowledge(
         ctx.driveId ?? '1',
         listenerId,
         validEntries,
       );
+
+      return result;
     } catch (e) {
-      console.log(e);
       return false;
     }
   },

@@ -21,7 +21,7 @@ type DocumentDriveState {
   id: ID!
   name: String!
   nodes: [Node]!
-  remoteUrl: String
+  slug: String
 }
 
 type DriveSystem implements System {
