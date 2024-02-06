@@ -172,6 +172,7 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
   }
+  Sync: {};
   User: { // root type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
@@ -208,7 +209,7 @@ export interface NexusGenFieldTypes {
   }
   DriveSystem: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
-    strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
+    sync: NexusGenRootTypes['Sync'] | null; // Sync
   }
   Listener: { // field return type
     block: boolean; // Boolean!
@@ -291,6 +292,9 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
   }
+  Sync: { // field return type
+    strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
+  }
   User: { // field return type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
@@ -319,7 +323,7 @@ export interface NexusGenFieldTypeNames {
   }
   DriveSystem: { // field return type name
     auth: 'Auth'
-    strands: 'StrandUpdate'
+    sync: 'Sync'
   }
   Listener: { // field return type name
     block: 'Boolean'
@@ -402,6 +406,9 @@ export interface NexusGenFieldTypeNames {
     operations: 'OperationUpdate'
     scope: 'String'
   }
+  Sync: { // field return type name
+    strands: 'StrandUpdate'
+  }
   User: { // field return type name
     address: 'String'
     createdAt: 'Date'
@@ -412,12 +419,6 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
-  DriveSystem: {
-    strands: { // args
-      listenerId?: string | null; // ID
-      since?: NexusGenScalars['Date'] | null; // Date
-    }
-  }
   Mutation: {
     acknowledge: { // args
       listenerId: string; // String!
@@ -444,6 +445,12 @@ export interface NexusGenArgTypes {
     solveChallenge: { // args
       nonce: string; // String!
       signature: string; // String!
+    }
+  }
+  Sync: {
+    strands: { // args
+      listenerId?: string | null; // ID
+      since?: NexusGenScalars['Date'] | null; // Date
     }
   }
 }

@@ -4,12 +4,10 @@ import {
 } from 'nexus';
 import { systemType } from '../system';
 import { StrandUpdate } from './definitions';
-import logger from '../../logger';
 
-export const driveSystemType = objectType({
-  name: 'DriveSystem',
+export const syncType = objectType({
+  name: 'Sync',
   definition(t) {
-    t.implements(systemType);
     t.field('strands', {
       type: list(StrandUpdate),
       args: {
@@ -19,7 +17,6 @@ export const driveSystemType = objectType({
       resolve: async (_parent, { listenerId, since }, ctx) => {
         if (!listenerId) throw new Error('Listener ID is required');
         try {
-          // @todo: fetch strands from connect drive server
           const result = await ctx.prisma.document.pullStrands(
             ctx.driveId ?? '1',
             listenerId,
@@ -42,6 +39,17 @@ export const driveSystemType = objectType({
           throw new Error('Failed to fetch strands');
         }
       },
+    });
+  },
+});
+
+export const driveSystemType = objectType({
+  name: 'DriveSystem',
+  definition(t) {
+    t.implements(systemType);
+    t.field('sync', {
+      type: syncType,
+      resolve: async () => true,
     });
   },
 });
