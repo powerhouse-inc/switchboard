@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type Auth {
+  me: User
+  sessions: [Session]
+}
+
 type Challenge {
   hex: String!
   message: String!
@@ -17,6 +22,11 @@ type DocumentDriveState {
   name: String!
   nodes: [Node]!
   remoteUrl: String
+}
+
+type DriveSystem implements System {
+  auth: Auth
+  strands(listenerId: ID, since: Date): [StrandUpdate]
 }
 
 input InputListenerFilter {
@@ -113,10 +123,11 @@ type OperationUpdate {
 
 type Query {
   drive: DocumentDriveState
-  me: User
-  sessions: [Session]
-  strands(listenerId: ID): [StrandUpdate]
-  strandsSince(listenerId: ID, since: Date): [StrandUpdate]
+  system: DriveSystem
+}
+
+type ServerSystem implements System {
+  auth: Auth
 }
 
 type Session {
@@ -148,6 +159,10 @@ type StrandUpdate {
   driveId: String!
   operations: [OperationUpdate!]!
   scope: String!
+}
+
+interface System {
+  auth: Auth
 }
 
 enum TransmitterType {

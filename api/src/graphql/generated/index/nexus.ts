@@ -74,6 +74,7 @@ export interface NexusGenObjects {
     global: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
     local: NexusGenRootTypes['DocumentDriveLocalState']; // DocumentDriveLocalState!
   }
+  Auth: {};
   Challenge: { // root type
     hex: string; // String!
     message: string; // String!
@@ -99,6 +100,7 @@ export interface NexusGenObjects {
     parentFolder?: string | null; // String
   }
   Query: {};
+  ServerSystem: {};
   Session: { // root type
     allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['Date']; // Date!
@@ -121,12 +123,13 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
+  System: NexusGenRootTypes['ServerSystem'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
@@ -134,6 +137,10 @@ export interface NexusGenFieldTypes {
   AddDriveResponse: { // field return type
     global: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
     local: NexusGenRootTypes['DocumentDriveLocalState']; // DocumentDriveLocalState!
+  }
+  Auth: { // field return type
+    me: NexusGenRootTypes['User'] | null; // User
+    sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
   }
   Challenge: { // field return type
     hex: string; // String!
@@ -168,8 +175,10 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     drives: Array<string | null> | null; // [String]
-    me: NexusGenRootTypes['User'] | null; // User
-    sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
+    system: NexusGenRootTypes['ServerSystem'] | null; // ServerSystem
+  }
+  ServerSystem: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
   }
   Session: { // field return type
     allowedOrigins: string | null; // String
@@ -190,12 +199,19 @@ export interface NexusGenFieldTypes {
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
   }
+  System: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
+  }
 }
 
 export interface NexusGenFieldTypeNames {
   AddDriveResponse: { // field return type name
     global: 'DocumentDriveState'
     local: 'DocumentDriveLocalState'
+  }
+  Auth: { // field return type name
+    me: 'User'
+    sessions: 'Session'
   }
   Challenge: { // field return type name
     hex: 'String'
@@ -230,8 +246,10 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     drives: 'String'
-    me: 'User'
-    sessions: 'Session'
+    system: 'ServerSystem'
+  }
+  ServerSystem: { // field return type name
+    auth: 'Auth'
   }
   Session: { // field return type name
     allowedOrigins: 'String'
@@ -251,6 +269,9 @@ export interface NexusGenFieldTypeNames {
   User: { // field return type name
     address: 'String'
     createdAt: 'Date'
+  }
+  System: { // field return type name
+    auth: 'Auth'
   }
 }
 
@@ -280,9 +301,11 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  System: "ServerSystem"
 }
 
 export interface NexusGenTypeInterfaces {
+  ServerSystem: "System"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -291,7 +314,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = never;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -299,7 +322,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

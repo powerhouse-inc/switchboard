@@ -10,7 +10,7 @@ import { getExtraResolvers } from '../../../importedModules';
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
   types: {
-    GQLDateBase, ...driveResolver, ...systemResolver, ...getExtraResolvers(),
+    GQLDateBase, ...systemResolver, ...driveResolver, ...getExtraResolvers(),
   },
   plugins: [
     fieldAuthorizePlugin({

@@ -91,6 +91,7 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Auth: {};
   Challenge: { // root type
     hex: string; // String!
     message: string; // String!
@@ -103,6 +104,7 @@ export interface NexusGenObjects {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     remoteUrl?: string | null; // String
   }
+  DriveSystem: {};
   Listener: { // root type
     block: boolean; // Boolean!
     callInfo?: NexusGenRootTypes['ListenerCallInfo'] | null; // ListenerCallInfo
@@ -147,6 +149,7 @@ export interface NexusGenObjects {
     type: string; // String!
   }
   Query: {};
+  ServerSystem: {};
   Session: { // root type
     allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['Date']; // Date!
@@ -176,16 +179,21 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
+  System: NexusGenRootTypes['DriveSystem'] | NexusGenRootTypes['ServerSystem'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Auth: { // field return type
+    me: NexusGenRootTypes['User'] | null; // User
+    sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
+  }
   Challenge: { // field return type
     hex: string; // String!
     message: string; // String!
@@ -197,6 +205,10 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     remoteUrl: string | null; // String
+  }
+  DriveSystem: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
+    strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
   }
   Listener: { // field return type
     block: boolean; // Boolean!
@@ -252,10 +264,10 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
-    me: NexusGenRootTypes['User'] | null; // User
-    sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
-    strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
-    strandsSince: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
+    system: NexusGenRootTypes['DriveSystem'] | null; // DriveSystem
+  }
+  ServerSystem: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
   }
   Session: { // field return type
     allowedOrigins: string | null; // String
@@ -283,9 +295,16 @@ export interface NexusGenFieldTypes {
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
   }
+  System: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
+  }
 }
 
 export interface NexusGenFieldTypeNames {
+  Auth: { // field return type name
+    me: 'User'
+    sessions: 'Session'
+  }
   Challenge: { // field return type name
     hex: 'String'
     message: 'String'
@@ -297,6 +316,10 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     nodes: 'Node'
     remoteUrl: 'String'
+  }
+  DriveSystem: { // field return type name
+    auth: 'Auth'
+    strands: 'StrandUpdate'
   }
   Listener: { // field return type name
     block: 'Boolean'
@@ -352,10 +375,10 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     drive: 'DocumentDriveState'
-    me: 'User'
-    sessions: 'Session'
-    strands: 'StrandUpdate'
-    strandsSince: 'StrandUpdate'
+    system: 'DriveSystem'
+  }
+  ServerSystem: { // field return type name
+    auth: 'Auth'
   }
   Session: { // field return type name
     allowedOrigins: 'String'
@@ -383,9 +406,18 @@ export interface NexusGenFieldTypeNames {
     address: 'String'
     createdAt: 'Date'
   }
+  System: { // field return type name
+    auth: 'Auth'
+  }
 }
 
 export interface NexusGenArgTypes {
+  DriveSystem: {
+    strands: { // args
+      listenerId?: string | null; // ID
+      since?: NexusGenScalars['Date'] | null; // Date
+    }
+  }
   Mutation: {
     acknowledge: { // args
       listenerId: string; // String!
@@ -414,21 +446,15 @@ export interface NexusGenArgTypes {
       signature: string; // String!
     }
   }
-  Query: {
-    strands: { // args
-      listenerId?: string | null; // ID
-    }
-    strandsSince: { // args
-      listenerId?: string | null; // ID
-      since?: NexusGenScalars['Date'] | null; // Date
-    }
-  }
 }
 
 export interface NexusGenAbstractTypeMembers {
+  System: "DriveSystem" | "ServerSystem"
 }
 
 export interface NexusGenTypeInterfaces {
+  DriveSystem: "System"
+  ServerSystem: "System"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -437,7 +463,7 @@ export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -445,7 +471,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

@@ -7,6 +7,11 @@ type AddDriveResponse {
   local: DocumentDriveLocalState!
 }
 
+type Auth {
+  me: User
+  sessions: [Session]
+}
+
 type Challenge {
   hex: String!
   message: String!
@@ -60,8 +65,11 @@ type Node {
 
 type Query {
   drives: [String]
-  me: User
-  sessions: [Session]
+  system: ServerSystem
+}
+
+type ServerSystem implements System {
+  auth: Auth
 }
 
 type Session {
@@ -85,6 +93,10 @@ input SessionInput {
 type SessionOutput {
   session: Session!
   token: String!
+}
+
+interface System {
+  auth: Auth
 }
 
 type User {

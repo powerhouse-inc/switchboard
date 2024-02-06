@@ -1,4 +1,4 @@
-import { mutationField, nonNull, objectType } from 'nexus/dist';
+import { mutationField, nonNull, objectType } from 'nexus';
 
 export const Challenge = objectType({
   name: 'Challenge',

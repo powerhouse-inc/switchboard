@@ -40,14 +40,6 @@ export const SessionOutput = objectType({
   },
 });
 
-export const listSessions = queryField('sessions', {
-  type: list('Session'),
-  resolve: async (_, __, ctx) => {
-    const { createdBy } = await ctx.getSession();
-    return ctx.prisma.session.listSessions(createdBy);
-  },
-});
-
 export const revoke = mutationField('revokeSession', {
   type: 'Session',
   args: {
