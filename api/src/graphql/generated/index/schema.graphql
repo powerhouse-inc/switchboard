@@ -65,11 +65,7 @@ type Node {
 
 type Query {
   drives: [String]
-  system: ServerSystem
-}
-
-type ServerSystem implements System {
-  auth: Auth
+  system: SwitchboardHost
 }
 
 type Session {
@@ -93,6 +89,10 @@ input SessionInput {
 type SessionOutput {
   session: Session!
   token: String!
+}
+
+type SwitchboardHost implements System {
+  auth: Auth
 }
 
 interface System {

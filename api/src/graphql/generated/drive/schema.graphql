@@ -16,12 +16,25 @@ type Challenge {
 """Date custom scalar type"""
 scalar Date
 
+interface Document {
+  id: String!
+  name: String!
+  type: String!
+}
+
 type DocumentDriveState {
   icon: String
   id: ID!
   name: String!
   nodes: [Node]!
   slug: String
+}
+
+type DocumentModelDocument implements Document {
+  content: String!
+  id: String!
+  name: String!
+  type: String!
 }
 
 type DriveSystem implements System {
@@ -122,12 +135,16 @@ type OperationUpdate {
 }
 
 type Query {
+  document(id: String!): Document
   drive: DocumentDriveState
   system: DriveSystem
 }
 
-type ServerSystem implements System {
-  auth: Auth
+type RwaDocument implements Document {
+  field1: String!
+  id: String!
+  name: String!
+  type: String!
 }
 
 type Session {
@@ -159,6 +176,10 @@ type StrandUpdate {
   driveId: String!
   operations: [OperationUpdate!]!
   scope: String!
+}
+
+type SwitchboardHost implements System {
+  auth: Auth
 }
 
 type Sync {

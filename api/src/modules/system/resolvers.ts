@@ -43,7 +43,7 @@ export const systemType = interfaceType({
 });
 
 export const system = objectType({
-  name: 'ServerSystem',
+  name: 'SwitchboardHost',
   definition(t) {
     t.implements(systemType);
   },

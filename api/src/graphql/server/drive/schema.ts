@@ -1,16 +1,23 @@
 import * as path from 'path';
-import { connectionPlugin, fieldAuthorizePlugin, makeSchema } from 'nexus/dist';
+import { connectionPlugin, fieldAuthorizePlugin, makeSchema, nonNull, queryField, unionType } from 'nexus/dist';
 import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import { GQLDateBase } from './dateSchema';
 import * as driveResolver from '../../../modules/drive';
 import * as systemResolver from '../../../modules/system';
+import * as documentResolver from '../../../modules/document';
+import * as rwaDocumentResolver from '../../../modules/rwa';
 import { getExtraResolvers } from '../../../importedModules';
 
 /* istanbul ignore next @preserve */
 export const schema = makeSchema({
   types: {
-    GQLDateBase, ...systemResolver, ...driveResolver, ...getExtraResolvers(),
+    GQLDateBase,
+    ...systemResolver,
+    ...driveResolver,
+    ...documentResolver,
+    ...rwaDocumentResolver,
+    ...getExtraResolvers(),
   },
   plugins: [
     fieldAuthorizePlugin({

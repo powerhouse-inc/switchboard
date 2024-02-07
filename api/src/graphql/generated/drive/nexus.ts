@@ -104,6 +104,12 @@ export interface NexusGenObjects {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug?: string | null; // String
   }
+  DocumentModelDocument: { // root type
+    content: string; // String!
+    id: string; // String!
+    name: string; // String!
+    type: string; // String!
+  }
   DriveSystem: {};
   Listener: { // root type
     block: boolean; // Boolean!
@@ -149,7 +155,12 @@ export interface NexusGenObjects {
     type: string; // String!
   }
   Query: {};
-  ServerSystem: {};
+  RwaDocument: { // root type
+    field1: string; // String!
+    id: string; // String!
+    name: string; // String!
+    type: string; // String!
+  }
   Session: { // root type
     allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['Date']; // Date!
@@ -172,6 +183,7 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
   }
+  SwitchboardHost: {};
   Sync: {};
   User: { // root type
     address: string; // String!
@@ -180,7 +192,8 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  System: NexusGenRootTypes['DriveSystem'] | NexusGenRootTypes['ServerSystem'];
+  Document: NexusGenRootTypes['DocumentModelDocument'] | NexusGenRootTypes['RwaDocument'];
+  System: NexusGenRootTypes['DriveSystem'] | NexusGenRootTypes['SwitchboardHost'];
 }
 
 export interface NexusGenUnions {
@@ -206,6 +219,12 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug: string | null; // String
+  }
+  DocumentModelDocument: { // field return type
+    content: string; // String!
+    id: string; // String!
+    name: string; // String!
+    type: string; // String!
   }
   DriveSystem: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -264,11 +283,15 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   Query: { // field return type
+    document: NexusGenRootTypes['Document'] | null; // Document
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     system: NexusGenRootTypes['DriveSystem'] | null; // DriveSystem
   }
-  ServerSystem: { // field return type
-    auth: NexusGenRootTypes['Auth'] | null; // Auth
+  RwaDocument: { // field return type
+    field1: string; // String!
+    id: string; // String!
+    name: string; // String!
+    type: string; // String!
   }
   Session: { // field return type
     allowedOrigins: string | null; // String
@@ -292,12 +315,20 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
   }
+  SwitchboardHost: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
+  }
   Sync: { // field return type
     strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
   }
   User: { // field return type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
+  }
+  Document: { // field return type
+    id: string; // String!
+    name: string; // String!
+    type: string; // String!
   }
   System: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -320,6 +351,12 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     nodes: 'Node'
     slug: 'String'
+  }
+  DocumentModelDocument: { // field return type name
+    content: 'String'
+    id: 'String'
+    name: 'String'
+    type: 'String'
   }
   DriveSystem: { // field return type name
     auth: 'Auth'
@@ -378,11 +415,15 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Query: { // field return type name
+    document: 'Document'
     drive: 'DocumentDriveState'
     system: 'DriveSystem'
   }
-  ServerSystem: { // field return type name
-    auth: 'Auth'
+  RwaDocument: { // field return type name
+    field1: 'String'
+    id: 'String'
+    name: 'String'
+    type: 'String'
   }
   Session: { // field return type name
     allowedOrigins: 'String'
@@ -406,12 +447,20 @@ export interface NexusGenFieldTypeNames {
     operations: 'OperationUpdate'
     scope: 'String'
   }
+  SwitchboardHost: { // field return type name
+    auth: 'Auth'
+  }
   Sync: { // field return type name
     strands: 'StrandUpdate'
   }
   User: { // field return type name
     address: 'String'
     createdAt: 'Date'
+  }
+  Document: { // field return type name
+    id: 'String'
+    name: 'String'
+    type: 'String'
   }
   System: { // field return type name
     auth: 'Auth'
@@ -447,6 +496,11 @@ export interface NexusGenArgTypes {
       signature: string; // String!
     }
   }
+  Query: {
+    document: { // args
+      id: string; // String!
+    }
+  }
   Sync: {
     strands: { // args
       listenerId?: string | null; // ID
@@ -456,12 +510,15 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  System: "DriveSystem" | "ServerSystem"
+  Document: "DocumentModelDocument" | "RwaDocument"
+  System: "DriveSystem" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
+  DocumentModelDocument: "Document"
   DriveSystem: "System"
-  ServerSystem: "System"
+  RwaDocument: "Document"
+  SwitchboardHost: "System"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -478,7 +535,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "System";
+export type NexusGenAbstractsUsingStrategyResolveType = "Document" | "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

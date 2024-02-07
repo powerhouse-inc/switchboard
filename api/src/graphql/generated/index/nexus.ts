@@ -100,7 +100,6 @@ export interface NexusGenObjects {
     parentFolder?: string | null; // String
   }
   Query: {};
-  ServerSystem: {};
   Session: { // root type
     allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['Date']; // Date!
@@ -116,6 +115,7 @@ export interface NexusGenObjects {
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
   }
+  SwitchboardHost: {};
   User: { // root type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
@@ -123,7 +123,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  System: NexusGenRootTypes['ServerSystem'];
+  System: NexusGenRootTypes['SwitchboardHost'];
 }
 
 export interface NexusGenUnions {
@@ -175,10 +175,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     drives: Array<string | null> | null; // [String]
-    system: NexusGenRootTypes['ServerSystem'] | null; // ServerSystem
-  }
-  ServerSystem: { // field return type
-    auth: NexusGenRootTypes['Auth'] | null; // Auth
+    system: NexusGenRootTypes['SwitchboardHost'] | null; // SwitchboardHost
   }
   Session: { // field return type
     allowedOrigins: string | null; // String
@@ -194,6 +191,9 @@ export interface NexusGenFieldTypes {
   SessionOutput: { // field return type
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
+  }
+  SwitchboardHost: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
   }
   User: { // field return type
     address: string; // String!
@@ -246,10 +246,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     drives: 'String'
-    system: 'ServerSystem'
-  }
-  ServerSystem: { // field return type name
-    auth: 'Auth'
+    system: 'SwitchboardHost'
   }
   Session: { // field return type name
     allowedOrigins: 'String'
@@ -265,6 +262,9 @@ export interface NexusGenFieldTypeNames {
   SessionOutput: { // field return type name
     session: 'Session'
     token: 'String'
+  }
+  SwitchboardHost: { // field return type name
+    auth: 'Auth'
   }
   User: { // field return type name
     address: 'String'
@@ -301,11 +301,11 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  System: "ServerSystem"
+  System: "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
-  ServerSystem: "System"
+  SwitchboardHost: "System"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
