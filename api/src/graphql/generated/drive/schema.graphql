@@ -2,9 +2,51 @@
 ### Do not make changes to this file directly
 
 
+type Account {
+  id: ID!
+  label: String
+  reference: String!
+}
+
+union Asset = Cash | FixedIncome
+
+type AssetPurchaseGroupTransaction {
+  cashTransaction: BaseTransaction
+  feeTransactions: [BaseTransaction]
+  fixedIncomeTransaction: BaseTransaction
+  id: ID!
+  type: GroupTransactionType!
+}
+
+type AssetSaleGroupTransaction {
+  cashTransaction: BaseTransaction
+  feeTransactions: [BaseTransaction]
+  fixedIncomeTransaction: BaseTransaction
+  id: ID!
+  type: GroupTransactionType!
+}
+
 type Auth {
   me: User
   sessions: [Session]
+}
+
+type BaseTransaction {
+  accountId: ID
+  amount: Float!
+  assetId: ID!
+  counterPartyAccountId: ID
+  entryTime: Date!
+  id: ID!
+  settlementTime: Date
+  tradeTime: Date
+  txRef: String
+}
+
+type Cash {
+  currency: String!
+  id: ID!
+  spvId: ID!
 }
 
 type Challenge {
@@ -42,6 +84,44 @@ type DriveSystem implements System {
   sync: Sync
 }
 
+type FeesPaymentGroupTransaction {
+  feeTransactions: [BaseTransaction]
+  id: ID!
+  type: GroupTransactionType!
+}
+
+type FixedIncome {
+  CUSIP: String
+  ISIN: String
+  annualizedYield: Float!
+  coupon: Float
+  currentValue: Float
+  fixedIncomeTypeId: ID!
+  id: ID!
+  marketValue: Float!
+  maturity: Date!
+  name: String!
+  notional: Float!
+  purchaseDate: Date!
+  purchasePrice: Float!
+  purchaseProceeds: Float!
+  realizedSurplus: Float!
+  spvId: ID!
+  totalDiscount: Float!
+  totalSurplus: Float!
+}
+
+type FixedIncomeType {
+  id: ID!
+  name: String!
+}
+
+union GroupTransaction = AssetPurchaseGroupTransaction | AssetSaleGroupTransaction | FeesPaymentGroupTransaction | InterestDrawGroupTransaction | InterestReturnGroupTransaction | PrincipalDrawGroupTransaction | PrincipalReturnGroupTransaction
+
+type GroupTransactionType {
+  name: String
+}
+
 input InputListenerFilter {
   branch: [String]
   documentId: [String]
@@ -64,6 +144,18 @@ input InputStrandUpdate {
   driveId: String!
   operations: [InputOperationUpdate!]!
   scope: String!
+}
+
+type InterestDrawGroupTransaction {
+  id: ID!
+  interestTransaction: BaseTransaction
+  type: GroupTransactionType!
+}
+
+type InterestReturnGroupTransaction {
+  id: ID!
+  interestTransaction: BaseTransaction
+  type: GroupTransactionType!
 }
 
 type Listener {
@@ -134,10 +226,37 @@ type OperationUpdate {
   type: String!
 }
 
+type PrincipalDrawGroupTransaction {
+  cashTransaction: BaseTransaction
+  feeTransactions: [BaseTransaction]
+  id: ID!
+  type: GroupTransactionType!
+}
+
+type PrincipalReturnGroupTransaction {
+  cashTransaction: BaseTransaction
+  feeTransactions: [BaseTransaction]
+  id: ID!
+  type: GroupTransactionType!
+}
+
 type Query {
   document(id: String!): Document
   drive: DocumentDriveState
   system: DriveSystem
+}
+
+type RealWorldAssetDocument implements Document {
+  accounts: [Account!]!
+  feeTypes: [ServiceProvider!]!
+  fixedIncomeTypes: [FixedIncomeType!]!
+  id: String!
+  name: String!
+  portfolio: [Asset!]!
+  principalLenderAccountId: ID!
+  spvs: [Spv!]!
+  transactions: [GroupTransaction!]!
+  type: String!
 }
 
 type RwaDocument implements Document {
@@ -145,6 +264,13 @@ type RwaDocument implements Document {
   id: String!
   name: String!
   type: String!
+}
+
+type ServiceProvider {
+  accountId: ID!
+  feeType: String!
+  id: ID!
+  name: String!
 }
 
 type Session {
@@ -170,6 +296,11 @@ type SessionOutput {
   token: String!
 }
 
+type Spv {
+  id: ID!
+  name: String!
+}
+
 type StrandUpdate {
   branch: String!
   documentId: String!
@@ -188,6 +319,11 @@ type Sync {
 
 interface System {
   auth: Auth
+}
+
+type TransactionFee {
+  amount: Float!
+  serviceProviderId: ID!
 }
 
 enum TransmitterType {

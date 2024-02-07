@@ -30,3 +30,11 @@ export const defaultDocument = objectType({
     t.nonNull.string('content');
   },
 });
+
+export const documentQuery = queryField('document', {
+  type: documentModelInterface,
+  args: {
+    id: nonNull('String'),
+  },
+  resolve: async (_root, { id }, ctx) => ctx.prisma.document.getDocument(ctx.driveId, id),
+});
