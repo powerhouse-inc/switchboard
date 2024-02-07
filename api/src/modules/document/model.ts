@@ -167,5 +167,13 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       await driveServer.addDriveOperations(driveId, [operation]);
       return listenerId;
     },
+
+    getDocument: async (
+      driveId: string,
+      documentId: string,
+    ) => {
+      const result = await driveServer.getDocument(driveId, documentId);
+      return result;
+    },
   };
 }
