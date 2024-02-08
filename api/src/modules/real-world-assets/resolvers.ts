@@ -207,9 +207,8 @@ export const GroupTransaction = unionType({
 });
 
 export const RealWorldAssetsState = objectType({
-  name: 'RealWorldAssetDocument',
+  name: 'RealWorldAssetsState',
   definition(t) {
-    t.implements(documentModelInterface);
     t.nonNull.list.nonNull.field('accounts', { type: Account });
     t.nonNull.id('principalLenderAccountId');
     t.nonNull.list.nonNull.field('spvs', { type: Spv });
@@ -217,6 +216,14 @@ export const RealWorldAssetsState = objectType({
     t.nonNull.list.nonNull.field('fixedIncomeTypes', { type: FixedIncomeType });
     t.nonNull.list.nonNull.field('portfolio', { type: Asset });
     t.nonNull.list.nonNull.field('transactions', { type: GroupTransaction });
+  },
+});
+
+export const RealWorldAssetsDocument = objectType({
+  name: 'RealWorldAssetsDocument',
+  definition(t) {
+    t.implements(documentModelInterface);
+    t.nonNull.field('state', { type: RealWorldAssetsState });
   },
 });
 

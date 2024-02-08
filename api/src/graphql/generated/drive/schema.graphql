@@ -241,19 +241,23 @@ type Query {
   system: DriveSystem
 }
 
-type RealWorldAssetDocument implements Document {
-  accounts: [Account!]!
+type RealWorldAssetsDocument implements Document {
   created: Date!
   documentType: String!
-  feeTypes: [ServiceProvider!]!
-  fixedIncomeTypes: [FixedIncomeType!]!
   id: String!
   lastModified: Date!
   name: String!
   operations: [Operation!]!
+  revision: Int!
+  state: RealWorldAssetsState!
+}
+
+type RealWorldAssetsState {
+  accounts: [Account!]!
+  feeTypes: [ServiceProvider!]!
+  fixedIncomeTypes: [FixedIncomeType!]!
   portfolio: [Asset!]!
   principalLenderAccountId: ID!
-  revision: Int!
   spvs: [Spv!]!
   transactions: [GroupTransaction!]!
 }
