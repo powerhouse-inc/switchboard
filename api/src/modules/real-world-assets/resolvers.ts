@@ -1,4 +1,4 @@
-import { enumType, objectType, queryField, unionType } from 'nexus';
+import { objectType, unionType } from 'nexus';
 import { documentModelInterface } from '../document';
 import { GQLDateBase } from '../../graphql/server/drive/dateSchema';
 
@@ -40,12 +40,12 @@ export const Account = objectType({
 //   resolveType: () => true,
 // });
 
-export const GroupTransactionType = objectType({
-  name: 'GroupTransactionType',
-  definition(t) {
-    t.string('name');
-  },
-});
+// export const GroupTransactionType = objectType({
+//   name: 'GroupTransactionType',
+//   definition(t) {
+//     t.string('name');
+//   },
+// });
 
 export const BaseTransaction = objectType({
   name: 'BaseTransaction',
@@ -66,7 +66,7 @@ export const AssetPurchaseGroupTransaction = objectType({
   name: 'AssetPurchaseGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.field('cashTransaction', { type: BaseTransaction });
     t.field('fixedIncomeTransaction', { type: BaseTransaction });
     t.list.field('feeTransactions', { type: BaseTransaction });
@@ -76,7 +76,7 @@ export const AssetSaleGroupTransaction = objectType({
   name: 'AssetSaleGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.field('cashTransaction', { type: BaseTransaction });
     t.field('fixedIncomeTransaction', { type: BaseTransaction });
     t.list.field('feeTransactions', { type: BaseTransaction });
@@ -95,7 +95,7 @@ export const FeesPaymentGroupTransaction = objectType({
   name: 'FeesPaymentGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.list.field('feeTransactions', { type: BaseTransaction });
   },
 });
@@ -133,7 +133,7 @@ export const InterestDrawGroupTransaction = objectType({
   name: 'InterestDrawGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.field('interestTransaction', { type: BaseTransaction });
   },
 });
@@ -141,7 +141,7 @@ export const InterestReturnGroupTransaction = objectType({
   name: 'InterestReturnGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.field('interestTransaction', { type: BaseTransaction });
   },
 });
@@ -149,7 +149,7 @@ export const PrincipalDrawGroupTransaction = objectType({
   name: 'PrincipalDrawGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.field('cashTransaction', { type: BaseTransaction });
     t.list.field('feeTransactions', { type: BaseTransaction });
   },
@@ -158,7 +158,7 @@ export const PrincipalReturnGroupTransaction = objectType({
   name: 'PrincipalReturnGroupTransaction',
   definition(t) {
     t.nonNull.id('id');
-    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('type', { type: 'String' });
     t.field('cashTransaction', { type: BaseTransaction });
     t.list.field('feeTransactions', { type: BaseTransaction });
   },

@@ -15,7 +15,7 @@ type AssetPurchaseGroupTransaction {
   feeTransactions: [BaseTransaction]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
-  type: GroupTransactionType!
+  type: String!
 }
 
 type AssetSaleGroupTransaction {
@@ -23,7 +23,7 @@ type AssetSaleGroupTransaction {
   feeTransactions: [BaseTransaction]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
-  type: GroupTransactionType!
+  type: String!
 }
 
 type Auth {
@@ -83,7 +83,7 @@ type DriveSystem implements System {
 type FeesPaymentGroupTransaction {
   feeTransactions: [BaseTransaction]
   id: ID!
-  type: GroupTransactionType!
+  type: String!
 }
 
 type FixedIncome {
@@ -114,10 +114,6 @@ type FixedIncomeType {
 
 union GroupTransaction = AssetPurchaseGroupTransaction | AssetSaleGroupTransaction | FeesPaymentGroupTransaction | InterestDrawGroupTransaction | InterestReturnGroupTransaction | PrincipalDrawGroupTransaction | PrincipalReturnGroupTransaction
 
-type GroupTransactionType {
-  name: String
-}
-
 input InputListenerFilter {
   branch: [String]
   documentId: [String]
@@ -145,13 +141,13 @@ input InputStrandUpdate {
 type InterestDrawGroupTransaction {
   id: ID!
   interestTransaction: BaseTransaction
-  type: GroupTransactionType!
+  type: String!
 }
 
 type InterestReturnGroupTransaction {
   id: ID!
   interestTransaction: BaseTransaction
-  type: GroupTransactionType!
+  type: String!
 }
 
 type Listener {
@@ -229,14 +225,14 @@ type PrincipalDrawGroupTransaction {
   cashTransaction: BaseTransaction
   feeTransactions: [BaseTransaction]
   id: ID!
-  type: GroupTransactionType!
+  type: String!
 }
 
 type PrincipalReturnGroupTransaction {
   cashTransaction: BaseTransaction
   feeTransactions: [BaseTransaction]
   id: ID!
-  type: GroupTransactionType!
+  type: String!
 }
 
 type Query {

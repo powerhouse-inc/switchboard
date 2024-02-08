@@ -101,14 +101,14 @@ export interface NexusGenObjects {
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   AssetSaleGroupTransaction: { // root type
     cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   Auth: {};
   BaseTransaction: { // root type
@@ -143,7 +143,7 @@ export interface NexusGenObjects {
   FeesPaymentGroupTransaction: { // root type
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   FixedIncome: { // root type
     CUSIP?: string | null; // String
@@ -169,18 +169,15 @@ export interface NexusGenObjects {
     id: string; // ID!
     name: string; // String!
   }
-  GroupTransactionType: { // root type
-    name?: string | null; // String
-  }
   InterestDrawGroupTransaction: { // root type
     id: string; // ID!
     interestTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   InterestReturnGroupTransaction: { // root type
     id: string; // ID!
     interestTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   Listener: { // root type
     block: boolean; // Boolean!
@@ -229,13 +226,13 @@ export interface NexusGenObjects {
     cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   PrincipalReturnGroupTransaction: { // root type
     cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   Query: {};
   RealWorldAssetDocument: { // root type
@@ -332,14 +329,14 @@ export interface NexusGenFieldTypes {
     feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   AssetSaleGroupTransaction: { // field return type
     cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   Auth: { // field return type
     me: NexusGenRootTypes['User'] | null; // User
@@ -380,7 +377,7 @@ export interface NexusGenFieldTypes {
   FeesPaymentGroupTransaction: { // field return type
     feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   FixedIncome: { // field return type
     CUSIP: string | null; // String
@@ -406,18 +403,15 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     name: string; // String!
   }
-  GroupTransactionType: { // field return type
-    name: string | null; // String
-  }
   InterestDrawGroupTransaction: { // field return type
     id: string; // ID!
     interestTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   InterestReturnGroupTransaction: { // field return type
     id: string; // ID!
     interestTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   Listener: { // field return type
     block: boolean; // Boolean!
@@ -471,13 +465,13 @@ export interface NexusGenFieldTypes {
     cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   PrincipalReturnGroupTransaction: { // field return type
     cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
-    type: NexusGenRootTypes['GroupTransactionType']; // GroupTransactionType!
+    type: string; // String!
   }
   Query: { // field return type
     document: NexusGenRootTypes['Document'] | null; // Document
@@ -583,14 +577,14 @@ export interface NexusGenFieldTypeNames {
     feeTransactions: 'BaseTransaction'
     fixedIncomeTransaction: 'BaseTransaction'
     id: 'ID'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   AssetSaleGroupTransaction: { // field return type name
     cashTransaction: 'BaseTransaction'
     feeTransactions: 'BaseTransaction'
     fixedIncomeTransaction: 'BaseTransaction'
     id: 'ID'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   Auth: { // field return type name
     me: 'User'
@@ -631,7 +625,7 @@ export interface NexusGenFieldTypeNames {
   FeesPaymentGroupTransaction: { // field return type name
     feeTransactions: 'BaseTransaction'
     id: 'ID'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   FixedIncome: { // field return type name
     CUSIP: 'String'
@@ -657,18 +651,15 @@ export interface NexusGenFieldTypeNames {
     id: 'ID'
     name: 'String'
   }
-  GroupTransactionType: { // field return type name
-    name: 'String'
-  }
   InterestDrawGroupTransaction: { // field return type name
     id: 'ID'
     interestTransaction: 'BaseTransaction'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   InterestReturnGroupTransaction: { // field return type name
     id: 'ID'
     interestTransaction: 'BaseTransaction'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   Listener: { // field return type name
     block: 'Boolean'
@@ -722,13 +713,13 @@ export interface NexusGenFieldTypeNames {
     cashTransaction: 'BaseTransaction'
     feeTransactions: 'BaseTransaction'
     id: 'ID'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   PrincipalReturnGroupTransaction: { // field return type name
     cashTransaction: 'BaseTransaction'
     feeTransactions: 'BaseTransaction'
     id: 'ID'
-    type: 'GroupTransactionType'
+    type: 'String'
   }
   Query: { // field return type name
     document: 'Document'
