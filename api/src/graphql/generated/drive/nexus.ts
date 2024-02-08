@@ -241,6 +241,7 @@ export interface NexusGenObjects {
     documentType: string; // String!
     feeTypes: NexusGenRootTypes['ServiceProvider'][]; // [ServiceProvider!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
@@ -254,6 +255,7 @@ export interface NexusGenObjects {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     field1: string; // String!
+    id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
@@ -483,6 +485,7 @@ export interface NexusGenFieldTypes {
     documentType: string; // String!
     feeTypes: NexusGenRootTypes['ServiceProvider'][]; // [ServiceProvider!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
@@ -496,6 +499,7 @@ export interface NexusGenFieldTypes {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     field1: string; // String!
+    id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
@@ -550,6 +554,7 @@ export interface NexusGenFieldTypes {
   Document: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
+    id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
@@ -731,6 +736,7 @@ export interface NexusGenFieldTypeNames {
     documentType: 'String'
     feeTypes: 'ServiceProvider'
     fixedIncomeTypes: 'FixedIncomeType'
+    id: 'String'
     lastModified: 'Date'
     name: 'String'
     operations: 'Operation'
@@ -744,6 +750,7 @@ export interface NexusGenFieldTypeNames {
     created: 'Date'
     documentType: 'String'
     field1: 'String'
+    id: 'String'
     lastModified: 'Date'
     name: 'String'
     operations: 'Operation'
@@ -798,6 +805,7 @@ export interface NexusGenFieldTypeNames {
   Document: { // field return type name
     created: 'Date'
     documentType: 'String'
+    id: 'String'
     lastModified: 'Date'
     name: 'String'
     operations: 'Operation'

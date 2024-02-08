@@ -27,6 +27,7 @@ export const operationModelInterface = interfaceType({
 export const documentModelInterface = interfaceType({
   name: 'Document',
   definition(t) {
+    t.nonNull.string('id');
     t.nonNull.string('name');
     t.nonNull.string('documentType');
     t.nonNull.int('revision');

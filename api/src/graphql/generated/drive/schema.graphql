@@ -61,6 +61,7 @@ scalar Date
 interface Document {
   created: Date!
   documentType: String!
+  id: String!
   lastModified: Date!
   name: String!
   operations: [Operation!]!
@@ -246,6 +247,7 @@ type RealWorldAssetDocument implements Document {
   documentType: String!
   feeTypes: [ServiceProvider!]!
   fixedIncomeTypes: [FixedIncomeType!]!
+  id: String!
   lastModified: Date!
   name: String!
   operations: [Operation!]!
@@ -260,6 +262,7 @@ type RwaDocument implements Document {
   created: Date!
   documentType: String!
   field1: String!
+  id: String!
   lastModified: Date!
   name: String!
   operations: [Operation!]!
