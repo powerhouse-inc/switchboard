@@ -59,9 +59,12 @@ type Challenge {
 scalar Date
 
 interface Document {
-  id: String!
+  created: Date!
+  documentType: String!
+  lastModified: Date!
   name: String!
-  type: String!
+  operations: [Operation!]!
+  revision: Int!
 }
 
 type DocumentDriveState {
@@ -70,13 +73,6 @@ type DocumentDriveState {
   name: String!
   nodes: [Node]!
   slug: String
-}
-
-type DocumentModelDocument implements Document {
-  content: String!
-  id: String!
-  name: String!
-  type: String!
 }
 
 type DriveSystem implements System {
@@ -199,12 +195,8 @@ input ListenerRevisionInput {
 }
 
 type Mutation {
-  acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
-  deletePullResponderListener(filter: InputListenerFilter!): Listener
-  pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
-  registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
@@ -215,6 +207,13 @@ type Node {
   kind: String!
   name: String!
   parentFolder: String
+}
+
+interface Operation {
+  hash: String!
+  index: Int!
+  timestamp: Date!
+  type: String!
 }
 
 type OperationUpdate {
@@ -242,28 +241,33 @@ type PrincipalReturnGroupTransaction {
 
 type Query {
   document(id: String!): Document
-  drive: DocumentDriveState
   system: DriveSystem
 }
 
 type RealWorldAssetDocument implements Document {
   accounts: [Account!]!
+  created: Date!
+  documentType: String!
   feeTypes: [ServiceProvider!]!
   fixedIncomeTypes: [FixedIncomeType!]!
-  id: String!
+  lastModified: Date!
   name: String!
+  operations: [Operation!]!
   portfolio: [Asset!]!
   principalLenderAccountId: ID!
+  revision: Int!
   spvs: [Spv!]!
   transactions: [GroupTransaction!]!
-  type: String!
 }
 
 type RwaDocument implements Document {
+  created: Date!
+  documentType: String!
   field1: String!
-  id: String!
+  lastModified: Date!
   name: String!
-  type: String!
+  operations: [Operation!]!
+  revision: Int!
 }
 
 type ServiceProvider {

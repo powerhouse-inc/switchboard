@@ -6,8 +6,9 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
-  PrismaStorage
 } from 'document-drive';
+
+import { PrismaStorage } from 'document-drive/storage/prisma';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
 import { module as DocumentModelLib } from 'document-model/document-model';
 import { DocumentModel, Operation } from 'document-model/document';
@@ -173,6 +174,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       documentId: string,
     ) => {
       const result = await driveServer.getDocument(driveId, documentId);
+      const doc = DocumentModelsLibs.RealWorldAssets.utils.createDocument();
+      const response = {
+        ...doc,
+        state: doc.state.global,
+      };
+
       return result;
     },
   };

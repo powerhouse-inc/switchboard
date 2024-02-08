@@ -1,5 +1,5 @@
 import { queryField } from 'nexus';
-import { DocumentDriveState } from '../definitions';
+import { DocumentDriveState } from '../drive-resolver';
 
 export const getDrive = queryField('drive', {
   type: DocumentDriveState,

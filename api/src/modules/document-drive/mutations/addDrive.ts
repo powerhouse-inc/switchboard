@@ -4,8 +4,8 @@ import {
   DocumentDriveLocalState,
   DocumentDriveLocalStateInput,
   DocumentDriveStateInput,
-} from '../definitions';
-import { DocumentDriveState } from '../../drive/definitions';
+} from '../drives-resolver';
+import { DocumentDriveState } from '../drive-resolver';
 
 const addDriveResponseDefinition = objectType({
   name: 'AddDriveResponse',

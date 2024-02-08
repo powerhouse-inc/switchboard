@@ -139,12 +139,6 @@ export interface NexusGenObjects {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug?: string | null; // String
   }
-  DocumentModelDocument: { // root type
-    content: string; // String!
-    id: string; // String!
-    name: string; // String!
-    type: string; // String!
-  }
   DriveSystem: {};
   FeesPaymentGroupTransaction: { // root type
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
@@ -246,21 +240,27 @@ export interface NexusGenObjects {
   Query: {};
   RealWorldAssetDocument: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
     feeTypes: NexusGenRootTypes['ServiceProvider'][]; // [ServiceProvider!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
-    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
+    revision: number; // Int!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-    type: string; // String!
   }
   RwaDocument: { // root type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
     field1: string; // String!
-    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    type: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
   }
   ServiceProvider: { // root type
     accountId: string; // ID!
@@ -307,7 +307,8 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Document: NexusGenRootTypes['DocumentModelDocument'] | NexusGenRootTypes['RealWorldAssetDocument'] | NexusGenRootTypes['RwaDocument'];
+  Document: NexusGenRootTypes['RealWorldAssetDocument'] | NexusGenRootTypes['RwaDocument'];
+  Operation: any;
   System: NexusGenRootTypes['DriveSystem'] | NexusGenRootTypes['SwitchboardHost'];
 }
 
@@ -371,12 +372,6 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug: string | null; // String
-  }
-  DocumentModelDocument: { // field return type
-    content: string; // String!
-    id: string; // String!
-    name: string; // String!
-    type: string; // String!
   }
   DriveSystem: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -452,12 +447,8 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: { // field return type
-    acknowledge: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
-    deletePullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
-    pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
-    registerPullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
@@ -490,26 +481,31 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     document: NexusGenRootTypes['Document'] | null; // Document
-    drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     system: NexusGenRootTypes['DriveSystem'] | null; // DriveSystem
   }
   RealWorldAssetDocument: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
     feeTypes: NexusGenRootTypes['ServiceProvider'][]; // [ServiceProvider!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
-    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
+    revision: number; // Int!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-    type: string; // String!
   }
   RwaDocument: { // field return type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
     field1: string; // String!
-    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    type: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
   }
   ServiceProvider: { // field return type
     accountId: string; // ID!
@@ -558,8 +554,17 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['Date']; // Date!
   }
   Document: { // field return type
-    id: string; // String!
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
+  }
+  Operation: { // field return type
+    hash: string; // String!
+    index: number; // Int!
+    timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
   System: { // field return type
@@ -618,12 +623,6 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     nodes: 'Node'
     slug: 'String'
-  }
-  DocumentModelDocument: { // field return type name
-    content: 'String'
-    id: 'String'
-    name: 'String'
-    type: 'String'
   }
   DriveSystem: { // field return type name
     auth: 'Auth'
@@ -699,12 +698,8 @@ export interface NexusGenFieldTypeNames {
     status: 'UpdateStatus'
   }
   Mutation: { // field return type name
-    acknowledge: 'Boolean'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
-    deletePullResponderListener: 'Listener'
-    pushUpdates: 'ListenerRevision'
-    registerPullResponderListener: 'Listener'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
   }
@@ -737,26 +732,31 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     document: 'Document'
-    drive: 'DocumentDriveState'
     system: 'DriveSystem'
   }
   RealWorldAssetDocument: { // field return type name
     accounts: 'Account'
+    created: 'Date'
+    documentType: 'String'
     feeTypes: 'ServiceProvider'
     fixedIncomeTypes: 'FixedIncomeType'
-    id: 'String'
+    lastModified: 'Date'
     name: 'String'
+    operations: 'Operation'
     portfolio: 'Asset'
     principalLenderAccountId: 'ID'
+    revision: 'Int'
     spvs: 'Spv'
     transactions: 'GroupTransaction'
-    type: 'String'
   }
   RwaDocument: { // field return type name
+    created: 'Date'
+    documentType: 'String'
     field1: 'String'
-    id: 'String'
+    lastModified: 'Date'
     name: 'String'
-    type: 'String'
+    operations: 'Operation'
+    revision: 'Int'
   }
   ServiceProvider: { // field return type name
     accountId: 'ID'
@@ -805,8 +805,17 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'Date'
   }
   Document: { // field return type name
-    id: 'String'
+    created: 'Date'
+    documentType: 'String'
+    lastModified: 'Date'
     name: 'String'
+    operations: 'Operation'
+    revision: 'Int'
+  }
+  Operation: { // field return type name
+    hash: 'String'
+    index: 'Int'
+    timestamp: 'Date'
     type: 'String'
   }
   System: { // field return type name
@@ -816,24 +825,11 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    acknowledge: { // args
-      listenerId: string; // String!
-      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
-    }
     createChallenge: { // args
       address: string; // String!
     }
     createSession: { // args
       session: NexusGenInputs['SessionInput']; // SessionInput!
-    }
-    deletePullResponderListener: { // args
-      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
-    }
-    pushUpdates: { // args
-      strands?: NexusGenInputs['InputStrandUpdate'][] | null; // [InputStrandUpdate!]
-    }
-    registerPullResponderListener: { // args
-      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
     }
     revokeSession: { // args
       sessionId: string; // String!
@@ -859,12 +855,11 @@ export interface NexusGenArgTypes {
 export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   GroupTransaction: "AssetPurchaseGroupTransaction" | "AssetSaleGroupTransaction" | "FeesPaymentGroupTransaction" | "InterestDrawGroupTransaction" | "InterestReturnGroupTransaction" | "PrincipalDrawGroupTransaction" | "PrincipalReturnGroupTransaction"
-  Document: "DocumentModelDocument" | "RealWorldAssetDocument" | "RwaDocument"
+  Document: "RealWorldAssetDocument" | "RwaDocument"
   System: "DriveSystem" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
-  DocumentModelDocument: "Document"
   DriveSystem: "System"
   RealWorldAssetDocument: "Document"
   RwaDocument: "Document"
@@ -885,7 +880,7 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "Document" | "GroupTransaction" | "System";
+export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "Document" | "GroupTransaction" | "Operation" | "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

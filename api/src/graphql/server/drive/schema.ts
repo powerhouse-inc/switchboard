@@ -1,12 +1,12 @@
 import * as path from 'path';
-import { connectionPlugin, fieldAuthorizePlugin, makeSchema, nonNull, queryField, unionType } from 'nexus/dist';
+import { connectionPlugin, fieldAuthorizePlugin, makeSchema } from 'nexus/dist';
 import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import { GQLDateBase } from './dateSchema';
-import * as driveResolver from '../../../modules/drive';
+import * as driveResolver from '../../../modules/document-drive/drive-resolver';
 import * as systemResolver from '../../../modules/system';
 import * as documentResolver from '../../../modules/document';
-import * as rwaDocumentResolver from '../../../modules/rwa';
+import * as rwaDocumentResolver from '../../../modules/real-world-assets';
 import { getExtraResolvers } from '../../../importedModules';
 
 /* istanbul ignore next @preserve */

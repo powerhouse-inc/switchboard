@@ -4,9 +4,10 @@ export const getDrives = queryField('drives', {
   type: list('String'),
   resolve: async (_parent, args, ctx) => {
     try {
-      return await ctx.prisma.document.getDrives();
+      const drives = await ctx.prisma.document.getDrives();
+      return drives;
     } catch (e) {
-      return [];
+      throw new Error('Failed to get drives.');
     }
   },
 });

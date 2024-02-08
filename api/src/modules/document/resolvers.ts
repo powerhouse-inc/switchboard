@@ -1,11 +1,14 @@
-import { interfaceType, nonNull, objectType, queryField } from 'nexus';
+import { interfaceType, nonNull, queryField } from 'nexus';
+import { GQLDateBase } from '../../graphql/server/drive/dateSchema';
 
-export const documentModelInterface = interfaceType({
-  name: 'Document',
+// todo: resolveType should be moved to somewhere else
+export const operationModelInterface = interfaceType({
+  name: 'Operation',
   definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
     t.nonNull.string('type');
+    t.nonNull.int('index');
+    t.nonNull.field('timestamp', { type: GQLDateBase });
+    t.nonNull.string('hash');
   },
   resolveType: (e) => {
     if (e.type === 'business-statement') {
@@ -20,14 +23,27 @@ export const documentModelInterface = interfaceType({
   },
 });
 
-export const defaultDocument = objectType({
-  name: 'DocumentModelDocument',
+// todo: resolveType should be moved to somewhere else
+export const documentModelInterface = interfaceType({
+  name: 'Document',
   definition(t) {
-    t.implements(documentModelInterface);
-    t.nonNull.string('id');
     t.nonNull.string('name');
-    t.nonNull.string('type');
-    t.nonNull.string('content');
+    t.nonNull.string('documentType');
+    t.nonNull.int('revision');
+    t.nonNull.field('created', { type: GQLDateBase });
+    t.nonNull.field('lastModified', { type: GQLDateBase });
+    t.nonNull.list.nonNull.field('operations', { type: operationModelInterface });
+  },
+  resolveType: (e) => {
+    if (e.type === 'business-statement') {
+      return 'Drive';
+    }
+
+    if (e.type === 'folder') {
+      return 'Folder';
+    }
+
+    return 'Document';
   },
 });
 
