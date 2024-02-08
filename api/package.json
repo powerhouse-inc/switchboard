@@ -16,14 +16,14 @@
   },
   "dependencies": {
     "@apollo/server": "^4.5.0",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "5.7.1",
     "@types/cookie-parser": "^1.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "document-drive": "powerhouse-inc/document-drive#ec00335",
+    "document-drive": "powerhouse-inc/document-drive#12d3656",
     "document-model": "^1.0.24",
-    "document-model-libs": "^1.1.37",
+    "document-model-libs": "^1.1.40",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
@@ -60,7 +60,7 @@
     "gql-query-builder": "^3.8.0",
     "graphql-request": "^5.2.0",
     "node-fetch": "^3.3.1",
-    "prisma": "^5.7.1",
+    "prisma": "5.7.1",
     "typescript": "^4.9.5",
     "vitest-mock-extended": "^1.1.3"
   }
