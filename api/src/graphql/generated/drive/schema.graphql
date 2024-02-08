@@ -237,11 +237,11 @@ type PrincipalReturnGroupTransaction {
 }
 
 type Query {
-  document(id: String!): Document
+  rwaPortfolio(id: String!): RWAPortfolio
   system: DriveSystem
 }
 
-type RealWorldAssetsDocument implements Document {
+type RWAPortfolio implements Document {
   created: Date!
   documentType: String!
   id: String!

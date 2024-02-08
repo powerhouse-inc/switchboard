@@ -235,7 +235,7 @@ export interface NexusGenObjects {
     type: string; // String!
   }
   Query: {};
-  RealWorldAssetsDocument: { // root type
+  RWAPortfolio: { // root type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -309,7 +309,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Document: NexusGenRootTypes['RealWorldAssetsDocument'] | NexusGenRootTypes['RwaDocument'];
+  Document: NexusGenRootTypes['RWAPortfolio'] | NexusGenRootTypes['RwaDocument'];
   Operation: any;
   System: NexusGenRootTypes['DriveSystem'] | NexusGenRootTypes['SwitchboardHost'];
 }
@@ -479,10 +479,10 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   Query: { // field return type
-    document: NexusGenRootTypes['Document'] | null; // Document
+    rwaPortfolio: NexusGenRootTypes['RWAPortfolio'] | null; // RWAPortfolio
     system: NexusGenRootTypes['DriveSystem'] | null; // DriveSystem
   }
-  RealWorldAssetsDocument: { // field return type
+  RWAPortfolio: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -733,10 +733,10 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Query: { // field return type name
-    document: 'Document'
+    rwaPortfolio: 'RWAPortfolio'
     system: 'DriveSystem'
   }
-  RealWorldAssetsDocument: { // field return type name
+  RWAPortfolio: { // field return type name
     created: 'Date'
     documentType: 'String'
     id: 'String'
@@ -848,7 +848,7 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    document: { // args
+    rwaPortfolio: { // args
       id: string; // String!
     }
   }
@@ -863,13 +863,13 @@ export interface NexusGenArgTypes {
 export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   GroupTransaction: "AssetPurchaseGroupTransaction" | "AssetSaleGroupTransaction" | "FeesPaymentGroupTransaction" | "InterestDrawGroupTransaction" | "InterestReturnGroupTransaction" | "PrincipalDrawGroupTransaction" | "PrincipalReturnGroupTransaction"
-  Document: "RealWorldAssetsDocument" | "RwaDocument"
+  Document: "RWAPortfolio" | "RwaDocument"
   System: "DriveSystem" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
   DriveSystem: "System"
-  RealWorldAssetsDocument: "Document"
+  RWAPortfolio: "Document"
   RwaDocument: "Document"
   SwitchboardHost: "System"
 }

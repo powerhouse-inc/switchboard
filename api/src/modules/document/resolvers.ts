@@ -1,5 +1,5 @@
 import { interfaceType, nonNull, queryField } from 'nexus';
-import { GQLDateBase } from '../../graphql/server/drive/dateSchema';
+import { GQLDateBase } from '../system';
 
 // todo: resolveType should be moved to somewhere else
 export const operationModelInterface = interfaceType({
@@ -10,17 +10,7 @@ export const operationModelInterface = interfaceType({
     t.nonNull.field('timestamp', { type: GQLDateBase });
     t.nonNull.string('hash');
   },
-  resolveType: (e) => {
-    if (e.type === 'business-statement') {
-      return 'Drive';
-    }
-
-    if (e.type === 'folder') {
-      return 'Folder';
-    }
-
-    return 'Document';
-  },
+  resolveType: (e) => 'RealWorldAssetsDocument',
 });
 
 // todo: resolveType should be moved to somewhere else
@@ -53,5 +43,8 @@ export const documentQuery = queryField('document', {
   args: {
     id: nonNull('String'),
   },
-  resolve: async (_root, { id }, ctx) => ctx.prisma.document.getDocument(ctx.driveId, id),
+  resolve: async (_root, { id }, ctx) => {
+    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
+    return doc;
+  },
 });

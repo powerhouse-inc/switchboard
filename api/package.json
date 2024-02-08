@@ -23,7 +23,7 @@
     "cors": "^2.8.5",
     "document-drive": "powerhouse-inc/document-drive#12d3656",
     "document-model": "^1.0.24",
-    "document-model-libs": "^1.1.40",
+    "document-model-libs": "1.1.42",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "express": "^4.18.2",

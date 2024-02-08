@@ -1,6 +1,6 @@
-import { objectType, unionType } from 'nexus';
+import { nonNull, objectType, queryField, unionType } from 'nexus';
 import { documentModelInterface } from '../document';
-import { GQLDateBase } from '../../graphql/server/drive/dateSchema';
+import { GQLDateBase } from '../system';
 
 export const rwaDocument = objectType({
   name: 'RwaDocument',
@@ -187,7 +187,13 @@ export const Asset = unionType({
   definition(t) {
     t.members(FixedIncome, Cash);
   },
-  resolveType: () => true,
+  resolveType: (e) => {
+    console.log(e);
+    if (e.currency) {
+      return "Cash"
+    }
+    return "FixedIncome";
+  },
 });
 
 export const GroupTransaction = unionType({
@@ -203,7 +209,18 @@ export const GroupTransaction = unionType({
       FeesPaymentGroupTransaction,
     );
   },
-  resolveType: () => true,
+  resolveType: (e) => {
+    if (e.type === "FeesPayment") {
+      return "FeesPaymentGroupTransaction"
+    }
+
+    if (e.type === "AssetPurchase") {
+      return "AssetPurchaseGroupTransaction"
+    }
+
+    console.log(e);
+    return true;
+  },
 });
 
 export const RealWorldAssetsState = objectType({
@@ -220,7 +237,7 @@ export const RealWorldAssetsState = objectType({
 });
 
 export const RealWorldAssetsDocument = objectType({
-  name: 'RealWorldAssetsDocument',
+  name: 'RWAPortfolio',
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: RealWorldAssetsState });
@@ -232,5 +249,17 @@ export const TransactionFee = objectType({
   definition(t) {
     t.nonNull.id('serviceProviderId');
     t.nonNull.float('amount');
+  },
+});
+
+export const documentQuery = queryField('rwaPortfolio', {
+  type: RealWorldAssetsDocument,
+  args: {
+    id: nonNull('String'),
+  },
+  resolve: async (_root, { id }, ctx) => {
+    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
+
+    return doc;
   },
 });

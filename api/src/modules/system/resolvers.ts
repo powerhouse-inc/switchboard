@@ -1,7 +1,7 @@
 import {
   extendType,
   interfaceType,
-  list, mutationField, nonNull, objectType, queryField, stringArg,
+  list, mutationField, nonNull, objectType, queryField, scalarType, stringArg,
 } from 'nexus';
 import logger from '../../logger';
 
@@ -52,4 +52,23 @@ export const system = objectType({
 export const systemQueryField = queryField('system', {
   type: system,
   resolve: async () => true,
+});
+
+export const GQLDateBase = scalarType({
+  name: 'Date',
+  asNexusMethod: 'date',
+  description: 'Date custom scalar type',
+  serialize(value: any) {
+    if (value instanceof Date) {
+      return value.toISOString();
+    }
+
+    return value;
+  },
+  parseValue(value: unknown) {
+    if (typeof value === 'string') {
+      return new Date(value);
+    }
+    return null;
+  },
 });
