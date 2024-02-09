@@ -184,14 +184,14 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
       let newDoc = DocumentModelsLibs.RealWorldAssets.reducer(doc, DocumentModelsLibs.RealWorldAssets.actions.createAccount({
         id: '1',
-        reference: "frank",
-        label: "Franks wallet"
+        reference: "ba",
+        label: "BA"
       }))
 
       newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createAccount({
         id: '2',
-        reference: "wouter",
-        label: "Wouters wallet"
+        reference: "maker",
+        label: "MakerDAO"
       }))
 
       newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.setName("Franks Portfolio"));

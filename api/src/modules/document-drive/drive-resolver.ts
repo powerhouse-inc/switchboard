@@ -204,7 +204,7 @@ export const syncType = objectType({
 });
 
 export const driveSystemType = objectType({
-  name: 'DriveSystem',
+  name: 'SwitchboardDrive',
   definition(t) {
     t.implements(systemType);
     t.field('sync', {

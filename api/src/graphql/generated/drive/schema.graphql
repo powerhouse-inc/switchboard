@@ -76,11 +76,6 @@ type DocumentDriveState {
   slug: String
 }
 
-type DriveSystem implements System {
-  auth: Auth
-  sync: Sync
-}
-
 type FeesPaymentGroupTransaction {
   feeTransactions: [BaseTransaction]
   id: ID!
@@ -241,9 +236,10 @@ type PrincipalReturnGroupTransaction {
 }
 
 type Query {
+  document(id: String!): Document
   drive: DocumentDriveState
   rwaPortfolio(id: String!): RWAPortfolio
-  system: DriveSystem
+  system: SwitchboardDrive
 }
 
 type RWAPortfolio implements Document {
@@ -265,17 +261,6 @@ type RealWorldAssetsState {
   principalLenderAccountId: ID!
   spvs: [Spv!]!
   transactions: [GroupTransaction!]!
-}
-
-type RwaDocument implements Document {
-  created: Date!
-  documentType: String!
-  field1: String!
-  id: String!
-  lastModified: Date!
-  name: String!
-  operations: [Operation!]!
-  revision: Int!
 }
 
 type ServiceProvider {
@@ -319,6 +304,11 @@ type StrandUpdate {
   driveId: String!
   operations: [OperationUpdate!]!
   scope: String!
+}
+
+type SwitchboardDrive implements System {
+  auth: Auth
+  sync: Sync
 }
 
 type SwitchboardHost implements System {

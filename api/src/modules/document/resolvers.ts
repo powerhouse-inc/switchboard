@@ -10,7 +10,7 @@ export const operationModelInterface = interfaceType({
     t.nonNull.field('timestamp', { type: GQLDateBase });
     t.nonNull.string('hash');
   },
-  resolveType: (e) => 'RealWorldAssetsDocument',
+  resolveType: (e) => 'Operation',
 });
 
 // todo: resolveType should be moved to somewhere else
@@ -26,6 +26,7 @@ export const documentModelInterface = interfaceType({
     t.nonNull.list.nonNull.field('operations', { type: operationModelInterface });
   },
   resolveType: (e) => {
+    console.log(e);
     if (e.type === 'business-statement') {
       return 'Drive';
     }
@@ -34,7 +35,7 @@ export const documentModelInterface = interfaceType({
       return 'Folder';
     }
 
-    return 'Document';
+    return 'RWAPortfolio';
   },
 });
 

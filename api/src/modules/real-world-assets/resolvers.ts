@@ -2,14 +2,6 @@ import { nonNull, objectType, queryField, unionType } from 'nexus';
 import { documentModelInterface } from '../document';
 import { GQLDateBase } from '../system';
 
-export const rwaDocument = objectType({
-  name: 'RwaDocument',
-  definition(t) {
-    t.implements(documentModelInterface);
-    t.nonNull.string('field1');
-  },
-});
-
 export const Account = objectType({
   name: 'Account',
   definition(t) {
@@ -251,7 +243,7 @@ export const TransactionFee = objectType({
   },
 });
 
-export const documentQuery = queryField('rwaPortfolio', {
+export const rwaQuery = queryField('rwaPortfolio', {
   type: RealWorldAssetsDocument,
   args: {
     id: nonNull('String'),
@@ -259,6 +251,17 @@ export const documentQuery = queryField('rwaPortfolio', {
   resolve: async (_root, { id }, ctx) => {
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
 
+    return doc;
+  },
+});
+
+export const documentQuery = queryField('document', {
+  type: documentModelInterface,
+  args: {
+    id: nonNull('String'),
+  },
+  resolve: async (_root, { id }, ctx) => {
+    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
     return doc;
   },
 });

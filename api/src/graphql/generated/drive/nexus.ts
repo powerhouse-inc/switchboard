@@ -139,7 +139,6 @@ export interface NexusGenObjects {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug?: string | null; // String
   }
-  DriveSystem: {};
   FeesPaymentGroupTransaction: { // root type
     feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
     id: string; // ID!
@@ -254,16 +253,6 @@ export interface NexusGenObjects {
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
-  RwaDocument: { // root type
-    created: NexusGenScalars['Date']; // Date!
-    documentType: string; // String!
-    field1: string; // String!
-    id: string; // String!
-    lastModified: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
-    revision: number; // Int!
-  }
   ServiceProvider: { // root type
     accountId: string; // ID!
     feeType: string; // String!
@@ -296,6 +285,7 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
   }
+  SwitchboardDrive: {};
   SwitchboardHost: {};
   Sync: {};
   TransactionFee: { // root type
@@ -309,9 +299,9 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Document: NexusGenRootTypes['RWAPortfolio'] | NexusGenRootTypes['RwaDocument'];
+  Document: NexusGenRootTypes['RWAPortfolio'];
   Operation: any;
-  System: NexusGenRootTypes['DriveSystem'] | NexusGenRootTypes['SwitchboardHost'];
+  System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
 
 export interface NexusGenUnions {
@@ -374,10 +364,6 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug: string | null; // String
-  }
-  DriveSystem: { // field return type
-    auth: NexusGenRootTypes['Auth'] | null; // Auth
-    sync: NexusGenRootTypes['Sync'] | null; // Sync
   }
   FeesPaymentGroupTransaction: { // field return type
     feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
@@ -483,9 +469,10 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   Query: { // field return type
+    document: NexusGenRootTypes['Document'] | null; // Document
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     rwaPortfolio: NexusGenRootTypes['RWAPortfolio'] | null; // RWAPortfolio
-    system: NexusGenRootTypes['DriveSystem'] | null; // DriveSystem
+    system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
   }
   RWAPortfolio: { // field return type
     created: NexusGenScalars['Date']; // Date!
@@ -505,16 +492,6 @@ export interface NexusGenFieldTypes {
     principalLenderAccountId: string; // ID!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  }
-  RwaDocument: { // field return type
-    created: NexusGenScalars['Date']; // Date!
-    documentType: string; // String!
-    field1: string; // String!
-    id: string; // String!
-    lastModified: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
-    revision: number; // Int!
   }
   ServiceProvider: { // field return type
     accountId: string; // ID!
@@ -547,6 +524,10 @@ export interface NexusGenFieldTypes {
     driveId: string; // String!
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
+  }
+  SwitchboardDrive: { // field return type
+    auth: NexusGenRootTypes['Auth'] | null; // Auth
+    sync: NexusGenRootTypes['Sync'] | null; // Sync
   }
   SwitchboardHost: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -633,10 +614,6 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     nodes: 'Node'
     slug: 'String'
-  }
-  DriveSystem: { // field return type name
-    auth: 'Auth'
-    sync: 'Sync'
   }
   FeesPaymentGroupTransaction: { // field return type name
     feeTransactions: 'BaseTransaction'
@@ -742,9 +719,10 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Query: { // field return type name
+    document: 'Document'
     drive: 'DocumentDriveState'
     rwaPortfolio: 'RWAPortfolio'
-    system: 'DriveSystem'
+    system: 'SwitchboardDrive'
   }
   RWAPortfolio: { // field return type name
     created: 'Date'
@@ -764,16 +742,6 @@ export interface NexusGenFieldTypeNames {
     principalLenderAccountId: 'ID'
     spvs: 'Spv'
     transactions: 'GroupTransaction'
-  }
-  RwaDocument: { // field return type name
-    created: 'Date'
-    documentType: 'String'
-    field1: 'String'
-    id: 'String'
-    lastModified: 'Date'
-    name: 'String'
-    operations: 'Operation'
-    revision: 'Int'
   }
   ServiceProvider: { // field return type name
     accountId: 'ID'
@@ -806,6 +774,10 @@ export interface NexusGenFieldTypeNames {
     driveId: 'String'
     operations: 'OperationUpdate'
     scope: 'String'
+  }
+  SwitchboardDrive: { // field return type name
+    auth: 'Auth'
+    sync: 'Sync'
   }
   SwitchboardHost: { // field return type name
     auth: 'Auth'
@@ -871,6 +843,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    document: { // args
+      id: string; // String!
+    }
     rwaPortfolio: { // args
       id: string; // String!
     }
@@ -886,14 +861,13 @@ export interface NexusGenArgTypes {
 export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   GroupTransaction: "AssetPurchaseGroupTransaction" | "AssetSaleGroupTransaction" | "FeesPaymentGroupTransaction" | "InterestDrawGroupTransaction" | "InterestReturnGroupTransaction" | "PrincipalDrawGroupTransaction" | "PrincipalReturnGroupTransaction"
-  Document: "RWAPortfolio" | "RwaDocument"
-  System: "DriveSystem" | "SwitchboardHost"
+  Document: "RWAPortfolio"
+  System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
-  DriveSystem: "System"
   RWAPortfolio: "Document"
-  RwaDocument: "Document"
+  SwitchboardDrive: "System"
   SwitchboardHost: "System"
 }
 
