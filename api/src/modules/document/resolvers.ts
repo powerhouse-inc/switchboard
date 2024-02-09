@@ -25,18 +25,7 @@ export const documentModelInterface = interfaceType({
     t.nonNull.field('lastModified', { type: GQLDateBase });
     t.nonNull.list.nonNull.field('operations', { type: operationModelInterface });
   },
-  resolveType: (e) => {
-    console.log(e);
-    if (e.type === 'business-statement') {
-      return 'Drive';
-    }
-
-    if (e.type === 'folder') {
-      return 'Folder';
-    }
-
-    return 'RWAPortfolio';
-  },
+  resolveType: (e) => e.name,
 });
 
 export const documentQuery = queryField('document', {
