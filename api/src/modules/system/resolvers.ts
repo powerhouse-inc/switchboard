@@ -72,3 +72,16 @@ export const GQLDateBase = scalarType({
     return null;
   },
 });
+
+
+export const GQLAttachmentBase = scalarType({
+  name: 'Attachment',
+  asNexusMethod: 'attachment',
+  description: 'Attachment custom scalar type',
+  serialize(value: any) {
+    return JSON.stringify(value);
+  },
+  parseValue(value: unknown) {
+    return JSON.parse(value as string);
+  },
+});
