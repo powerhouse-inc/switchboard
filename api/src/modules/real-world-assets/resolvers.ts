@@ -228,7 +228,7 @@ export const RealWorldAssetsState = objectType({
 });
 
 export const RealWorldAssetsDocument = objectType({
-  name: 'RWAPortfolio',
+  name: 'RealWorldAssets',
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: RealWorldAssetsState });
@@ -250,7 +250,6 @@ export const rwaQuery = queryField('rwaPortfolio', {
   },
   resolve: async (_root, { id }, ctx) => {
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
-
     return doc;
   },
 });
