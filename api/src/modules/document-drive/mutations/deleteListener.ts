@@ -2,7 +2,7 @@ import { mutationField, nonNull } from 'nexus';
 import {
   InputListenerFilter,
   Listener,
-} from '../definitions';
+} from '../drive-resolver';
 
 export const deleteListener = mutationField('deletePullResponderListener', {
   type: Listener,

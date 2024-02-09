@@ -12,9 +12,9 @@ import { getExtraResolvers } from '../../../importedModules';
 export const schema = makeSchema({
   types: {
     ...systemResolver,
-    ...driveResolver,
     ...documentResolver,
     ...rwaDocumentResolver,
+    ...driveResolver,
     ...getExtraResolvers(),
   },
   plugins: [

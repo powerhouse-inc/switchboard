@@ -19,6 +19,7 @@ export const Account = objectType({
   },
 });
 
+// TODO: union type doesnt allow enums :-(
 // export const CashGroupTransactionType = enumType({
 //   name: 'CashGroupTransactionType',
 //   members: ['PrincipalDraw', 'PrincipalReturn'],

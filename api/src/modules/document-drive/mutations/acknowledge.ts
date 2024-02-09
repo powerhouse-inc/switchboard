@@ -1,6 +1,6 @@
 import { list, mutationField, nonNull } from 'nexus';
 import { ListenerRevision, UpdateStatus } from 'document-drive';
-import { ListenerRevisionInput } from '../definitions';
+import { ListenerRevisionInput } from '../drive-resolver';
 
 export const acknowledge = mutationField('acknowledge', {
   type: 'Boolean',

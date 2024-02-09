@@ -5,7 +5,7 @@ import {
   UpdateStatus,
 } from 'document-drive';
 import { OperationScope } from 'document-model/dist/node/src/document';
-import { InputStrandUpdate, ListenerRevision } from '../definitions';
+import { InputStrandUpdate, ListenerRevision } from '../drive-resolver';
 
 export const pushUpdates = mutationField('pushUpdates', {
   type: list(ListenerRevision),
