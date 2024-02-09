@@ -182,8 +182,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       // const result = await driveServer.getDocument(driveId, documentId);
       const doc = DocumentModelsLibs.RealWorldAssets.utils.createDocument();
 
-      console.log(DocumentModelsLibs.RealWorldAssets);
-
       let newDoc = DocumentModelsLibs.RealWorldAssets.reducer(doc, DocumentModelsLibs.RealWorldAssets.actions.createAccount({
         id: '1',
         reference: "frank",

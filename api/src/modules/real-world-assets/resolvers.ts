@@ -189,7 +189,6 @@ export const Asset = unionType({
     t.members(FixedIncome, Cash);
   },
   resolveType: (e) => {
-    console.log(e);
     if (e.currency) {
       return "Cash"
     }
@@ -219,7 +218,6 @@ export const GroupTransaction = unionType({
       return "AssetPurchaseGroupTransaction"
     }
 
-    console.log(e);
     return true;
   },
 });

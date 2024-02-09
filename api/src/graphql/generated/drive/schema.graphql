@@ -192,8 +192,12 @@ input ListenerRevisionInput {
 }
 
 type Mutation {
+  acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
+  deletePullResponderListener(filter: InputListenerFilter!): Listener
+  pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
+  registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
@@ -237,6 +241,7 @@ type PrincipalReturnGroupTransaction {
 }
 
 type Query {
+  drive: DocumentDriveState
   rwaPortfolio(id: String!): RWAPortfolio
   system: DriveSystem
 }

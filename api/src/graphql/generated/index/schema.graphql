@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type AddDriveResponse {
+  global: DocumentDriveState!
+  local: DocumentDriveLocalState!
+}
+
 type Auth {
   me: User
   sessions: [Session]
@@ -26,6 +31,14 @@ input DocumentDriveLocalStateInput {
   sharingType: String
 }
 
+type DocumentDriveState {
+  icon: String
+  id: ID!
+  name: String!
+  nodes: [Node]!
+  slug: String
+}
+
 input DocumentDriveStateInput {
   icon: String
   id: ID!
@@ -34,13 +47,24 @@ input DocumentDriveStateInput {
 }
 
 type Mutation {
+  addDrive(global: DocumentDriveStateInput!, local: DocumentDriveLocalStateInput!): AddDriveResponse
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
+  deleteDrive(id: String!): Boolean
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
 
+type Node {
+  documentType: String
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
+}
+
 type Query {
+  drives: [String]
   system: SwitchboardHost
 }
 

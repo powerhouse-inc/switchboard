@@ -446,8 +446,12 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
   }
   Mutation: { // field return type
+    acknowledge: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
+    deletePullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
+    pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
+    registerPullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
@@ -479,6 +483,7 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   Query: { // field return type
+    drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     rwaPortfolio: NexusGenRootTypes['RWAPortfolio'] | null; // RWAPortfolio
     system: NexusGenRootTypes['DriveSystem'] | null; // DriveSystem
   }
@@ -700,8 +705,12 @@ export interface NexusGenFieldTypeNames {
     status: 'UpdateStatus'
   }
   Mutation: { // field return type name
+    acknowledge: 'Boolean'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
+    deletePullResponderListener: 'Listener'
+    pushUpdates: 'ListenerRevision'
+    registerPullResponderListener: 'Listener'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
   }
@@ -733,6 +742,7 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Query: { // field return type name
+    drive: 'DocumentDriveState'
     rwaPortfolio: 'RWAPortfolio'
     system: 'DriveSystem'
   }
@@ -833,11 +843,24 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    acknowledge: { // args
+      listenerId: string; // String!
+      revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
+    }
     createChallenge: { // args
       address: string; // String!
     }
     createSession: { // args
       session: NexusGenInputs['SessionInput']; // SessionInput!
+    }
+    deletePullResponderListener: { // args
+      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
+    }
+    pushUpdates: { // args
+      strands?: NexusGenInputs['InputStrandUpdate'][] | null; // [InputStrandUpdate!]
+    }
+    registerPullResponderListener: { // args
+      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
     }
     revokeSession: { // args
       sessionId: string; // String!

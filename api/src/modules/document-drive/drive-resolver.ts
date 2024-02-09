@@ -3,10 +3,16 @@ import {
   idArg,
   inputObjectType,
   list,
+  mutationField,
+  nonNull,
   objectType,
   queryField,
 } from 'nexus';
 import { systemType } from '../system';
+import {
+  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
+} from 'document-drive';
+import { OperationScope } from 'document-model/document';
 
 export const Node = objectType({
   name: 'Node',
@@ -211,4 +217,119 @@ export const driveSystemType = objectType({
 export const driveSystemQueryField = queryField('system', {
   type: driveSystemType,
   resolve: async () => true,
+});
+
+export const getDrive = queryField('drive', {
+  type: DocumentDriveState,
+  resolve: async (_parent, args, ctx) => {
+    try {
+      const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1');
+      return drive.global;
+    } catch (e) {
+      return null;
+    }
+  },
+});
+
+export const registerListener = mutationField('registerPullResponderListener', {
+  type: Listener,
+  args: {
+    filter: nonNull(InputListenerFilter),
+  },
+  resolve: async (_parent, { filter }, ctx) => {
+    const result = await ctx.prisma.document.registerPullResponderListener(
+      ctx.driveId ?? '1',
+      filter,
+    );
+
+    return result;
+  },
+});
+
+
+export const deleteListener = mutationField('deletePullResponderListener', {
+  type: Listener,
+  args: {
+    filter: nonNull(InputListenerFilter),
+  },
+  resolve: async (_parent, { filter }, ctx) => {
+    const result = await ctx.prisma.document.deletePullResponderListener(
+      ctx.driveId ?? '1',
+      filter,
+    );
+
+    return result;
+  },
+});
+
+export const pushUpdates = mutationField('pushUpdates', {
+  type: list(ListenerRevision),
+  args: {
+    strands: list(nonNull(InputStrandUpdate)),
+  },
+  resolve: async (_parent, { strands }, ctx) => {
+    // @todo: get connect drive server from ctx and apply updates
+    if (!strands || strands?.length === 0) return [];
+
+    const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
+      const operations = s.operations?.map((o) => ({
+        ...o,
+        input: JSON.parse(o.input),
+        skip: o.skip ?? 0,
+        scope: s.scope as OperationScope,
+        branch: 'main',
+        scopes: ['global', 'local'],
+      })) ?? [];
+
+      const result = await ctx.prisma.document.pushUpdates(
+        s.driveId,
+        operations,
+        s.documentId ?? undefined,
+      );
+
+      return {
+        branch: s.branch,
+        documentId: s.documentId ?? '',
+        driveId: s.driveId,
+        revision: result.operations.pop()?.index ?? -1,
+        scope: s.scope as OperationScope,
+        status: (result.error ? 'ERROR' : 'SUCCESS') as IUpdateStatus,
+      };
+    }));
+
+    return listenerRevisions;
+  },
+});
+
+export const acknowledge = mutationField('acknowledge', {
+  type: 'Boolean',
+  args: {
+    listenerId: nonNull('String'),
+    revisions: list(ListenerRevisionInput),
+  },
+  resolve: async (_parent, { revisions, listenerId }, ctx) => {
+    try {
+      if (!listenerId || !revisions) return false;
+      const validEntries: IListenerRevision[] = revisions
+        .filter((r) => r !== null)
+        .map((e) => ({
+          driveId: ctx.driveId ?? '1',
+          documentId: e!.documentId,
+          scope: e!.scope,
+          branch: e!.branch,
+          revision: e!.revision,
+          status: e!.status as IUpdateStatus,
+        }));
+
+      const result = await ctx.prisma.document.processAcknowledge(
+        ctx.driveId ?? '1',
+        listenerId,
+        validEntries,
+      );
+
+      return result;
+    } catch (e) {
+      return false;
+    }
+  },
 });

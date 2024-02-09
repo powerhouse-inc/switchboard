@@ -70,6 +70,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AddDriveResponse: { // root type
+    global: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+    local: NexusGenRootTypes['DocumentDriveLocalState']; // DocumentDriveLocalState!
+  }
   Auth: {};
   Challenge: { // root type
     hex: string; // String!
@@ -80,7 +84,21 @@ export interface NexusGenObjects {
     availableOffline: boolean; // Boolean!
     sharingType?: string | null; // String
   }
+  DocumentDriveState: { // root type
+    icon?: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    slug?: string | null; // String
+  }
   Mutation: {};
+  Node: { // root type
+    documentType?: string | null; // String
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder?: string | null; // String
+  }
   Query: {};
   Session: { // root type
     allowedOrigins?: string | null; // String
@@ -116,6 +134,10 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  AddDriveResponse: { // field return type
+    global: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+    local: NexusGenRootTypes['DocumentDriveLocalState']; // DocumentDriveLocalState!
+  }
   Auth: { // field return type
     me: NexusGenRootTypes['User'] | null; // User
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
@@ -129,13 +151,30 @@ export interface NexusGenFieldTypes {
     availableOffline: boolean; // Boolean!
     sharingType: string | null; // String
   }
+  DocumentDriveState: { // field return type
+    icon: string | null; // String
+    id: string; // ID!
+    name: string; // String!
+    nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    slug: string | null; // String
+  }
   Mutation: { // field return type
+    addDrive: NexusGenRootTypes['AddDriveResponse'] | null; // AddDriveResponse
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
+    deleteDrive: boolean | null; // Boolean
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
+  Node: { // field return type
+    documentType: string | null; // String
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder: string | null; // String
+  }
   Query: { // field return type
+    drives: Array<string | null> | null; // [String]
     system: NexusGenRootTypes['SwitchboardHost'] | null; // SwitchboardHost
   }
   Session: { // field return type
@@ -166,6 +205,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AddDriveResponse: { // field return type name
+    global: 'DocumentDriveState'
+    local: 'DocumentDriveLocalState'
+  }
   Auth: { // field return type name
     me: 'User'
     sessions: 'Session'
@@ -179,13 +222,30 @@ export interface NexusGenFieldTypeNames {
     availableOffline: 'Boolean'
     sharingType: 'String'
   }
+  DocumentDriveState: { // field return type name
+    icon: 'String'
+    id: 'ID'
+    name: 'String'
+    nodes: 'Node'
+    slug: 'String'
+  }
   Mutation: { // field return type name
+    addDrive: 'AddDriveResponse'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
+    deleteDrive: 'Boolean'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
   }
+  Node: { // field return type name
+    documentType: 'String'
+    id: 'String'
+    kind: 'String'
+    name: 'String'
+    parentFolder: 'String'
+  }
   Query: { // field return type name
+    drives: 'String'
     system: 'SwitchboardHost'
   }
   Session: { // field return type name
@@ -217,11 +277,18 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    addDrive: { // args
+      global: NexusGenInputs['DocumentDriveStateInput']; // DocumentDriveStateInput!
+      local: NexusGenInputs['DocumentDriveLocalStateInput']; // DocumentDriveLocalStateInput!
+    }
     createChallenge: { // args
       address: string; // String!
     }
     createSession: { // args
       session: NexusGenInputs['SessionInput']; // SessionInput!
+    }
+    deleteDrive: { // args
+      id: string; // String!
     }
     revokeSession: { // args
       sessionId: string; // String!

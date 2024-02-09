@@ -9,9 +9,9 @@ const application = createApp();
 /* istanbul ignore next @preserve */
 startServer(application)
   .then((e) => {
+    // Hot Module Replacement
     if (import.meta.hot) {
       import.meta.hot.on("vite:beforeFullReload", () => {
-        console.log("full reload");
         e.close();
       });
     }
