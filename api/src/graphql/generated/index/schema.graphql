@@ -7,6 +7,9 @@ type AddDriveResponse {
   local: DocumentDriveLocalState!
 }
 
+"""Attachment custom scalar type"""
+scalar Attachment
+
 type Auth {
   me: User
   sessions: [Session]

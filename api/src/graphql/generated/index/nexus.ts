@@ -14,6 +14,10 @@ declare global {
      * Date custom scalar type
      */
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+    /**
+     * Attachment custom scalar type
+     */
+    attachment<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Attachment";
   }
 }
 declare global {
@@ -22,6 +26,10 @@ declare global {
      * Date custom scalar type
      */
     date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+    /**
+     * Attachment custom scalar type
+     */
+    attachment<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Attachment";
     /**
      * Adds a Relay-style connection to the type, with numerous options for configuration
      *
@@ -66,6 +74,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Attachment: any
   Date: any
 }
 

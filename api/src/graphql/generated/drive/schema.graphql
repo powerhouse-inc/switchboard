@@ -8,6 +8,57 @@ type Account {
   reference: String!
 }
 
+type AccountSnapshot implements Document {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [Operation!]!
+  revision: Int!
+  state: AccountSnapshotState!
+}
+
+type AccountSnapshotState {
+  actualsComparison: [ActualsComparison]
+  end: String
+  id: ID!
+  ownerId: ID
+  ownerType: String
+  period: String
+  snapshotAccount: [SnapshotAccount]
+  start: String
+}
+
+type ActualsComparison {
+  currency: String
+  month: String
+  netExpenses: ActualsComparisonNetExpenses
+  reportedActuals: Float
+}
+
+type ActualsComparisonNetExpenses {
+  offChainIncluded: ActualsComparisonNetExpensesItem
+  onChainOnly: ActualsComparisonNetExpensesItem!
+}
+
+type ActualsComparisonNetExpensesItem {
+  amount: Float
+  difference: Float
+}
+
+type AddElementInput {
+  components: ElementComponents
+  id: String!
+  name: String
+  path: String!
+  type: ScopeFrameworkElementType!
+}
+
+type ArticleComponent {
+  content: String
+}
+
 union Asset = Cash | FixedIncome
 
 type AssetPurchaseGroupTransaction {
@@ -24,6 +75,22 @@ type AssetSaleGroupTransaction {
   fixedIncomeTransaction: BaseTransaction
   id: ID!
   type: String!
+}
+
+"""Attachment custom scalar type"""
+scalar Attachment
+
+type AuditReport {
+  report: Attachment!
+  status: AuditReportStatus!
+  timestamp: Date!
+}
+
+enum AuditReportStatus {
+  Approved
+  ApprovedWithComments
+  Escalated
+  NeedsAction
 }
 
 type Auth {
@@ -43,6 +110,41 @@ type BaseTransaction {
   txRef: String
 }
 
+type BudgetStatement implements Document {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [Operation!]!
+  revision: Int!
+  state: BudgetStatementState!
+}
+
+type BudgetStatementAccount {
+  address: String!
+  lineItems: [LineItem!]!
+  name: String!
+}
+
+type BudgetStatementState {
+  accounts: [BudgetStatementAccount!]!
+  auditReports: [AuditReport!]!
+  comments: [Comment!]!
+  ftes: Ftes
+  month: String
+  owner: Owner
+  quoteCurrency: String
+  vesting: [Vesting!]!
+}
+
+enum BudgetStatus {
+  Draft
+  Escalated
+  Final
+  Review
+}
+
 type Cash {
   currency: String!
   id: ID!
@@ -53,6 +155,25 @@ type Challenge {
   hex: String!
   message: String!
   nonce: String!
+}
+
+type Comment {
+  author: CommentAuthor!
+  comment: String!
+  key: String!
+  status: BudgetStatus!
+  timestamp: Date!
+}
+
+type CommentAuthor {
+  id: String
+  ref: String
+  roleLabel: String
+  username: String
+}
+
+type CoreComponent {
+  content: String
 }
 
 """Date custom scalar type"""
@@ -75,6 +196,8 @@ type DocumentDriveState {
   nodes: [Node]!
   slug: String
 }
+
+union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | SectionComponent | TypeSpecificationComponent
 
 type FeesPaymentGroupTransaction {
   feeTransactions: [BaseTransaction]
@@ -106,6 +229,16 @@ type FixedIncome {
 type FixedIncomeType {
   id: ID!
   name: String!
+}
+
+type Ftes {
+  forecast: [FtesForecast!]!
+  value: Float!
+}
+
+type FtesForecast {
+  month: String!
+  value: Float!
 }
 
 union GroupTransaction = AssetPurchaseGroupTransaction | AssetSaleGroupTransaction | FeesPaymentGroupTransaction | InterestDrawGroupTransaction | InterestReturnGroupTransaction | PrincipalDrawGroupTransaction | PrincipalReturnGroupTransaction
@@ -144,6 +277,36 @@ type InterestReturnGroupTransaction {
   id: ID!
   interestTransaction: BaseTransaction
   type: String!
+}
+
+type LineItem {
+  actual: Float
+  budgetCap: Float
+  category: LineItemCategory
+  comment: String
+  forecast: [LineItemForecast!]!
+  group: LineItemGroup
+  headcountExpense: Boolean!
+  payment: Float
+}
+
+type LineItemCategory {
+  id: String!
+  ref: String!
+  title: String!
+}
+
+type LineItemForecast {
+  budgetCap: Float!
+  month: String!
+  value: Float!
+}
+
+type LineItemGroup {
+  color: String!
+  id: String!
+  ref: String!
+  title: String!
 }
 
 type Listener {
@@ -186,6 +349,11 @@ input ListenerRevisionInput {
   status: UpdateStatus!
 }
 
+type MoveElementInput {
+  id: ID!
+  newParentId: ID!
+}
+
 type Mutation {
   acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   createChallenge(address: String!): Challenge
@@ -221,6 +389,12 @@ type OperationUpdate {
   type: String!
 }
 
+type Owner {
+  id: String
+  ref: String
+  title: String
+}
+
 type PrincipalDrawGroupTransaction {
   cashTransaction: BaseTransaction
   feeTransactions: [BaseTransaction]
@@ -238,11 +412,11 @@ type PrincipalReturnGroupTransaction {
 type Query {
   document(id: String!): Document
   drive: DocumentDriveState
-  rwaPortfolio(id: String!): RWAPortfolio
+  rwaPortfolio(id: String!): RealWorldAssets
   system: SwitchboardDrive
 }
 
-type RWAPortfolio implements Document {
+type RealWorldAssets implements Document {
   created: Date!
   documentType: String!
   id: String!
@@ -261,6 +435,56 @@ type RealWorldAssetsState {
   principalLenderAccountId: ID!
   spvs: [Spv!]!
   transactions: [GroupTransaction!]!
+}
+
+type RemoveElementInput {
+  id: ID!
+}
+
+type ReorderElementsInput {
+  order: [ID!]!
+  parentElementId: ID!
+}
+
+type ScopeComponent {
+  content: String
+}
+
+type ScopeFramework implements Document {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [Operation!]!
+  revision: Int!
+  state: ScopeFrameworkState!
+}
+
+type ScopeFrameworkElement {
+  components: ElementComponents
+  id: ID!
+  name: String
+  path: String!
+  type: ScopeFrameworkElementType
+  version: Int!
+}
+
+enum ScopeFrameworkElementType {
+  Article
+  Core
+  Scope
+  Section
+  TypeSpecification
+}
+
+type ScopeFrameworkState {
+  elements: [ScopeFrameworkElement!]!
+  rootPath: String!
+}
+
+type SectionComponent {
+  content: String
 }
 
 type ServiceProvider {
@@ -291,6 +515,68 @@ input SessionInput {
 type SessionOutput {
   session: Session!
   token: String!
+}
+
+input SetEndInput {
+  end: String!
+}
+
+input SetIdInput {
+  id: ID!
+}
+
+input SetOwnerIdInput {
+  ownerId: ID!
+}
+
+input SetOwnerTypeInput {
+  ownerType: String!
+}
+
+input SetPeriodInput {
+  period: String!
+}
+
+type SetRootPathInput {
+  newRootPath: String!
+}
+
+input SetStartInput {
+  start: String!
+}
+
+type SnapshotAccount {
+  accountAddress: String
+  accountLabel: String
+  accountType: String
+  groupAccountId: ID
+  id: ID!
+  offChain: Boolean
+  snapshotAccountBalance: [SnapshotAccountBalance]
+  snapshotAccountTransaction: [SnapshotAccountTransaction]
+  upstreamAccountId: ID
+}
+
+type SnapshotAccountBalance {
+  id: ID
+  includesOffChain: Boolean
+  inflow: Float
+  initialBalance: Float
+  newBalance: Float
+  outflow: Float
+  token: String
+}
+
+type SnapshotAccountTransaction {
+  amount: Float
+  block: Int
+  counterParty: String
+  counterPartyName: String
+  id: ID!
+  timestamp: String
+  token: String
+  txHash: String
+  txLabel: String
 }
 
 type Spv {
@@ -337,6 +623,37 @@ enum TransmitterType {
   SwitchboardPush
 }
 
+type TypeSpecificationComponent {
+  additionalLogic: String
+  category: TypeSpecificationComponentCategory
+  documentIdentifierRules: String
+  name: String
+  overview: String
+  typeAuthority: String
+}
+
+enum TypeSpecificationComponentCategory {
+  Accessory
+  Immutable
+  Primary
+  Supporting
+}
+
+type UpdateElementComponentsInput {
+  components: ElementComponents
+  id: ID!
+}
+
+type UpdateElementNameInput {
+  id: ID!
+  name: String
+}
+
+type UpdateElementTypeInput {
+  id: ID!
+  type: ScopeFrameworkElementType!
+}
+
 enum UpdateStatus {
   CONFLICT
   ERROR
@@ -347,4 +664,14 @@ enum UpdateStatus {
 type User {
   address: String!
   createdAt: Date!
+}
+
+type Vesting {
+  amount: String!
+  amountOld: String!
+  comment: String!
+  currency: String!
+  date: String!
+  key: String!
+  vested: Boolean!
 }
