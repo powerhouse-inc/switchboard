@@ -254,14 +254,3 @@ export const rwaQuery = queryField('rwaPortfolio', {
     return doc;
   },
 });
-
-export const documentQuery = queryField('document', {
-  type: documentModelInterface,
-  args: {
-    id: nonNull('String'),
-  },
-  resolve: async (_root, { id }, ctx) => {
-    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
-    return doc;
-  },
-});

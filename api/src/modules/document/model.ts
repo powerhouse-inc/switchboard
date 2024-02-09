@@ -177,98 +177,13 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       driveId: string,
       documentId: string,
     ) => {
-
-
-      // const result = await driveServer.getDocument(driveId, documentId);
-      const doc = DocumentModelsLibs.RealWorldAssets.utils.createDocument();
-
-      let newDoc = DocumentModelsLibs.RealWorldAssets.reducer(doc, DocumentModelsLibs.RealWorldAssets.actions.createAccount({
-        id: '1',
-        reference: "ba",
-        label: "BA"
-      }))
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createAccount({
-        id: '2',
-        reference: "maker",
-        label: "MakerDAO"
-      }))
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.setName("Franks Portfolio"));
-
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createSpv({
-        id: "1",
-        name: "SPV 1",
-      }));
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createFixedIncomeType({
-        id: "1",
-        name: "Fixed Income Type #1",
-      }))
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createCashAsset({
-        currency: "USD",
-        id: "1",
-        spvId: "1",
-      }));
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createFixedIncomeAsset({
-        id: "2",
-        spvId: "1",
-        name: "Fixed Income Asset #1",
-        fixedIncomeTypeId: "1",
-        maturity: new Date().toISOString(),
-      }));
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createServiceProvider({
-        accountId: "2",
-        feeType: "feeType",
-        id: "1",
-        name: "Service Provider #1",
-      }));
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createFeesPaymentGroupTransaction({
-        id: "1",
-        feeTransactions: [
-          {
-            id: "abc",
-            assetId: "2",
-            amount: -10,
-            accountId: "1",
-            counterPartyAccountId: "2",
-            entryTime: new Date().toISOString(),
-            settlementTime: new Date().toISOString(),
-            tradeTime: new Date().toISOString(),
-            txRef: "txRef",
-          }
-        ]
-      }))
-
-      newDoc = DocumentModelsLibs.RealWorldAssets.reducer(newDoc, DocumentModelsLibs.RealWorldAssets.actions.createAssetPurchaseGroupTransaction({
-        id: "2",
-        fixedIncomeTransaction: {
-          accountId: "1",
-          amount: 100,
-          assetId: "2",
-          id: "100",
-          txRef: "txRef",
-          tradeTime: new Date().toISOString(),
-          settlementTime: new Date().toISOString(),
-          counterPartyAccountId: "2",
-          entryTime: new Date().toISOString(),
-        }
-      }
-      ));
-
+      const document = await driveServer.getDocument(driveId, documentId);
       const response = {
-        ...newDoc,
-        __typename: 'RealWorldAssetsDocument',
+        ...document,
         id: documentId,
-        revision: newDoc.revision.global,
-        state: newDoc.state.global,
+        revision: document.revision.global,
+        state: document.state.global,
       };
-
       return response;
     },
   };
