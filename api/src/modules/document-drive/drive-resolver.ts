@@ -10,7 +10,7 @@ import {
 } from 'nexus';
 import { systemType } from '../system';
 import {
-  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
+  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus, StrandUpdate,
 } from 'document-drive';
 import { OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
@@ -101,7 +101,7 @@ export const InputOperationUpdate = inputObjectType({
   },
 });
 
-export const StrandUpdate = objectType({
+export const IStrandUpdate = objectType({
   name: 'StrandUpdate',
   definition(t) {
     t.nonNull.string('driveId');
@@ -170,7 +170,7 @@ export const syncType = objectType({
   name: 'Sync',
   definition(t) {
     t.field('strands', {
-      type: list(StrandUpdate),
+      type: list(IStrandUpdate),
       args: {
         listenerId: idArg(),
         since: 'Date',
@@ -183,7 +183,7 @@ export const syncType = objectType({
             listenerId,
             since,
           );
-          return result.map((e) => ({
+          return result.map((e: StrandUpdate) => ({
             driveId: e.driveId,
             documentId: e.documentId,
             scope: e.scope,
@@ -272,7 +272,6 @@ export const pushUpdates = mutationField('pushUpdates', {
     strands: list(nonNull(InputStrandUpdate)),
   },
   resolve: async (_parent, { strands }, ctx) => {
-    // @todo: get connect drive server from ctx and apply updates
     if (!strands || strands?.length === 0) return [];
 
     const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
@@ -297,7 +296,7 @@ export const pushUpdates = mutationField('pushUpdates', {
         driveId: s.driveId,
         revision: result.operations.pop()?.index ?? -1,
         scope: s.scope as OperationScope,
-        status: result.status as IUpdateStatus ?? "ERROR",
+        status: (result.success ? "SUCCESS" : "ERROR") as IUpdateStatus,
       };
     }));
 
@@ -317,7 +316,7 @@ export const acknowledge = mutationField('acknowledge', {
       const validEntries: IListenerRevision[] = revisions
         .filter((r) => r !== null)
         .map((e) => ({
-          driveId: ctx.driveId ?? '1',
+          driveId: e!.driveId,
           documentId: e!.documentId,
           scope: e!.scope,
           branch: e!.branch,
@@ -326,7 +325,7 @@ export const acknowledge = mutationField('acknowledge', {
         }));
 
       const result = await ctx.prisma.document.processAcknowledge(
-        ctx.driveId ?? '1',
+        ctx.driveId,
         listenerId,
         validEntries,
       );

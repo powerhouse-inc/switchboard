@@ -35,6 +35,7 @@ describe("Document Drive Server", () => {
       pullResponderResponse.listenerId
     );
 
+    expect(pull1StrandsResponse.sync.strands.find(e => e.documentId != "1")!.operations.length).toBe(1);
     expect(pull1StrandsResponse.sync.strands.find(e => e.documentId == "1")!.operations.length).toBe(0);
 
     // acknowledge
@@ -52,14 +53,21 @@ describe("Document Drive Server", () => {
       "0xdef1c0ded9bec7f1a1670819833240f027b25eff"
     );
 
-    expect(addLineItemResponse2.length).toBe(1);
+    expect(addLineItemResponse2.pop()).toStrictEqual({
+      branch: 'main',
+      documentId: '1',
+      driveId: '1',
+      revision: 1,
+      scope: 'global',
+      status: 'SUCCESS',
+    });
 
     // pull twice - should be same result
     const pull2StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
 
-    expect(pull2StrandsResponse.sync.strands[1].operations.length).toBe(1);
+    expect(pull2StrandsResponse.sync.strands.find(e => e.documentId === "1")!.operations.length).toBe(1);
     const pull3StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
@@ -73,7 +81,7 @@ describe("Document Drive Server", () => {
         scope: e.scope,
         branch: e.branch,
         status: "SUCCESS" as UpdateStatus,
-        revision: e.operations.pop()!.index,
+        revision: e.operations[e.operations.length - 1].index,
       };
     })
 
@@ -87,6 +95,12 @@ describe("Document Drive Server", () => {
     const pull4StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
+
+    console.log(JSON.stringify(pull4StrandsResponse));
+
+    // should be empty
+    expect(pull4StrandsResponse.sync.strands.filter(e => e.documentId !== "1").length).toBe(0);
     expect(pull4StrandsResponse.sync.strands.filter(e => e.documentId === "1").length).toBe(0);
+
   });
 });
