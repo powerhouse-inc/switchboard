@@ -7,6 +7,7 @@ import { createApp } from "../../src/app";
 
 interface TestContext {
   client: GraphQLClient;
+  driveClient: GraphQLClient;
   baseUrl: string;
 }
 
@@ -28,6 +29,7 @@ function getGraphqlTestContext() {
       };
       return {
         client: new GraphQLClient(`${baseUrl}/drives`, requestConfig),
+        driveClient: new GraphQLClient(`${baseUrl}/d/1`, requestConfig),
         baseUrl,
         driveId: 1,
       };
@@ -43,8 +45,9 @@ function createTestContext(): TestContext {
   const context = {} as TestContext;
   const graphqlTestContext = getGraphqlTestContext();
   beforeEach(async () => {
-    const { client, baseUrl } = await graphqlTestContext.before();
+    const { client, baseUrl, driveClient } = await graphqlTestContext.before();
     context.client = client;
+    context.driveClient = driveClient
     context.baseUrl = baseUrl;
   });
   afterEach(async () => {
@@ -63,18 +66,38 @@ export async function executeGraphQlQuery(data: {
   return ctx.client.request(query, variables).catch((e) => e.response);
 }
 
+export async function executeDriveGraphQlQuery(data: {
+  query: string;
+  variables: any;
+}) {
+  const { query, variables } = data;
+  return ctx.driveClient.request(query, variables).catch((e) => e.response);
+}
+
 export const fetchOrThrow = async <T>(builderOutput: {
   query: string;
   variables: any;
-}) => {
+}, drive = false) => {
   const operationName = (parse(builderOutput.query).definitions[0] as any)
     .selectionSet.selections[0].name.value;
-  const result = (await ctx.client.request(
-    builderOutput.query,
-    builderOutput.variables
-  )) as any;
+
+  let result;
+  if (drive) {
+    result = (await ctx.driveClient.request(
+      builderOutput.query,
+      builderOutput.variables
+    )) as any;
+
+  } else {
+    result = (await ctx.client.request(
+      builderOutput.query,
+      builderOutput.variables
+    )) as any;
+  }
+
   if (result?.response?.errors) {
     throw new Error(result.response.errors[0].message);
   }
   return result[operationName] as T;
 };
+

@@ -197,7 +197,7 @@ export const syncType = objectType({
               timestamp: o.timestamp,
               type: o.type,
             })),
-          })) ;
+          }));
         } catch (e) {
           console.error(e)
           throw new Error('Failed to fetch strands');
@@ -297,7 +297,7 @@ export const pushUpdates = mutationField('pushUpdates', {
         driveId: s.driveId,
         revision: result.operations.pop()?.index ?? -1,
         scope: s.scope as OperationScope,
-        status: result.status as IUpdateStatus,
+        status: result.status as IUpdateStatus ?? "ERROR",
       };
     }));
 

@@ -7,7 +7,9 @@ export function cleanDatabase() {
     await prisma.user.deleteMany();
     await prisma.coreUnit.deleteMany();
     await prisma.attachment.deleteMany();
+    await prisma.syncronizationUnit.deleteMany();
     await prisma.operation.deleteMany();
+    await prisma.listener.deleteMany();
     await prisma.document.deleteMany();
   };
   beforeEach(async () => {

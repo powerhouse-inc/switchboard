@@ -173,7 +173,8 @@ export const addBudgetStatement = () => {
         "status",
         "revision",
       ],
-    })
+    }),
+    true
   );
 };
 
@@ -193,28 +194,33 @@ export const addPullResponderListener = () => {
         },
       },
       fields: ["listenerId", "label", "block", "system"],
-    })
+    }),
+    true
   );
 };
 
 export const pullStrands = (listenerId: string) => {
-  return fetchOrThrow<StrandUpdate[]>(
+  return fetchOrThrow<{ sync: { strands: StrandUpdate[] } }>(
     builder.query({
-      operation: "strands",
-      variables: {
-        listenerId: {
-          type: "ID!",
-          value: listenerId,
-        },
-      },
-      fields: [
-        "driveId",
-        "documentId",
-        "scope",
-        "branch",
-        { operations: ["index", "skip", "operation", "input", "hash"] },
-      ],
-    })
+      operation: "system",
+      fields: [{
+        sync: [{
+          operation: "strands",
+          fields: ["driveId",
+            "documentId",
+            "scope",
+            "branch",
+            { operations: ["index", "skip", "type", "input", "hash"] }],
+          variables: {
+            listenerId: {
+              type: "ID!",
+              value: listenerId,
+            },
+          }
+        }]
+      }]
+    }),
+    true
   );
 };
 
@@ -235,7 +241,8 @@ export const acknowledge = (
           value: revisions,
         },
       },
-    })
+    }),
+    true
   );
 };
 
@@ -273,6 +280,7 @@ export const addLineItem = (address: string) => {
         "status",
         "revision",
       ],
-    })
+    }),
+    true
   );
 };
