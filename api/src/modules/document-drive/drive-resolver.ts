@@ -13,6 +13,7 @@ import {
   ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
 } from 'document-drive';
 import { OperationScope } from 'document-model/document';
+import stringify from 'json-stringify-deterministic';
 
 export const Node = objectType({
   name: 'Node',
@@ -188,14 +189,17 @@ export const syncType = objectType({
             scope: e.scope,
             branch: e.branch,
             operations: e.operations.map((o) => ({
-              revision: o.index,
+              index: o.index,
               skip: o.skip,
               name: o.type,
-              inputJson: JSON.stringify(o.input),
-              stateHash: o.hash,
+              input: stringify(o.input),
+              hash: o.hash,
+              timestamp: o.timestamp,
+              type: o.type,
             })),
-          }));
+          })) ;
         } catch (e) {
+          console.error(e)
           throw new Error('Failed to fetch strands');
         }
       },
@@ -293,7 +297,7 @@ export const pushUpdates = mutationField('pushUpdates', {
         driveId: s.driveId,
         revision: result.operations.pop()?.index ?? -1,
         scope: s.scope as OperationScope,
-        status: (result.error ? 'ERROR' : 'SUCCESS') as IUpdateStatus,
+        status: result.status as IUpdateStatus,
       };
     }));
 

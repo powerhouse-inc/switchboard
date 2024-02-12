@@ -34,6 +34,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     new PrismaStorage(prisma),
   );
 
+  driveServer.initialize();
+
   return {
     addDrive: async (args: DriveInput) => {
       try {
