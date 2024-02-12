@@ -176,6 +176,17 @@ type CoreComponent {
   content: String
 }
 
+type CoreUnit {
+  code: String
+  descriptionParagraph: String
+  descriptionParagraphImageSource: String
+  descriptionSentence: String
+  id: String
+  imageSource: String
+  name: String
+  shortCode: String
+}
+
 """Date custom scalar type"""
 scalar Date
 
@@ -410,6 +421,8 @@ type PrincipalReturnGroupTransaction {
 }
 
 type Query {
+  coreUnit(id: String): CoreUnit
+  coreUnits: [CoreUnit]
   document(id: String!): Document
   drive: DocumentDriveState
   rwaPortfolio(id: String!): RealWorldAssets

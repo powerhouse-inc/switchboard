@@ -63,19 +63,11 @@ export const solveChallenge = (nonce: string, signature: string) =>
     })
   );
 
-export const me = () =>
-  fetchOrThrow<{ address: string }>(
+export const system = () =>
+  fetchOrThrow<{ auth: { me: { address: string }, sessions: Session[] } }>(
     builder.query({
-      operation: "me",
-      fields: ["address"],
-    })
-  );
-
-export const sessions = () =>
-  fetchOrThrow<Session[]>(
-    builder.query({
-      operation: "sessions",
-      fields: sessionFields,
+      operation: "system",
+      fields: [{ auth: [{ me: ["address"] }, { sessions: sessionFields }] }],
     })
   );
 

@@ -4,7 +4,7 @@ import { isRecent } from './helpers/time';
 import { ctx } from './helpers/server';
 import { signIn } from './auth.test';
 import {
-  me, sessions, createSession, revokeSession,
+  system, createSession, revokeSession,
 } from './helpers/gql';
 import { PUBLIC_KEY, SECOND_PRIVATE_KEY } from './helpers/const';
 
@@ -12,13 +12,13 @@ cleanDatabaseBeforeAfterEachTest();
 
 test('Auth session: list, no auth', async () => {
   await expect(
-    () => sessions(),
+    () => system(),
   ).rejects.toThrowError('Not authenticated');
 });
 
 test('Auth session: list', async () => {
   await signIn();
-  const sessionsResponse = await sessions();
+  const sessionsResponse = (await system()).auth.sessions;
   const executedAt = new Date();
   expect(sessionsResponse.length).toBe(1);
   const session = sessionsResponse[0];
@@ -28,7 +28,7 @@ test('Auth session: list', async () => {
 
 test('Auth session: revoke', async () => {
   await signIn();
-  const sessionsResponse = await sessions();
+  const sessionsResponse = (await system()).auth.sessions;
   const session = sessionsResponse[0];
   const revokeResponse = await revokeSession(session.id);
   expect(revokeResponse?.id).toBe(session.id);
@@ -52,6 +52,7 @@ test('Auth session: revoke nonexistent', async () => {
 test('Auth session: create expirable', async () => {
   await signIn();
   const createResponse = await createSession('Expirable', '*', 1);
+  console.log(createResponse)
   expect(
     isRecent(new Date(createResponse.session.referenceExpiryDate)),
   ).toBe(true);
@@ -59,7 +60,7 @@ test('Auth session: create expirable', async () => {
 
   ctx.client.setHeader('Authorization', `Bearer ${createResponse.token}`);
   await expect(
-    () => me(),
+    () => system(),
   ).rejects.toThrowError('Token expired');
 });
 
@@ -71,13 +72,13 @@ test('Auth session: create unexpirable', async () => {
   expect(
     createResponse.session.referenceExpiryDate,
   ).toBe(null);
-  const sessionsResponse = await sessions();
+  const sessionsResponse = (await system()).auth.sessions;
   expect(sessionsResponse.length).toBe(2);
   expect(sessionsResponse.some((s) => s.isUserCreated)).toBe(true);
   const customToken = createResponse.token;
   ctx.client.setHeader('Authorization', `Bearer ${customToken}`);
-  const response = await me();
-  expect(response.address).toBe(PUBLIC_KEY);
+  const response = await system();
+  expect(response.auth.me.address).toBe(PUBLIC_KEY);
 });
 
 test('Auth session: revoked session no longer works', async () => {
@@ -86,7 +87,7 @@ test('Auth session: revoked session no longer works', async () => {
   await revokeSession(createResponse.session.id);
   ctx.client.setHeader('Authorization', `Bearer ${createResponse.token}`);
   await expect(
-    () => sessions(),
+    () => system(),
   ).rejects.toThrowError('Session expired');
 });
 
@@ -120,7 +121,7 @@ test('Auth session: origin restriction wrong origin', async () => {
   const sessionResponse = await createSession('Wrong origin', 'http://google.com', 3600);
   ctx.client.setHeader('Authorization', `Bearer ${sessionResponse.token}`);
   await expect(
-    () => me(),
+    () => system(),
   ).rejects.toThrowError('Access denied due to origin restriction');
 });
 
@@ -129,8 +130,8 @@ test('Auth session: origin restriction success', async () => {
   const sessionResponse = await createSession('Correct origin', 'http://google.com', 3600);
   ctx.client.setHeader('Authorization', `Bearer ${sessionResponse.token}`);
   ctx.client.setHeader('Origin', 'http://google.com');
-  const response = await me();
-  expect(response.address).toBe(PUBLIC_KEY);
+  const response = await system();
+  expect(response.auth.me.address).toBe(PUBLIC_KEY);
 });
 
 test('Auth session: origin restriction missing header', async () => {
@@ -139,7 +140,7 @@ test('Auth session: origin restriction missing header', async () => {
   ctx.client.setHeader('Authorization', `Bearer ${sessionResponse.token}`);
   ctx.client.setHeader('Origin', '');
   await expect(
-    () => me(),
+    () => system(),
   ).rejects.toThrowError('Origin not provided');
 });
 

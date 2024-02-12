@@ -89,6 +89,16 @@ export interface NexusGenObjects {
     message: string; // String!
     nonce: string; // String!
   }
+  CoreUnit: { // root type
+    code?: string | null; // String
+    descriptionParagraph?: string | null; // String
+    descriptionParagraphImageSource?: string | null; // String
+    descriptionSentence?: string | null; // String
+    id?: string | null; // String
+    imageSource?: string | null; // String
+    name?: string | null; // String
+    shortCode?: string | null; // String
+  }
   DocumentDriveLocalState: { // root type
     availableOffline: boolean; // Boolean!
     sharingType?: string | null; // String
@@ -156,6 +166,16 @@ export interface NexusGenFieldTypes {
     message: string; // String!
     nonce: string; // String!
   }
+  CoreUnit: { // field return type
+    code: string | null; // String
+    descriptionParagraph: string | null; // String
+    descriptionParagraphImageSource: string | null; // String
+    descriptionSentence: string | null; // String
+    id: string | null; // String
+    imageSource: string | null; // String
+    name: string | null; // String
+    shortCode: string | null; // String
+  }
   DocumentDriveLocalState: { // field return type
     availableOffline: boolean; // Boolean!
     sharingType: string | null; // String
@@ -183,6 +203,8 @@ export interface NexusGenFieldTypes {
     parentFolder: string | null; // String
   }
   Query: { // field return type
+    coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
+    coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     drives: Array<string | null> | null; // [String]
     system: NexusGenRootTypes['SwitchboardHost'] | null; // SwitchboardHost
   }
@@ -227,6 +249,16 @@ export interface NexusGenFieldTypeNames {
     message: 'String'
     nonce: 'String'
   }
+  CoreUnit: { // field return type name
+    code: 'String'
+    descriptionParagraph: 'String'
+    descriptionParagraphImageSource: 'String'
+    descriptionSentence: 'String'
+    id: 'String'
+    imageSource: 'String'
+    name: 'String'
+    shortCode: 'String'
+  }
   DocumentDriveLocalState: { // field return type name
     availableOffline: 'Boolean'
     sharingType: 'String'
@@ -254,6 +286,8 @@ export interface NexusGenFieldTypeNames {
     parentFolder: 'String'
   }
   Query: { // field return type name
+    coreUnit: 'CoreUnit'
+    coreUnits: 'CoreUnit'
     drives: 'String'
     system: 'SwitchboardHost'
   }
@@ -305,6 +339,11 @@ export interface NexusGenArgTypes {
     solveChallenge: { // args
       nonce: string; // String!
       signature: string; // String!
+    }
+  }
+  Query: {
+    coreUnit: { // args
+      id?: string | null; // String
     }
   }
 }

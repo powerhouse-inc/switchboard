@@ -27,7 +27,7 @@ function getGraphqlTestContext() {
         headers: { Origin: baseUrl },
       };
       return {
-        client: new GraphQLClient(`${baseUrl}/graphql`, requestConfig),
+        client: new GraphQLClient(`${baseUrl}/drives`, requestConfig),
         baseUrl,
         driveId: 1,
       };

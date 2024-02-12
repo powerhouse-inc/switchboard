@@ -253,6 +253,16 @@ export interface NexusGenObjects {
   CoreComponent: { // root type
     content?: string | null; // String
   }
+  CoreUnit: { // root type
+    code?: string | null; // String
+    descriptionParagraph?: string | null; // String
+    descriptionParagraphImageSource?: string | null; // String
+    descriptionSentence?: string | null; // String
+    id?: string | null; // String
+    imageSource?: string | null; // String
+    name?: string | null; // String
+    shortCode?: string | null; // String
+  }
   DocumentDriveState: { // root type
     icon?: string | null; // String
     id: string; // ID!
@@ -711,6 +721,16 @@ export interface NexusGenFieldTypes {
   CoreComponent: { // field return type
     content: string | null; // String
   }
+  CoreUnit: { // field return type
+    code: string | null; // String
+    descriptionParagraph: string | null; // String
+    descriptionParagraphImageSource: string | null; // String
+    descriptionSentence: string | null; // String
+    id: string | null; // String
+    imageSource: string | null; // String
+    name: string | null; // String
+    shortCode: string | null; // String
+  }
   DocumentDriveState: { // field return type
     icon: string | null; // String
     id: string; // ID!
@@ -865,6 +885,8 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   Query: { // field return type
+    coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
+    coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     document: NexusGenRootTypes['Document'] | null; // Document
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     rwaPortfolio: NexusGenRootTypes['RealWorldAssets'] | null; // RealWorldAssets
@@ -1192,6 +1214,16 @@ export interface NexusGenFieldTypeNames {
   CoreComponent: { // field return type name
     content: 'String'
   }
+  CoreUnit: { // field return type name
+    code: 'String'
+    descriptionParagraph: 'String'
+    descriptionParagraphImageSource: 'String'
+    descriptionSentence: 'String'
+    id: 'String'
+    imageSource: 'String'
+    name: 'String'
+    shortCode: 'String'
+  }
   DocumentDriveState: { // field return type name
     icon: 'String'
     id: 'ID'
@@ -1346,6 +1378,8 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Query: { // field return type name
+    coreUnit: 'CoreUnit'
+    coreUnits: 'CoreUnit'
     document: 'Document'
     drive: 'DocumentDriveState'
     rwaPortfolio: 'RealWorldAssets'
@@ -1568,6 +1602,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    coreUnit: { // args
+      id?: string | null; // String
+    }
     document: { // args
       id: string; // String!
     }

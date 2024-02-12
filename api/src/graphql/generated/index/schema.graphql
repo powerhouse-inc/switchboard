@@ -21,6 +21,17 @@ type Challenge {
   nonce: String!
 }
 
+type CoreUnit {
+  code: String
+  descriptionParagraph: String
+  descriptionParagraphImageSource: String
+  descriptionSentence: String
+  id: String
+  imageSource: String
+  name: String
+  shortCode: String
+}
+
 """Date custom scalar type"""
 scalar Date
 
@@ -67,6 +78,8 @@ type Node {
 }
 
 type Query {
+  coreUnit(id: String): CoreUnit
+  coreUnits: [CoreUnit]
   drives: [String]
   system: SwitchboardHost
 }
