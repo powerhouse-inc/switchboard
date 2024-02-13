@@ -50,36 +50,35 @@ model Challenge {
 
 // Document Drive
 model Document {
-  id           String
-  driveId      String
-  created      DateTime    @default(now())
-  lastModified DateTime    @default(now())
-  revision     Json
-  name         String?
-  operations   Operation[]
-  initialState Json // json object with the scope as keys of the root object
-  documentType String
+  id                  String
+  driveId             String
+  created             DateTime             @default(now())
+  lastModified        DateTime             @default(now())
+  revision            Json
+  name                String?
+  operations          Operation[]
+  initialState        Json // json object with the scope as keys of the root object
+  documentType        String
   syncronizationUnits SyncronizationUnit[]
 
   @@id([id, driveId])
 }
 
 model Operation {
-  driveId    String
-  Document   Document? @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
-  documentId String
-  scope      String
-  branch     String
-  index      Int
-  skip       Int
-
+  driveId     String
+  Document    Document?    @relation(fields: [driveId, documentId], references: [driveId, id])
+  documentId  String
+  scope       String
+  branch      String
+  index       Int
+  skip        Int
   hash        String
   timestamp   DateTime
   input       Json
   type        String
   attachments Attachment[]
-
-  syncId String?
+  syncId      String?
+  clipboard   Boolean?     @default(false)
 
   SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId])
 

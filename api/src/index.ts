@@ -1,23 +1,23 @@
-import { createApp } from "./app";
-import { startServer } from "./graphql/server";
-import { getChildLogger } from "./logger";
+import { createApp } from './app';
+import { startServer } from './graphql/server';
+import { getChildLogger } from './logger';
 
-const logger = getChildLogger({ msgPrefix: "SERVER" });
+const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
 const application = createApp();
 
 /* istanbul ignore next @preserve */
 startServer(application)
   .then((e) => {
+    // Hot Module Replacement
     if (import.meta.hot) {
       import.meta.hot.on("vite:beforeFullReload", () => {
-        console.log("full reload");
         e.close();
       });
     }
   })
   .catch((err) => {
-    logger.warn("Shutting down...");
+    logger.warn('Shutting down...');
     if (err instanceof Error) {
       logger.error(err);
     } else {

@@ -4,7 +4,7 @@ import {
 import { utils, Wallet } from 'ethers';
 import { restoreEnvAfterEach } from './helpers/env';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
-import { createChallenge, solveChallenge, me } from './helpers/gql';
+import { createChallenge, solveChallenge, system } from './helpers/gql';
 import {
   PRIVATE_KEY, PUBLIC_KEY, signer, provider,
 } from './helpers/const';
@@ -76,14 +76,14 @@ describe('Authentication', () => {
   test('Protected endpoint fails without sign in', async () => {
     ctx.client.setHeader('Authorization', 'Bearer heavy');
     await expect(
-      () => me(),
+      () => system(),
     ).rejects.toThrowError('Invalid authentication token');
   });
 
   test('Protected endpoint works with sign in', async () => {
     await signIn();
-    const response = await me();
-    expect(response.address).not.toBeNull();
+    const response = await system();
+    expect(response.auth.me.address).not.toBeNull();
   });
 
   test('Error is thrown if token is expired', async () => {
@@ -92,7 +92,7 @@ describe('Authentication', () => {
     expect(response.token).not.toBeNull();
     await new Promise((resolve) => { setTimeout(resolve, 2000); });
     await expect(
-      () => me(),
+      () => system(),
     ).rejects.toThrowError('Token expired');
   });
 });

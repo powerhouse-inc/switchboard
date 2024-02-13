@@ -2,7 +2,7 @@ import { PrismaClient, Prisma } from '@prisma/client';
 import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
 import { getUserCrud, getSessionCrud, getChallengeCrud } from './modules';
-import { getDocumentDriveCRUD } from './modules/DocumentDrive';
+import { getDocumentDriveCRUD } from './modules/document';
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 

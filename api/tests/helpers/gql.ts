@@ -63,19 +63,11 @@ export const solveChallenge = (nonce: string, signature: string) =>
     })
   );
 
-export const me = () =>
-  fetchOrThrow<{ address: string }>(
+export const system = () =>
+  fetchOrThrow<{ auth: { me: { address: string }, sessions: Session[] } }>(
     builder.query({
-      operation: "me",
-      fields: ["address"],
-    })
-  );
-
-export const sessions = () =>
-  fetchOrThrow<Session[]>(
-    builder.query({
-      operation: "sessions",
-      fields: sessionFields,
+      operation: "system",
+      fields: [{ auth: [{ me: ["address"] }, { sessions: sessionFields }] }],
     })
   );
 
@@ -134,7 +126,7 @@ export const addDrive = () => {
         },
         local: {
           type: "DocumentDriveLocalStateInput!",
-          value: { sharingType: "private", availableOffline: false },
+          value: { sharingType: "public", availableOffline: false },
         },
       },
       fields: [
@@ -181,7 +173,8 @@ export const addBudgetStatement = () => {
         "status",
         "revision",
       ],
-    })
+    }),
+    true
   );
 };
 
@@ -193,36 +186,41 @@ export const addPullResponderListener = () => {
         filter: {
           type: "InputListenerFilter!",
           value: {
-            documentType: ["powerhouse/budget-statement"],
-            documentId: ["1"],
+            documentType: ["*"],
+            documentId: ["*"],
             scope: ["global"],
             branch: ["main"],
           },
         },
       },
       fields: ["listenerId", "label", "block", "system"],
-    })
+    }),
+    true
   );
 };
 
 export const pullStrands = (listenerId: string) => {
-  return fetchOrThrow<StrandUpdate[]>(
+  return fetchOrThrow<{ sync: { strands: StrandUpdate[] } }>(
     builder.query({
-      operation: "strands",
-      variables: {
-        listenerId: {
-          type: "ID!",
-          value: listenerId,
-        },
-      },
-      fields: [
-        "driveId",
-        "documentId",
-        "scope",
-        "branch",
-        { operations: ["index", "skip", "operation", "input", "hash"] },
-      ],
-    })
+      operation: "system",
+      fields: [{
+        sync: [{
+          operation: "strands",
+          fields: ["driveId",
+            "documentId",
+            "scope",
+            "branch",
+            { operations: ["index", "skip", "type", "input", "hash"] }],
+          variables: {
+            listenerId: {
+              type: "ID!",
+              value: listenerId,
+            },
+          }
+        }]
+      }]
+    }),
+    true
   );
 };
 
@@ -243,11 +241,12 @@ export const acknowledge = (
           value: revisions,
         },
       },
-    })
+    }),
+    true
   );
 };
 
-export const addLineItem = (address: string) => {
+export const addLineItem = (address: string, index: number) => {
   return fetchOrThrow<ListenerRevision[]>(
     builder.mutation({
       operation: "pushUpdates",
@@ -262,9 +261,9 @@ export const addLineItem = (address: string) => {
               branch: "main",
               operations: [
                 {
+                  index,
                   type: "AddAccountInput",
                   input: `{"address": "${address}"}`,
-                  index: 1,
                   timestamp: "2024-01-16T18:13:54.823Z",
                   hash: "0eho6S5/g2eQnswPvq8R7p/6jpA=",
                 },
@@ -281,6 +280,7 @@ export const addLineItem = (address: string) => {
         "status",
         "revision",
       ],
-    })
+    }),
+    true
   );
 };
