@@ -14,6 +14,9 @@ import {
 } from 'document-drive';
 import { OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
+import { getChildLogger } from '../../logger';
+
+const logger = getChildLogger({ msgPrefix: 'Drive' });
 
 export const Node = objectType({
   name: 'Node',
@@ -199,7 +202,7 @@ export const syncType = objectType({
             })),
           }));
         } catch (e) {
-          console.error(e)
+          logger.error(e);
           throw new Error('Failed to fetch strands');
         }
       },
@@ -290,13 +293,16 @@ export const pushUpdates = mutationField('pushUpdates', {
         s.documentId ?? undefined,
       );
 
+      if (result.status !== "SUCCESS") logger.error(result.error);
+
+      const revision = result.document.operations[s.scope].slice().pop()?.index ?? -1;
       return {
+        revision,
         branch: s.branch,
         documentId: s.documentId ?? '',
         driveId: s.driveId,
-        revision: result.operations.pop()?.index ?? -1,
         scope: s.scope as OperationScope,
-        status: (result.success ? "SUCCESS" : "ERROR") as IUpdateStatus,
+        status: result.status,
       };
     }));
 
@@ -332,6 +338,7 @@ export const acknowledge = mutationField('acknowledge', {
 
       return result;
     } catch (e) {
+      logger.error(e)
       return false;
     }
   },
