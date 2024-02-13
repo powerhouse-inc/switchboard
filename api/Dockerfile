@@ -9,8 +9,8 @@ WORKDIR /app
 
 # copy the app, note .dockerignore
 COPY package.json .
-COPY package-lock.json .
-RUN npm ci
+COPY yarn.lock .
+RUN yarn install --frozen-lockfile
 
 FROM dependency-base AS production
 
