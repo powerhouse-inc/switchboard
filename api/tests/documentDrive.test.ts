@@ -47,31 +47,31 @@ describe("Document Drive Server", () => {
 
     // push strands - should update budget statement
     const addLineItemResponse1 = await addLineItem(
-      "0xdef1c0ded9bec7f1a1670819833240f027b25eff"
+      "0xdef1c0ded9bec7f1a1670819833240f027b25eff", 0
     );
     const addLineItemResponse2 = await addLineItem(
-      "0xdef1c0ded9bec7f1a1670819833240f027b25eff"
+      "0xdef1c0ded9bec7f1a1670819833240f027b25eff", 1
     );
 
-    expect(addLineItemResponse2.pop()).toStrictEqual({
+    expect(addLineItemResponse2).toStrictEqual([{
       branch: 'main',
       documentId: '1',
       driveId: '1',
       revision: 1,
       scope: 'global',
       status: 'SUCCESS',
-    });
+    }]);
 
     // pull twice - should be same result
     const pull2StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
 
-    expect(pull2StrandsResponse.sync.strands.find(e => e.documentId === "1")!.operations.length).toBe(1);
+    expect(pull2StrandsResponse.sync.strands.find(e => e.documentId === "1")!.operations.length).toBe(2);
     const pull3StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
-    expect(pull3StrandsResponse.sync.strands.find(e => e.documentId === "1")!.operations.length).toBe(1);
+    expect(pull3StrandsResponse.sync.strands.find(e => e.documentId === "1")!.operations.length).toBe(2);
 
     // acknowlege - should be boolean
     const listenerRevisions: ListenerRevision[] = pull3StrandsResponse.sync.strands.map<ListenerRevision>((e) => {
@@ -95,8 +95,6 @@ describe("Document Drive Server", () => {
     const pull4StrandsResponse = await pullStrands(
       pullResponderResponse.listenerId
     );
-
-    console.log(JSON.stringify(pull4StrandsResponse));
 
     // should be empty
     expect(pull4StrandsResponse.sync.strands.filter(e => e.documentId !== "1").length).toBe(0);

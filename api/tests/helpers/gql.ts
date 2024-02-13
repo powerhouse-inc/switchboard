@@ -126,7 +126,7 @@ export const addDrive = () => {
         },
         local: {
           type: "DocumentDriveLocalStateInput!",
-          value: { sharingType: "private", availableOffline: false },
+          value: { sharingType: "public", availableOffline: false },
         },
       },
       fields: [
@@ -186,8 +186,8 @@ export const addPullResponderListener = () => {
         filter: {
           type: "InputListenerFilter!",
           value: {
-            documentType: ["powerhouse/budget-statement"],
-            documentId: ["1"],
+            documentType: ["*"],
+            documentId: ["*"],
             scope: ["global"],
             branch: ["main"],
           },
@@ -246,7 +246,7 @@ export const acknowledge = (
   );
 };
 
-export const addLineItem = (address: string) => {
+export const addLineItem = (address: string, index: number) => {
   return fetchOrThrow<ListenerRevision[]>(
     builder.mutation({
       operation: "pushUpdates",
@@ -261,9 +261,9 @@ export const addLineItem = (address: string) => {
               branch: "main",
               operations: [
                 {
+                  index,
                   type: "AddAccountInput",
                   input: `{"address": "${address}"}`,
-                  index: 1,
                   timestamp: "2024-01-16T18:13:54.823Z",
                   hash: "0eho6S5/g2eQnswPvq8R7p/6jpA=",
                 },
