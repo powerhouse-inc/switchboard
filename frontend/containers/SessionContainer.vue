@@ -30,10 +30,10 @@ const getSessions = async () => {
   try {
     errorMessage.value = ''
     const { data, error } = await useAsyncGql('getSessions')
-    if (error.value || !data.value?.sessions) {
+    if (error.value || !data.value?.system?.auth?.sessions) {
       errorMessage.value = error.value?.gqlErrors?.[0]?.message ?? 'Unknown error'
     }
-    sessions.value = data.value?.sessions as Session[]
+    sessions.value = data.value?.system?.auth?.sessions as Session[]
   } finally {
     areSessionsLoading.value = false
   }

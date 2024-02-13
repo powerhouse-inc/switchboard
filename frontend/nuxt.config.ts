@@ -66,7 +66,7 @@ export default defineNuxtConfig({
     clients: {
       default: {
         host: `${API_BASE}/drives`,
-        schema: '../api/src/generated/schema.graphql'
+        schema: '../api/src/graphql/generated/index/schema.graphql'
       }
     }
   }

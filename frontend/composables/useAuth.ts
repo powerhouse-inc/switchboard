@@ -4,7 +4,7 @@ import decode from 'jwt-decode'
 import useWallet from './useWallet'
 
 export declare interface User {
-    address: string;
+  address: string;
 }
 
 const user = ref(undefined as User | undefined)
@@ -22,11 +22,11 @@ const useAuth = function () {
   const checkAuthValidity = async () => {
     try {
       const { data, error } = await useAsyncGql('me')
-      if (error.value || !data.value?.me) {
+      if (error.value || !data.value?.system?.auth?.me) {
         user.value = undefined
         return
       }
-      user.value = data.value?.me
+      user.value = data.value?.system?.auth?.me
     } finally {
       isLoading.value = false
     }
