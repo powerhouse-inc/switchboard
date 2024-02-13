@@ -5,8 +5,6 @@ import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import cookierParser from 'cookie-parser';
-import cors from 'cors';
-import { CORS_ORIGINS, PORT } from '../../env';
 import { schemaWithMiddleware as indexSchema } from './index/schema';
 import { schemaWithMiddleware as driveSchema } from './drive/schema';
 import { Context as IndexContext, createContext as createIndexContext } from './index/context';
@@ -54,10 +52,6 @@ export const startServer = async (
 
   app.use(
     '/drives',
-    cors<cors.CorsRequest>({
-      origin: CORS_ORIGINS,
-    }),
-
     cookierParser(undefined, { decode: (value: string) => value }),
     bodyParser.json(),
     expressMiddleware(apolloIndex, {
@@ -67,10 +61,6 @@ export const startServer = async (
 
   app.use(
     '/d/:driveId',
-    cors<cors.CorsRequest>({
-      origin: CORS_ORIGINS,
-    }),
-
     cookierParser(undefined, { decode: (value: string) => value }),
     bodyParser.json(),
     expressMiddleware(apolloDrive, {
