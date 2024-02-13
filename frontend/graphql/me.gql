@@ -1,5 +1,9 @@
 query me {
-    me {
-        address
+    system {
+        auth {
+            me {
+                address
+            }
+        }
     }
 }

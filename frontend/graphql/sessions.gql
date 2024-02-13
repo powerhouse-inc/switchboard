@@ -1,13 +1,17 @@
 query getSessions {
-    sessions {
-        id
-        createdAt
-        createdBy
-        referenceExpiryDate
-        referenceTokenId
-        isUserCreated
-        name
-        revokedAt
-        allowedOrigins
+    system {
+        auth {
+            sessions {
+                id
+                createdAt
+                createdBy
+                referenceExpiryDate
+                referenceTokenId
+                isUserCreated
+                name
+                revokedAt
+                allowedOrigins
+            }
+        }
     }
 }
