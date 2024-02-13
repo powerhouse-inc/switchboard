@@ -20,7 +20,7 @@ FROM dependency-base AS production-base
 COPY frontend /app/frontend
 COPY api /app/api
 WORKDIR /app/api
-RUN npm ci
+RUN yarn install --frozen-lockfile
 WORKDIR /app/frontend
 
 # Set env vars before build
