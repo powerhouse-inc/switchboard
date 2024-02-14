@@ -1,11 +1,9 @@
 import type { Express } from 'express';
 import express from 'express';
-import expressPlayground from 'graphql-playground-middleware-express';
 import { getChildLogger } from './logger';
 import basePrisma from './database';
 import { API_GQL_ENDPOINT } from './env';
 import {
-  MiddlewareOptions,
   renderPlaygroundPage,
 } from 'graphql-playground-html'
 
