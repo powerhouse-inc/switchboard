@@ -4,6 +4,10 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import { getChildLogger } from './logger';
 import basePrisma from './database';
 import { API_GQL_ENDPOINT } from './env';
+import {
+  MiddlewareOptions,
+  renderPlaygroundPage,
+} from 'graphql-playground-html'
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
@@ -30,14 +34,17 @@ export const createApp = (): Express => {
   });
 
   app.get(
-    '/',
-    expressPlayground({
-      endpoint: API_GQL_ENDPOINT,
-      settings: {
-        'editor.theme': 'light',
-        'request.credentials': 'include',
-      },
-    }),
+    '/explorer/:driveId?',
+    (req, res) => {
+      res.setHeader('Content-Type', 'text/html')
+      const endpoint = API_GQL_ENDPOINT + (req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives')
+      res.send(renderPlaygroundPage({
+        endpoint: endpoint,
+        settings: {
+          'request.credentials': 'include',
+        },
+      }))
+    }
   );
 
   return app;
