@@ -1972,10 +1972,10 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-document-drive@0.0.28:
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/document-drive/-/document-drive-0.0.28.tgz#cc29c23bfe3d39f47d277387d0b7b1b0f31a463a"
-  integrity sha512-qc+ekjMwnNuvCfxP0RUPVI1qItilYFeCD0KiKYB6yFY020+LLPuWqEPFVd8W03EPi4fXptNWzW0N1Pi0oVK3hA==
+document-drive@^0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/document-drive/-/document-drive-0.0.29.tgz#ab00d60bbcf34f0b1c1d75cbecb172cc3d92994a"
+  integrity sha512-p1kss+TZpVoNgPeys13+sI3nOE030KxdqmmFgEH5UGzYYMQypCQvfsVmI8M5Sgokws84gBVAHX6QFRZaNQ2Sjg==
   dependencies:
     graphql "^16.8.1"
     graphql-request "^6.1.0"
@@ -1987,7 +1987,7 @@ document-model-libs@1.1.43:
   resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.43.tgz#d12704c9faa700c27de38d6d47d577420d446676"
   integrity sha512-bDZTeBc0XVFP1hQ1sfcRVPGMrMS8tnLTsumLyGg7VeBf/yGJBAqRrEl5NSMmWBr9lVkdUKCVpHHFCIadB8NjBQ==
 
-document-model@1.0.29:
+document-model@^1.0.29:
   version "1.0.29"
   resolved "https://registry.yarnpkg.com/document-model/-/document-model-1.0.29.tgz#befdca50981511011d0fb194bbe0c313dd87cb88"
   integrity sha512-CX3d3+aD6tbRD7y666k9UNMEGFKPTew44dgN5CBixEToAcOel3Ai9un24fiOFtiLCUYpJ8LAsxVOCWBeP+Jq5g==
