@@ -3668,10 +3668,10 @@ document-drive@^0.0.30:
     nanoevents "^9.0.0"
     sanitize-filename "^1.6.3"
 
-document-model-libs@1.1.47:
-  version "1.1.47"
-  resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.47.tgz#fa2cd0629de27cd53fedc76f67c029e079ca7816"
-  integrity sha512-ook8rHd+2uajoxyYDQ/dPC28L8jifbyVIlPXvRtHjYugoyvdQxWyuJevI5OmvfIEbVOMF2FZDwZ9uaHpKBhbTA==
+document-model-libs@^1.1.48:
+  version "1.1.48"
+  resolved "https://registry.yarnpkg.com/document-model-libs/-/document-model-libs-1.1.48.tgz#e14d7b71240ebf6d244998943ae6258eea3e60b6"
+  integrity sha512-8JG9z+mwxrpRKOCa5Vng7OlIZNRMna3ooTKMHnpCohVkdbNOXjdZjoTnJne0zfJzuOpDvFSaOUXSB5HWrvHrNA==
   dependencies:
     "@acaldas/graphql-codegen-typescript-validation-schema" "^0.12.3"
     "@graphql-codegen/core" "^4.0.2"
