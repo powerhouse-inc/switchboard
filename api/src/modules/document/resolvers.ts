@@ -31,7 +31,7 @@ export const documentModelInterface = interfaceType({
         return 'BudgetStatement';
       case 'powerhouse/account-snapshot':
         return 'AccountSnapshot';
-      case 'powerhouse/real-world-assets':
+      case 'makerdao/rwa-portfolio':
         return 'RealWorldAssets';
       default:
         return 'DefaultDocument';
