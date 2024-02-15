@@ -1972,14 +1972,15 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-document-drive@^0.0.29:
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/document-drive/-/document-drive-0.0.29.tgz#ab00d60bbcf34f0b1c1d75cbecb172cc3d92994a"
-  integrity sha512-p1kss+TZpVoNgPeys13+sI3nOE030KxdqmmFgEH5UGzYYMQypCQvfsVmI8M5Sgokws84gBVAHX6QFRZaNQ2Sjg==
+document-drive@^0.0.30:
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/document-drive/-/document-drive-0.0.30.tgz#0cc5a959223ce85ffadae7668af698e7facda12a"
+  integrity sha512-BEkPjBLtYTkTyS4wqMDwaA5SF3Th0TQZGxZOX/9o9l8rV0BYTcmEqiVM4tjmMJpUnD7NNgivVwVFH8aD9gaCpA==
   dependencies:
     graphql "^16.8.1"
     graphql-request "^6.1.0"
     json-stringify-deterministic "^1.0.12"
+    nanoevents "^9.0.0"
     sanitize-filename "^1.6.3"
 
 document-model-libs@1.1.43:
@@ -3389,6 +3390,11 @@ ms@2.1.3, ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
+
+nanoevents@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/nanoevents/-/nanoevents-9.0.0.tgz#c44fa7dde1615ac092023d5c881a3ee0b0a8c8fd"
+  integrity sha512-X8pU7IOpgKXVLPxYUI55ymXc8XuBE+uypfEyEFBtHkD1EX9KavYTVc+vXZHFyHKzA1TaZoVDqklLdQBBrxIuAw==
 
 nanoid@^3.3.7:
   version "3.3.7"
