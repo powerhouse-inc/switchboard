@@ -22,7 +22,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      GQL_PLAYGROUND: `${API_BASE}/`,
+      GQL_PLAYGROUND: `${API_BASE}/explorer`,
       DOCUMENTATION_VERSION,
       IS_DEV_MODE
     }
