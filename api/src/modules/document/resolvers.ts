@@ -1,4 +1,4 @@
-import { interfaceType, nonNull, queryField } from 'nexus';
+import { interfaceType, nonNull, objectType, queryField } from 'nexus';
 import { GQLDateBase } from '../system';
 
 // todo: resolveType should be moved to somewhere else
@@ -25,7 +25,25 @@ export const documentModelInterface = interfaceType({
     t.nonNull.field('lastModified', { type: GQLDateBase });
     t.nonNull.list.nonNull.field('operations', { type: operationModelInterface });
   },
-  resolveType: (e) => e.name,
+  resolveType: (e) => {
+    switch (e.documentType) {
+      case 'powerhouse/budget-statement':
+        return 'BudgetStatement';
+      case 'powerhouse/account-snapshot':
+        return 'AccountSnapshot';
+      case 'powerhouse/real-world-assets':
+        return 'RealWorldAssets';
+      default:
+        return 'DefaultDocument';
+    }
+  },
+});
+
+export const defaultDocument = objectType({
+  name: 'DefaultDocument',
+  definition(t) {
+    t.implements(documentModelInterface);
+  },
 });
 
 export const documentQuery = queryField('document', {

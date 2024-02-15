@@ -263,6 +263,15 @@ export interface NexusGenObjects {
     name?: string | null; // String
     shortCode?: string | null; // String
   }
+  DefaultDocument: { // root type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
+    name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
+  }
   DocumentDriveState: { // root type
     icon?: string | null; // String
     id: string; // ID!
@@ -571,7 +580,7 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Document: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
+  Document: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
   Operation: any;
   System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
@@ -730,6 +739,15 @@ export interface NexusGenFieldTypes {
     imageSource: string | null; // String
     name: string | null; // String
     shortCode: string | null; // String
+  }
+  DefaultDocument: { // field return type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
+    name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
   }
   DocumentDriveState: { // field return type
     icon: string | null; // String
@@ -1224,6 +1242,15 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     shortCode: 'String'
   }
+  DefaultDocument: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'Operation'
+    revision: 'Int'
+  }
   DocumentDriveState: { // field return type name
     icon: 'String'
     id: 'ID'
@@ -1624,13 +1651,14 @@ export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
   GroupTransaction: "AssetPurchaseGroupTransaction" | "AssetSaleGroupTransaction" | "FeesPaymentGroupTransaction" | "InterestDrawGroupTransaction" | "InterestReturnGroupTransaction" | "PrincipalDrawGroupTransaction" | "PrincipalReturnGroupTransaction"
-  Document: "AccountSnapshot" | "BudgetStatement" | "RealWorldAssets" | "ScopeFramework"
+  Document: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
   System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
   AccountSnapshot: "Document"
   BudgetStatement: "Document"
+  DefaultDocument: "Document"
   RealWorldAssets: "Document"
   ScopeFramework: "Document"
   SwitchboardDrive: "System"
