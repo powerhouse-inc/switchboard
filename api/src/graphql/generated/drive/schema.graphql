@@ -190,6 +190,16 @@ type CoreUnit {
 """Date custom scalar type"""
 scalar Date
 
+type DefaultDocument implements Document {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [Operation!]!
+  revision: Int!
+}
+
 interface Document {
   created: Date!
   documentType: String!
