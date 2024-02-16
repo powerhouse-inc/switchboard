@@ -9,19 +9,18 @@ WORKDIR /app
 
 # copy the app, note .dockerignore
 COPY package.json .
-COPY yarn.lock .
-RUN yarn install --frozen-lockfile
+COPY pnpm-lock.yaml .
+ENV NODE_ENV=production
+RUN npm install -g pnpm
+RUN pnpm install
 
 FROM dependency-base AS production
 
 COPY . .
 
-# Run in production mode
 ENV NODE_ENV=production
-RUN sed --in-place 's/sqlite/postgresql/g' ./prisma/schema.prisma
 RUN npx prisma generate
 
-# initialize db and start the app
 RUN useradd -m myuser
 USER myuser
-CMD npm start
+CMD pnpm start

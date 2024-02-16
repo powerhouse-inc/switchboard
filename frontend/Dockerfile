@@ -19,16 +19,17 @@ FROM dependency-base AS production-base
 # if necessary
 COPY frontend /app/frontend
 COPY api /app/api
-WORKDIR /app/api
-RUN yarn install --frozen-lockfile
-WORKDIR /app/frontend
 
-# Set env vars before build
+WORKDIR /app/api
+RUN npm install -g pnpm
+ENV NODE_ENV=production
+RUN pnpm install
+
+WORKDIR /app/frontend
 ARG API_BASE=""
 ENV API_BASE=${API_BASE}
 ARG API_GQL_ENDPOINT=/wundergraph/graphql
 ENV API_GQL_ENDPOINT=${API_BASE}
-
 RUN npm run build
 
 FROM $NODE_VERSION AS production
