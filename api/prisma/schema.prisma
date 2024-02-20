@@ -65,8 +65,9 @@ model Document {
 }
 
 model Operation {
+  id          String       @id @default(uuid())
   driveId     String
-  Document    Document?    @relation(fields: [driveId, documentId], references: [driveId, id])
+  Document    Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
   documentId  String
   scope       String
   branch      String
@@ -80,9 +81,7 @@ model Operation {
   syncId      String?
   clipboard   Boolean?     @default(false)
 
-  SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId])
-
-  @@id([driveId, documentId, scope, branch, index])
+  SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId], onDelete: Cascade)
 }
 
 model SyncronizationUnit {
@@ -90,7 +89,7 @@ model SyncronizationUnit {
   driveId    String
   documentId String
 
-  Document   Document    @relation(fields: [documentId, driveId], references: [id, driveId])
+  Document   Document    @relation(fields: [documentId, driveId], references: [id, driveId], onDelete: Cascade)
   scope      String
   branch     String
   operations Operation[]
@@ -99,13 +98,9 @@ model SyncronizationUnit {
 }
 
 model Attachment {
-  id         String    @id @default(uuid())
-  driveId    String
-  documentId String
-  scope      String
-  branch     String
-  index      Int
-  Operation  Operation @relation(fields: [driveId, documentId, scope, branch, index], references: [driveId, documentId, scope, branch, index], onDelete: Cascade)
+  id          String    @id @default(uuid())
+  operationId String
+  Operation   Operation @relation(fields: [operationId], references: [id], onDelete: Cascade)
 
   mimeType  String
   data      String
