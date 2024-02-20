@@ -107,8 +107,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       if (!transmitter) {
         throw new Error(`Transmitter with id ${listenerId} not found`);
       }
-
-      const result = await transmitter.getStrands(listenerId, since);
+      const result = await transmitter.getStrands(since || undefined);
       return result;
     },
 
