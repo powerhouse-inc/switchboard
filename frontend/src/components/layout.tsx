@@ -10,7 +10,6 @@ export default function RootLayout({
     const router = useRouter();
     let container = "";
 
-    console.log(router.pathname);
     if (router.pathname !== "/" && !router.pathname.includes("/graphql")) {
         container = "container";
     }

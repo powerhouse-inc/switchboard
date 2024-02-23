@@ -7,17 +7,10 @@ import { useRouter } from "next/router";
 
 const User = () => {
     const address = authStore((state) => state.address);
-    const gqlToken = authStore((state) => state.gqlToken);
 
-    const { signIn, checkAuthValidity, signOut } = useAuth();
+    const { signIn, signOut } = useAuth();
 
     const router = useRouter();
-
-    useEffect(() => {
-        if (gqlToken) {
-            checkAuthValidity();
-        }
-    }, [gqlToken]);
 
     if (!address) {
         return (

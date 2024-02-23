@@ -59,7 +59,6 @@ const useAuth = () => {
 
   const { connectWallet, signMessage } = useWallet();
   const { gqlToken, setGqlToken, setIsLoading, setAddress, setIsAuthorized, setSessions } = authStore();
-
   useEffect(() => {
     const localToken = localStorage.getItem('token');
     if (localToken && !gqlToken) {
@@ -84,6 +83,22 @@ const useAuth = () => {
     link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
   });
+
+  const getDrives = async () => {
+    const { data, errors } = await client.query({
+      query: gql`
+        query {
+          drives
+        }
+      `,
+    });
+
+    if (errors) {
+      throw new Error(errors[0].message);
+    }
+
+    return data.drives;
+  }
 
   const checkAuthValidity = async () => {
     try {
@@ -207,7 +222,7 @@ const useAuth = () => {
     localStorage.removeItem('token');
   }
 
-  return { checkAuthValidity, signIn, signOut, createSession, revokeSession }
+  return { checkAuthValidity, signIn, signOut, createSession, revokeSession, getDrives }
 }
 
 export default useAuth
