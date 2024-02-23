@@ -1,9 +1,0 @@
-query me {
-    system {
-        auth {
-            me {
-                address
-            }
-        }
-    }
-}

@@ -1,6 +1,0 @@
-mutation createChallenge($address: String!) {
-    createChallenge(address: $address) {
-        nonce
-        message
-    }
-}

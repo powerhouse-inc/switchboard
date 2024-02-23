@@ -1,39 +1,36 @@
-# Powerhouse Switchboard Frontend
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-The UI part of the system that intends to provide user-friendly wrapper over the API in order to easily do common things: signin/signup, create API tokens, use graphql playground, explore data stored in the database.
+## Getting Started
 
-## Development Setup
+First, run the development server:
 
-0. `node -v` to check that your Node is LTS (currently version 18.*)
-1. Set up _required_ environment variables [outlined below](#environment-variables) (if there any)
-2. `npm install` to install dependencies
-4. `npm run dev` to run application in development mode (make sure api service is already running)
-5. View hot-reloaded UI on [http://localhost:3000](http://localhost:3000)
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Other commands include:
-- `npm run typecheck` for typechecking
-- `npm run lint` for linting
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Environment variables
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Note: you can set environment variables directly or define them in the `frontend/.env` file.
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-- `API_BASE` (optional, default `http://localhost:3001`): relative path or the url under which `api` service is running. For example, if the `api` service is running on port 4000, the value should be `http://localhost:4000`. However, if the `api` is sharing the origin with the `frontend` service via reverse-proxy, providing relative path is enough (e.g.: `/backend`)
+## Learn More
 
-## Production
+To learn more about Next.js, take a look at the following resources:
 
-You can build application for production using `npm run build` and then locally preview production build via `npm run preview`.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Health endpoint
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-Endpoint available at `/healthz` path. Provides response if frontend is currently running.
+## Deploy on Vercel
 
-## Documentation page
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-One of the frontend's features is to display documentation about document model package. The documentation is generated using `scripts/generateDocs.ts` script from the `@acaldas/document-model-libs` npm package installed by the API service. Meaning that whenever the API updates the `@acaldas/document-model-libs` package, the documentation will be automatcially updated during build (before `npm run build`). To run the generation manually:
-
-1. `(cd ../api && npm install)` to install api dependencies including `@acaldas/document-model-libs` package
-2. `npm install` to install frontend dependencies
-3. Generate documentation file that will be served by the frontend using `npm run generateDocs`
-4. Start frontend via `npm run dev` (see [Development Setup](#development-setup) section above)
-5. Open http://localhost:3000/documentation
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
