@@ -1,50 +1,33 @@
-# see https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG NODE_VERSION=node:20.11.0
+FROM node:lts-alpine AS deps
 
-FROM $NODE_VERSION AS dependency-base
-
-# create destination directory
-RUN mkdir -p /app/frontend
-WORKDIR /app/frontend
-
-# copy the app, note .dockerignore
-COPY frontend/package.json .
-COPY frontend/package-lock.json .
-COPY frontend/scripts ./scripts
-RUN npm ci
-
-FROM dependency-base AS production-base
-
-# build will also take care of building
-# if necessary
-COPY frontend /app/frontend
-COPY api /app/api
-
-WORKDIR /app/api
+WORKDIR /opt/app
+COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm
-ENV NODE_ENV=production
 RUN pnpm install
 
-WORKDIR /app/frontend
-ARG API_BASE=""
-ENV API_BASE=${API_BASE}
-ARG API_GQL_ENDPOINT=/wundergraph/graphql
-ENV API_GQL_ENDPOINT=${API_BASE}
-RUN npm run build
+# Rebuild the source code only when needed
+# This is where because may be the case that you would try
+# to build the app based on some `X_TAG` in my case (Git commit hash)
+# but the code hasn't changed.
+FROM node:lts-alpine AS builder
 
-FROM $NODE_VERSION AS production
-
-COPY --from=production-base /app/frontend/.output /app/frontend/.output
-
-# Service hostname
-ENV NUXT_HOST=0.0.0.0
-
-# Service version
-ARG NUXT_APP_VERSION
-ENV NUXT_APP_VERSION=${NUXT_APP_VERSION}
-
-# Run in production mode
 ENV NODE_ENV=production
+ARG SWITCHBOARD_HOST="https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com"
+ENV NEXT_PUBLIC_SWITCHBOARD_HOST=${SWITCHBOARD_HOST}
+WORKDIR /opt/app
+COPY . .
+COPY --from=deps /opt/app/node_modules ./node_modules
+RUN npm install -g pnpm
+RUN pnpm build
 
-# start the app
-CMD [ "node", "/app/frontend/.output/server/index.mjs" ]
+# Production image, copy all the files and run next
+FROM node:lts-alpine AS runner
+
+ARG X_TAG
+WORKDIR /opt/app
+ENV NODE_ENV=production
+COPY --from=builder /opt/app/next.config.mjs ./
+COPY --from=builder /opt/app/public ./public
+COPY --from=builder /opt/app/.next ./.next
+COPY --from=builder /opt/app/node_modules ./node_modules
+CMD ["node_modules/.bin/next", "start"]
