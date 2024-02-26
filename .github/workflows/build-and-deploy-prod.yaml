@@ -1,11 +1,11 @@
-name: Deploy Switchboard Staging
+name: Deploy Switchboard Production
 
 on:
   push:
-    branches: [staging]
+    branches: [main]
 jobs:
   build:
-    environment: Staging
+    environment: Production
     runs-on: ubuntu-latest
     steps:
       # Check-out your repository.
