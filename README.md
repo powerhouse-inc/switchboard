@@ -24,7 +24,7 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
     ```sh
     docker-compose up --build --force-recreate
     ```
-3. Open [http://localhost](http://localhost) to view the frontend
+3. Open [http://localhost:3000](http://localhost:3000) to view the frontend
 
 ### Using plain Node.js (for the development)
 
