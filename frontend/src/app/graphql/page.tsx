@@ -6,7 +6,7 @@ export default function GraphQL() {
   return (
     <Suspense>
       <GraphQLIframe
-        url={`${process.env.NEXT_PUBLIC_SWITCHBOARD_HOST}/explorer`}
+        url={`${process.env.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST}/explorer`}
       />
     </Suspense>
   );

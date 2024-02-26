@@ -1,7 +1,7 @@
 FROM node:lts-alpine AS deps
 
 WORKDIR /opt/app
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml .
 RUN npm install -g pnpm
 RUN pnpm install
 
@@ -12,8 +12,8 @@ RUN pnpm install
 FROM node:lts-alpine AS builder
 
 ENV NODE_ENV=production
-ARG SWITCHBOARD_HOST="https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com"
-ENV NEXT_PUBLIC_SWITCHBOARD_HOST=${SWITCHBOARD_HOST}
+ARG NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST
+ENV NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST=${NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST}
 WORKDIR /opt/app
 COPY . .
 COPY --from=deps /opt/app/node_modules ./node_modules

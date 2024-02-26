@@ -9,7 +9,7 @@ export default function GraphQLDrive() {
   return (
     <Suspense>
       <GraphQLIframe
-        url={`${process.env.NEXT_PUBLIC_SWITCHBOARD_HOST}/explorer/${params?.driveId}`}
+        url={`${process.env.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST}/explorer/${params?.driveId}`}
       />
     </Suspense>
   );
