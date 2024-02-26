@@ -2,7 +2,6 @@ import type { Express } from 'express';
 import express from 'express';
 import { getChildLogger } from './logger';
 import basePrisma from './database';
-import { API_GQL_ENDPOINT } from './env';
 import {
   renderPlaygroundPage,
 } from 'graphql-playground-html'
