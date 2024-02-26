@@ -20,7 +20,8 @@ COPY . .
 
 ENV NODE_ENV=production
 RUN npx prisma generate
+ENV PORT=3000
 
 RUN useradd -m myuser
 USER myuser
-CMD pnpm start
+CMD npx prisma db push && pnpm start

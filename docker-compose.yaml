@@ -1,7 +1,6 @@
-version: '3'
+version: "3"
 
 services:
-
   database:
     restart: unless-stopped
     image: postgres:15
@@ -30,6 +29,13 @@ services:
       AUTH_SIGNUP_ENABLED: "1"
       JWT_SECRET: replace_in_production_with_actual_secret
       JWT_EXPIRATION_PERIOD_SECONDS: 3600
+      API_GQL_ENDPOINT: "http://localhost:3000"
+      PORT: 3000
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://api:3000/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       database:
         condition: service_healthy
@@ -37,30 +43,42 @@ services:
   frontend:
     restart: unless-stopped
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST: "http://localhost:3000"
+    environment:
+      NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST: "http://localhost:3000"
     expose:
       - 3000
+    depends_on:
+      api:
+        condition: service_healthy
 
   wundergraph:
     platform: linux/amd64
     restart: unless-stopped
     expose:
-      - 3002
+      - 3000
     build:
       context: ./wundergraph
     environment:
-      SWITCHBOARD_GQL_ENDPOINT: "http://api:3000/graphql"
+      SWITCHBOARD_GQL_ENDPOINT: "http://api:3000/drives"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
 
   reverse-proxy:
     restart: unless-stopped
-    image: nginx:stable
+    build:
+      context: ./nginx
     ports:
-      - '80:80'
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      FRONTEND: "http://frontend:3000"
+      BACKEND: "http://api:3000"
+      WUNDERGRAPH: "http://wundergraph:3000"
     depends_on:
       - api
       - frontend
+      - wundergraph
