@@ -1,6 +1,6 @@
 import { Eip1193Provider } from 'ethers';
 import { JsonRpcSigner } from 'ethers';
-import { getDefaultProvider, BrowserProvider, getAddress } from 'ethers'
+import { BrowserProvider } from 'ethers'
 import { create } from 'zustand'
 
 declare global {
