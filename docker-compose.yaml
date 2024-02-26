@@ -25,7 +25,7 @@ services:
       context: ./api
     environment:
       DATABASE_URL: "postgres://postgres:postgres@database:5432/postgres?sslmode=disable&connect_timeout=30"
-      API_ORIGIN: http://localhost
+      API_ORIGIN: http://localhost:3000
       AUTH_SIGNUP_ENABLED: "1"
       JWT_SECRET: replace_in_production_with_actual_secret
       JWT_EXPIRATION_PERIOD_SECONDS: 3600
