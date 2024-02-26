@@ -2,7 +2,7 @@ name: Deploy Switchboard Staging
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
 jobs:
   build:
     runs-on: ubuntu-latest
