@@ -35,7 +35,7 @@ export const createApp = (): Express => {
     '/explorer/:driveId?',
     (req, res) => {
       res.setHeader('Content-Type', 'text/html')
-      const endpoint = API_GQL_ENDPOINT + (req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives')
+      const endpoint = req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
       res.send(renderPlaygroundPage({
         endpoint: endpoint,
         settings: {
