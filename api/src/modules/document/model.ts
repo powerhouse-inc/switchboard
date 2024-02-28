@@ -6,6 +6,7 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
+  InternalTransmitter,
 } from 'document-drive';
 
 import { PrismaStorage } from 'document-drive/storage/prisma';
@@ -20,9 +21,6 @@ import {
 } from 'document-model-libs/document-drive';
 
 
-import { actions as rwaActions } from 'document-model-libs/dist/real-world-assets'
-
-
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
@@ -31,7 +29,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
   const driveServer = new DocumentDriveServer(
     documentModels,
-    new PrismaStorage(prisma),
+    new PrismaStorage(prisma as Prisma.DefaultPrismaClient),
   );
 
   driveServer.initialize();
@@ -157,7 +155,9 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       let drive = await driveServer.getDrive(driveId);
       drive = reducer(drive, actions.addListener({ listener }));
       const operation = drive.operations.local.slice().pop();
-
+      if (!operation) {
+        throw new Error('Invalid PullResponderListener');
+      }
       await driveServer.addDriveOperations(driveId, [operation]);
       return listener;
     },
@@ -169,7 +169,9 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       let drive = await driveServer.getDrive(driveId);
       drive = reducer(drive, actions.removeListener({ listenerId }));
       const operation = drive.operations.local.slice().pop();
-
+      if (!operation) {
+        throw new Error('PullResponderListener not found');
+      }
       await driveServer.addDriveOperations(driveId, [operation]);
       return listenerId;
     },
