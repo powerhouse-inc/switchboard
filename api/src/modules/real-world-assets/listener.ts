@@ -1,7 +1,13 @@
-import { Listener } from "document-drive"
+import { Document, OperationScope } from "document-model/document"
+import { InternalTransmitterUpdate, Listener } from "document-drive"
+import { Prisma } from "@prisma/client"
 
-export const transmitFn = () => {
+export const transmitFn = (strands: InternalTransmitterUpdate<Document, OperationScope>[], prisma: Prisma.TransactionClient) => {
+  console.log(strands);
+  console.log(prisma)
+  for (const strand of strands) {
 
+  }
 }
 
 

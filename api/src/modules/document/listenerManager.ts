@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { DocumentDriveServer, InternalTransmitter } from 'document-drive';
+import { DocumentDriveServer, InternalTransmitter, InternalTransmitterUpdate } from 'document-drive';
 import {
   Listener,
   ListenerFilter,
@@ -8,25 +8,26 @@ import {
   reducer,
   DocumentDriveDocument
 } from 'document-model-libs/document-drive';
-
+import { Document, OperationScope } from "document-model/document"
+import { Prisma } from '@prisma/client';
 const listeners: Promise<any>[] = [];
 
 function loadModules(startPath: string, filter: string) {
-  if (!fs.existsSync(startPath)) {
-    console.log("no dir ", startPath);
-    return;
-  }
+  // if (!fs.existsSync(startPath)) {
+  //   console.log("no dir ", startPath);
+  //   return;
+  // }
 
-  var files = fs.readdirSync(startPath);
-  for (var i = 0; i < files.length; i++) {
-    var filename = path.join(startPath, files[i]);
-    var stat = fs.lstatSync(filename);
-    if (stat.isDirectory()) {
-      loadModules(filename, filter); //recursive
-    } else if (filename.endsWith(filter)) {
-      listeners.push(import(filename));
-    };
-  };
+  // var files = fs.readdirSync(startPath);
+  // for (var i = 0; i < files.length; i++) {
+  //   var filename = path.join(startPath, files[i]);
+  //   var stat = fs.lstatSync(filename);
+  //   if (stat.isDirectory()) {
+  //     loadModules(filename, filter); //recursive
+  //   } else if (filename.endsWith(filter)) {
+  //     listeners.push(import(filename));
+  //   };
+  // };
 };
 
 function isListenerRegistered(drive: DocumentDriveDocument, listener: Listener) {
@@ -45,27 +46,31 @@ async function registerListener(driveServer: DocumentDriveServer, driveId: strin
   return driveServer.addDriveOperations(driveId, [operation]);
 }
 
-export async function init(driveServer: DocumentDriveServer) {
-  loadModules('./src/modules', 'listener.ts');
-  const modules = await Promise.all(listeners);
-  const drives = await driveServer.getDrives();
-  for (const { listener, transmitFn } of modules) {
-    if (!listener || !transmitFn) {
-      continue;
-    }
+export async function init(driveServer: DocumentDriveServer, prisma: Prisma.TransactionClient) {
 
-    for (const driveId of drives) {
-      const drive = await driveServer.getDrive(driveId);
-      if (!isListenerRegistered(drive, listener)) {
-        await registerListener(driveServer, driveId, listener);
-      }
 
-      const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId)) as InternalTransmitter;
-      transmitter.setReceiver({
-        transmit: transmitFn
-      })
-    }
-  }
+  // loadModules('./src/modules', 'listener.ts');
+  // const modules = await Promise.all(listeners);
+  // const drives = await driveServer.getDrives();
+  // for (const { listener, transmitFn } of modules) {
+  //   if (!listener || !transmitFn) {
+  //     continue;
+  //   }
+
+  //   for (const driveId of drives) {
+  //     // const drive = await driveServer.getDrive(driveId);
+  //     // if (!isListenerRegistered(drive, listener)) {
+  //     //   await registerListener(driveServer, driveId, listener);
+  //     // }
+
+  // const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId)) as InternalTransmitter;
+  // transmitter.setReceiver({
+  //   transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
+  //     transmitFn(strands, prisma)
+  //   }
+  // })
+  //   }
+  // }
 }
 
 

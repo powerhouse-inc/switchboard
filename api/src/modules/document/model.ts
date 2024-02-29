@@ -6,19 +6,21 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
+  InternalTransmitterUpdate,
   InternalTransmitter,
 } from 'document-drive';
 
 import { PrismaStorage } from 'document-drive/storage/prisma';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
 import { module as DocumentModelLib } from 'document-model/document-model';
-import { DocumentModel, Operation } from 'document-model/document';
+import { Document, DocumentModel, Operation, OperationScope } from 'document-model/document';
 import {
   Listener,
   ListenerFilter,
   actions,
   reducer,
 } from 'document-model-libs/document-drive';
+// import { init } from './listenerManager';
 
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
@@ -32,7 +34,39 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     new PrismaStorage(prisma as Prisma.DefaultPrismaClient),
   );
 
-  driveServer.initialize();
+  async function mainInit() {
+    await driveServer.initialize();
+    const transmitter = (await driveServer.getTransmitter("core-test-2", "rwa-2")) as InternalTransmitter;
+    console.log(transmitter);
+    if (!transmitter) {
+      await driveServer.addInternalListener(
+        "core-test-2", {
+        transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
+          console.log("transmit");
+          // transmitFn(strands, prisma)
+        }
+      },
+        {
+          block: false,
+          filter: {
+            branch: ["main"],
+            documentId: ["*"],
+            documentType: ["makerdao/rwa-portfolio"],
+            scope: ["global"]
+          },
+          label: "RWA Listener",
+          listenerId: "rwa-2",
+        })
+    } else {
+      transmitter.setReceiver({
+        transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
+          console.log("transmit");
+        }
+      })
+    }
+  }
+
+  mainInit();
 
   return {
     addDrive: async (args: DriveInput) => {
@@ -105,6 +139,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       if (!transmitter) {
         throw new Error(`Transmitter with id ${listenerId} not found`);
       }
+      console.log(transmitter);
       const result = await transmitter.getStrands(since || undefined);
       return result;
     },
