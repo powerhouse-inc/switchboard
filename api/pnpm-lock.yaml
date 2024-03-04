@@ -24,14 +24,14 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: ^1.0.0-alpha.10
-    version: 1.0.0-alpha.10(@prisma/client@5.8.1)(document-model-libs@1.1.51)(document-model@1.0.30)(localforage@1.10.0)(sequelize@6.37.1)(sqlite3@5.1.7)
+    specifier: ^1.0.0-alpha.15
+    version: 1.0.0-alpha.15(@prisma/client@5.8.1)(document-model-libs@1.3.0)(document-model@1.0.30)(localforage@1.10.0)(sequelize@6.37.1)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.30
     version: 1.0.30
   document-model-libs:
-    specifier: ^1.1.51
-    version: 1.1.51(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^1.3.0
+    version: 1.3.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -1529,14 +1529,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@graphql-codegen/typescript@4.0.5(graphql@16.8.1):
-    resolution: {integrity: sha512-PCS6LovGhyNfnmZ2AJ8rN5wGUhysWNsFwCPrZccuwBVCCvcet8/GNKStY5cHiDqG0B5Q+6g8OXVbffhxkkytLA==}
+  /@graphql-codegen/typescript@4.0.6(graphql@16.8.1):
+    resolution: {integrity: sha512-IBG4N+Blv7KAL27bseruIoLTjORFCT3r+QYyMC3g11uY3/9TPpaUyjSdF70yBe5GIQ6dAgDU+ENUC1v7EPi0rw==}
     peerDependencies:
       graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.3(graphql@16.8.1)
       '@graphql-codegen/schema-ast': 4.0.2(graphql@16.8.1)
-      '@graphql-codegen/visitor-plugin-common': 5.0.0(graphql@16.8.1)
+      '@graphql-codegen/visitor-plugin-common': 5.1.0(graphql@16.8.1)
       auto-bind: 4.0.0
       graphql: 16.8.1
       tslib: 2.6.2
@@ -1566,8 +1566,8 @@ packages:
       - supports-color
     dev: false
 
-  /@graphql-codegen/visitor-plugin-common@5.0.0(graphql@16.8.1):
-    resolution: {integrity: sha512-qQOZZZ2MxmBEyd0Lm3lVh7zgauLXVBsg3ToucQJHmbk2WUxLMOcaf/+BOBIkrDjvWA8L+JU6COUT6uZc57DBcw==}
+  /@graphql-codegen/visitor-plugin-common@5.1.0(graphql@16.8.1):
+    resolution: {integrity: sha512-eamQxtA9bjJqI2lU5eYoA1GbdMIRT2X8m8vhWYsVQVWD3qM7sx/IqJU0kx0J3Vd4/CSd36BzL6RKwksibytDIg==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
@@ -2584,8 +2584,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@react-aria/toolbar@3.0.0-beta.1(react@18.2.0):
-    resolution: {integrity: sha512-GTQ76i0N8/BzWRJ/95RpOFGmbtv0lV3T2zd7CUis6xmP1zJCpSycs1V2jAUs6ggkVDedHLU2d0AOMkXorZLiUg==}
+  /@react-aria/toolbar@3.0.0-beta.3(react@18.2.0):
+    resolution: {integrity: sha512-tPIEPRsZI/6Mb0tAW/GBTt3wBk7dfJg/eUnTloY8NHialvDa+cMUQyUVzPyLWGpErhYeBeutBmw1e2seMjmu+A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
@@ -4125,6 +4125,10 @@ packages:
     dev: false
     optional: true
 
+  /client-only@0.0.1:
+    resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
+
   /cliui@6.0.0:
     resolution: {integrity: sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==}
     dependencies:
@@ -4442,19 +4446,19 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.10(@prisma/client@5.8.1)(document-model-libs@1.1.51)(document-model@1.0.30)(localforage@1.10.0)(sequelize@6.37.1)(sqlite3@5.1.7):
-    resolution: {integrity: sha512-khWY6JkLLf1T0bTY2w0rymnPm31dBun5cc5ORnrjho5MGUYjecV6c78ARMqP6hoXesvmv/iD1QZY2jb1Tw+jiQ==}
+  /document-drive@1.0.0-alpha.15(@prisma/client@5.8.1)(document-model-libs@1.3.0)(document-model@1.0.30)(localforage@1.10.0)(sequelize@6.37.1)(sqlite3@5.1.7):
+    resolution: {integrity: sha512-6igsndGaNxL8QdUUDmvMCJD0yMV1gt8K2vTExBjfpRZqjiysKZfBgd/fNaAnnJbAamhuk6YkF+Kow84u967I8w==}
     peerDependencies:
       '@prisma/client': 5.8.1
       document-model: ^1.0.29
-      document-model-libs: ^1.1.44
+      document-model-libs: ^1.1.51
       localforage: ^1.10.0
       sequelize: ^6.35.2
       sqlite3: ^5.1.7
     dependencies:
       '@prisma/client': 5.8.1(prisma@5.8.1)
       document-model: 1.0.30
-      document-model-libs: 1.1.51(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
+      document-model-libs: 1.3.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4467,22 +4471,22 @@ packages:
       - encoding
     dev: false
 
-  /document-model-libs@1.1.51(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-58SYxLfSklaImunLD/kcfXLpKrlNz1yIbIHYtBFto2SQmAhEoBpr8d1bMDbqX03Q7HrPHzRf0qnUfwlS5y22wA==}
+  /document-model-libs@1.3.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-fFGJ3/8D7OejWubb1nzHTVFtEzwaR9PbdLYnz+9CB8TgZkGyShH22VFKuUwTT2PI3NJHduUzM291WUjObDrHdw==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
       '@acaldas/graphql-codegen-typescript-validation-schema': 0.12.3(graphql@16.8.1)
       '@graphql-codegen/core': 4.0.2(graphql@16.8.1)
-      '@graphql-codegen/typescript': 4.0.5(graphql@16.8.1)
+      '@graphql-codegen/typescript': 4.0.6(graphql@16.8.1)
       '@internationalized/date': 3.5.2
       date-fns: 3.3.1
       document-model: 1.0.30
       jsonc-parser: 3.2.1
       jszip: 3.10.1
       react: 18.2.0
-      react-aria-components: 1.0.1(react-dom@18.2.0)(react@18.2.0)
+      react-aria-components: 1.1.1(react-dom@18.2.0)(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       tailwind-merge: 2.2.1
     transitivePeerDependencies:
@@ -7001,8 +7005,8 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
-  /react-aria-components@1.0.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-zlSx5r7Hu3kTg7hDEGNBwrtMNWJnJ81Zt1AXPJASAdO0dw6WUgSgQH2/ZgkDiKLlNmRFQhR8/gKN70rAJ+LZiQ==}
+  /react-aria-components@1.1.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-XdgqSbrlh9V1vJEvTwrnr+YGndQWYcVEAbN+Rx104o9g88cAAabclgetU2OUJ9Gbht6+gwnvnA0ksgXzVZog2Q==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
@@ -7011,14 +7015,18 @@ packages:
       '@internationalized/string': 3.2.1
       '@react-aria/focus': 3.16.2(react@18.2.0)
       '@react-aria/interactions': 3.21.1(react@18.2.0)
-      '@react-aria/toolbar': 3.0.0-beta.1(react@18.2.0)
+      '@react-aria/menu': 3.13.1(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/toolbar': 3.0.0-beta.3(react@18.2.0)
       '@react-aria/utils': 3.23.2(react@18.2.0)
+      '@react-stately/menu': 3.6.1(react@18.2.0)
       '@react-stately/table': 3.11.6(react@18.2.0)
+      '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/form': 3.7.2(react@18.2.0)
       '@react-types/grid': 3.2.4(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/table': 3.9.3(react@18.2.0)
       '@swc/helpers': 0.5.6
+      client-only: 0.0.1
       react: 18.2.0
       react-aria: 3.32.1(react-dom@18.2.0)(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
@@ -7550,6 +7558,7 @@ packages:
   /socks@2.7.3:
     resolution: {integrity: sha512-vfuYK48HXCTFD03G/1/zkIls3Ebr2YNa4qU9gHDZdblHLiqhJrJGkY3+0Nx0JpN9qBhJbVObc1CNciT1bIZJxw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
+    deprecated: please use 2.7.4 or 2.8.1 to fix package-lock issue
     requiresBuild: true
     dependencies:
       ip-address: 9.0.5
