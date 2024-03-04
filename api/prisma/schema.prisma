@@ -120,3 +120,101 @@ model Listener {
   filter   Json
   callInfo Json
 }
+
+// RWA Operational Data
+model RWAPortfolio {
+  id                       String                                   @id @default(uuid())
+  accounts                 RWAAccountOnPortfolio[]
+  principalLenderAccountId String
+  spvs                     RWAPortfolioSpvOnPortfolio[]
+  feeTypes                 RWAPortfolioServiceProviderOnPortfolio[]
+  fixedIncomeTypes         RWAPortfolioFixedIncomeTypeOnPortfolio[]
+  portfolio                RWAPortfolioAsset[]
+}
+
+model RWAPortfolioAccount {
+  id                          String                        @id @default(uuid())
+  reference                   String
+  label                       String
+  RWAAccountOnPortfolio       RWAAccountOnPortfolio[]
+  RWAPortfolioServiceProvider RWAPortfolioServiceProvider[]
+}
+
+enum RWAPortfolioAssetType {
+  CASH
+  FixedIncome
+}
+
+model RWAPortfolioAsset {
+  id                String                @id @default(uuid())
+  fixedIncomeTypeId String?
+  name              String?
+  spvId             String
+  maturity          DateTime?
+  purchaseDate      DateTime?
+  notional          Float?
+  purchasePrice     Float?
+  purchaseProceeds  Float?
+  totalDiscount     Float?
+  annualizedYield   Float?
+  ISIN              String?
+  CUSIP             String?
+  coupon            Float?
+  portfolio         RWAPortfolio          @relation(fields: [portfolioId], references: [id])
+  portfolioId       String
+  currency          String
+  assetType         RWAPortfolioAssetType
+}
+
+model RWAPortfolioFixedIncomeType {
+  id                                     String                                   @id
+  name                                   String
+  RWAPortfolioFixedIncomeTypeOnPortfolio RWAPortfolioFixedIncomeTypeOnPortfolio[]
+}
+
+model RWAPortfolioSpv {
+  id                                     String                                   @id
+  name                                   String
+  RWAPortfolioSpvOnPortfolio             RWAPortfolioSpvOnPortfolio[]
+  RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
+}
+
+model RWAPortfolioSpvOnPortfolio {
+  id          String          @id @default(uuid())
+  portfolioId String
+  spvId       String
+  portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id])
+  spv         RWAPortfolioSpv @relation(fields: [spvId], references: [id])
+}
+
+model RWAAccountOnPortfolio {
+  id          String              @id @default(uuid())
+  portfolioId String
+  accountId   String
+  portfolio   RWAPortfolio        @relation(fields: [portfolioId], references: [id])
+  account     RWAPortfolioAccount @relation(fields: [accountId], references: [id])
+}
+
+model RWAPortfolioServiceProvider {
+  id        String              @id
+  name      String
+  feeType   String
+  accountId String
+  account   RWAPortfolioAccount @relation(fields: [accountId], references: [id])
+}
+
+model RWAPortfolioServiceProviderOnPortfolio {
+  id          String          @id @default(uuid())
+  portfolioId String
+  spvId       String
+  portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id])
+  spv         RWAPortfolioSpv @relation(fields: [spvId], references: [id])
+}
+
+model RWAPortfolioFixedIncomeTypeOnPortfolio {
+  id            String                      @id
+  portfolioId   String
+  fixedIncomeId String
+  portfolio     RWAPortfolio                @relation(fields: [portfolioId], references: [id])
+  fixedIncome   RWAPortfolioFixedIncomeType @relation(fields: [fixedIncomeId], references: [id])
+}
