@@ -6,6 +6,8 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
+  IReceiver,
+  InternalTransmitter,
 } from 'document-drive';
 
 import { PrismaStorage } from 'document-drive/storage/prisma';
@@ -21,6 +23,8 @@ import {
 
 
 import { actions as rwaActions } from 'document-model-libs/dist/real-world-assets'
+import logger from '../../logger';
+import { init } from './listenerManager';
 
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
@@ -34,12 +38,18 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     new PrismaStorage(prisma),
   );
 
-  driveServer.initialize();
+  async function initialize() {
+    await driveServer.initialize();
+    await init(driveServer, prisma);
+  }
+
+  initialize();
 
   return {
     addDrive: async (args: DriveInput) => {
       try {
         await driveServer.addDrive(args);
+        await initialize();
       } catch (e) {
         throw new Error("Couldn't add drive");
       }
@@ -107,8 +117,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       if (!transmitter) {
         throw new Error(`Transmitter with id ${listenerId} not found`);
       }
-      const result = await transmitter.getStrands(since || undefined);
-      return result;
+      if (transmitter.getStrands) {
+        const result = await transmitter.getStrands(since || undefined);
+        return result;
+      }
+
+      return []
     },
 
     processAcknowledge: async (
