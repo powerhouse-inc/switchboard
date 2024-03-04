@@ -123,21 +123,27 @@ model Listener {
 
 // RWA Operational Data
 model RWAPortfolio {
-  id                       String                                   @id @default(uuid())
+  id                       String
+  driveId                  String
   accounts                 RWAAccountOnPortfolio[]
   principalLenderAccountId String
   spvs                     RWAPortfolioSpvOnPortfolio[]
   feeTypes                 RWAPortfolioServiceProviderOnPortfolio[]
   fixedIncomeTypes         RWAPortfolioFixedIncomeTypeOnPortfolio[]
   portfolio                RWAPortfolioAsset[]
+
+  @@id([id, driveId])
 }
 
 model RWAPortfolioAccount {
-  id                          String                        @id @default(uuid())
+  id                          String
+  driveId                     String
   reference                   String
-  label                       String
+  label                       String?
   RWAAccountOnPortfolio       RWAAccountOnPortfolio[]
   RWAPortfolioServiceProvider RWAPortfolioServiceProvider[]
+
+  @@id([id, driveId])
 }
 
 enum RWAPortfolioAssetType {
@@ -146,12 +152,13 @@ enum RWAPortfolioAssetType {
 }
 
 model RWAPortfolioAsset {
-  id                String                @id @default(uuid())
+  driveId           String
+  id                String                       @default(uuid())
   fixedIncomeTypeId String?
   name              String?
   spvId             String
-  maturity          DateTime?
-  purchaseDate      DateTime?
+  maturity          String?
+  purchaseDate      String?
   notional          Float?
   purchasePrice     Float?
   purchaseProceeds  Float?
@@ -160,61 +167,82 @@ model RWAPortfolioAsset {
   ISIN              String?
   CUSIP             String?
   coupon            Float?
-  portfolio         RWAPortfolio          @relation(fields: [portfolioId], references: [id])
+  portfolio         RWAPortfolio                 @relation(fields: [portfolioId, driveId], references: [id, driveId])
   portfolioId       String
-  currency          String
-  assetType         RWAPortfolioAssetType
+  currency          String?
+  assetType         String
+  fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, driveId], references: [id, driveId])
+
+  @@id([id, driveId])
 }
 
 model RWAPortfolioFixedIncomeType {
-  id                                     String                                   @id
+  id                                     String
+  driveId                                String
   name                                   String
   RWAPortfolioFixedIncomeTypeOnPortfolio RWAPortfolioFixedIncomeTypeOnPortfolio[]
+  RWAPortfolioAsset                      RWAPortfolioAsset[]
+
+  @@id([id, driveId])
 }
 
 model RWAPortfolioSpv {
-  id                                     String                                   @id
+  id                                     String
+  driveId                                String
   name                                   String
   RWAPortfolioSpvOnPortfolio             RWAPortfolioSpvOnPortfolio[]
   RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
+
+  @@id([id, driveId])
 }
 
 model RWAPortfolioSpvOnPortfolio {
-  id          String          @id @default(uuid())
+  driveId     String
   portfolioId String
   spvId       String
-  portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id])
-  spv         RWAPortfolioSpv @relation(fields: [spvId], references: [id])
+  portfolio   RWAPortfolio    @relation(fields: [portfolioId, driveId], references: [id, driveId])
+  spv         RWAPortfolioSpv @relation(fields: [spvId, driveId], references: [id, driveId])
+
+  @@id([spvId, portfolioId, driveId])
 }
 
 model RWAAccountOnPortfolio {
-  id          String              @id @default(uuid())
+  driveId     String
   portfolioId String
   accountId   String
-  portfolio   RWAPortfolio        @relation(fields: [portfolioId], references: [id])
-  account     RWAPortfolioAccount @relation(fields: [accountId], references: [id])
+  portfolio   RWAPortfolio        @relation(fields: [portfolioId, driveId], references: [id, driveId])
+  account     RWAPortfolioAccount @relation(fields: [accountId, driveId], references: [id, driveId])
+
+  @@id([accountId, portfolioId, driveId])
 }
 
 model RWAPortfolioServiceProvider {
-  id        String              @id
+  id        String              @default(uuid())
+  driveId   String
   name      String
   feeType   String
   accountId String
-  account   RWAPortfolioAccount @relation(fields: [accountId], references: [id])
+  account   RWAPortfolioAccount @relation(fields: [accountId, driveId], references: [id, driveId])
+
+  @@id([id, driveId])
 }
 
 model RWAPortfolioServiceProviderOnPortfolio {
-  id          String          @id @default(uuid())
+  driveId     String
   portfolioId String
   spvId       String
-  portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id])
-  spv         RWAPortfolioSpv @relation(fields: [spvId], references: [id])
+  portfolio   RWAPortfolio    @relation(fields: [portfolioId, driveId], references: [id, driveId])
+  spv         RWAPortfolioSpv @relation(fields: [spvId, driveId], references: [id, driveId])
+
+  @@id([spvId, portfolioId, driveId])
 }
 
 model RWAPortfolioFixedIncomeTypeOnPortfolio {
-  id            String                      @id
-  portfolioId   String
-  fixedIncomeId String
-  portfolio     RWAPortfolio                @relation(fields: [portfolioId], references: [id])
-  fixedIncome   RWAPortfolioFixedIncomeType @relation(fields: [fixedIncomeId], references: [id])
+  driveId           String
+  portfolioId       String
+  fixedIncomeTypeId String
+  portfolio         RWAPortfolio                @relation(fields: [portfolioId, driveId], references: [id, driveId])
+  fixedIncome       RWAPortfolioFixedIncomeType @relation(fields: [fixedIncomeTypeId, driveId], references: [id, driveId])
+
+  @@id([fixedIncomeTypeId, portfolioId, driveId])
 }
