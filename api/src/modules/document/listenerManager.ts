@@ -7,7 +7,6 @@ import { Prisma } from '@prisma/client';
 
 const listeners: Promise<any>[] = [];
 function loadModules(startPath: string, filter: string): Promise<any>[] {
-
     if (!fs.existsSync(startPath)) {
         console.log("no dir ", startPath);
         return [];
@@ -47,9 +46,7 @@ export async function init(driveServer: DocumentDriveServer, prisma: Prisma.Tran
     loadModules('./src/modules', 'listener.ts');
     const modules = await Promise.all(listeners);
     const drives = await driveServer.getDrives();
-    console.log(listeners)
     for (const { listener, transmit } of modules) {
-        console.log(listener, transmit);
         if (!listener || !transmit) {
             continue;
         }
@@ -60,14 +57,15 @@ export async function init(driveServer: DocumentDriveServer, prisma: Prisma.Tran
                 await registerListener(driveServer, driveId, listener);
             }
 
-            const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId)) as InternalTransmitter;
-            transmitter.setReceiver({
-                transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
-                    transmit(strands, prisma)
-                }
-            })
+            const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId));
+            if (transmitter instanceof InternalTransmitter) {
+                transmitter.setReceiver({
+                    transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
+                        transmit(strands, prisma)
+                    }
+                })
+
+            }
         }
     }
 }
-
-
