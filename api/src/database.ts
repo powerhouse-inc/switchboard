@@ -1,7 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
-import { getUserCrud, getSessionCrud, getChallengeCrud } from './modules';
+import { getUserCrud, getSessionCrud, getChallengeCrud, getRWACRUD } from './modules';
 import { getDocumentDriveCRUD } from './modules/document';
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
@@ -52,6 +52,7 @@ const prisma = prismaBase.$extends({
     session: getSessionCrud(prismaBase),
     challenge: getChallengeCrud(prismaBase),
     document: getDocumentDriveCRUD(prismaBase),
+    rWAPortfolio: getRWACRUD(prismaBase),
   },
 });
 

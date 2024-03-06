@@ -1,29 +1,36 @@
 import { Prisma } from "@prisma/client";
 import { InternalTransmitterUpdate } from "document-drive";
-import logger from "../../logger";
-import { DocumentDriveDocument, DocumentDriveState, ListenerFilter } from "document-model-libs/document-drive";
-import { RealWorldAssets } from "document-model-libs/document-models";
-
-
-type RWA = typeof RealWorldAssets.Document
-const updateOperationalData = async (prisma: Prisma.TransactionClient, data: any) => {
-
+import { ListenerFilter } from "document-model-libs/document-drive";
+import { RealWorldAssetsDocument } from "document-model-libs/real-world-assets"
+export interface IReceiverOptions {
+  listenerId: string;
+  label: string;
+  block: boolean;
+  filter: ListenerFilter;
 }
 
-const updateAnalyticalData = async (prisma: Prisma.TransactionClient, data: any) => {
-
+export const listener: IReceiverOptions = {
+  listenerId: "real-world-assets",
+  filter: {
+    branch: ["main"],
+    documentId: ["*"],
+    documentType: ["makerdao/rwa-portfolio"],
+    scope: ["*"],
+  },
+  block: false,
+  label: "real-world-assets",
 }
 
-export async function transmit(strands: InternalTransmitterUpdate[], prisma: Prisma.TransactionClient) {
 
-
+export async function transmit(strands: InternalTransmitterUpdate<RealWorldAssetsDocument, "global">[], prisma: Prisma.TransactionClient) {
+  //todo: work with strands instead of state
   for (const strand of strands) {
-
     const { transactions, principalLenderAccountId, fixedIncomeTypes, spvs, accounts, feeTypes, portfolio } = strand.state;
     const driveId = strand.driveId;
     const documentId = strand.documentId;
 
-    // console.log(portfolio)
+    //todo: check whether all operations can be applied otherwise delete database and insert everything new
+
 
     // create portfolio document
     await prisma.rWAPortfolio.upsert({
@@ -40,9 +47,7 @@ export async function transmit(strands: InternalTransmitterUpdate[], prisma: Pri
       },
     });
 
-
-
-    // // create spvs
+    // create spvs
     await prisma.rWAPortfolioSpv.createMany({
       data: spvs.map((spv) => ({ ...spv, driveId: driveId })),
       skipDuplicates: true,
@@ -97,8 +102,6 @@ export async function transmit(strands: InternalTransmitterUpdate[], prisma: Pri
       skipDuplicates: true,
     });
 
-
-
     // fetch portfolio with everything
     const portfolioEntity = await prisma.rWAPortfolio.findUnique({
       where: {
@@ -131,25 +134,6 @@ export async function transmit(strands: InternalTransmitterUpdate[], prisma: Pri
     }
 
     console.log(data);
-    // console.log(portfolioEntity.);
   }
 }
 
-export interface IReceiverOptions {
-  listenerId: string;
-  label: string;
-  block: boolean;
-  filter: ListenerFilter;
-}
-
-export const listener: IReceiverOptions = {
-  listenerId: "real-world-assets",
-  filter: {
-    branch: ["main"],
-    documentId: ["*"],
-    documentType: ["makerdao/rwa-portfolio"],
-    scope: ["*"],
-  },
-  block: false,
-  label: "real-world-assets",
-}
