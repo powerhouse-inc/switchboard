@@ -435,7 +435,7 @@ type Query {
   coreUnits: [CoreUnit]
   document(id: String!): Document
   drive: DocumentDriveState
-  rwaPortfolio(id: String!): RealWorldAssets
+  rwaPortfolios(filter: filterInput): [RealWorldAssetsState]
   system: SwitchboardDrive
 }
 
@@ -697,4 +697,8 @@ type Vesting {
   date: String!
   key: String!
   vested: Boolean!
+}
+
+input filterInput {
+  assetId: String
 }

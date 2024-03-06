@@ -100,6 +100,9 @@ export interface NexusGenInputs {
   SetStartInput: { // input type
     start: string; // String!
   }
+  filterInput: { // input type
+    assetId?: string | null; // String
+  }
 }
 
 export interface NexusGenEnums {
@@ -907,7 +910,7 @@ export interface NexusGenFieldTypes {
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     document: NexusGenRootTypes['Document'] | null; // Document
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
-    rwaPortfolio: NexusGenRootTypes['RealWorldAssets'] | null; // RealWorldAssets
+    rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsState'] | null> | null; // [RealWorldAssetsState]
     system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
   }
   RealWorldAssets: { // field return type
@@ -1409,7 +1412,7 @@ export interface NexusGenFieldTypeNames {
     coreUnits: 'CoreUnit'
     document: 'Document'
     drive: 'DocumentDriveState'
-    rwaPortfolio: 'RealWorldAssets'
+    rwaPortfolios: 'RealWorldAssetsState'
     system: 'SwitchboardDrive'
   }
   RealWorldAssets: { // field return type name
@@ -1635,8 +1638,8 @@ export interface NexusGenArgTypes {
     document: { // args
       id: string; // String!
     }
-    rwaPortfolio: { // args
-      id: string; // String!
+    rwaPortfolios: { // args
+      filter?: NexusGenInputs['filterInput'] | null; // filterInput
     }
   }
   Sync: {

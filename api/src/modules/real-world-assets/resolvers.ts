@@ -1,6 +1,7 @@
-import { nonNull, objectType, queryField, unionType } from 'nexus';
+import { arg, inputObjectType, list, nonNull, objectType, queryField, stringArg, unionType } from 'nexus';
 import { documentModelInterface } from '../document';
 import { GQLDateBase } from '../system';
+
 
 export const Account = objectType({
   name: 'Account',
@@ -243,13 +244,26 @@ export const TransactionFee = objectType({
   },
 });
 
-export const rwaQuery = queryField('rwaPortfolio', {
-  type: RealWorldAssetsDocument,
-  args: {
-    id: nonNull('String'),
-  },
-  resolve: async (_root, { id }, ctx) => {
-    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
+// export const filterInput = inputObjectType({
+//   name: 'filterInput',
+//   definition(t) {
+//     t.list.string("assetId_in");
+//   }
+// });
+
+export const rwaQuery = queryField('rwaPortfolios', {
+  type: list(RealWorldAssetsState),
+  // args: {
+  //   filter: arg(
+  //     {
+  //       type: filterInput,
+  //     }
+  //   ),
+  // },
+  resolve: async (_root, args, ctx) => {
+    console.log(args);
+    const doc = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
     return doc;
   },
 });
+
