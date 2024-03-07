@@ -1,4 +1,7 @@
-export function transformPortfolioToState(portfolios) {
+import { RWAPortfolio } from "@prisma/client";
+
+export function transformPortfolioToState(portfolios: RWAPortfolio[]) {
+    console.log(portfolios);
     return portfolios.map(portfolio => ({
         id: portfolio.id,
         name: portfolio.name,
