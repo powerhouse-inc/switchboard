@@ -100,9 +100,6 @@ export interface NexusGenInputs {
   SetStartInput: { // input type
     start: string; // String!
   }
-  filterInput: { // input type
-    assetId?: string | null; // String
-  }
 }
 
 export interface NexusGenEnums {
@@ -1637,9 +1634,6 @@ export interface NexusGenArgTypes {
     }
     document: { // args
       id: string; // String!
-    }
-    rwaPortfolios: { // args
-      filter?: NexusGenInputs['filterInput'] | null; // filterInput
     }
   }
   Sync: {
