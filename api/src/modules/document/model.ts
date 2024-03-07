@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 import {
   DocumentDriveServer,
   DriveInput,
@@ -23,10 +23,11 @@ import {
 
 
 import { actions as rwaActions } from 'document-model-libs/dist/real-world-assets'
-import logger from '../../logger';
+
 import { init } from './listenerManager';
+import { getChildLogger } from '../../logger';
 
-
+const logger = getChildLogger({ msgPrefix: 'Document Model' });
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
@@ -35,7 +36,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
   const driveServer = new DocumentDriveServer(
     documentModels,
-    new PrismaStorage(prisma),
+    new PrismaStorage(prisma as PrismaClient),
   );
 
   async function initialize() {
@@ -89,6 +90,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       documentId?: string,
     ) => {
       if (!documentId) {
+        logger.info('adding drive operations')
         const result = await driveServer.addDriveOperations(
           driveId,
           operations,
@@ -96,6 +98,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
         return result;
       }
+      logger.info('adding operations to document')
       const result = await driveServer.addOperations(
         driveId,
         documentId,

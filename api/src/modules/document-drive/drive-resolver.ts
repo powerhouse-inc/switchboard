@@ -16,7 +16,7 @@ import { OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import { getChildLogger } from '../../logger';
 
-const logger = getChildLogger({ msgPrefix: 'Drive' });
+const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
 export const Node = objectType({
   name: 'Node',
@@ -275,6 +275,7 @@ export const pushUpdates = mutationField('pushUpdates', {
     strands: list(nonNull(InputStrandUpdate)),
   },
   resolve: async (_parent, { strands }, ctx) => {
+    logger.info('pushUpdates')
     if (!strands || strands?.length === 0) return [];
 
     const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {

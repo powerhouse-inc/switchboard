@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 
 export declare interface LoggerConfig {
   moduleFilter: string[];
+  debugModules: [],
   prefixFilter: string[];
   logLevel: PinoLevel;
   dbLogLevel: Prisma.LogLevel[];
