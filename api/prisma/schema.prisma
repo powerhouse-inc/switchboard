@@ -123,27 +123,36 @@ model Listener {
 
 // RWA Operational Data
 model RWAPortfolio {
-  id                       String
-  driveId                  String
-  accounts                 RWAAccountOnPortfolio[]
-  principalLenderAccountId String
-  spvs                     RWAPortfolioSpvOnPortfolio[]
-  feeTypes                 RWAPortfolioServiceProviderOnPortfolio[]
-  fixedIncomeTypes         RWAPortfolioFixedIncomeTypeOnPortfolio[]
-  portfolio                RWAPortfolioAsset[]
+  id                                   String                                   @id @default(uuid())
+  driveId                              String
+  documentId                           String
+  accounts                             RWAAccountOnPortfolio[]
+  principalLenderAccountId             String
+  spvs                                 RWAPortfolioSpvOnPortfolio[]
+  feeTypes                             RWAPortfolioServiceProviderOnPortfolio[]
+  fixedIncomeTypes                     RWAPortfolioFixedIncomeTypeOnPortfolio[]
+  portfolio                            RWAPortfolioAsset[]
+  RWAPortfolioAccount                  RWAPortfolioAccount[]
+  RWAPortfolioFixedIncomeType          RWAPortfolioFixedIncomeType[]
+  RWAPortfolioSpv                      RWAPortfolioSpv[]
+  RWAPortfolioServiceProvider          RWAPortfolioServiceProvider[]
+  RWABaseTransaction                   RWABaseTransaction[]
+  RWAGroupTransaction                  RWAGroupTransaction[]
+  RWABaseTransactionOnGroupTransaction RWABaseTransactionOnGroupTransaction[]
 
-  @@id([id, driveId])
+  @@unique([driveId, documentId])
 }
 
 model RWAPortfolioAccount {
-  id                          String
-  driveId                     String
+  id                          String                        @default(uuid())
+  portfolioId                 String
+  portfolio                   RWAPortfolio                  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   reference                   String
   label                       String?
   RWAAccountOnPortfolio       RWAAccountOnPortfolio[]
   RWAPortfolioServiceProvider RWAPortfolioServiceProvider[]
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }
 
 enum RWAPortfolioAssetType {
@@ -152,9 +161,12 @@ enum RWAPortfolioAssetType {
 }
 
 model RWAPortfolioAsset {
-  driveId           String
   id                String                       @default(uuid())
+  assetRefId        String
+  portfolioId       String
+  portfolio         RWAPortfolio                 @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   fixedIncomeTypeId String?
+  fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
   name              String?
   spvId             String
   maturity          String?
@@ -167,89 +179,88 @@ model RWAPortfolioAsset {
   ISIN              String?
   CUSIP             String?
   coupon            Float?
-  portfolio         RWAPortfolio                 @relation(fields: [portfolioId, driveId], references: [id, driveId])
-  portfolioId       String
-  currency          String?
-  assetType         String
-  fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, driveId], references: [id, driveId])
 
-  @@id([id, driveId])
+  currency  String?
+  assetType String
+
+  @@id([id, portfolioId]) // TODO: Change to id,
+  @@unique([assetRefId, portfolioId])
 }
 
 model RWAPortfolioFixedIncomeType {
-  id                                     String
-  driveId                                String
+  id                                     String                                   @default(uuid())
+  portfolioId                            String
+  portfolio                              RWAPortfolio                             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   name                                   String
   RWAPortfolioFixedIncomeTypeOnPortfolio RWAPortfolioFixedIncomeTypeOnPortfolio[]
   RWAPortfolioAsset                      RWAPortfolioAsset[]
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }
 
 model RWAPortfolioSpv {
-  id                                     String
-  driveId                                String
+  id                                     String                                   @default(uuid())
+  portfolioId                            String
+  portfolio                              RWAPortfolio                             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   name                                   String
   RWAPortfolioSpvOnPortfolio             RWAPortfolioSpvOnPortfolio[]
   RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }
 
 model RWAPortfolioSpvOnPortfolio {
-  driveId     String
   portfolioId String
   spvId       String
-  portfolio   RWAPortfolio    @relation(fields: [portfolioId, driveId], references: [id, driveId])
-  spv         RWAPortfolioSpv @relation(fields: [spvId, driveId], references: [id, driveId])
+  portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  spv         RWAPortfolioSpv @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
 
-  @@id([spvId, portfolioId, driveId])
+  @@id([spvId, portfolioId])
 }
 
 model RWAAccountOnPortfolio {
-  driveId     String
   portfolioId String
   accountId   String
-  portfolio   RWAPortfolio        @relation(fields: [portfolioId, driveId], references: [id, driveId])
-  account     RWAPortfolioAccount @relation(fields: [accountId, driveId], references: [id, driveId])
+  portfolio   RWAPortfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  account     RWAPortfolioAccount @relation(fields: [accountId, portfolioId], references: [id, portfolioId])
 
-  @@id([accountId, portfolioId, driveId])
+  @@id([accountId, portfolioId])
 }
 
 model RWAPortfolioServiceProvider {
-  id        String              @default(uuid())
-  driveId   String
-  name      String
-  feeType   String
-  accountId String
-  account   RWAPortfolioAccount @relation(fields: [accountId, driveId], references: [id, driveId])
+  id          String              @default(uuid())
+  portfolioId String
+  portfolio   RWAPortfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  name        String
+  feeType     String
+  accountId   String
+  account     RWAPortfolioAccount @relation(fields: [accountId, portfolioId], references: [id, portfolioId])
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }
 
 model RWAPortfolioServiceProviderOnPortfolio {
-  driveId     String
   portfolioId String
   spvId       String
-  portfolio   RWAPortfolio    @relation(fields: [portfolioId, driveId], references: [id, driveId])
-  spv         RWAPortfolioSpv @relation(fields: [spvId, driveId], references: [id, driveId])
+  portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  spv         RWAPortfolioSpv @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
 
-  @@id([spvId, portfolioId, driveId])
+  @@id([spvId, portfolioId])
 }
 
 model RWAPortfolioFixedIncomeTypeOnPortfolio {
-  driveId           String
   portfolioId       String
   fixedIncomeTypeId String
-  portfolio         RWAPortfolio                @relation(fields: [portfolioId, driveId], references: [id, driveId])
-  fixedIncome       RWAPortfolioFixedIncomeType @relation(fields: [fixedIncomeTypeId, driveId], references: [id, driveId])
+  portfolio         RWAPortfolio                @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  fixedIncome       RWAPortfolioFixedIncomeType @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
 
-  @@id([fixedIncomeTypeId, portfolioId, driveId])
+  @@id([fixedIncomeTypeId, portfolioId])
 }
 
 model RWABaseTransaction {
-  driveId                 String
   id                      String
+  portfolioId             String
+  portfolio               RWAPortfolio                           @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   assetId                 String
   amount                  Float
   entryTime               DateTime?
@@ -262,31 +273,32 @@ model RWABaseTransaction {
   fixedIncomeTransactions RWAGroupTransaction[]                  @relation(name: "fixedIncomeTransaction")
   feeTransactions         RWABaseTransactionOnGroupTransaction[]
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }
 
 model RWAGroupTransaction {
-  driveId                String
   id                     String
   portfolioId            String
+  portfolio              RWAPortfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   type                   String
-  cashTransaction        RWABaseTransaction? @relation(name: "cashTransaction", fields: [cashTransactionId, driveId], references: [id, driveId])
+  cashTransaction        RWABaseTransaction? @relation(name: "cashTransaction", fields: [cashTransactionId, portfolioId], references: [id, portfolioId])
   cashTransactionId      String?
-  fixedIncomeTransaction RWABaseTransaction? @relation(name: "fixedIncomeTransaction", fields: [fixedTransactionId, driveId], references: [id, driveId])
+  fixedIncomeTransaction RWABaseTransaction? @relation(name: "fixedIncomeTransaction", fields: [fixedTransactionId, portfolioId], references: [id, portfolioId])
   fixedTransactionId     String?
 
   feeTransactions RWABaseTransactionOnGroupTransaction[]
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }
 
 model RWABaseTransactionOnGroupTransaction {
-  driveId            String
   id                 String              @default(uuid())
+  portfolioId        String
+  portfolio          RWAPortfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   groupTransactionId String
   baseTransactionId  String
-  groupTransaction   RWAGroupTransaction @relation(fields: [groupTransactionId, driveId], references: [id, driveId])
-  baseTransaction    RWABaseTransaction  @relation(fields: [baseTransactionId, driveId], references: [id, driveId])
+  groupTransaction   RWAGroupTransaction @relation(fields: [groupTransactionId, portfolioId], references: [id, portfolioId])
+  baseTransaction    RWABaseTransaction  @relation(fields: [baseTransactionId, portfolioId], references: [id, portfolioId])
 
-  @@id([id, driveId])
+  @@id([id, portfolioId])
 }

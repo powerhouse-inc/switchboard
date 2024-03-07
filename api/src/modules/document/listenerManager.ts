@@ -4,6 +4,9 @@ import { DocumentDriveServer, IReceiver, InternalTransmitter, InternalTransmitte
 import { Listener, DocumentDriveDocument } from 'document-model-libs/document-drive';
 import { Document, OperationScope } from "document-model/document"
 import { Prisma } from '@prisma/client';
+import { getChildLogger } from '../../logger';
+
+const logger = getChildLogger({ msgPrefix: 'Listener Manager' });
 
 const listeners: Promise<any>[] = [];
 function loadModules(startPath: string, filter: string): Promise<any>[] {
@@ -19,6 +22,7 @@ function loadModules(startPath: string, filter: string): Promise<any>[] {
         if (stat.isDirectory()) {
             loadModules(filename, filter); //recursive
         } else if (filename.endsWith(filter)) {
+            logger.info(`Loading listener from ${filename}`);
             listeners.push(import(filename));
         };
     };
@@ -40,6 +44,8 @@ async function registerListener(driveServer: DocumentDriveServer, driveId: strin
         block: false,
         label: listener.label!,
     })
+
+    logger.info(`Listener ${listener.label}(${listener.listenerId}) registered for drive ${driveId}`);
 }
 
 export async function init(driveServer: DocumentDriveServer, prisma: Prisma.TransactionClient) {
@@ -59,12 +65,12 @@ export async function init(driveServer: DocumentDriveServer, prisma: Prisma.Tran
 
             const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId));
             if (transmitter instanceof InternalTransmitter) {
+                logger.info(`Setting receiver for ${listener.listenerId}`);
                 transmitter.setReceiver({
                     transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
                         transmit(strands, prisma)
                     }
                 })
-
             }
         }
     }
