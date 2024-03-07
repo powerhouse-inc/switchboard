@@ -10,7 +10,7 @@ export function getRWACRUD(prisma: Prisma.TransactionClient) {
 
       try {
         const portfolios = await prisma.rWAPortfolio.findMany({
-          where: newWhere, include: {
+          include: {
             spvs: {
               include: { spv: true }
             },
