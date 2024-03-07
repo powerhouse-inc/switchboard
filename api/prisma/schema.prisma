@@ -248,34 +248,41 @@ model RWAPortfolioFixedIncomeTypeOnPortfolio {
 }
 
 model RWABaseTransaction {
-  id                      String                                 @id @default(uuid())
-  assetId                 String
-  amount                  Float
-  entryTime               DateTime
-  tradeTime               DateTime
-  settlementTime          DateTime
-  txRef                   String
-  accountId               String
-  counterPartyAccountId   String
-  cashTransactions        RWAGroupTransaction[]                  @relation(name: "cashTransactions")
-  fixedIncomeTransactions RWAGroupTransaction[]                  @relation(name: "fixedIncomeTransactions")
-  feeTransactions         RWABaseTransactionOnGroupTransaction[] @relation(name: "feeTransactions")
+  driveId               String
+  id                    String
+  assetId               String
+  amount                Float
+  entryTime             DateTime
+  tradeTime             DateTime
+  settlementTime        DateTime
+  txRef                 String
+  accountId             String
+  counterPartyAccountId String
+  cashTransactions      RWAGroupTransaction[]
+  feeTransactions       RWABaseTransactionOnGroupTransaction[]
+
+  @@id([id, driveId])
 }
 
 model RWAGroupTransaction {
-  id                       String                                 @id @default(uuid())
-  type                     String
-  cashTransaction          RWABaseTransaction?                    @relation(name: "cashTransactions", fields: [cashTransactionId], references: [id])
-  cashTransactionId        String?
-  fixedIncomeTransaction   RWABaseTransaction?                    @relation(name: "fixedIncomeTransactions", fields: [fixedIncomeTransactionId], references: [id])
-  fixedIncomeTransactionId String?
-  feeTransactions          RWABaseTransactionOnGroupTransaction[] @relation(name: "feeTransactions")
+  driveId           String
+  id                String
+  portfolioId       String
+  type              String
+  baseTransaction   RWABaseTransaction?                    @relation(fields: [baseTransactionId, driveId], references: [id, driveId])
+  baseTransactionId String?
+  feeTransactions   RWABaseTransactionOnGroupTransaction[]
+
+  @@id([id, driveId])
 }
 
 model RWABaseTransactionOnGroupTransaction {
-  id                 String              @id @default(uuid())
+  driveId            String
+  id                 String              @default(uuid())
   groupTransactionId String
   baseTransactionId  String
-  groupTransaction   RWAGroupTransaction @relation(name: "feeTransactions", fields: [groupTransactionId], references: [id])
-  baseTransaction    RWABaseTransaction  @relation(name: "feeTransactions", fields: [baseTransactionId], references: [id])
+  groupTransaction   RWAGroupTransaction @relation(fields: [groupTransactionId, driveId], references: [id, driveId])
+  baseTransaction    RWABaseTransaction  @relation(fields: [baseTransactionId, driveId], references: [id, driveId])
+
+  @@id([id, driveId])
 }
