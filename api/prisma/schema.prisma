@@ -248,30 +248,34 @@ model RWAPortfolioFixedIncomeTypeOnPortfolio {
 }
 
 model RWABaseTransaction {
-  driveId               String
-  id                    String
-  assetId               String
-  amount                Float
-  entryTime             DateTime
-  tradeTime             DateTime
-  settlementTime        DateTime
-  txRef                 String
-  accountId             String
-  counterPartyAccountId String
-  cashTransactions      RWAGroupTransaction[]
-  feeTransactions       RWABaseTransactionOnGroupTransaction[]
+  driveId                 String
+  id                      String
+  assetId                 String
+  amount                  Float
+  entryTime               DateTime?
+  tradeTime               DateTime?
+  settlementTime          DateTime?
+  txRef                   String
+  accountId               String?
+  counterPartyAccountId   String?
+  cashTransactions        RWAGroupTransaction[]                  @relation(name: "cashTransaction")
+  fixedIncomeTransactions RWAGroupTransaction[]                  @relation(name: "fixedIncomeTransaction")
+  feeTransactions         RWABaseTransactionOnGroupTransaction[]
 
   @@id([id, driveId])
 }
 
 model RWAGroupTransaction {
-  driveId           String
-  id                String
-  portfolioId       String
-  type              String
-  baseTransaction   RWABaseTransaction?                    @relation(fields: [baseTransactionId, driveId], references: [id, driveId])
-  baseTransactionId String?
-  feeTransactions   RWABaseTransactionOnGroupTransaction[]
+  driveId                String
+  id                     String
+  portfolioId            String
+  type                   String
+  cashTransaction        RWABaseTransaction? @relation(name: "cashTransaction", fields: [cashTransactionId, driveId], references: [id, driveId])
+  cashTransactionId      String?
+  fixedIncomeTransaction RWABaseTransaction? @relation(name: "fixedIncomeTransaction", fields: [fixedTransactionId, driveId], references: [id, driveId])
+  fixedTransactionId     String?
+
+  feeTransactions RWABaseTransactionOnGroupTransaction[]
 
   @@id([id, driveId])
 }
