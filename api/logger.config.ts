@@ -3,7 +3,6 @@ import { LoggerConfig } from './src/types';
 export const defaultLoggerConfig: LoggerConfig = {
   // Filter by module name
   moduleFilter: [],
-  debugModules:  [],
   // Filter by log prefix, e.g. adding
   // `pref` to filter is going to correspond to showing `[PREF] ` logs
   prefixFilter: [],
@@ -17,8 +16,7 @@ export const defaultLoggerConfig: LoggerConfig = {
 
 export const debugLogConfig: LoggerConfig = {
   // Filter by module name
-  moduleFilter: [],
-  debugModules:  [],
+  moduleFilter: ["RWA Internal Listener"],
   // Filter by log prefix, e.g. adding
   // `pref` to filter is going to correspond to showing `[PERF]` logs
   prefixFilter: [],
