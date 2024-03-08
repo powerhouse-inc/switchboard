@@ -62,15 +62,9 @@ async function doSurgicalDriveUpdate(strand: InternalTransmitterUpdate<DocumentD
             case "ADD_FILE":
                 const addFileInput = operation.input as AddFileInput;
                 if (addFileInput.documentType === "makerdao/rwa-portfolio") {
-                    const result = await prisma.rWAPortfolio.create({
-                        data: {
-                            driveId: strand.driveId,
-                            documentId: addFileInput.id,
-                            principalLenderAccountId: "",
-                        }
-                    })
-                    logger.debug({ PortfolioID: result.id })
-                    logger.debug({ msg: "Adding file", operation });
+                    logger.debug({ msg: `Adding ${addFileInput.documentType}`, operation });
+                    const document = utils.createDocument(addFileInput);
+                    await rebuildRwaPortfolio(strand.driveId, addFileInput.id, document.state.global, prisma);
                 }
                 break;
             case "DELETE_NODE":
@@ -86,7 +80,6 @@ async function doSurgicalDriveUpdate(strand: InternalTransmitterUpdate<DocumentD
                     }
                 })
                 logger.debug(`Removed ${result.count} portfolios`);
-                logger.debug({ msg: "Removing file", operation });
                 break;
             default:
                 logger.debug(`Ignoring operation ${operation.type}`);
@@ -173,7 +166,6 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
 
 
         // Create and Link Fee TX Entities
-        console.log(transaction)
     }
 
     // add relationships
@@ -215,6 +207,7 @@ async function rwaPortfolioExists(driveId: string, documentId: string, prisma: P
 
 const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => Promise<void>> = {
     "CREATE_FIXED_INCOME_ASSET": async (input: CreateFixedIncomeAssetInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Creating fixed income asset", input });
         await prisma.rWAPortfolioAsset.create({
             data: {
                 ...input,
@@ -225,8 +218,22 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
 
         });
 
-        logger.debug({ msg: "Creating fixed income asset", input });
+
     },
+    "EDIT_FIXED_INCOME_ASSET": async (input: EditFixedIncomeAssetInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Editing fixed income asset", input });
+        await prisma.rWAPortfolioAsset.update({
+            where: {
+                assetRefId_portfolioId: {
+                    assetRefId: input.id,
+                    portfolioId: portfolio.id
+                }
+            },
+            data: {
+                ...input,
+            }
+        });
+    }
 }
 
 async function handleRwaDocumentStrand(strand: InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, prisma: Prisma.TransactionClient) {
@@ -238,7 +245,6 @@ async function handleRwaDocumentStrand(strand: InternalTransmitterUpdate<RealWor
 
 
     if (strandStartsFromOpZero(strand) || !allOperationsAreSurgical(strand, surgicalOperations)) {
-        // await deleteDriveState(strand.state, prisma);
         await rebuildRwaPortfolio(strand.driveId, strand.documentId, strand.state, prisma);
     } else {
         const portfolio = await prisma.rWAPortfolio.findFirst({

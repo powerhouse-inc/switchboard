@@ -261,7 +261,6 @@ export const rwaQuery = queryField('rwaPortfolios', {
   //   ),
   // },
   resolve: async (_root, args, ctx) => {
-    console.log(args);
     const doc = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
     return doc;
   },

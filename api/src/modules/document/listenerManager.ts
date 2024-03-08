@@ -6,12 +6,12 @@ import { Document, OperationScope } from "document-model/document"
 import { Prisma } from '@prisma/client';
 import { getChildLogger } from '../../logger';
 
-const logger = getChildLogger({ msgPrefix: 'Listener Manager' });
+const logger = getChildLogger({ msgPrefix: 'Listener Manager' }, { module: 'Listener Manager' });
 
 const listeners: Promise<any>[] = [];
 function loadModules(startPath: string, filter: string): Promise<any>[] {
     if (!fs.existsSync(startPath)) {
-        console.log("no dir ", startPath);
+        logger.error(`Directory not found: ${startPath}`);
         return [];
     }
 
