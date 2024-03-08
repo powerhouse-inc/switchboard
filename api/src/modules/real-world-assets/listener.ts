@@ -5,7 +5,7 @@ import { CashGroupTransactionType, CreateFixedIncomeAssetInput, EditFixedIncomeA
 import { getChildLogger } from "../../logger";
 import { Action } from "document-model/document";
 
-const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' });
+const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
 export interface IReceiverOptions {
     listenerId: string;
     label: string;
@@ -27,7 +27,7 @@ export const listener: IReceiverOptions = {
 
 
 export async function transmit(strands: InternalTransmitterUpdate<RealWorldAssetsDocument | DocumentDriveDocument, "global">[], prisma: Prisma.TransactionClient) {
-    // logger.info(strands);
+    // logger.debug(strands);
     for (const strand of strands) {
 
         if (strand.documentId === "") {
@@ -35,16 +35,13 @@ export async function transmit(strands: InternalTransmitterUpdate<RealWorldAsset
         } else {
             await handleRwaDocumentStrand(strand as InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, prisma);
         }
-
-
-
     }
 }
 
 
 
 async function handleDriveStrand(strand: InternalTransmitterUpdate<DocumentDriveDocument, "global">, prisma: Prisma.TransactionClient) {
-    logger.info("Received strand for drive");
+    logger.debug("Received strand for drive");
     if (strandStartsFromOpZero(strand)) {
         await deleteDriveState(strand.state, prisma);
     }
@@ -54,13 +51,13 @@ async function handleDriveStrand(strand: InternalTransmitterUpdate<DocumentDrive
 
 function strandStartsFromOpZero(strand: InternalTransmitterUpdate<DocumentDriveDocument | RealWorldAssetsDocument, "global">) {
     const resetNeeded = strand.operations.length > 0 && strand.operations[0].index === 0;
-    logger.info(`Reset needed: ${resetNeeded}`);
+    logger.debug(`Reset needed: ${resetNeeded}`);
     return resetNeeded;
 }
 async function doSurgicalDriveUpdate(strand: InternalTransmitterUpdate<DocumentDriveDocument, "global">, prisma: Prisma.TransactionClient) {
-    logger.info("Doing surgical drive update");
+    logger.debug("Doing surgical drive update");
     for (const operation of strand.operations) {
-        logger.info(`Operation: ${operation.type}`);
+        logger.debug(`Operation: ${operation.type}`);
         switch (operation.type) {
             case "ADD_FILE":
                 const addFileInput = operation.input as AddFileInput;
@@ -72,14 +69,14 @@ async function doSurgicalDriveUpdate(strand: InternalTransmitterUpdate<DocumentD
                             principalLenderAccountId: "",
                         }
                     })
-                    logger.info({ PortfolioID: result.id })
-                    logger.info({ msg: "Adding file", operation });
+                    logger.debug({ PortfolioID: result.id })
+                    logger.debug({ msg: "Adding file", operation });
                 }
                 break;
             case "DELETE_NODE":
                 const deleteNodeInput = operation.input as DeleteNodeInput;
                 const driveId = strand.driveId;
-                logger.info(`Removing file ${deleteNodeInput.id} from ${driveId}`);
+                logger.debug(`Removing file ${deleteNodeInput.id} from ${driveId}`);
                 const result = await prisma.rWAPortfolio.deleteMany({
                     where: {
                         AND: {
@@ -88,18 +85,18 @@ async function doSurgicalDriveUpdate(strand: InternalTransmitterUpdate<DocumentD
                         }
                     }
                 })
-                logger.info(`Removed ${result.count} portfolios`);
-                logger.info({ msg: "Removing file", operation });
+                logger.debug(`Removed ${result.count} portfolios`);
+                logger.debug({ msg: "Removing file", operation });
                 break;
             default:
-                logger.info(`Ignoring operation ${operation.type}`);
+                logger.debug(`Ignoring operation ${operation.type}`);
                 break;
         }
     }
 }
 
 async function deleteDriveState(state: DocumentDriveState, prisma: Prisma.TransactionClient) {
-    logger.info("Deleting rwa read model");
+    logger.debug("Deleting rwa read model");
     await prisma.rWAPortfolio.deleteMany({
         where: {
             driveId: state.id
@@ -228,14 +225,14 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
 
         });
 
-        logger.info({ msg: "Creating fixed income asset", input });
+        logger.debug({ msg: "Creating fixed income asset", input });
     },
 }
 
 async function handleRwaDocumentStrand(strand: InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, prisma: Prisma.TransactionClient) {
-    logger.info(`Received strand for document ${strand.documentId} with operations: ${strand.operations.map(op => op.type).join(", ")}`);
+    logger.debug(`Received strand for document ${strand.documentId} with operations: ${strand.operations.map(op => op.type).join(", ")}`);
     if (!await rwaPortfolioExists(strand.driveId, strand.documentId, prisma)) {
-        logger.info(`Skipping strand for document ${strand.documentId} as it doesn't exist in the read model`);
+        logger.debug(`Skipping strand for document ${strand.documentId} as it doesn't exist in the read model`);
         return;
     }
 
@@ -261,15 +258,14 @@ async function handleRwaDocumentStrand(strand: InternalTransmitterUpdate<RealWor
     }
 }
 
-function doSurgicalRwaPortfolioUpdate(operation: OperationUpdate, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) {
-    logger.info({ msg: "Doing surgical rwa portfolio update", name: operation.type });
-
-    return;
+async function doSurgicalRwaPortfolioUpdate(operation: OperationUpdate, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) {
+    logger.debug({ msg: "Doing surgical rwa portfolio update", name: operation.type });
+    await surgicalOperations[operation.type](operation.input, portfolio, prisma);
 }
 
 function allOperationsAreSurgical(strand: InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => void>) {
     const allOperationsAreSurgical = strand.operations.filter(op => surgicalOperations[op.type] === undefined).length === 0;
-    logger.info(`All operations are surgical: ${allOperationsAreSurgical}`);
+    logger.debug(`All operations are surgical: ${allOperationsAreSurgical}`);
     return allOperationsAreSurgical
 }
 

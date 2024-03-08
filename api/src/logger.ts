@@ -34,8 +34,8 @@ const filterModule = (config: {
     return true;
   }
   const { bindings } = config;
-  const { module: mod } = bindings;
-  if (mod && moduleFilter.includes(mod)) {
+  const { moduleName } = bindings;
+  if (moduleName && moduleFilter.includes(moduleName)) {
     return true;
   }
   return false;
