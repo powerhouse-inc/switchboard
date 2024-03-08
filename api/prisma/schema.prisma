@@ -168,7 +168,7 @@ model RWAPortfolioAsset {
   fixedIncomeTypeId String?
   fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
   name              String?
-  spvId             String
+  spvId             String?
   maturity          String?
   purchaseDate      String?
   notional          Float?
