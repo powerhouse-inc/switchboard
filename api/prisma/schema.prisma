@@ -202,7 +202,7 @@ model RWAPortfolioSpv {
   id                                     String                                   @default(uuid())
   portfolioId                            String
   portfolio                              RWAPortfolio                             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-  name                                   String
+  name                                   String?
   RWAPortfolioSpvOnPortfolio             RWAPortfolioSpvOnPortfolio[]
   RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
 
@@ -228,13 +228,13 @@ model RWAAccountOnPortfolio {
 }
 
 model RWAPortfolioServiceProvider {
-  id          String              @default(uuid())
+  id          String               @default(uuid())
   portfolioId String
-  portfolio   RWAPortfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-  name        String
-  feeType     String
-  accountId   String
-  account     RWAPortfolioAccount @relation(fields: [accountId, portfolioId], references: [id, portfolioId])
+  portfolio   RWAPortfolio         @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  name        String?
+  feeType     String?
+  accountId   String?
+  account     RWAPortfolioAccount? @relation(fields: [accountId, portfolioId], references: [id, portfolioId])
 
   @@id([id, portfolioId])
 }
@@ -258,15 +258,15 @@ model RWAPortfolioFixedIncomeTypeOnPortfolio {
 }
 
 model RWABaseTransaction {
-  id                      String
+  id                      String                                 @default(uuid())
   portfolioId             String
   portfolio               RWAPortfolio                           @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-  assetId                 String
-  amount                  Float
+  assetId                 String?
+  amount                  Float?
   entryTime               DateTime?
   tradeTime               DateTime?
   settlementTime          DateTime?
-  txRef                   String
+  txRef                   String?
   accountId               String?
   counterPartyAccountId   String?
   cashTransactions        RWAGroupTransaction[]                  @relation(name: "cashTransaction")
@@ -277,7 +277,7 @@ model RWABaseTransaction {
 }
 
 model RWAGroupTransaction {
-  id                     String
+  id                     String              @default(uuid())
   portfolioId            String
   portfolio              RWAPortfolio        @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
   type                   String
