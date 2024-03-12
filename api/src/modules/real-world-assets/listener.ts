@@ -1,9 +1,8 @@
 import { Prisma, RWAPortfolio } from "@prisma/client";
 import { InternalTransmitterUpdate, OperationUpdate } from "document-drive";
-import { AddFileInput, DeleteNodeInput, DocumentDriveDocument, DocumentDriveState, ListenerFilter, actions } from "document-model-libs/document-drive";
-import { AddFeeTransactionsToGroupTransactionInput, CashGroupTransactionType, CreateAccountInput, CreateAssetPurchaseGroupTransactionInput, CreateAssetSaleGroupTransactionInput, CreateCashAssetInput, CreateFeesPaymentGroupTransactionInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateInterestReturnGroupTransactionInput, CreatePrincipalDrawGroupTransactionInput, CreatePrincipalReturnGroupTransactionInput, CreateServiceProviderInput, CreateSpvInput, DeleteGroupTransactionInput, EditAccountInput, EditAssetPurchaseGroupTransactionInput, EditAssetSaleGroupTransactionInput, EditCashAssetInput, EditFeeTransactionInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionTypeInput, EditInterestDrawGroupTransactionInput, EditInterestReturnGroupTransactionInput, EditPrincipalDrawGroupTransactionInput, EditPrincipalReturnGroupTransactionInput, EditServiceProviderInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeeTransactionFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
+import { AddFileInput, DeleteNodeInput, DocumentDriveDocument, DocumentDriveState, ListenerFilter } from "document-model-libs/document-drive";
+import { AddFeeTransactionsToGroupTransactionInput, CashGroupTransactionType, CreateAccountInput, CreateAssetPurchaseGroupTransactionInput, CreateAssetSaleGroupTransactionInput, CreateCashAssetInput, CreateFeesPaymentGroupTransactionInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateInterestReturnGroupTransactionInput, CreatePrincipalDrawGroupTransactionInput, CreatePrincipalReturnGroupTransactionInput, CreateServiceProviderInput, CreateSpvInput, DeleteAccountInput, DeleteGroupTransactionInput, DeleteServiceProviderInput, DeleteSpvInput, EditAccountInput, EditAssetPurchaseGroupTransactionInput, EditAssetSaleGroupTransactionInput, EditCashAssetInput, EditFeeTransactionInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionTypeInput, EditInterestDrawGroupTransactionInput, EditInterestReturnGroupTransactionInput, EditPrincipalDrawGroupTransactionInput, EditPrincipalReturnGroupTransactionInput, EditServiceProviderInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeeTransactionFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
 import { getChildLogger } from "../../logger";
-import { Action } from "document-model/document";
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
 
@@ -258,6 +257,17 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             }
         });
     },
+    "DELETE_SPV": async (input: DeleteSpvInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Deleting SPV", input });
+        await prisma.rWAPortfolioSpv.delete({
+            where: {
+                id_portfolioId: {
+                    id: input.id,
+                    portfolioId: portfolio.id
+                }
+            }
+        });
+    },
     "CREATE_SERVICE_PROVIDER": async (input: CreateServiceProviderInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Creating service provider", input });
         await prisma.rWAPortfolioServiceProvider.create({
@@ -284,6 +294,17 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             }
         });
     },
+    "DELETE_SERVICE_PROVIDER": async (input: DeleteServiceProviderInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Deleting service provider", input });
+        await prisma.rWAPortfolioServiceProvider.delete({
+            where: {
+                id_portfolioId: {
+                    id: input.id,
+                    portfolioId: portfolio.id
+                }
+            }
+        });
+    },
     "CREATE_ACCOUNT": async (input: CreateAccountInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Creating account", input });
         await prisma.rWAPortfolioAccount.create({
@@ -305,6 +326,17 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             data: {
                 ...input,
                 reference: input.reference ?? undefined,
+            }
+        });
+    },
+    "DELETE_ACCOUNT": async (input: DeleteAccountInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Deleting account", input });
+        await prisma.rWAPortfolioAccount.delete({
+            where: {
+                id_portfolioId: {
+                    id: input.id,
+                    portfolioId: portfolio.id
+                }
             }
         });
     },
