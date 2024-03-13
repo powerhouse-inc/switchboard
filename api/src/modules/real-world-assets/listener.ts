@@ -1,7 +1,7 @@
 import { Prisma, RWAPortfolio } from "@prisma/client";
 import { InternalTransmitterUpdate, OperationUpdate } from "document-drive";
 import { AddFileInput, DeleteNodeInput, DocumentDriveDocument, DocumentDriveState, ListenerFilter } from "document-model-libs/document-drive";
-import { AddFeeTransactionsToGroupTransactionInput, CashGroupTransactionType, CreateAccountInput, CreateAssetPurchaseGroupTransactionInput, CreateAssetSaleGroupTransactionInput, CreateCashAssetInput, CreateFeesPaymentGroupTransactionInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateInterestReturnGroupTransactionInput, CreatePrincipalDrawGroupTransactionInput, CreatePrincipalReturnGroupTransactionInput, CreateServiceProviderInput, CreateSpvInput, DeleteAccountInput, DeleteGroupTransactionInput, DeleteServiceProviderInput, DeleteSpvInput, EditAccountInput, EditAssetPurchaseGroupTransactionInput, EditAssetSaleGroupTransactionInput, EditCashAssetInput, EditFeeTransactionInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionTypeInput, EditInterestDrawGroupTransactionInput, EditInterestReturnGroupTransactionInput, EditPrincipalDrawGroupTransactionInput, EditPrincipalReturnGroupTransactionInput, EditServiceProviderInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeeTransactionFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
+import { AddFeeTransactionsToGroupTransactionInput, CreateAccountInput, CreateAssetPurchaseGroupTransactionInput, CreateAssetSaleGroupTransactionInput, CreateCashAssetInput, CreateFeesPaymentGroupTransactionInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateInterestReturnGroupTransactionInput, CreatePrincipalDrawGroupTransactionInput, CreatePrincipalReturnGroupTransactionInput, CreateServiceProviderInput, CreateSpvInput, DeleteAccountInput, DeleteGroupTransactionInput, DeleteServiceProviderInput, DeleteSpvInput, EditAccountInput, EditAssetPurchaseGroupTransactionInput, EditAssetSaleGroupTransactionInput, EditCashAssetInput, EditFeeTransactionInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionTypeInput, EditInterestDrawGroupTransactionInput, EditInterestReturnGroupTransactionInput, EditPrincipalDrawGroupTransactionInput, EditPrincipalReturnGroupTransactionInput, EditServiceProviderInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeeTransactionFromGroupTransactionInput, isCashAsset, utils, AssetPurchaseGroupTransaction, PrincipalDrawGroupTransaction, PrincipalReturnGroupTransaction, AssetSaleGroupTransaction, InterestDrawGroupTransaction, FeesPaymentGroupTransaction, InterestReturnGroupTransaction } from "document-model-libs/real-world-assets"
 import { getChildLogger } from "../../logger";
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
@@ -38,8 +38,6 @@ export async function transmit(strands: InternalTransmitterUpdate<RealWorldAsset
     }
 }
 
-
-
 async function handleDriveStrand(strand: InternalTransmitterUpdate<DocumentDriveDocument, "global">, prisma: Prisma.TransactionClient) {
     logger.debug("Received strand for drive");
     if (strandStartsFromOpZero(strand)) {
@@ -50,7 +48,11 @@ async function handleDriveStrand(strand: InternalTransmitterUpdate<DocumentDrive
 }
 
 function strandStartsFromOpZero(strand: InternalTransmitterUpdate<DocumentDriveDocument | RealWorldAssetsDocument, "global">) {
-    const resetNeeded = strand.operations.length > 0 && strand.operations[0].index === 0;
+    const resetNeeded = strand.operations.length > 0
+        && (
+            strand.operations[0].index === 0
+            || strand.operations[strand.operations.length].index - strand.operations[strand.operations.length].skip === 0
+        );
     logger.debug(`Reset needed: ${resetNeeded}`);
     return resetNeeded;
 }
@@ -148,24 +150,167 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
     });
 
     // create transactions
-    // TODO: add transactions
     for (const transaction of transactions) {
-        const isCashTx = ["PrincipalDraw", "PrincipalReturn"].includes(transaction.type);
+        let cashTxEntity;
+        let feeTxEntities = [];
+        let interestTxEntity;
+        let fixedIncomeTxEntity;
+        if (transaction.type === "PrincipalDraw") {
+            const tx = transaction as PrincipalDrawGroupTransaction;
+            // cash transaction
+            if (tx.cashTransaction) {
+                cashTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.cashTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+            // fee transactions
+            for (const feeTx of tx.feeTransactions ?? []) {
+                feeTxEntities.push(await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...feeTx,
+                        portfolioId: portfolioEntity.id,
+                    }
+                }));
+            }
+        } else if (transaction.type === "PrincipalReturn") {
+            const tx = transaction as PrincipalReturnGroupTransaction;
+            // cash transaction
+
+            if (tx.cashTransaction) {
+                cashTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.cashTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+            // fee transactions
+            for (const feeTx of tx.feeTransactions ?? []) {
+                feeTxEntities.push(await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...feeTx,
+                        portfolioId: portfolioEntity.id,
+                    }
+                }));
+            }
+        } else if (transaction.type === "AssetPurchase") {
+            const tx = transaction as AssetPurchaseGroupTransaction;
+            // cash transaction
+            if (tx.cashTransaction) {
+                cashTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.cashTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+            // fee transactions
+            for (const feeTx of tx.feeTransactions ?? []) {
+                feeTxEntities.push(await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...feeTx,
+                        portfolioId: portfolioEntity.id,
+                    }
+                }));
+            }
+            // fixed income transaction
+            if (tx.fixedIncomeTransaction) {
+                fixedIncomeTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.fixedIncomeTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+        } else if (transaction.type === "AssetSale") {
+            const tx = transaction as AssetSaleGroupTransaction;
+            // cash transaction
+            if (tx.cashTransaction) {
+                cashTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.cashTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+            // fee transactions
+            for (const feeTx of tx.feeTransactions ?? []) {
+                feeTxEntities.push(await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...feeTx,
+                        portfolioId: portfolioEntity.id,
+                    }
+                }));
+            }
+            // fixed income transaction
+            if (tx.fixedIncomeTransaction) {
+                fixedIncomeTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.fixedIncomeTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+        } else if (transaction.type === "InterestDraw") {
+            const tx = transaction as InterestDrawGroupTransaction;
+            // interest transaction
+            if (tx.interestTransaction) {
+                interestTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.interestTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+        } else if (transaction.type === "FeesPayment") {
+            const tx = transaction as FeesPaymentGroupTransaction;
+            // fee transactions
+            for (const feeTx of tx.feeTransactions ?? []) {
+                feeTxEntities.push(await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...feeTx,
+                        portfolioId: portfolioEntity.id,
+                    }
+                }));
+            }
+        } else if (transaction.type === "InterestReturn") {
+            const tx = transaction as InterestReturnGroupTransaction;
+            // interest transaction
+            if (tx.interestTransaction) {
+                interestTxEntity = await prisma.rWABaseTransaction.create({
+                    data: {
+                        ...tx.interestTransaction,
+                        portfolioId: portfolioEntity.id,
+                    }
+                });
+            }
+        }
 
         // Create Grpup TX Entity
         const groupTxEntity = await prisma.rWAGroupTransaction.create({
             data: {
                 id: transaction.id,
                 portfolioId: portfolioEntity.id,
-                type: transaction.type
+                type: transaction.type,
+                cashTransactionId: cashTxEntity?.id ?? undefined,
+                fixedTransactionId: fixedIncomeTxEntity?.id ?? undefined,
+                interestTransactionId: interestTxEntity?.id ?? undefined,
             },
         })
 
-        // Create Cash and/or FixedIncome TX Entity
-        // cashtx:
-
-
-        // Create and Link Fee TX Entities
+        // add relationships for fees
+        for (const feeTxEntity of feeTxEntities) {
+            await prisma.rWABaseTransactionOnGroupTransaction.create({
+                data: {
+                    portfolioId: portfolioEntity.id,
+                    baseTransactionId: feeTxEntity.id,
+                    groupTransactionId: groupTxEntity.id,
+                }
+            });
+        }
     }
 
     // add relationships
@@ -958,8 +1103,7 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
     },
     "REMOVE_FEE_TRANSACTION_FROM_GROUP_TRANSACTION": async (input: RemoveFeeTransactionFromGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Removing fee transaction from group transaction", input });
-        // TODO: Check where clause and set on delete cascade
-        await prisma.rWABaseTransactionOnGroupTransaction.delete({
+        await prisma.rWABaseTransaction.delete({
             where: {
                 id_portfolioId: {
                     id: input.feeTransactionId,
@@ -970,22 +1114,49 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
     },
     "DELETE_GROUP_TRANSACTION": async (input: DeleteGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Deleting group transaction", input });
-        await prisma.rWAGroupTransaction.delete({
+        const { cashTransactionId, fixedTransactionId } = await prisma.rWAGroupTransaction.delete({
             where: {
                 id_portfolioId: {
                     id: input.id,
                     portfolioId: portfolio.id
                 }
-            }
+            },
         });
 
-        // TODO: need to delete cash and fee transactions?
+        if (cashTransactionId) {
+            await prisma.rWABaseTransaction.delete({
+                where: {
+                    id_portfolioId: {
+                        id: cashTransactionId,
+                        portfolioId: portfolio.id
+                    }
+                }
+            });
+        }
+
+        if (fixedTransactionId) {
+            await prisma.rWABaseTransaction.delete({
+                where: {
+                    id_portfolioId: {
+                        id: fixedTransactionId,
+                        portfolioId: portfolio.id
+                    }
+                }
+            });
+        }
     }
 }
 
 async function handleRwaDocumentStrand(strand: InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, prisma: Prisma.TransactionClient) {
     logger.debug(`Received strand for document ${strand.documentId} with operations: ${strand.operations.map(op => op.type).join(", ")}`);
-    if (!await rwaPortfolioExists(strand.driveId, strand.documentId, prisma)) {
+    const portfolio = await prisma.rWAPortfolio.findFirst({
+        where: {
+            driveId: strand.driveId,
+            documentId: strand.documentId
+        }
+    })
+
+    if (portfolio === null) {
         logger.debug(`Skipping strand for document ${strand.documentId} as it doesn't exist in the read model`);
         return;
     }
@@ -993,21 +1164,11 @@ async function handleRwaDocumentStrand(strand: InternalTransmitterUpdate<RealWor
 
     if (strandStartsFromOpZero(strand) || !allOperationsAreSurgical(strand, surgicalOperations)) {
         await rebuildRwaPortfolio(strand.driveId, strand.documentId, strand.state, prisma);
-    } else {
-        const portfolio = await prisma.rWAPortfolio.findFirst({
-            where: {
-                driveId: strand.driveId,
-                documentId: strand.documentId
-            }
-        })
-        if (!portfolio) {
-            logger.error({ msg: "Portfolio not found", driveId: strand.driveId, documentId: strand.documentId });
-            return;
-        }
-        for (const operation of strand.operations) {
-            await doSurgicalRwaPortfolioUpdate(operation, portfolio, prisma);
-        }
+        return;
+    }
 
+    for (const operation of strand.operations) {
+        await doSurgicalRwaPortfolioUpdate(operation, portfolio, prisma);
     }
 }
 
