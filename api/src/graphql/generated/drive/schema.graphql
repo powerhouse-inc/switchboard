@@ -61,22 +61,6 @@ type ArticleComponent {
 
 union Asset = Cash | FixedIncome
 
-type AssetPurchaseGroupTransaction {
-  cashTransaction: BaseTransaction
-  feeTransactions: [BaseTransaction]
-  fixedIncomeTransaction: BaseTransaction
-  id: ID!
-  type: String!
-}
-
-type AssetSaleGroupTransaction {
-  cashTransaction: BaseTransaction
-  feeTransactions: [BaseTransaction]
-  fixedIncomeTransaction: BaseTransaction
-  id: ID!
-  type: String!
-}
-
 """Attachment custom scalar type"""
 scalar Attachment
 
@@ -146,6 +130,7 @@ enum BudgetStatus {
 }
 
 type Cash {
+  balance: Float!
   currency: String!
   id: ID!
   spvId: ID!
@@ -220,21 +205,13 @@ type DocumentDriveState {
 
 union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | SectionComponent | TypeSpecificationComponent
 
-type FeesPaymentGroupTransaction {
-  feeTransactions: [BaseTransaction]
-  id: ID!
-  type: String!
-}
-
 type FixedIncome {
   CUSIP: String
   ISIN: String
   annualizedYield: Float!
   coupon: Float
-  currentValue: Float
   fixedIncomeTypeId: ID!
   id: ID!
-  marketValue: Float!
   maturity: Date!
   name: String!
   notional: Float!
@@ -244,7 +221,6 @@ type FixedIncome {
   realizedSurplus: Float!
   spvId: ID!
   totalDiscount: Float!
-  totalSurplus: Float!
 }
 
 type FixedIncomeType {
@@ -262,7 +238,27 @@ type FtesForecast {
   value: Float!
 }
 
-union GroupTransaction = AssetPurchaseGroupTransaction | AssetSaleGroupTransaction | FeesPaymentGroupTransaction | InterestDrawGroupTransaction | InterestReturnGroupTransaction | PrincipalDrawGroupTransaction | PrincipalReturnGroupTransaction
+type GroupTransaction {
+  cashBalanceChange: Float!
+  cashTransaction: BaseTransaction
+  entryTime: Date!
+  feeTransactions: [BaseTransaction!]
+  fees: [TransactionFee!]
+  fixedIncomeTransaction: BaseTransaction
+  id: ID!
+  interestTransaction: BaseTransaction
+  type: GroupTransactionType!
+}
+
+enum GroupTransactionType {
+  AssetPurchase
+  AssetSale
+  FeesPayment
+  InterestDraw
+  InterestReturn
+  PrincipalDraw
+  PrincipalReturn
+}
 
 input InputListenerFilter {
   branch: [String]
@@ -286,18 +282,6 @@ input InputStrandUpdate {
   driveId: String!
   operations: [InputOperationUpdate!]!
   scope: String!
-}
-
-type InterestDrawGroupTransaction {
-  id: ID!
-  interestTransaction: BaseTransaction
-  type: String!
-}
-
-type InterestReturnGroupTransaction {
-  id: ID!
-  interestTransaction: BaseTransaction
-  type: String!
 }
 
 type LineItem {
@@ -416,46 +400,42 @@ type Owner {
   title: String
 }
 
-type PrincipalDrawGroupTransaction {
-  cashTransaction: BaseTransaction
-  feeTransactions: [BaseTransaction]
-  id: ID!
-  type: String!
-}
-
-type PrincipalReturnGroupTransaction {
-  cashTransaction: BaseTransaction
-  feeTransactions: [BaseTransaction]
-  id: ID!
-  type: String!
-}
-
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   document(id: String!): Document
   drive: DocumentDriveState
-  rwaPortfolios: [RealWorldAssetsState]
+  rwaPortfolios: [RealWorldAssetsStateWithId]
   system: SwitchboardDrive
 }
 
-type RealWorldAssets implements Document {
-  created: Date!
-  documentType: String!
-  id: String!
-  lastModified: Date!
-  name: String!
-  operations: [Operation!]!
-  revision: Int!
-  state: RealWorldAssetsState!
-}
-
-type RealWorldAssetsState {
+type RealWorldAssetsState implements RealWorldAssetsStateInterface {
   accounts: [Account!]!
-  feeTypes: [ServiceProvider!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   portfolio: [Asset!]!
   principalLenderAccountId: ID!
+  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
+  spvs: [Spv!]!
+  transactions: [GroupTransaction!]!
+}
+
+interface RealWorldAssetsStateInterface {
+  accounts: [Account!]!
+  fixedIncomeTypes: [FixedIncomeType!]!
+  portfolio: [Asset!]!
+  principalLenderAccountId: ID!
+  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
+  spvs: [Spv!]!
+  transactions: [GroupTransaction!]!
+}
+
+type RealWorldAssetsStateWithId implements RealWorldAssetsStateInterface {
+  accounts: [Account!]!
+  fixedIncomeTypes: [FixedIncomeType!]!
+  id: ID!
+  portfolio: [Asset!]!
+  principalLenderAccountId: ID!
+  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
   spvs: [Spv!]!
   transactions: [GroupTransaction!]!
 }
@@ -510,7 +490,7 @@ type SectionComponent {
   content: String
 }
 
-type ServiceProvider {
+type ServiceProviderFeeType {
   accountId: ID!
   feeType: String!
   id: ID!
@@ -634,7 +614,8 @@ interface System {
 
 type TransactionFee {
   amount: Float!
-  serviceProviderId: ID!
+  id: ID!
+  serviceProviderFeeTypeId: ID!
 }
 
 enum TransmitterType {
