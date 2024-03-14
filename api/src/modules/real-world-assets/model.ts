@@ -53,7 +53,8 @@ export function getRWACRUD(prisma: Prisma.TransactionClient) {
                                 interestTransaction: true,
                                 fees: true,
                             }
-                        }
+                        },
+                        RWAPortfolioServiceProviderFeeType: true
                     }
                 })
                 return transformPortfolioToState(portfolios)

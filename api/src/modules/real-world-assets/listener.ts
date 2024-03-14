@@ -1,7 +1,7 @@
 import { Prisma, RWAPortfolio } from "@prisma/client";
 import { InternalTransmitterUpdate, OperationUpdate } from "document-drive";
 import { AddFileInput, DeleteNodeInput, DocumentDriveDocument, DocumentDriveState, ListenerFilter } from "document-model-libs/document-drive";
-import { AddFeesToGroupTransactionInput, CreateAccountInput, CreateCashAssetInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateGroupTransactionInput, CreateServiceProviderFeeTypeInput, CreateSpvInput, DeleteAccountInput, DeleteCashAssetInput, DeleteFixedIncomeAssetInput, DeleteGroupTransactionInput, DeleteServiceProviderFeeTypeInput, DeleteSpvInput, EditAccountInput, EditCashAssetInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionFeesInput, EditGroupTransactionInput, EditServiceProviderFeeTypeInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeesFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
+import { AddFeesToGroupTransactionInput, Cash, CreateAccountInput, CreateCashAssetInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateGroupTransactionInput, CreateServiceProviderFeeTypeInput, CreateSpvInput, DeleteAccountInput, DeleteCashAssetInput, DeleteFixedIncomeAssetInput, DeleteGroupTransactionInput, DeleteServiceProviderFeeTypeInput, DeleteSpvInput, EditAccountInput, EditCashAssetInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionFeesInput, EditGroupTransactionInput, EditServiceProviderFeeTypeInput, EditSpvInput, FixedIncome, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeesFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
 import { getChildLogger } from "../../logger";
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
@@ -127,9 +127,15 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
         skipDuplicates: true,
     });
 
+    // create accounts
+    await prisma.rWAPortfolioAccount.createMany({
+        data: accounts.map((account) => ({ ...account, portfolioId: portfolioEntity.id })),
+        skipDuplicates: true,
+    });
+
     // create feeTypes
     await prisma.rWAPortfolioServiceProviderFeeType.createMany({
-        data: serviceProviderFeeTypes.map((feeType) => ({ ...feeType, portfolioId: portfolioEntity.id })),
+        data: serviceProviderFeeTypes.map((feeType) => ({ ...feeType, portfolioId: portfolioEntity.id, id: feeType.id, accountId: feeType.accountId })),
         skipDuplicates: true,
     });
 
@@ -141,15 +147,15 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
         skipDuplicates: true,
     });
 
-    // create accounts
-    await prisma.rWAPortfolioAccount.createMany({
-        data: accounts.map((account) => ({ ...account, portfolioId: portfolioEntity.id })),
-        skipDuplicates: true,
-    });
-
     // create RWAPortfolioAsset
     await prisma.rWAPortfolioAsset.createMany({
-        data: portfolio.map((asset) => ({ ...asset, assetRefId: asset.id, portfolioId: portfolioEntity.id, assetType: utils.isCashAsset(asset) ? "Cash" : "FixedIncome" })),
+        data: portfolio.map((asset) => ({
+            ...asset,
+            assetRefId: asset.id,
+            portfolioId: portfolioEntity.id,
+            assetType: utils.isCashAsset(asset) ? "Cash" : "FixedIncome",
+            purchaseDate: !utils.isCashAsset(asset) ? asset.purchaseDate === "" ? undefined : asset.purchaseDate : undefined,
+        })),
         skipDuplicates: true,
     });
 
@@ -167,7 +173,7 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
                 data: {
                     ...transaction.cashTransaction,
                     portfolioId: portfolioEntity.id,
-                }
+                },
             });
         }
 
@@ -234,11 +240,6 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
         skipDuplicates: true,
     });
 
-    await prisma.rWAPortfolioServiceProviderFeeType.createMany({
-        data: serviceProviderFeeTypes.map((feeType) => ({ portfolioId: portfolioEntity.id, spvId: feeType.id })),
-        skipDuplicates: true,
-    });
-
     await prisma.rWAPortfolioSpvOnPortfolio.createMany({
         data: spvs.map((spv) => ({ portfolioId: portfolioEntity.id, spvId: spv.id })),
         skipDuplicates: true,
@@ -249,17 +250,6 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
         skipDuplicates: true,
     });
 
-}
-
-async function rwaPortfolioExists(driveId: string, documentId: string, prisma: Prisma.TransactionClient) {
-    const portfolio = await prisma.rWAPortfolio.findFirst({
-        where: {
-            driveId,
-            documentId
-        }
-    });
-
-    return !!portfolio;
 }
 
 const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => Promise<void>> = {

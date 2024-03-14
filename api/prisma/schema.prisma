@@ -160,7 +160,7 @@ model RWAPortfolioAsset {
     name              String?
     spvId             String?
     maturity          String?
-    purchaseDate      String?
+    purchaseDate      DateTime?
     notional          Float?
     purchasePrice     Float?
     purchaseProceeds  Float?
@@ -169,10 +169,13 @@ model RWAPortfolioAsset {
     ISIN              String?
     CUSIP             String?
     coupon            Float?
+    realizedSurplus   Float?
+    balance           Float?
     currency          String?
     assetType         String
     portfolio         RWAPortfolio                 @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
+    spv               RWAPortfolioSpv?             @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
 
     @@id([id, portfolioId]) // TODO: Change to id,
     @@unique([assetRefId, portfolioId])
@@ -196,6 +199,7 @@ model RWAPortfolioSpv {
     portfolio                              RWAPortfolio                             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     RWAPortfolioSpvOnPortfolio             RWAPortfolioSpvOnPortfolio[]
     RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
+    RWAPortfolioAsset                      RWAPortfolioAsset[]
 
     @@id([id, portfolioId])
 }
