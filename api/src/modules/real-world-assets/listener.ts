@@ -1,7 +1,7 @@
 import { Prisma, RWAPortfolio } from "@prisma/client";
 import { InternalTransmitterUpdate, OperationUpdate } from "document-drive";
 import { AddFileInput, DeleteNodeInput, DocumentDriveDocument, DocumentDriveState, ListenerFilter } from "document-model-libs/document-drive";
-import { AddFeeTransactionsToGroupTransactionInput, CreateAccountInput, CreateAssetPurchaseGroupTransactionInput, CreateAssetSaleGroupTransactionInput, CreateCashAssetInput, CreateFeesPaymentGroupTransactionInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateInterestReturnGroupTransactionInput, CreatePrincipalDrawGroupTransactionInput, CreatePrincipalReturnGroupTransactionInput, CreateServiceProviderInput, CreateSpvInput, DeleteAccountInput, DeleteGroupTransactionInput, DeleteServiceProviderInput, DeleteSpvInput, EditAccountInput, EditAssetPurchaseGroupTransactionInput, EditAssetSaleGroupTransactionInput, EditCashAssetInput, EditFeeTransactionInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionTypeInput, EditInterestDrawGroupTransactionInput, EditInterestReturnGroupTransactionInput, EditPrincipalDrawGroupTransactionInput, EditPrincipalReturnGroupTransactionInput, EditServiceProviderInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeeTransactionFromGroupTransactionInput, isCashAsset, utils, AssetPurchaseGroupTransaction, PrincipalDrawGroupTransaction, PrincipalReturnGroupTransaction, AssetSaleGroupTransaction, InterestDrawGroupTransaction, FeesPaymentGroupTransaction, InterestReturnGroupTransaction } from "document-model-libs/real-world-assets"
+import { AddFeesToGroupTransactionInput, CreateAccountInput, CreateCashAssetInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateGroupTransactionInput, CreateServiceProviderFeeTypeInput, CreateSpvInput, DeleteAccountInput, DeleteCashAssetInput, DeleteFixedIncomeAssetInput, DeleteGroupTransactionInput, DeleteServiceProviderFeeTypeInput, DeleteSpvInput, EditAccountInput, EditCashAssetInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionFeesInput, EditGroupTransactionInput, EditServiceProviderFeeTypeInput, EditSpvInput, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeesFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
 import { getChildLogger } from "../../logger";
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
@@ -51,7 +51,7 @@ function strandStartsFromOpZero(strand: InternalTransmitterUpdate<DocumentDriveD
     const resetNeeded = strand.operations.length > 0
         && (
             strand.operations[0].index === 0
-            || strand.operations[strand.operations.length].index - strand.operations[strand.operations.length].skip === 0
+            || strand.operations[strand.operations.length - 1].index - strand.operations[strand.operations.length - 1].skip === 0
         );
     logger.debug(`Reset needed: ${resetNeeded}`);
     return resetNeeded;
@@ -100,7 +100,9 @@ async function deleteDriveState(state: DocumentDriveState, prisma: Prisma.Transa
 }
 
 async function rebuildRwaPortfolio(driveId: string, documentId: string, state: RealWorldAssetsState, prisma: Prisma.TransactionClient) {
-    const { transactions, principalLenderAccountId, fixedIncomeTypes, spvs, accounts, feeTypes, portfolio } = state;
+    const { transactions, principalLenderAccountId, fixedIncomeTypes, spvs, accounts, serviceProviderFeeTypes, portfolio } = state;
+
+    logger.debug({ msg: "rebuild portfolio", state });
     // create portfolio document
     const portfolioEntity = await prisma.rWAPortfolio.upsert({
         where: {
@@ -126,14 +128,16 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
     });
 
     // create feeTypes
-    await prisma.rWAPortfolioServiceProvider.createMany({
-        data: feeTypes.map((feeType) => ({ ...feeType, portfolioId: portfolioEntity.id })),
+    await prisma.rWAPortfolioServiceProviderFeeType.createMany({
+        data: serviceProviderFeeTypes.map((feeType) => ({ ...feeType, portfolioId: portfolioEntity.id })),
         skipDuplicates: true,
     });
 
     // fixed income types
     await prisma.rWAPortfolioFixedIncomeType.createMany({
-        data: fixedIncomeTypes.map((fixedIncomeType) => ({ ...fixedIncomeType, portfolioId: portfolioEntity.id })),
+        data: fixedIncomeTypes.map((fixedIncomeType) => ({
+            ...fixedIncomeType, portfolioId: portfolioEntity.id
+        })),
         skipDuplicates: true,
     });
 
@@ -150,143 +154,51 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
     });
 
     // create transactions
+    logger.debug({ msg: "Creating transactions", transactions })
     for (const transaction of transactions) {
         let cashTxEntity;
         let feeTxEntities = [];
         let interestTxEntity;
         let fixedIncomeTxEntity;
-        if (transaction.type === "PrincipalDraw") {
-            const tx = transaction as PrincipalDrawGroupTransaction;
-            // cash transaction
-            if (tx.cashTransaction) {
-                cashTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.cashTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-            // fee transactions
-            for (const feeTx of tx.feeTransactions ?? []) {
-                feeTxEntities.push(await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...feeTx,
-                        portfolioId: portfolioEntity.id,
-                    }
-                }));
-            }
-        } else if (transaction.type === "PrincipalReturn") {
-            const tx = transaction as PrincipalReturnGroupTransaction;
-            // cash transaction
 
-            if (tx.cashTransaction) {
-                cashTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.cashTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-            // fee transactions
-            for (const feeTx of tx.feeTransactions ?? []) {
-                feeTxEntities.push(await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...feeTx,
-                        portfolioId: portfolioEntity.id,
-                    }
-                }));
-            }
-        } else if (transaction.type === "AssetPurchase") {
-            const tx = transaction as AssetPurchaseGroupTransaction;
-            // cash transaction
-            if (tx.cashTransaction) {
-                cashTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.cashTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-            // fee transactions
-            for (const feeTx of tx.feeTransactions ?? []) {
-                feeTxEntities.push(await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...feeTx,
-                        portfolioId: portfolioEntity.id,
-                    }
-                }));
-            }
-            // fixed income transaction
-            if (tx.fixedIncomeTransaction) {
-                fixedIncomeTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.fixedIncomeTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-        } else if (transaction.type === "AssetSale") {
-            const tx = transaction as AssetSaleGroupTransaction;
-            // cash transaction
-            if (tx.cashTransaction) {
-                cashTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.cashTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-            // fee transactions
-            for (const feeTx of tx.feeTransactions ?? []) {
-                feeTxEntities.push(await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...feeTx,
-                        portfolioId: portfolioEntity.id,
-                    }
-                }));
-            }
-            // fixed income transaction
-            if (tx.fixedIncomeTransaction) {
-                fixedIncomeTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.fixedIncomeTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-        } else if (transaction.type === "InterestDraw") {
-            const tx = transaction as InterestDrawGroupTransaction;
-            // interest transaction
-            if (tx.interestTransaction) {
-                interestTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.interestTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
-        } else if (transaction.type === "FeesPayment") {
-            const tx = transaction as FeesPaymentGroupTransaction;
-            // fee transactions
-            for (const feeTx of tx.feeTransactions ?? []) {
-                feeTxEntities.push(await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...feeTx,
-                        portfolioId: portfolioEntity.id,
-                    }
-                }));
-            }
-        } else if (transaction.type === "InterestReturn") {
-            const tx = transaction as InterestReturnGroupTransaction;
-            // interest transaction
-            if (tx.interestTransaction) {
-                interestTxEntity = await prisma.rWABaseTransaction.create({
-                    data: {
-                        ...tx.interestTransaction,
-                        portfolioId: portfolioEntity.id,
-                    }
-                });
-            }
+        // cash transaction
+        if (transaction.cashTransaction) {
+            cashTxEntity = await prisma.rWABaseTransaction.create({
+                data: {
+                    ...transaction.cashTransaction,
+                    portfolioId: portfolioEntity.id,
+                }
+            });
+        }
+
+        // fee transactions
+        for (const feeTx of transaction.feeTransactions ?? []) {
+            feeTxEntities.push(await prisma.rWABaseTransaction.create({
+                data: {
+                    ...feeTx,
+                    portfolioId: portfolioEntity.id,
+                }
+            }));
+        }
+
+        // fixed income transaction
+        if (transaction.fixedIncomeTransaction) {
+            fixedIncomeTxEntity = await prisma.rWABaseTransaction.create({
+                data: {
+                    ...transaction.fixedIncomeTransaction,
+                    portfolioId: portfolioEntity.id,
+                }
+            });
+        }
+
+        // interest transaction
+        if (transaction.interestTransaction) {
+            interestTxEntity = await prisma.rWABaseTransaction.create({
+                data: {
+                    ...transaction.interestTransaction,
+                    portfolioId: portfolioEntity.id,
+                }
+            });
         }
 
         // Create Grpup TX Entity
@@ -296,7 +208,7 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
                 portfolioId: portfolioEntity.id,
                 type: transaction.type,
                 cashTransactionId: cashTxEntity?.id ?? undefined,
-                fixedTransactionId: fixedIncomeTxEntity?.id ?? undefined,
+                fixedIncomeTransactionId: fixedIncomeTxEntity?.id ?? undefined,
                 interestTransactionId: interestTxEntity?.id ?? undefined,
             },
         })
@@ -322,8 +234,8 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
         skipDuplicates: true,
     });
 
-    await prisma.rWAPortfolioServiceProviderOnPortfolio.createMany({
-        data: feeTypes.map((feeType) => ({ portfolioId: portfolioEntity.id, spvId: feeType.id })),
+    await prisma.rWAPortfolioServiceProviderFeeType.createMany({
+        data: serviceProviderFeeTypes.map((feeType) => ({ portfolioId: portfolioEntity.id, spvId: feeType.id })),
         skipDuplicates: true,
     });
 
@@ -413,18 +325,29 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             }
         });
     },
-    "CREATE_SERVICE_PROVIDER": async (input: CreateServiceProviderInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "CREATE_SERVICE_PROVIDER_FEE_TYPE": async (input: CreateServiceProviderFeeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Creating service provider", input });
-        await prisma.rWAPortfolioServiceProvider.create({
+        await prisma.rWAPortfolioServiceProviderFeeType.create({
             data: {
                 ...input,
                 portfolioId: portfolio.id
             }
         });
     },
-    "EDIT_SERVICE_PROVIDER": async (input: EditServiceProviderInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "EDIT_SERVICE_PROVIDER_FEE_TYPE": async (input: EditServiceProviderFeeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing service provider", input });
-        await prisma.rWAPortfolioServiceProvider.update({
+        const updateFields: Record<string, string> = {};
+        if (input.accountId) {
+            updateFields.accountId = input.accountId;
+        }
+        if (input.name) {
+            updateFields.name = input.name;
+        }
+        if (input.feeType) {
+            updateFields.feeType = input.feeType;
+        }
+
+        await prisma.rWAPortfolioServiceProviderFeeType.update({
             where: {
                 id_portfolioId: {
                     id: input.id,
@@ -432,16 +355,13 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 }
             },
             data: {
-                ...input,
-                accountId: input.accountId ?? undefined,
-                name: input.name ?? undefined,
-                feeType: input.feeType ?? undefined,
+                ...updateFields
             }
         });
     },
-    "DELETE_SERVICE_PROVIDER": async (input: DeleteServiceProviderInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "DELETE_SERVICE_PROVIDER_FEE_TYPE": async (input: DeleteServiceProviderFeeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Deleting service provider", input });
-        await prisma.rWAPortfolioServiceProvider.delete({
+        await prisma.rWAPortfolioServiceProviderFeeType.delete({
             where: {
                 id_portfolioId: {
                     id: input.id,
@@ -509,6 +429,17 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             }
         });
     },
+    "DELETE_FIXED_INCOME_ASSET": async (input: DeleteFixedIncomeAssetInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Deleting fixed income asset", input });
+        await prisma.rWAPortfolioAsset.delete({
+            where: {
+                assetRefId_portfolioId: {
+                    assetRefId: input.id,
+                    portfolioId: portfolio.id
+                }
+            }
+        });
+    },
     "CREATE_CASH_ASSET": async (input: CreateCashAssetInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Creating cash asset", input });
         await prisma.rWAPortfolioAsset.create({
@@ -534,13 +465,25 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             }
         });
     },
-    "CREATE_PRINCIPAL_DRAW_GROUP_TRANSACTION": async (input: CreatePrincipalDrawGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "DELETE_CASH_ASSET": async (input: DeleteCashAssetInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        logger.debug({ msg: "Deleting cash asset", input });
+        await prisma.rWAPortfolioAsset.delete({
+            where: {
+                assetRefId_portfolioId: {
+                    assetRefId: input.id,
+                    portfolioId: portfolio.id
+                }
+            }
+        });
+    },
+    "CREATE_GROUP_TRANSACTION": async (input: CreateGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Creating principal draw transaction", input });
         const { id } = await prisma.rWAGroupTransaction.create({
             data: {
                 id: input.id,
                 portfolioId: portfolio.id,
-                type: "PrincipalDraw",
+                type: input.type,
+                entryTime: input.entryTime
             }
         });
 
@@ -569,205 +512,19 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 }
             });
 
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
+            await prisma.rWAGroupTransaction.update({
+                where: {
+                    id_portfolioId: {
+                        id: id,
+                        portfolioId: portfolio.id
+                    }
+                },
                 data: {
                     portfolioId: portfolio.id,
-                    baseTransactionId: cashTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-
-        }
-    },
-    "CREATE_PRINCIPAL_RETURN_GROUP_TRANSACTION": async (input: CreatePrincipalReturnGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating principal return transaction", input });
-        const { id } = await prisma.rWAGroupTransaction.create({
-            data: {
-                id: input.id,
-                portfolioId: portfolio.id,
-                type: "PrincipalReturn",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            const feeTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: feeTxEntity.id,
-                    groupTransactionId: id,
+                    cashTransactionId: cashTxEntity.id,
                 }
             });
         }
-
-        if (input.cashTransaction) {
-            const cashTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...input.cashTransaction,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: cashTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-
-        }
-    },
-    "CREATE_ASSET_PURCHASE_GROUP_TRANSACTION": async (input: CreateAssetPurchaseGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating asset purchase transaction", input });
-        const { id } = await prisma.rWAGroupTransaction.create({
-            data: {
-                id: input.id,
-                portfolioId: portfolio.id,
-                type: "AssetPurchase",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            const feeTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: feeTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-        }
-
-        if (input.cashTransaction) {
-            const cashTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...input.cashTransaction,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: cashTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-
-        }
-    },
-    "CREATE_ASSET_SALE_GROUP_TRANSACTION": async (input: CreateAssetSaleGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating asset sale transaction", input });
-        const { id } = await prisma.rWAGroupTransaction.create({
-            data: {
-                id: input.id,
-                portfolioId: portfolio.id,
-                type: "AssetSale",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            const feeTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: feeTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-        }
-
-        if (input.cashTransaction) {
-            const cashTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...input.cashTransaction,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: cashTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-
-        }
-    },
-    "CREATE_INTEREST_DRAW_GROUP_TRANSACTION": async (input: CreatePrincipalDrawGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating interest draw transaction", input });
-        const { id } = await prisma.rWAGroupTransaction.create({
-            data: {
-                id: input.id,
-                portfolioId: portfolio.id,
-                type: "InterestDraw",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            const feeTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: feeTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-        }
-
-        if (input.cashTransaction) {
-            const cashTxEntity = await prisma.rWABaseTransaction.create({
-                data: {
-                    ...input.cashTransaction,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: cashTxEntity.id,
-                    groupTransactionId: id,
-                }
-            });
-
-        }
-    },
-    "CREATE_INTEREST_RETURN_GROUP_TRANSACTION": async (input: CreateInterestReturnGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating interest return transaction", input });
-        const { id } = await prisma.rWAGroupTransaction.create({
-            data: {
-                id: input.id,
-                portfolioId: portfolio.id,
-                type: "InterestReturn",
-            }
-        });
 
         if (input.interestTransaction) {
             const interestTxEntity = await prisma.rWABaseTransaction.create({
@@ -777,59 +534,54 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 }
             });
 
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
+            await prisma.rWAGroupTransaction.update({
+                where: {
+                    id_portfolioId: {
+                        id: id,
+                        portfolioId: portfolio.id
+                    }
+                },
                 data: {
                     portfolioId: portfolio.id,
-                    baseTransactionId: interestTxEntity.id,
-                    groupTransactionId: id,
+                    interestTransactionId: interestTxEntity.id,
                 }
             });
         }
-    },
-    "CREATE_FEES_PAYMENT_GROUP_TRANSACTION": async (input: CreateFeesPaymentGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating fees payment transaction", input });
-        const { id } = await prisma.rWAGroupTransaction.create({
-            data: {
-                id: input.id,
-                portfolioId: portfolio.id,
-                type: "FeesPayment",
-            }
-        });
 
-        for (const feeTx of input.feeTransactions ?? []) {
-            const feeTxEntity = await prisma.rWABaseTransaction.create({
+        if (input.fixedIncomeTransaction) {
+            const interestTxEntity = await prisma.rWABaseTransaction.create({
                 data: {
-                    ...feeTx,
+                    ...input.fixedIncomeTransaction,
                     portfolioId: portfolio.id,
                 }
             });
 
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
+            await prisma.rWAGroupTransaction.update({
+                where: {
+                    id_portfolioId: {
+                        id: id,
+                        portfolioId: portfolio.id
+                    }
+                },
                 data: {
                     portfolioId: portfolio.id,
-                    baseTransactionId: feeTxEntity.id,
-                    groupTransactionId: id,
+                    fixedIncomeTransactionId: interestTxEntity.id,
                 }
             });
         }
+
     },
-    "EDIT_GROUP_TRANSACTION_TYPE": async (input: EditGroupTransactionTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Editing group transaction type", input });
-        await prisma.rWAGroupTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                type: input.type,
-            }
-        });
-    },
-    "EDIT_PRINCIPAL_DRAW_GROUP_TRANSACTION": async (input: EditPrincipalDrawGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "EDIT_GROUP_TRANSACTION": async (input: EditGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing principal draw transaction", input });
-        await prisma.rWAGroupTransaction.update({
+        const updateData: Record<string, string> = {}
+        if (input.type) {
+            updateData.type = input.type;
+        }
+        if (input.entryTime) {
+            updateData.entryTime = input.entryTime;
+        }
+
+        const { id } = await prisma.rWAGroupTransaction.update({
             where: {
                 id_portfolioId: {
                     id: input.id,
@@ -837,284 +589,176 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 }
             },
             data: {
-                type: "PrincipalDraw",
+                ...updateData
             }
         });
 
-        for (const feeTx of input.feeTransactions ?? []) {
-            await prisma.rWABaseTransaction.update({
-                where: {
-                    id_portfolioId: {
-                        id: input.id,
-                        portfolioId: portfolio.id
-                    }
-                },
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
-                }
-            });
-        }
+        // for (const feeTx of input.feeTransactions ?? []) {
+        //     await prisma.rWABaseTransaction.update({
+        //         where: {
+        //             id_portfolioId: {
+        //                 id: input.id,
+        //                 portfolioId: portfolio.id
+        //             }
+        //         },
+        //         data: {
+        //             ...feeTx,
+        //             portfolioId: portfolio.id,
+        //         }
+        //     });
+        // }
 
         if (input.cashTransaction) {
-            await prisma.rWABaseTransaction.update({
+            const cashTxEntity = await prisma.rWABaseTransaction.upsert({
                 where: {
                     id_portfolioId: {
                         id: input.cashTransaction.id,
                         portfolioId: portfolio.id
                     }
                 },
-                data: {
+                create: {
+                    ...input.cashTransaction,
+                    portfolioId: portfolio.id,
+                }, update: {
                     ...input.cashTransaction,
                     portfolioId: portfolio.id,
                 }
             });
 
-        }
-    },
-    "EDIT_PRINCIPAL_RETURN_GROUP_TRANSACTION": async (input: EditPrincipalReturnGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Editing principal return transaction", input });
-        await prisma.rWAGroupTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                type: "PrincipalReturn",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            await prisma.rWABaseTransaction.update({
+            await prisma.rWAGroupTransaction.update({
                 where: {
                     id_portfolioId: {
-                        id: input.id,
+                        id: id,
                         portfolioId: portfolio.id
                     }
                 },
                 data: {
-                    ...feeTx,
                     portfolioId: portfolio.id,
+                    cashTransactionId: cashTxEntity.id,
                 }
             });
         }
 
-        if (input.cashTransaction) {
-            await prisma.rWABaseTransaction.update({
+        if (input.fixedIncomeTransaction) {
+            const interestTxEntity = await prisma.rWABaseTransaction.upsert({
                 where: {
                     id_portfolioId: {
-                        id: input.cashTransaction.id,
+                        id: input.fixedIncomeTransaction.id,
+                        portfolioId: portfolio.id
+                    }
+                },
+                create: {
+                    ...input.fixedIncomeTransaction,
+                    portfolioId: portfolio.id,
+                },
+                update: {
+                    ...input.fixedIncomeTransaction,
+                    portfolioId: portfolio.id,
+                }
+            });
+
+            await prisma.rWAGroupTransaction.update({
+                where: {
+                    id_portfolioId: {
+                        id: id,
                         portfolioId: portfolio.id
                     }
                 },
                 data: {
-                    ...input.cashTransaction,
                     portfolioId: portfolio.id,
-                }
-            });
-
-        }
-    },
-    "EDIT_ASSET_PURCHASE_GROUP_TRANSACTION": async (input: EditAssetPurchaseGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Editing asset purchase transaction", input });
-        await prisma.rWAGroupTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                type: "AssetPurchase",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            await prisma.rWABaseTransaction.update({
-                where: {
-                    id_portfolioId: {
-                        id: input.id,
-                        portfolioId: portfolio.id
-                    }
-                },
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
+                    fixedIncomeTransactionId: interestTxEntity.id,
                 }
             });
         }
-
-        if (input.cashTransaction) {
-            await prisma.rWABaseTransaction.update({
-                where: {
-                    id_portfolioId: {
-                        id: input.cashTransaction.id,
-                        portfolioId: portfolio.id
-                    }
-                },
-                data: {
-                    ...input.cashTransaction,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-        }
-    },
-    "EDIT_ASSET_SALE_GROUP_TRANSACTION": async (input: EditAssetSaleGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Editing asset sale transaction", input });
-        await prisma.rWAGroupTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                type: "AssetSale",
-            }
-        });
-
-        for (const feeTx of input.feeTransactions ?? []) {
-            await prisma.rWABaseTransaction.update({
-                where: {
-                    id_portfolioId: {
-                        id: input.id,
-                        portfolioId: portfolio.id
-                    }
-                },
-                data: {
-                    ...feeTx,
-                    portfolioId: portfolio.id,
-                }
-            });
-        }
-
-        if (input.cashTransaction) {
-            await prisma.rWABaseTransaction.update({
-                where: {
-                    id_portfolioId: {
-                        id: input.cashTransaction.id,
-                        portfolioId: portfolio.id
-                    }
-                },
-                data: {
-                    ...input.cashTransaction,
-                    portfolioId: portfolio.id,
-                }
-            });
-
-        }
-    },
-    "EDIT_INTEREST_DRAW_GROUP_TRANSACTION": async (input: EditInterestDrawGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Editing interest draw transaction", input });
-        await prisma.rWAGroupTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                type: "InterestDraw",
-            }
-        });
 
         if (input.interestTransaction) {
-            await prisma.rWABaseTransaction.update({
+            const interestTxEntity = await prisma.rWABaseTransaction.upsert({
                 where: {
                     id_portfolioId: {
                         id: input.interestTransaction.id,
                         portfolioId: portfolio.id
                     }
                 },
-                data: {
+                create: {
+                    ...input.interestTransaction,
+                    portfolioId: portfolio.id,
+                },
+                update: {
                     ...input.interestTransaction,
                     portfolioId: portfolio.id,
                 }
             });
 
-        }
-    },
-    "EDIT_INTEREST_RETURN_GROUP_TRANSACTION": async (input: EditInterestReturnGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Editing interest return transaction", input });
-        await prisma.rWAGroupTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                type: "InterestReturn",
-            }
-        });
-
-        if (input.interestTransaction) {
-            await prisma.rWABaseTransaction.update({
+            await prisma.rWAGroupTransaction.update({
                 where: {
                     id_portfolioId: {
-                        id: input.interestTransaction.id,
+                        id: id,
                         portfolioId: portfolio.id
                     }
                 },
                 data: {
-                    ...input.interestTransaction,
                     portfolioId: portfolio.id,
+                    interestTransactionId: interestTxEntity.id,
                 }
             });
-
         }
     },
-    "ADD_FEE_TRANSACTIONS_TO_GROUP_TRANSACTION": async (input: AddFeeTransactionsToGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+
+    "ADD_FEES_TO_GROUP_TRANSACTION": async (input: AddFeesToGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Adding fee transactions to group transaction", input });
-        for (const feeTx of input.feeTransactions ?? []) {
-            const feeTxEntity = await prisma.rWABaseTransaction.create({
+        for (const fee of input.fees ?? []) {
+            prisma.rWAGroupTransactionFee.create({
                 data: {
-                    ...feeTx,
+                    ...fee,
                     portfolioId: portfolio.id,
-                }
-            });
-
-            await prisma.rWABaseTransactionOnGroupTransaction.create({
-                data: {
-                    portfolioId: portfolio.id,
-                    baseTransactionId: feeTxEntity.id,
-                    groupTransactionId: input.id,
+                    groupTransactionId: input.id ?? undefined,
+                    id: fee.id ?? undefined
                 }
             });
         }
     },
-    "EDIT_FEE_TRANSACTION": async (input: EditFeeTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "EDIT_GROUP_TRANSACTION_FEES": async (input: EditGroupTransactionFeesInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing fee transaction", input });
-        await prisma.rWABaseTransaction.update({
-            where: {
-                id_portfolioId: {
-                    id: input.id,
-                    portfolioId: portfolio.id
-                }
-            },
-            data: {
-                ...input,
-                portfolioId: portfolio.id,
+        for (const fee of input.fees ?? []) {
+            if (!fee.id) {
+                logger.debug("Skipping fee transaction as it doesn't have an id");
+                continue;
             }
-        });
+            await prisma.rWAGroupTransactionFee.update({
+                where: {
+                    id_groupTransactionId_portfolioId: {
+                        id: fee.id,
+                        groupTransactionId: input.id,
+                        portfolioId: portfolio.id
+                    }
+                },
+                data: {
+                    ...fee,
+                    portfolioId: portfolio.id,
+                    groupTransactionId: input.id ?? undefined,
+                    id: fee.id ?? undefined
+                }
+            });
+        }
     },
-    "REMOVE_FEE_TRANSACTION_FROM_GROUP_TRANSACTION": async (input: RemoveFeeTransactionFromGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+    "REMOVE_FEES_FROM_GROUP_TRANSACTION": async (input: RemoveFeesFromGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Removing fee transaction from group transaction", input });
-        await prisma.rWABaseTransaction.delete({
-            where: {
-                id_portfolioId: {
-                    id: input.feeTransactionId,
-                    portfolioId: portfolio.id
-                }
-            }
-        });
+        for (const feeId of input.feeIds ?? []) {
+            await prisma.rWAGroupTransactionFee.delete({
+                where: {
+                    id_groupTransactionId_portfolioId: {
+                        id: feeId,
+                        groupTransactionId: input.id,
+                        portfolioId: portfolio.id
+                    }
+                },
+
+            });
+        }
     },
     "DELETE_GROUP_TRANSACTION": async (input: DeleteGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Deleting group transaction", input });
-        const { cashTransactionId, fixedTransactionId } = await prisma.rWAGroupTransaction.delete({
+        const { cashTransactionId, fixedIncomeTransactionId, interestTransactionId } = await prisma.rWAGroupTransaction.delete({
             where: {
                 id_portfolioId: {
                     id: input.id,
@@ -1134,11 +778,22 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             });
         }
 
-        if (fixedTransactionId) {
+        if (fixedIncomeTransactionId) {
             await prisma.rWABaseTransaction.delete({
                 where: {
                     id_portfolioId: {
-                        id: fixedTransactionId,
+                        id: fixedIncomeTransactionId,
+                        portfolioId: portfolio.id
+                    }
+                }
+            });
+        }
+
+        if (interestTransactionId) {
+            await prisma.rWABaseTransaction.delete({
+                where: {
+                    id_portfolioId: {
+                        id: interestTransactionId,
                         portfolioId: portfolio.id
                     }
                 }
