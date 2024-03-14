@@ -282,7 +282,7 @@ model RWAGroupTransaction {
     cashTransaction          RWABaseTransaction?                    @relation(name: "cashTransaction", fields: [cashTransactionId, portfolioId], references: [id, portfolioId])
     interestTransaction      RWABaseTransaction?                    @relation(name: "interestTransaction", fields: [interestTransactionId, portfolioId], references: [id, portfolioId])
     feeTransactions          RWABaseTransactionOnGroupTransaction[]
-    RWAGroupTransactionFee   RWAGroupTransactionFee[]
+    fees                     RWAGroupTransactionFee[]
 
     @@id([id, portfolioId])
 }
