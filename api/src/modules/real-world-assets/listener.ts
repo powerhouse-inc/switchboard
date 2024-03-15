@@ -219,6 +219,18 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
             },
         })
 
+        // add fees
+        for (const fee of transaction.fees ?? []) {
+            await prisma.rWAGroupTransactionFee.create({
+                data: {
+                    ...fee,
+                    portfolioId: portfolioEntity.id,
+                    groupTransactionId: transaction.id,
+                    id: fee.id ?? undefined
+                }
+            })
+        }
+
         // add relationships for fees
         for (const feeTxEntity of feeTxEntities) {
             await prisma.rWABaseTransactionOnGroupTransaction.create({
@@ -467,7 +479,7 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
         });
     },
     "CREATE_GROUP_TRANSACTION": async (input: CreateGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
-        logger.debug({ msg: "Creating principal draw transaction", input });
+        logger.debug({ msg: "Creating Group transaction", input });
         const { id } = await prisma.rWAGroupTransaction.create({
             data: {
                 id: input.id,
