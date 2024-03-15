@@ -738,8 +738,8 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 data: {
                     ...fee,
                     portfolioId: portfolio.id,
-                    groupTransactionId: input.id ?? undefined,
-                    id: fee.id ?? undefined
+                    groupTransactionId: input.id,
+                    id: fee.id
                 }
             });
         }
