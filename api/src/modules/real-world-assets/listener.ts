@@ -708,15 +708,16 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
 
     "ADD_FEES_TO_GROUP_TRANSACTION": async (input: AddFeesToGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Adding fee transactions to group transaction", input });
+        // add fees
         for (const fee of input.fees ?? []) {
-            prisma.rWAGroupTransactionFee.create({
+            await prisma.rWAGroupTransactionFee.create({
                 data: {
                     ...fee,
                     portfolioId: portfolio.id,
-                    groupTransactionId: input.id ?? undefined,
+                    groupTransactionId: input.id,
                     id: fee.id ?? undefined
                 }
-            });
+            })
         }
     },
     "EDIT_GROUP_TRANSACTION_FEES": async (input: EditGroupTransactionFeesInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
