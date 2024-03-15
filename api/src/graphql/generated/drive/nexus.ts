@@ -105,6 +105,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   AuditReportStatus: "Approved" | "ApprovedWithComments" | "Escalated" | "NeedsAction"
   BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
+  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
   TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
@@ -171,20 +172,6 @@ export interface NexusGenObjects {
   ArticleComponent: { // root type
     content?: string | null; // String
   }
-  AssetPurchaseGroupTransaction: { // root type
-    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    id: string; // ID!
-    type: string; // String!
-  }
-  AssetSaleGroupTransaction: { // root type
-    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    id: string; // ID!
-    type: string; // String!
-  }
   AuditReport: { // root type
     report: NexusGenScalars['Attachment']; // Attachment!
     status: NexusGenEnums['AuditReportStatus']; // AuditReportStatus!
@@ -228,6 +215,7 @@ export interface NexusGenObjects {
     vesting: NexusGenRootTypes['Vesting'][]; // [Vesting!]!
   }
   Cash: { // root type
+    balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
     spvId: string; // ID!
@@ -279,20 +267,13 @@ export interface NexusGenObjects {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug?: string | null; // String
   }
-  FeesPaymentGroupTransaction: { // root type
-    feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    id: string; // ID!
-    type: string; // String!
-  }
   FixedIncome: { // root type
     CUSIP?: string | null; // String
     ISIN?: string | null; // String
     annualizedYield: number; // Float!
     coupon?: number | null; // Float
-    currentValue?: number | null; // Float
     fixedIncomeTypeId: string; // ID!
     id: string; // ID!
-    marketValue: number; // Float!
     maturity: NexusGenScalars['Date']; // Date!
     name: string; // String!
     notional: number; // Float!
@@ -302,7 +283,6 @@ export interface NexusGenObjects {
     realizedSurplus: number; // Float!
     spvId: string; // ID!
     totalDiscount: number; // Float!
-    totalSurplus: number; // Float!
   }
   FixedIncomeType: { // root type
     id: string; // ID!
@@ -316,15 +296,16 @@ export interface NexusGenObjects {
     month: string; // String!
     value: number; // Float!
   }
-  InterestDrawGroupTransaction: { // root type
+  GroupTransaction: { // root type
+    cashBalanceChange: number; // Float!
+    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    entryTime: NexusGenScalars['Date']; // Date!
+    feeTransactions?: NexusGenRootTypes['BaseTransaction'][] | null; // [BaseTransaction!]
+    fees?: NexusGenRootTypes['TransactionFee'][] | null; // [TransactionFee!]
+    fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
     interestTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: string; // String!
-  }
-  InterestReturnGroupTransaction: { // root type
-    id: string; // ID!
-    interestTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: string; // String!
+    type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
   }
   LineItem: { // root type
     actual?: number | null; // Float
@@ -404,18 +385,6 @@ export interface NexusGenObjects {
     ref?: string | null; // String
     title?: string | null; // String
   }
-  PrincipalDrawGroupTransaction: { // root type
-    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    id: string; // ID!
-    type: string; // String!
-  }
-  PrincipalReturnGroupTransaction: { // root type
-    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions?: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    id: string; // ID!
-    type: string; // String!
-  }
   Query: {};
   RealWorldAssets: { // root type
     created: NexusGenScalars['Date']; // Date!
@@ -427,12 +396,22 @@ export interface NexusGenObjects {
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
   }
+  RealWorldAssetsPortfolio: { // root type
+    accounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    id: string; // ID!
+    portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
+    principalLenderAccountId: string; // ID!
+    serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
+    spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
+    transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
+  }
   RealWorldAssetsState: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
-    feeTypes: NexusGenRootTypes['ServiceProvider'][]; // [ServiceProvider!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
+    serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
@@ -471,7 +450,7 @@ export interface NexusGenObjects {
   SectionComponent: { // root type
     content?: string | null; // String
   }
-  ServiceProvider: { // root type
+  ServiceProviderFeeType: { // root type
     accountId: string; // ID!
     feeType: string; // String!
     id: string; // ID!
@@ -542,7 +521,8 @@ export interface NexusGenObjects {
   Sync: {};
   TransactionFee: { // root type
     amount: number; // Float!
-    serviceProviderId: string; // ID!
+    id: string; // ID!
+    serviceProviderFeeTypeId: string; // ID!
   }
   TypeSpecificationComponent: { // root type
     additionalLogic?: string | null; // String
@@ -580,7 +560,8 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Document: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
+  IDocument: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
+  IRealWorldAssetsState: NexusGenRootTypes['RealWorldAssetsPortfolio'] | NexusGenRootTypes['RealWorldAssetsState'];
   Operation: any;
   System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
@@ -588,7 +569,6 @@ export interface NexusGenInterfaces {
 export interface NexusGenUnions {
   Asset: NexusGenRootTypes['Cash'] | NexusGenRootTypes['FixedIncome'];
   ElementComponents: NexusGenRootTypes['ArticleComponent'] | NexusGenRootTypes['CoreComponent'] | NexusGenRootTypes['ScopeComponent'] | NexusGenRootTypes['SectionComponent'] | NexusGenRootTypes['TypeSpecificationComponent'];
-  GroupTransaction: NexusGenRootTypes['AssetPurchaseGroupTransaction'] | NexusGenRootTypes['AssetSaleGroupTransaction'] | NexusGenRootTypes['FeesPaymentGroupTransaction'] | NexusGenRootTypes['InterestDrawGroupTransaction'] | NexusGenRootTypes['InterestReturnGroupTransaction'] | NexusGenRootTypes['PrincipalDrawGroupTransaction'] | NexusGenRootTypes['PrincipalReturnGroupTransaction'];
 }
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
@@ -645,20 +625,6 @@ export interface NexusGenFieldTypes {
   ArticleComponent: { // field return type
     content: string | null; // String
   }
-  AssetPurchaseGroupTransaction: { // field return type
-    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    id: string; // ID!
-    type: string; // String!
-  }
-  AssetSaleGroupTransaction: { // field return type
-    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    id: string; // ID!
-    type: string; // String!
-  }
   AuditReport: { // field return type
     report: NexusGenScalars['Attachment']; // Attachment!
     status: NexusGenEnums['AuditReportStatus']; // AuditReportStatus!
@@ -705,6 +671,7 @@ export interface NexusGenFieldTypes {
     vesting: NexusGenRootTypes['Vesting'][]; // [Vesting!]!
   }
   Cash: { // field return type
+    balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
     spvId: string; // ID!
@@ -756,20 +723,13 @@ export interface NexusGenFieldTypes {
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug: string | null; // String
   }
-  FeesPaymentGroupTransaction: { // field return type
-    feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    id: string; // ID!
-    type: string; // String!
-  }
   FixedIncome: { // field return type
     CUSIP: string | null; // String
     ISIN: string | null; // String
     annualizedYield: number; // Float!
     coupon: number | null; // Float
-    currentValue: number | null; // Float
     fixedIncomeTypeId: string; // ID!
     id: string; // ID!
-    marketValue: number; // Float!
     maturity: NexusGenScalars['Date']; // Date!
     name: string; // String!
     notional: number; // Float!
@@ -779,7 +739,6 @@ export interface NexusGenFieldTypes {
     realizedSurplus: number; // Float!
     spvId: string; // ID!
     totalDiscount: number; // Float!
-    totalSurplus: number; // Float!
   }
   FixedIncomeType: { // field return type
     id: string; // ID!
@@ -793,15 +752,16 @@ export interface NexusGenFieldTypes {
     month: string; // String!
     value: number; // Float!
   }
-  InterestDrawGroupTransaction: { // field return type
+  GroupTransaction: { // field return type
+    cashBalanceChange: number; // Float!
+    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    entryTime: NexusGenScalars['Date']; // Date!
+    feeTransactions: NexusGenRootTypes['BaseTransaction'][] | null; // [BaseTransaction!]
+    fees: NexusGenRootTypes['TransactionFee'][] | null; // [TransactionFee!]
+    fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
     interestTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: string; // String!
-  }
-  InterestReturnGroupTransaction: { // field return type
-    id: string; // ID!
-    interestTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    type: string; // String!
+    type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
   }
   LineItem: { // field return type
     actual: number | null; // Float
@@ -890,24 +850,12 @@ export interface NexusGenFieldTypes {
     ref: string | null; // String
     title: string | null; // String
   }
-  PrincipalDrawGroupTransaction: { // field return type
-    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    id: string; // ID!
-    type: string; // String!
-  }
-  PrincipalReturnGroupTransaction: { // field return type
-    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
-    feeTransactions: Array<NexusGenRootTypes['BaseTransaction'] | null> | null; // [BaseTransaction]
-    id: string; // ID!
-    type: string; // String!
-  }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
-    document: NexusGenRootTypes['Document'] | null; // Document
+    document: NexusGenRootTypes['IDocument'] | null; // IDocument
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
-    rwaPortfolio: NexusGenRootTypes['RealWorldAssets'] | null; // RealWorldAssets
+    rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsPortfolio'] | null> | null; // [RealWorldAssetsPortfolio]
     system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
   }
   RealWorldAssets: { // field return type
@@ -920,12 +868,22 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
   }
+  RealWorldAssetsPortfolio: { // field return type
+    accounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    id: string; // ID!
+    portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
+    principalLenderAccountId: string; // ID!
+    serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
+    spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
+    transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
+  }
   RealWorldAssetsState: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
-    feeTypes: NexusGenRootTypes['ServiceProvider'][]; // [ServiceProvider!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
+    serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
@@ -964,7 +922,7 @@ export interface NexusGenFieldTypes {
   SectionComponent: { // field return type
     content: string | null; // String
   }
-  ServiceProvider: { // field return type
+  ServiceProviderFeeType: { // field return type
     accountId: string; // ID!
     feeType: string; // String!
     id: string; // ID!
@@ -1042,7 +1000,8 @@ export interface NexusGenFieldTypes {
   }
   TransactionFee: { // field return type
     amount: number; // Float!
-    serviceProviderId: string; // ID!
+    id: string; // ID!
+    serviceProviderFeeTypeId: string; // ID!
   }
   TypeSpecificationComponent: { // field return type
     additionalLogic: string | null; // String
@@ -1077,7 +1036,7 @@ export interface NexusGenFieldTypes {
     key: string; // String!
     vested: boolean; // Boolean!
   }
-  Document: { // field return type
+  IDocument: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -1085,6 +1044,15 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
     revision: number; // Int!
+  }
+  IRealWorldAssetsState: { // field return type
+    accounts: NexusGenRootTypes['Account'][]; // [Account!]!
+    fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
+    principalLenderAccountId: string; // ID!
+    serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
+    spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
+    transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
   Operation: { // field return type
     hash: string; // String!
@@ -1147,20 +1115,6 @@ export interface NexusGenFieldTypeNames {
   ArticleComponent: { // field return type name
     content: 'String'
   }
-  AssetPurchaseGroupTransaction: { // field return type name
-    cashTransaction: 'BaseTransaction'
-    feeTransactions: 'BaseTransaction'
-    fixedIncomeTransaction: 'BaseTransaction'
-    id: 'ID'
-    type: 'String'
-  }
-  AssetSaleGroupTransaction: { // field return type name
-    cashTransaction: 'BaseTransaction'
-    feeTransactions: 'BaseTransaction'
-    fixedIncomeTransaction: 'BaseTransaction'
-    id: 'ID'
-    type: 'String'
-  }
   AuditReport: { // field return type name
     report: 'Attachment'
     status: 'AuditReportStatus'
@@ -1207,6 +1161,7 @@ export interface NexusGenFieldTypeNames {
     vesting: 'Vesting'
   }
   Cash: { // field return type name
+    balance: 'Float'
     currency: 'String'
     id: 'ID'
     spvId: 'ID'
@@ -1258,20 +1213,13 @@ export interface NexusGenFieldTypeNames {
     nodes: 'Node'
     slug: 'String'
   }
-  FeesPaymentGroupTransaction: { // field return type name
-    feeTransactions: 'BaseTransaction'
-    id: 'ID'
-    type: 'String'
-  }
   FixedIncome: { // field return type name
     CUSIP: 'String'
     ISIN: 'String'
     annualizedYield: 'Float'
     coupon: 'Float'
-    currentValue: 'Float'
     fixedIncomeTypeId: 'ID'
     id: 'ID'
-    marketValue: 'Float'
     maturity: 'Date'
     name: 'String'
     notional: 'Float'
@@ -1281,7 +1229,6 @@ export interface NexusGenFieldTypeNames {
     realizedSurplus: 'Float'
     spvId: 'ID'
     totalDiscount: 'Float'
-    totalSurplus: 'Float'
   }
   FixedIncomeType: { // field return type name
     id: 'ID'
@@ -1295,15 +1242,16 @@ export interface NexusGenFieldTypeNames {
     month: 'String'
     value: 'Float'
   }
-  InterestDrawGroupTransaction: { // field return type name
+  GroupTransaction: { // field return type name
+    cashBalanceChange: 'Float'
+    cashTransaction: 'BaseTransaction'
+    entryTime: 'Date'
+    feeTransactions: 'BaseTransaction'
+    fees: 'TransactionFee'
+    fixedIncomeTransaction: 'BaseTransaction'
     id: 'ID'
     interestTransaction: 'BaseTransaction'
-    type: 'String'
-  }
-  InterestReturnGroupTransaction: { // field return type name
-    id: 'ID'
-    interestTransaction: 'BaseTransaction'
-    type: 'String'
+    type: 'GroupTransactionType'
   }
   LineItem: { // field return type name
     actual: 'Float'
@@ -1392,24 +1340,12 @@ export interface NexusGenFieldTypeNames {
     ref: 'String'
     title: 'String'
   }
-  PrincipalDrawGroupTransaction: { // field return type name
-    cashTransaction: 'BaseTransaction'
-    feeTransactions: 'BaseTransaction'
-    id: 'ID'
-    type: 'String'
-  }
-  PrincipalReturnGroupTransaction: { // field return type name
-    cashTransaction: 'BaseTransaction'
-    feeTransactions: 'BaseTransaction'
-    id: 'ID'
-    type: 'String'
-  }
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
-    document: 'Document'
+    document: 'IDocument'
     drive: 'DocumentDriveState'
-    rwaPortfolio: 'RealWorldAssets'
+    rwaPortfolios: 'RealWorldAssetsPortfolio'
     system: 'SwitchboardDrive'
   }
   RealWorldAssets: { // field return type name
@@ -1422,12 +1358,22 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
     state: 'RealWorldAssetsState'
   }
+  RealWorldAssetsPortfolio: { // field return type name
+    accounts: 'Account'
+    fixedIncomeTypes: 'FixedIncomeType'
+    id: 'ID'
+    portfolio: 'Asset'
+    principalLenderAccountId: 'ID'
+    serviceProviderFeeTypes: 'ServiceProviderFeeType'
+    spvs: 'Spv'
+    transactions: 'GroupTransaction'
+  }
   RealWorldAssetsState: { // field return type name
     accounts: 'Account'
-    feeTypes: 'ServiceProvider'
     fixedIncomeTypes: 'FixedIncomeType'
     portfolio: 'Asset'
     principalLenderAccountId: 'ID'
+    serviceProviderFeeTypes: 'ServiceProviderFeeType'
     spvs: 'Spv'
     transactions: 'GroupTransaction'
   }
@@ -1466,7 +1412,7 @@ export interface NexusGenFieldTypeNames {
   SectionComponent: { // field return type name
     content: 'String'
   }
-  ServiceProvider: { // field return type name
+  ServiceProviderFeeType: { // field return type name
     accountId: 'ID'
     feeType: 'String'
     id: 'ID'
@@ -1544,7 +1490,8 @@ export interface NexusGenFieldTypeNames {
   }
   TransactionFee: { // field return type name
     amount: 'Float'
-    serviceProviderId: 'ID'
+    id: 'ID'
+    serviceProviderFeeTypeId: 'ID'
   }
   TypeSpecificationComponent: { // field return type name
     additionalLogic: 'String'
@@ -1579,7 +1526,7 @@ export interface NexusGenFieldTypeNames {
     key: 'String'
     vested: 'Boolean'
   }
-  Document: { // field return type name
+  IDocument: { // field return type name
     created: 'Date'
     documentType: 'String'
     id: 'String'
@@ -1587,6 +1534,15 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     operations: 'Operation'
     revision: 'Int'
+  }
+  IRealWorldAssetsState: { // field return type name
+    accounts: 'Account'
+    fixedIncomeTypes: 'FixedIncomeType'
+    portfolio: 'Asset'
+    principalLenderAccountId: 'ID'
+    serviceProviderFeeTypes: 'ServiceProviderFeeType'
+    spvs: 'Spv'
+    transactions: 'GroupTransaction'
   }
   Operation: { // field return type name
     hash: 'String'
@@ -1635,9 +1591,6 @@ export interface NexusGenArgTypes {
     document: { // args
       id: string; // String!
     }
-    rwaPortfolio: { // args
-      id: string; // String!
-    }
   }
   Sync: {
     strands: { // args
@@ -1650,17 +1603,19 @@ export interface NexusGenArgTypes {
 export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
-  GroupTransaction: "AssetPurchaseGroupTransaction" | "AssetSaleGroupTransaction" | "FeesPaymentGroupTransaction" | "InterestDrawGroupTransaction" | "InterestReturnGroupTransaction" | "PrincipalDrawGroupTransaction" | "PrincipalReturnGroupTransaction"
-  Document: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
+  IDocument: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
+  IRealWorldAssetsState: "RealWorldAssetsPortfolio" | "RealWorldAssetsState"
   System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
-  AccountSnapshot: "Document"
-  BudgetStatement: "Document"
-  DefaultDocument: "Document"
-  RealWorldAssets: "Document"
-  ScopeFramework: "Document"
+  AccountSnapshot: "IDocument"
+  BudgetStatement: "IDocument"
+  DefaultDocument: "IDocument"
+  RealWorldAssets: "IDocument"
+  RealWorldAssetsPortfolio: "IRealWorldAssetsState"
+  RealWorldAssetsState: "IRealWorldAssetsState"
+  ScopeFramework: "IDocument"
   SwitchboardDrive: "System"
   SwitchboardHost: "System"
 }
@@ -1679,7 +1634,7 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "Document" | "ElementComponents" | "GroupTransaction" | "Operation" | "System";
+export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IRealWorldAssetsState" | "Operation" | "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

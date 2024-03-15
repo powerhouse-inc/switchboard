@@ -15,7 +15,7 @@ export const operationModelInterface = interfaceType({
 
 // todo: resolveType should be moved to somewhere else
 export const documentModelInterface = interfaceType({
-  name: 'Document',
+  name: 'IDocument',
   definition(t) {
     t.nonNull.string('id');
     t.nonNull.string('name');

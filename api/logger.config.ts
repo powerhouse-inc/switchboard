@@ -16,7 +16,7 @@ export const defaultLoggerConfig: LoggerConfig = {
 
 export const debugLogConfig: LoggerConfig = {
   // Filter by module name
-  moduleFilter: [],
+  moduleFilter: ["RWA Internal Listener"],
   // Filter by log prefix, e.g. adding
   // `pref` to filter is going to correspond to showing `[PERF]` logs
   prefixFilter: [],

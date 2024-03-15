@@ -1,4 +1,4 @@
-import type { Prisma } from '@prisma/client';
+import type { Prisma, PrismaClient } from '@prisma/client';
 import {
   DocumentDriveServer,
   DriveInput,
@@ -6,6 +6,8 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
+  IReceiver,
+  InternalTransmitter,
 } from 'document-drive';
 
 import { PrismaStorage } from 'document-drive/storage/prisma';
@@ -20,9 +22,10 @@ import {
 } from 'document-model-libs/document-drive';
 
 
-import { actions as rwaActions } from 'document-model-libs/dist/real-world-assets'
+import { init } from './listenerManager';
+import { getChildLogger } from '../../logger';
 
-
+const logger = getChildLogger({ msgPrefix: 'Document Model' });
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
@@ -31,15 +34,21 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
   const driveServer = new DocumentDriveServer(
     documentModels,
-    new PrismaStorage(prisma),
+    new PrismaStorage(prisma as PrismaClient),
   );
 
-  driveServer.initialize();
+  async function initialize() {
+    await driveServer.initialize();
+    await init(driveServer, prisma);
+  }
+
+  initialize();
 
   return {
     addDrive: async (args: DriveInput) => {
       try {
         await driveServer.addDrive(args);
+        await initialize();
       } catch (e) {
         throw new Error("Couldn't add drive");
       }
@@ -79,6 +88,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       documentId?: string,
     ) => {
       if (!documentId) {
+        logger.info('adding drive operations')
         const result = await driveServer.addDriveOperations(
           driveId,
           operations,
@@ -86,6 +96,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
         return result;
       }
+      logger.info('adding operations to document')
       const result = await driveServer.addOperations(
         driveId,
         documentId,
@@ -107,8 +118,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       if (!transmitter) {
         throw new Error(`Transmitter with id ${listenerId} not found`);
       }
-      const result = await transmitter.getStrands(since || undefined);
-      return result;
+      if (transmitter.getStrands) {
+        const result = await transmitter.getStrands(since || undefined);
+        return result;
+      }
+
+      return []
     },
 
     processAcknowledge: async (
