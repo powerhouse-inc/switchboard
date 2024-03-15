@@ -74,7 +74,7 @@ export const GroupTransaction = objectType({
   }
 })
 export const RealWorldAssetsStateInterface = interfaceType({
-  name: "RealWorldAssetsStateInterface",
+  name: "IRealWorldAssets",
   definition(t) {
     t.nonNull.list.nonNull.field("accounts", { type: Account })
     t.nonNull.id("principalLenderAccountId")
@@ -87,7 +87,7 @@ export const RealWorldAssetsStateInterface = interfaceType({
 })
 
 export const RealWorldAssetsState = objectType({
-  name: "RealWorldAssetsState",
+  name: "RealWorldAssets",
   definition(t) {
     t.implements(RealWorldAssetsStateInterface)
   }
@@ -138,7 +138,7 @@ export const GroupTransactionType = enumType({
 });
 
 export const RealWorldAssetsStateWithId = objectType({
-  name: "RealWorldAssetsStateWithId",
+  name: "RealWorldAssetsWithId",
   definition(t) {
     t.nonNull.id("id")
     t.implements(RealWorldAssetsStateInterface)

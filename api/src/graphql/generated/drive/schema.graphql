@@ -260,6 +260,16 @@ enum GroupTransactionType {
   PrincipalReturn
 }
 
+interface IRealWorldAssets {
+  accounts: [Account!]!
+  fixedIncomeTypes: [FixedIncomeType!]!
+  portfolio: [Asset!]!
+  principalLenderAccountId: ID!
+  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
+  spvs: [Spv!]!
+  transactions: [GroupTransaction!]!
+}
+
 input InputListenerFilter {
   branch: [String]
   documentId: [String]
@@ -405,11 +415,11 @@ type Query {
   coreUnits: [CoreUnit]
   document(id: String!): Document
   drive: DocumentDriveState
-  rwaPortfolios: [RealWorldAssetsStateWithId]
+  rwaPortfolios: [RealWorldAssetsWithId]
   system: SwitchboardDrive
 }
 
-type RealWorldAssetsState implements RealWorldAssetsStateInterface {
+type RealWorldAssets implements IRealWorldAssets {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   portfolio: [Asset!]!
@@ -419,17 +429,7 @@ type RealWorldAssetsState implements RealWorldAssetsStateInterface {
   transactions: [GroupTransaction!]!
 }
 
-interface RealWorldAssetsStateInterface {
-  accounts: [Account!]!
-  fixedIncomeTypes: [FixedIncomeType!]!
-  portfolio: [Asset!]!
-  principalLenderAccountId: ID!
-  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
-  spvs: [Spv!]!
-  transactions: [GroupTransaction!]!
-}
-
-type RealWorldAssetsStateWithId implements RealWorldAssetsStateInterface {
+type RealWorldAssetsWithId implements IRealWorldAssets {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   id: ID!
