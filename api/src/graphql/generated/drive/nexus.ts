@@ -387,18 +387,28 @@ export interface NexusGenObjects {
   }
   Query: {};
   RealWorldAssets: { // root type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
+    name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
+    state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
+  }
+  RealWorldAssetsPortfolio: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    id: string; // ID!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
-  RealWorldAssetsPortfolio: { // root type
+  RealWorldAssetsState: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
-    id: string; // ID!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
@@ -550,8 +560,8 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  Document: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['ScopeFramework'];
-  IRealWorldAssets: NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['RealWorldAssetsPortfolio'];
+  IDocument: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
+  IRealWorldAssetsState: NexusGenRootTypes['RealWorldAssetsPortfolio'] | NexusGenRootTypes['RealWorldAssetsState'];
   Operation: any;
   System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
@@ -843,24 +853,34 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
-    document: NexusGenRootTypes['Document'] | null; // Document
+    document: NexusGenRootTypes['IDocument'] | null; // IDocument
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsPortfolio'] | null> | null; // [RealWorldAssetsPortfolio]
     system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
   }
   RealWorldAssets: { // field return type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    id: string; // String!
+    lastModified: NexusGenScalars['Date']; // Date!
+    name: string; // String!
+    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    revision: number; // Int!
+    state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
+  }
+  RealWorldAssetsPortfolio: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
+    id: string; // ID!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
-  RealWorldAssetsPortfolio: { // field return type
+  RealWorldAssetsState: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
-    id: string; // ID!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
     principalLenderAccountId: string; // ID!
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
@@ -1016,7 +1036,7 @@ export interface NexusGenFieldTypes {
     key: string; // String!
     vested: boolean; // Boolean!
   }
-  Document: { // field return type
+  IDocument: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -1025,7 +1045,7 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
     revision: number; // Int!
   }
-  IRealWorldAssets: { // field return type
+  IRealWorldAssetsState: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
@@ -1323,24 +1343,34 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
-    document: 'Document'
+    document: 'IDocument'
     drive: 'DocumentDriveState'
     rwaPortfolios: 'RealWorldAssetsPortfolio'
     system: 'SwitchboardDrive'
   }
   RealWorldAssets: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'Operation'
+    revision: 'Int'
+    state: 'RealWorldAssetsState'
+  }
+  RealWorldAssetsPortfolio: { // field return type name
     accounts: 'Account'
     fixedIncomeTypes: 'FixedIncomeType'
+    id: 'ID'
     portfolio: 'Asset'
     principalLenderAccountId: 'ID'
     serviceProviderFeeTypes: 'ServiceProviderFeeType'
     spvs: 'Spv'
     transactions: 'GroupTransaction'
   }
-  RealWorldAssetsPortfolio: { // field return type name
+  RealWorldAssetsState: { // field return type name
     accounts: 'Account'
     fixedIncomeTypes: 'FixedIncomeType'
-    id: 'ID'
     portfolio: 'Asset'
     principalLenderAccountId: 'ID'
     serviceProviderFeeTypes: 'ServiceProviderFeeType'
@@ -1496,7 +1526,7 @@ export interface NexusGenFieldTypeNames {
     key: 'String'
     vested: 'Boolean'
   }
-  Document: { // field return type name
+  IDocument: { // field return type name
     created: 'Date'
     documentType: 'String'
     id: 'String'
@@ -1505,7 +1535,7 @@ export interface NexusGenFieldTypeNames {
     operations: 'Operation'
     revision: 'Int'
   }
-  IRealWorldAssets: { // field return type name
+  IRealWorldAssetsState: { // field return type name
     accounts: 'Account'
     fixedIncomeTypes: 'FixedIncomeType'
     portfolio: 'Asset'
@@ -1573,18 +1603,19 @@ export interface NexusGenArgTypes {
 export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
-  Document: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "ScopeFramework"
-  IRealWorldAssets: "RealWorldAssets" | "RealWorldAssetsPortfolio"
+  IDocument: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
+  IRealWorldAssetsState: "RealWorldAssetsPortfolio" | "RealWorldAssetsState"
   System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
-  AccountSnapshot: "Document"
-  BudgetStatement: "Document"
-  DefaultDocument: "Document"
-  RealWorldAssets: "IRealWorldAssets"
-  RealWorldAssetsPortfolio: "IRealWorldAssets"
-  ScopeFramework: "Document"
+  AccountSnapshot: "IDocument"
+  BudgetStatement: "IDocument"
+  DefaultDocument: "IDocument"
+  RealWorldAssets: "IDocument"
+  RealWorldAssetsPortfolio: "IRealWorldAssetsState"
+  RealWorldAssetsState: "IRealWorldAssetsState"
+  ScopeFramework: "IDocument"
   SwitchboardDrive: "System"
   SwitchboardHost: "System"
 }
@@ -1603,7 +1634,7 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "Document" | "ElementComponents" | "IRealWorldAssets" | "Operation" | "System";
+export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IRealWorldAssetsState" | "Operation" | "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

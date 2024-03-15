@@ -8,7 +8,7 @@ type Account {
   reference: String!
 }
 
-type AccountSnapshot implements Document {
+type AccountSnapshot implements IDocument {
   created: Date!
   documentType: String!
   id: String!
@@ -94,7 +94,7 @@ type BaseTransaction {
   txRef: String
 }
 
-type BudgetStatement implements Document {
+type BudgetStatement implements IDocument {
   created: Date!
   documentType: String!
   id: String!
@@ -175,17 +175,7 @@ type CoreUnit {
 """Date custom scalar type"""
 scalar Date
 
-type DefaultDocument implements Document {
-  created: Date!
-  documentType: String!
-  id: String!
-  lastModified: Date!
-  name: String!
-  operations: [Operation!]!
-  revision: Int!
-}
-
-interface Document {
+type DefaultDocument implements IDocument {
   created: Date!
   documentType: String!
   id: String!
@@ -260,7 +250,17 @@ enum GroupTransactionType {
   PrincipalReturn
 }
 
-interface IRealWorldAssets {
+interface IDocument {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [Operation!]!
+  revision: Int!
+}
+
+interface IRealWorldAssetsState {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   portfolio: [Asset!]!
@@ -413,15 +413,27 @@ type Owner {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
-  document(id: String!): Document
+  document(id: String!): IDocument
   drive: DocumentDriveState
   rwaPortfolios: [RealWorldAssetsPortfolio]
   system: SwitchboardDrive
 }
 
-type RealWorldAssets implements IRealWorldAssets {
+type RealWorldAssets implements IDocument {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [Operation!]!
+  revision: Int!
+  state: RealWorldAssetsState!
+}
+
+type RealWorldAssetsPortfolio implements IRealWorldAssetsState {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
+  id: ID!
   portfolio: [Asset!]!
   principalLenderAccountId: ID!
   serviceProviderFeeTypes: [ServiceProviderFeeType!]!
@@ -429,10 +441,9 @@ type RealWorldAssets implements IRealWorldAssets {
   transactions: [GroupTransaction!]!
 }
 
-type RealWorldAssetsPortfolio implements IRealWorldAssets {
+type RealWorldAssetsState implements IRealWorldAssetsState {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
-  id: ID!
   portfolio: [Asset!]!
   principalLenderAccountId: ID!
   serviceProviderFeeTypes: [ServiceProviderFeeType!]!
@@ -453,7 +464,7 @@ type ScopeComponent {
   content: String
 }
 
-type ScopeFramework implements Document {
+type ScopeFramework implements IDocument {
   created: Date!
   documentType: String!
   id: String!
