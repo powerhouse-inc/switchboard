@@ -1,5 +1,6 @@
 import { enumType, interfaceType, list, objectType, queryField, unionType } from 'nexus';
 import { GQLDateBase } from '../system';
+import { documentModelInterface } from '../document';
 
 export const Account = objectType({
   name: "Account",
@@ -74,7 +75,7 @@ export const GroupTransaction = objectType({
   }
 })
 export const RealWorldAssetsStateInterface = interfaceType({
-  name: "IRealWorldAssets",
+  name: "IRealWorldAssetsState",
   definition(t) {
     t.nonNull.list.nonNull.field("accounts", { type: Account })
     t.nonNull.id("principalLenderAccountId")
@@ -87,7 +88,7 @@ export const RealWorldAssetsStateInterface = interfaceType({
 })
 
 export const RealWorldAssetsState = objectType({
-  name: "RealWorldAssets",
+  name: "RealWorldAssetsState",
   definition(t) {
     t.implements(RealWorldAssetsStateInterface)
   }
@@ -144,6 +145,14 @@ export const RealWorldAssetsPortfolio = objectType({
     t.implements(RealWorldAssetsStateInterface)
   }
 })
+
+export const RealWorldAssetsDocument = objectType({
+  name: 'RealWorldAssets',
+  definition(t) {
+    t.implements(documentModelInterface);
+    t.nonNull.field('state', { type: RealWorldAssetsState });
+  },
+});
 
 export const rwaQuery = queryField('rwaPortfolios', {
   type: list(RealWorldAssetsPortfolio),

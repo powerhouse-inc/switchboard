@@ -22,8 +22,6 @@ import {
 } from 'document-model-libs/document-drive';
 
 
-import { actions as rwaActions } from 'document-model-libs/dist/real-world-assets'
-
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
 
