@@ -137,8 +137,8 @@ export const GroupTransactionType = enumType({
   members: ['AssetPurchase', 'AssetSale', 'InterestDraw', 'InterestReturn', 'FeesPayment', 'PrincipalDraw', 'PrincipalReturn'],
 });
 
-export const RealWorldAssetsStateWithId = objectType({
-  name: "RealWorldAssetsWithId",
+export const RealWorldAssetsPortfolio = objectType({
+  name: "RealWorldAssetsPortfolio",
   definition(t) {
     t.nonNull.id("id")
     t.implements(RealWorldAssetsStateInterface)
@@ -146,7 +146,7 @@ export const RealWorldAssetsStateWithId = objectType({
 })
 
 export const rwaQuery = queryField('rwaPortfolios', {
-  type: list(RealWorldAssetsStateWithId),
+  type: list(RealWorldAssetsPortfolio),
   // args: {
   //   filter: arg(
   //     {

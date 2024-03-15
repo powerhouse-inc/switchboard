@@ -415,7 +415,7 @@ type Query {
   coreUnits: [CoreUnit]
   document(id: String!): Document
   drive: DocumentDriveState
-  rwaPortfolios: [RealWorldAssetsWithId]
+  rwaPortfolios: [RealWorldAssetsPortfolio]
   system: SwitchboardDrive
 }
 
@@ -429,7 +429,7 @@ type RealWorldAssets implements IRealWorldAssets {
   transactions: [GroupTransaction!]!
 }
 
-type RealWorldAssetsWithId implements IRealWorldAssets {
+type RealWorldAssetsPortfolio implements IRealWorldAssets {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   id: ID!

@@ -395,7 +395,7 @@ export interface NexusGenObjects {
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
-  RealWorldAssetsWithId: { // root type
+  RealWorldAssetsPortfolio: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     id: string; // ID!
@@ -551,7 +551,7 @@ export interface NexusGenObjects {
 
 export interface NexusGenInterfaces {
   Document: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['ScopeFramework'];
-  IRealWorldAssets: NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['RealWorldAssetsWithId'];
+  IRealWorldAssets: NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['RealWorldAssetsPortfolio'];
   Operation: any;
   System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
@@ -845,7 +845,7 @@ export interface NexusGenFieldTypes {
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     document: NexusGenRootTypes['Document'] | null; // Document
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
-    rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsWithId'] | null> | null; // [RealWorldAssetsWithId]
+    rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsPortfolio'] | null> | null; // [RealWorldAssetsPortfolio]
     system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
   }
   RealWorldAssets: { // field return type
@@ -857,7 +857,7 @@ export interface NexusGenFieldTypes {
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
   }
-  RealWorldAssetsWithId: { // field return type
+  RealWorldAssetsPortfolio: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     id: string; // ID!
@@ -1325,7 +1325,7 @@ export interface NexusGenFieldTypeNames {
     coreUnits: 'CoreUnit'
     document: 'Document'
     drive: 'DocumentDriveState'
-    rwaPortfolios: 'RealWorldAssetsWithId'
+    rwaPortfolios: 'RealWorldAssetsPortfolio'
     system: 'SwitchboardDrive'
   }
   RealWorldAssets: { // field return type name
@@ -1337,7 +1337,7 @@ export interface NexusGenFieldTypeNames {
     spvs: 'Spv'
     transactions: 'GroupTransaction'
   }
-  RealWorldAssetsWithId: { // field return type name
+  RealWorldAssetsPortfolio: { // field return type name
     accounts: 'Account'
     fixedIncomeTypes: 'FixedIncomeType'
     id: 'ID'
@@ -1574,7 +1574,7 @@ export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
   Document: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "ScopeFramework"
-  IRealWorldAssets: "RealWorldAssets" | "RealWorldAssetsWithId"
+  IRealWorldAssets: "RealWorldAssets" | "RealWorldAssetsPortfolio"
   System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
@@ -1583,7 +1583,7 @@ export interface NexusGenTypeInterfaces {
   BudgetStatement: "Document"
   DefaultDocument: "Document"
   RealWorldAssets: "IRealWorldAssets"
-  RealWorldAssetsWithId: "IRealWorldAssets"
+  RealWorldAssetsPortfolio: "IRealWorldAssets"
   ScopeFramework: "Document"
   SwitchboardDrive: "System"
   SwitchboardHost: "System"
