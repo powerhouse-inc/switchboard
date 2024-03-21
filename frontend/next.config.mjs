@@ -5,8 +5,8 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST ||
       "https://ph-switchboard-nginx-prod-c84ebf8c6e3b.herokuapp.com",
   },
-  basePath: process.env.BASE_PATH ?? undefined,
-  assetPrefix: process.env.BASE_PATH ?? undefined,
+  // basePath: process.env.BASE_PATH ?? "/",
+  assetPrefix: process.env.BASE_PATH ?? "/",
 };
 
 export default nextConfig;

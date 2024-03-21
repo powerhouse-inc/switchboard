@@ -18,7 +18,7 @@ WORKDIR /opt/app
 COPY . .
 COPY --from=deps /opt/app/node_modules ./node_modules
 RUN npm install -g pnpm
-ARG BASE_PATH=undefined
+ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
 RUN pnpm build
 
@@ -28,7 +28,7 @@ FROM node:lts-alpine AS runner
 ARG X_TAG
 WORKDIR /opt/app
 ENV NODE_ENV=production
-ARG BASE_PATH=undefined
+ARG BASE_PATH=""
 ENV BASE_PATH=${BASE_PATH}
 EXPOSE 3000
 COPY --from=builder /opt/app/next.config.mjs ./
