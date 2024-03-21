@@ -1,7 +1,7 @@
 FROM nginx:stable
 ENV PORT=80
 
-ENV BASE_PATH="/makerdao/switchboard"
+ENV BASE_PATH="/"
 ENV BACKEND=https://ph-switchboard-api-prod-2f0358a27fa5.herokuapp.com
 ENV FRONTEND=https://ph-switchboard-frontend-prod-2030e418555a.herokuapp.com
 ENV WUNDERGRAPH=https://ph-switchboard-wgraph-prod-46a95adab5b7.herokuapp.com
