@@ -26,6 +26,7 @@ FROM node:lts-alpine AS runner
 ARG X_TAG
 WORKDIR /opt/app
 ENV NODE_ENV=production
+ENV BASE_PATH=undefined
 EXPOSE 3000
 COPY --from=builder /opt/app/next.config.mjs ./
 COPY --from=builder /opt/app/public ./public
