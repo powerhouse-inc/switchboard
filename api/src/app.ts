@@ -35,7 +35,8 @@ export const createApp = (): { app: Express, router: express.Router } => {
     '/explorer/:driveId?',
     (req, res) => {
       res.setHeader('Content-Type', 'text/html')
-      const endpoint = req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
+      const basePath = process.env.BASE_PATH === "/" ? "" : process.env.BASE_PATH || '';
+      const endpoint = basePath + req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
       res.send(renderPlaygroundPage({
         endpoint: endpoint,
         settings: {
