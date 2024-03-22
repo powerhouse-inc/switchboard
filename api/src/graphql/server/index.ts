@@ -12,6 +12,7 @@ import { schemaWithMiddleware as driveSchema } from './drive/schema';
 import { Context as IndexContext, createContext as createIndexContext } from './index/context';
 import { Context as DriveContext, createContext as createDriveContext } from './drive/context';
 import { getChildLogger } from '../../logger';
+import { renderPlaygroundPage } from 'graphql-playground-html';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
@@ -43,16 +44,17 @@ const createApolloDriveServer = (): ApolloServer<DriveContext> => new ApolloServ
 
 export const startServer = async (
   app: express.Application,
+  router: express.Router,
 ): Promise<Server> => {
   logger.debug('Starting server');
-  const httpServer = createHttpServer(app);
+
   const apolloIndex = createApolloIndexServer();
   const apolloDrive = createApolloDriveServer();
 
   await apolloIndex.start();
   await apolloDrive.start();
 
-  app.use(
+  router.use(
     '/drives',
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
@@ -62,7 +64,7 @@ export const startServer = async (
     }),
   );
 
-  app.use(
+  router.use(
     '/d/:driveId',
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
@@ -72,6 +74,10 @@ export const startServer = async (
     }),
   );
 
+  const basePath = process.env.BASE_PATH || '/';
+  app.use(basePath, router);
+
+  const httpServer = createHttpServer(app);
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);
   });

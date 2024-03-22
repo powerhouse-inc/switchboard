@@ -9,11 +9,12 @@ import {
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
 
-export const createApp = (): Express => {
+export const createApp = (): { app: Express, router: express.Router } => {
   logger.debug('Creating app');
   const app = express();
+  const router = express.Router();
 
-  app.get('/healthz', async (_req, res) => {
+  router.get('/healthz', async (_req, res) => {
     try {
       await basePrisma.user.findFirst();
     } catch (error: any) {
@@ -30,7 +31,7 @@ export const createApp = (): Express => {
     });
   });
 
-  app.get(
+  router.get(
     '/explorer/:driveId?',
     (req, res) => {
       res.setHeader('Content-Type', 'text/html')
@@ -44,5 +45,5 @@ export const createApp = (): Express => {
     }
   );
 
-  return app;
+  return { app, router };
 };
