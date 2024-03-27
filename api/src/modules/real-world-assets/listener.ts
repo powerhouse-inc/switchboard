@@ -1,7 +1,7 @@
 import { Prisma, RWAPortfolio } from "@prisma/client";
 import { InternalTransmitterUpdate, OperationUpdate } from "document-drive";
 import { AddFileInput, DeleteNodeInput, DocumentDriveDocument, DocumentDriveState, ListenerFilter } from "document-model-libs/document-drive";
-import { AddFeesToGroupTransactionInput, Cash, CreateAccountInput, CreateCashAssetInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateGroupTransactionInput, CreateServiceProviderFeeTypeInput, CreateSpvInput, DeleteAccountInput, DeleteCashAssetInput, DeleteFixedIncomeAssetInput, DeleteGroupTransactionInput, DeleteServiceProviderFeeTypeInput, DeleteSpvInput, EditAccountInput, EditCashAssetInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionFeesInput, EditGroupTransactionInput, EditServiceProviderFeeTypeInput, EditSpvInput, FixedIncome, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeesFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
+import { AddFeesToGroupTransactionInput, Asset, Cash, CreateAccountInput, CreateCashAssetInput, CreateFixedIncomeAssetInput, CreateFixedIncomeTypeInput, CreateGroupTransactionInput, CreateServiceProviderFeeTypeInput, CreateSpvInput, DeleteAccountInput, DeleteCashAssetInput, DeleteFixedIncomeAssetInput, DeleteGroupTransactionInput, DeleteServiceProviderFeeTypeInput, DeleteSpvInput, EditAccountInput, EditCashAssetInput, EditFixedIncomeAssetInput, EditFixedIncomeTypeInput, EditGroupTransactionFeesInput, EditGroupTransactionInput, EditServiceProviderFeeTypeInput, EditSpvInput, FixedIncome, RealWorldAssetsDocument, RealWorldAssetsState, RemoveFeesFromGroupTransactionInput, utils } from "document-model-libs/real-world-assets"
 import { getChildLogger } from "../../logger";
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
@@ -149,7 +149,7 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
 
     // create RWAPortfolioAsset
     await prisma.rWAPortfolioAsset.createMany({
-        data: portfolio.map((asset) => ({
+        data: portfolio.map((asset: Asset) => ({
             ...asset,
             assetRefId: asset.id,
             portfolioId: portfolioEntity.id,
