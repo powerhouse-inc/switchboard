@@ -66,7 +66,7 @@ export function transformPortfolioToState(portfolios: Prisma.RWAPortfolioGetPayl
             purchasePrice: asset.purchasePrice,
             purchaseDate: asset.purchaseDate,
             name: asset.name,
-            saleProceeds: asset.salesProceeds,
+            salesProceeds: asset.salesProceeds,
             fixedIncomeType: {
                 id: asset.fixedIncomeType?.id,
                 name: asset.fixedIncomeType?.name
