@@ -51,6 +51,7 @@ export const FixedIncome = objectType({
     t.string("ISIN")
     t.string("CUSIP")
     t.float("coupon")
+    t.float("salesProceeds")
   }
 })
 export const FixedIncomeType = objectType({

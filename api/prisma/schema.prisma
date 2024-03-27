@@ -169,6 +169,7 @@ model RWAPortfolioAsset {
     ISIN              String?
     CUSIP             String?
     coupon            Float?
+    salesProceeds     Float?
     realizedSurplus   Float?
     balance           Float?
     currency          String?
