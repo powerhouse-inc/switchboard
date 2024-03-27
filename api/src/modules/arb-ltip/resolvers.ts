@@ -1,4 +1,6 @@
 import { objectType, enumType, scalarType } from 'nexus';
+import { GQLDateBase } from '../system';
+import { documentModelInterface } from '../document';
 
 export const ArbLtipGranteeState = objectType({
   name: "ArbLtipGranteeState",
@@ -57,8 +59,8 @@ export const GranteeStats = objectType({
 export const Phase = objectType({
   name: "Phase",
   definition(t) {
-    t.nonNull.field("startDate", { type: DateTime })
-    t.nonNull.field("endDate", { type: DateTime })
+    t.nonNull.field("startDate", { type: GQLDateBase })
+    t.nonNull.field("endDate", { type: GQLDateBase })
     t.field("actuals", { type: GranteeActuals })
     t.field("planned", { type: GranteePlanned })
     t.field("stats", { type: GranteeStats })
@@ -79,9 +81,10 @@ export const Status = enumType({
   members: ['Uninitialized','NotStarted','InProgress','Finalized'],
 });
 
-export const DateTime = scalarType({
-  name: "DateTime",
-  serialize() { /* Todo */ },
-  parseValue() { /* Todo */ },
-  parseLiteral() { /* Todo */ }
+export const ArbLtipGranteeDocument = objectType({
+  name: 'ArbLtipGrantee',
+  definition(t) {
+    t.implements(documentModelInterface);
+    t.nonNull.field('state', { type: ArbLtipGranteeState });
+  },
 });
