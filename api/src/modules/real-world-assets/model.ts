@@ -59,7 +59,6 @@ export function getRWACRUD(prisma: Prisma.TransactionClient) {
                 })
                 return transformPortfolioToState(portfolios)
             } catch (e) {
-                console.error(e)
                 return [];
             }
         },
