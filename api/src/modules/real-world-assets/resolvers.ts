@@ -126,11 +126,11 @@ export const AssetUnion = unionType({
     t.members(FixedIncome, Cash)
   },
   resolveType: (asset) => {
-    if (asset.assetType === "Cash") {
-      return "Cash";
+    if (asset.name) {
+      return "FixedIncome";
     }
 
-    return "FixedIncome"
+    return "Cash"
   }
 });
 
