@@ -220,7 +220,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       if (!operation) {
         throw new Error("Operation couldnt be applied")
       }
-      await driveServer.addDriveOperations(driveId, [operation]);
+      const result = await driveServer.addDriveOperations(driveId, [operation]);
+      if (result.status !== "SUCCESS") {
+        throw new Error(`Listener couldn't be registered: ${result.error}`);
+      }
+
       return listener;
     },
 
@@ -235,7 +239,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         throw new Error("Operation couldnt be applied")
       }
 
-      await driveServer.addDriveOperations(driveId, [operation]);
+      const result = await driveServer.addDriveOperations(driveId, [operation]);
+      if (result.status !== "SUCCESS") {
+        throw new Error(`Listener couldn't be deleted: ${result.error}`);
+      }
+
       delete transmitters[driveId][listenerId];
       return listenerId;
     },
