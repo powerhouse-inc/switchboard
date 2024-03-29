@@ -281,6 +281,7 @@ export interface NexusGenObjects {
     purchasePrice: number; // Float!
     purchaseProceeds: number; // Float!
     realizedSurplus: number; // Float!
+    salesProceeds?: number | null; // Float
     spvId: string; // ID!
     totalDiscount: number; // Float!
   }
@@ -737,6 +738,7 @@ export interface NexusGenFieldTypes {
     purchasePrice: number; // Float!
     purchaseProceeds: number; // Float!
     realizedSurplus: number; // Float!
+    salesProceeds: number | null; // Float
     spvId: string; // ID!
     totalDiscount: number; // Float!
   }
@@ -1227,6 +1229,7 @@ export interface NexusGenFieldTypeNames {
     purchasePrice: 'Float'
     purchaseProceeds: 'Float'
     realizedSurplus: 'Float'
+    salesProceeds: 'Float'
     spvId: 'ID'
     totalDiscount: 'Float'
   }

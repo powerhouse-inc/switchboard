@@ -209,6 +209,7 @@ type FixedIncome {
   purchasePrice: Float!
   purchaseProceeds: Float!
   realizedSurplus: Float!
+  salesProceeds: Float
   spvId: ID!
   totalDiscount: Float!
 }
