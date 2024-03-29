@@ -75,14 +75,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     return transmitter
   }
 
-  function setTransmitter(driveId: string, transmitterId: string, transmitter: PullResponderTransmitter) {
-    if (!transmitters[driveId]) {
-      transmitters[driveId] = {};
-    }
-    transmitters[driveId][transmitterId] = transmitter;
-  }
-
-
   initialize();
 
   setInterval(() => {
