@@ -38,7 +38,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   ] as DocumentModel[];
 
   let transmitters: Record<string, Record<string, PullResponderTransmitter>> = {};
-  let lastAcceessedTransmitter: Record<string, Record<string, number>> = {};
   let drives: Record<string, DocumentDriveState> = {};
 
   const driveServer = new DocumentDriveServer(
@@ -57,14 +56,23 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
   function clearTransmitterCache() {
     transmitters = {};
-    lastAcceessedTransmitter = {};
   }
 
-  function getTransmitter(driveId: string, transmitterId: string) {
+  async function getTransmitter(driveId: string, transmitterId: string) {
     if (!transmitters[driveId]) {
-      return undefined;
+      transmitters[driveId] = {};
     }
-    const transmitter = transmitters[driveId][transmitterId];
+
+
+    let transmitter = transmitters[driveId][transmitterId];
+    if (!transmitter) {
+      transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
+      if (!transmitter) {
+        throw new Error(`Transmitter ${transmitterId} not found`)
+      }
+      transmitters[driveId][transmitterId] = transmitter;
+    }
+
     return transmitter
   }
 
@@ -75,12 +83,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     transmitters[driveId][transmitterId] = transmitter;
   }
 
-  function updateLastAccessedTransmitter(driveId: string, transmitterId: string) {
-    if (!lastAcceessedTransmitter[driveId]) {
-      lastAcceessedTransmitter[driveId] = {};
-    }
-    lastAcceessedTransmitter[driveId][transmitterId] = Date.now();
-  }
+
   initialize();
 
   setInterval(() => {
@@ -114,7 +117,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     getDrive: async (id: string) => {
       try {
         let drive = drives[id];
-        console.log(drive);
         if (!drive) {
           const { state } = await driveServer.getDrive(id);
           drives[id] = state.global;
@@ -175,21 +177,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       since?: string,
     ): Promise<StrandUpdate[]> => {
 
-      console.log(transmitters)
-      let transmitter: PullResponderTransmitter | undefined = getTransmitter(driveId, listenerId);
-      if (!transmitter) {
-        transmitter = await driveServer.getTransmitter(
-          driveId,
-          listenerId,
-        ) as PullResponderTransmitter;
-
-        if (!transmitter) {
-          throw new Error(`Transmitter with id ${listenerId} not found`);
-        }
-        setTransmitter(driveId, listenerId, transmitter);
-        updateLastAccessedTransmitter(driveId, listenerId);
-      }
-
+      const transmitter = await getTransmitter(driveId, listenerId);
       if (transmitter.getStrands) {
         const result = await transmitter.getStrands(since || undefined);
         return result;
@@ -203,18 +191,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       listenerId: string,
       revisions: ListenerRevision[],
     ) => {
-      let transmitter: PullResponderTransmitter | undefined = getTransmitter(driveId, listenerId);
-      if (!transmitter) {
-        transmitter = await driveServer.getTransmitter(
-          driveId,
-          listenerId,
-        ) as PullResponderTransmitter;
-        if (!transmitter) {
-          throw new Error(`Transmitter with id ${listenerId} not found`);
-        }
-        setTransmitter(driveId, listenerId, transmitter);
-        updateLastAccessedTransmitter(driveId, listenerId);
-      }
+      const transmitter = await getTransmitter(driveId, listenerId);
       const result = await transmitter.processAcknowledge(
         driveId,
         listenerId,
@@ -269,7 +246,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
       await driveServer.addDriveOperations(driveId, [operation]);
       delete transmitters[driveId][listenerId];
-      delete lastAcceessedTransmitter[driveId][listenerId];
       return listenerId;
     },
 
