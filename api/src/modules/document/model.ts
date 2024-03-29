@@ -213,13 +213,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         listenerId: uuid,
         system: false,
       };
-     
+
       const result = await driveServer.addDriveAction(driveId, actions.addListener({ listener }));
       if (result.status !== "SUCCESS") {
         result.error && logger.error(result.error);
         throw new Error(`Listener couldn't be registered: ${result.error || result.status}`);
       }
-
       return listener;
     },
 
