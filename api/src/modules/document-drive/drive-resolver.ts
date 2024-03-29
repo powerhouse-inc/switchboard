@@ -12,9 +12,11 @@ import { systemType } from '../system';
 import {
   ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus, StrandUpdate,
 } from 'document-drive';
-import { OperationScope } from 'document-model/document';
+import { Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import { getChildLogger } from '../../logger';
+import { Context } from '../../graphql/server/drive/context';
+import { DocumentDriveAction } from 'document-model-libs/document-drive';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -178,7 +180,7 @@ export const syncType = objectType({
         listenerId: idArg(),
         since: 'Date',
       },
-      resolve: async (_parent, { listenerId, since }, ctx) => {
+      resolve: async (_parent, { listenerId, since }, ctx: Context) => {
         if (!listenerId) throw new Error('Listener ID is required');
         try {
           const result = await ctx.prisma.document.pullStrands(
@@ -228,11 +230,12 @@ export const driveSystemQueryField = queryField('system', {
 
 export const getDrive = queryField('drive', {
   type: DocumentDriveState,
-  resolve: async (_parent, args, ctx) => {
+  resolve: async (_parent, args, ctx: Context) => {
     try {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1');
       return drive;
     } catch (e) {
+      logger.error(e);
       return null;
     }
   },
@@ -243,10 +246,15 @@ export const registerListener = mutationField('registerPullResponderListener', {
   args: {
     filter: nonNull(InputListenerFilter),
   },
-  resolve: async (_parent, { filter }, ctx) => {
+  resolve: async (_parent, { filter }, ctx: Context) => {
     const result = await ctx.prisma.document.registerPullResponderListener(
       ctx.driveId ?? '1',
-      filter,
+      {
+          branch: filter.branch?.filter(b => !!b) as string[] ?? [],
+          documentId: filter.documentId?.filter(b => !!b) as string[] ?? [],
+          documentType: filter.documentType?.filter(b => !!b) as string[] ?? [],
+          scope: filter.scope?.filter(b => !!b) as string[] ?? [],
+      },
     );
 
     return result;
@@ -259,7 +267,7 @@ export const deleteListener = mutationField('deletePullResponderListener', {
   args: {
     filter: nonNull(InputListenerFilter),
   },
-  resolve: async (_parent, { filter }, ctx) => {
+  resolve: async (_parent, { filter }, ctx: Context) => {
     const result = await ctx.prisma.document.deletePullResponderListener(
       ctx.driveId ?? '1',
       filter,
@@ -274,7 +282,7 @@ export const pushUpdates = mutationField('pushUpdates', {
   args: {
     strands: list(nonNull(InputStrandUpdate)),
   },
-  resolve: async (_parent, { strands }, ctx) => {
+  resolve: async (_parent, { strands }, ctx: Context) => {
     logger.info('pushUpdates')
     if (!strands || strands?.length === 0) return [];
 
@@ -290,13 +298,13 @@ export const pushUpdates = mutationField('pushUpdates', {
 
       const result = await ctx.prisma.document.pushUpdates(
         s.driveId,
-        operations,
+        operations as Operation<DocumentDriveAction>[],
         s.documentId ?? undefined,
       );
 
       if (result.status !== "SUCCESS") logger.error(result.error);
 
-      const revision = result.document.operations[s.scope].slice().pop()?.index ?? -1;
+      const revision = result.document?.operations[s.scope as OperationScope].slice().pop()?.index ?? -1;
       return {
         revision,
         branch: s.branch,
@@ -317,7 +325,7 @@ export const acknowledge = mutationField('acknowledge', {
     listenerId: nonNull('String'),
     revisions: list(ListenerRevisionInput),
   },
-  resolve: async (_parent, { revisions, listenerId }, ctx) => {
+  resolve: async (_parent, { revisions, listenerId }, ctx: Context) => {
     try {
       if (!listenerId || !revisions) return false;
       const validEntries: IListenerRevision[] = revisions
@@ -332,7 +340,7 @@ export const acknowledge = mutationField('acknowledge', {
         }));
 
       const result = await ctx.prisma.document.processAcknowledge(
-        ctx.driveId,
+        ctx.driveId ?? "1",
         listenerId,
         validEntries,
       );

@@ -20,7 +20,6 @@ import {
   Listener,
   ListenerFilter,
   actions,
-  reducer,
   DocumentDriveState,
   DocumentDriveAction
 } from 'document-model-libs/document-drive';
@@ -85,21 +84,21 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   return {
     addDrive: async (args: DriveInput) => {
       try {
-        await driveServer.addDrive(args);
+        const drive = await driveServer.addDrive(args);
         await initialize();
         clearDriveCache();
+        return drive;
       } catch (e) {
+        logger.error(e);
         throw new Error("Couldn't add drive");
       }
-      return {
-        ...args,
-      };
     },
     deleteDrive: async (id: string) => {
       try {
         await driveServer.deleteDrive(id);
         clearDriveCache();
       } catch (e) {
+        logger.error(e);
         throw new Error("Couldn't delete drive");
       }
 
@@ -115,9 +114,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         } else {
           return drive;
         }
-
-
       } catch (e) {
+        logger.error(e);
         throw new Error("Couldn't get drive");
       }
     },
@@ -134,6 +132,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
         return driveIds;
       } catch (e) {
+        logger.error(e);
         throw new Error("Couldn't get drives");
       }
     },
@@ -214,15 +213,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         listenerId: uuid,
         system: false,
       };
-      let drive = await driveServer.getDrive(driveId);
-      drive = reducer(drive, actions.addListener({ listener }));
-      const operation = drive.operations.local.slice().pop();
-      if (!operation) {
-        throw new Error("Operation couldnt be applied")
-      }
-      const result = await driveServer.addDriveOperations(driveId, [operation]);
+     
+      const result = await driveServer.addDriveAction(driveId, actions.addListener({ listener }));
       if (result.status !== "SUCCESS") {
-        throw new Error(`Listener couldn't be registered: ${result.error}`);
+        result.error && logger.error(result.error);
+        throw new Error(`Listener couldn't be registered: ${result.error || result.status}`);
       }
 
       return listener;
@@ -232,16 +227,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       driveId: string,
       listenerId: string,
     ) => {
-      let drive = await driveServer.getDrive(driveId);
-      drive = reducer(drive, actions.removeListener({ listenerId }));
-      const operation = drive.operations.local.slice().pop();
-      if (!operation) {
-        throw new Error("Operation couldnt be applied")
-      }
-
-      const result = await driveServer.addDriveOperations(driveId, [operation]);
+      const result = await driveServer.addDriveAction(driveId, actions.removeListener({ listenerId }));
       if (result.status !== "SUCCESS") {
-        throw new Error(`Listener couldn't be deleted: ${result.error}`);
+        result.error && logger.error(result.error);
+        throw new Error(`Listener couldn't be deleted: ${result.error || result.status}`);
       }
 
       delete transmitters[driveId][listenerId];

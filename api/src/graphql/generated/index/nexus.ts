@@ -54,7 +54,7 @@ export interface NexusGenInputs {
   }
   DocumentDriveStateInput: { // input type
     icon?: string | null; // String
-    id: string; // ID!
+    id?: string | null; // ID
     name: string; // String!
     slug?: string | null; // String
   }

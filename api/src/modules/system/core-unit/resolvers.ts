@@ -1,6 +1,7 @@
 import {
   stringArg, list, queryField, objectType,
 } from 'nexus/dist';
+import { Context } from '../../../graphql/server/index/context';
 
 export const CoreUnit = objectType({
   name: 'CoreUnit',
@@ -18,7 +19,7 @@ export const CoreUnit = objectType({
 
 export const coreUnits = queryField('coreUnits', {
   type: list('CoreUnit'),
-  resolve: async (_parent, _args, ctx) => {
+  resolve: async (_parent, _args, ctx: Context) => {
     const response = await ctx.prisma.coreUnit.findMany();
     return response;
   },
@@ -27,7 +28,7 @@ export const coreUnits = queryField('coreUnits', {
 export const coreUnit = queryField('coreUnit', {
   type: 'CoreUnit',
   args: { id: stringArg() },
-  resolve: async (_parent, { id }, ctx) => {
+  resolve: async (_parent, { id }, ctx: Context) => {
     if (!id) {
       throw new Error('please provide id');
     }

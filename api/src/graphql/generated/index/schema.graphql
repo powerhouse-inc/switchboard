@@ -55,7 +55,7 @@ type DocumentDriveState {
 
 input DocumentDriveStateInput {
   icon: String
-  id: ID!
+  id: ID
   name: String!
   slug: String
 }
