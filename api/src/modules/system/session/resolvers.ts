@@ -7,6 +7,7 @@ import {
   inputObjectType,
   objectType,
 } from 'nexus/dist';
+import { Context } from '../../../graphql/server/index/context';
 
 export const Session = objectType({
   name: 'Session',
@@ -45,7 +46,7 @@ export const revoke = mutationField('revokeSession', {
   args: {
     sessionId: nonNull(stringArg()),
   },
-  resolve: async (_parent, { sessionId }, ctx) => {
+  resolve: async (_parent, { sessionId }, ctx: Context) => {
     const userId = (await ctx.getSession()).createdBy;
     return ctx.prisma.session.revoke(sessionId, userId);
   },
@@ -59,7 +60,7 @@ export const create = mutationField('createSession', {
   resolve: async (
     _parent,
     { session },
-    ctx,
+    ctx: Context,
   ) => {
     const { createdBy } = await ctx.getSession();
     return ctx.prisma.session.createCustomSession(createdBy, session, true);

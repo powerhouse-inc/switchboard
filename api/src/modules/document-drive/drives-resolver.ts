@@ -7,6 +7,8 @@ import {
   queryField,
 } from 'nexus';
 import { DocumentDriveState } from './drive-resolver';
+import { Context } from '../../graphql/server/drive/context';
+import logger from '../../logger';
 
 export const DocumentDriveLocalState = objectType({
   name: 'DocumentDriveLocalState',
@@ -26,7 +28,7 @@ export const DocumentDriveLocalStateInput = inputObjectType({
 export const DocumentDriveStateInput = inputObjectType({
   name: 'DocumentDriveStateInput',
   definition(t) {
-    t.nonNull.id('id');
+    t.id('id');
     t.nonNull.string('name');
     t.string('icon');
     t.string('slug');
@@ -35,11 +37,12 @@ export const DocumentDriveStateInput = inputObjectType({
 
 export const getDrives = queryField('drives', {
   type: list('String'),
-  resolve: async (_parent, args, ctx) => {
+  resolve: async (_parent, args, ctx: Context) => {
     try {
       const drives = await ctx.prisma.document.getDrives();
       return drives;
     } catch (e) {
+      logger.error(e);
       throw new Error('Failed to get drives.');
     }
   },
@@ -49,7 +52,7 @@ const addDriveResponseDefinition = objectType({
   name: 'AddDriveResponse',
   definition(t) {
     t.nonNull.field('global', {
-      type: DocumentDriveState,
+      type: DocumentDriveState
     });
     t.nonNull.field('local', {
       type: DocumentDriveLocalState,
@@ -64,12 +67,12 @@ export const addDrive = mutationField('addDrive', {
     global: nonNull(DocumentDriveStateInput),
     local: nonNull(DocumentDriveLocalStateInput),
   },
-  resolve: async (_parent, { global, local }, ctx) => {
-    await ctx;
-    return ctx.prisma.document.addDrive({
-      global: { ...global, nodes: [] },
-      local: { ...local, listeners: [], triggers: [] },
+  resolve: async (_parent, { global, local }, ctx: Context) => {
+    const drive = await ctx.prisma.document.addDrive({
+      global: { id: global.id, name: global.name, icon: global.icon ?? null, slug: global.slug ?? null },
+      local: { availableOffline: local.availableOffline, sharingType: local.sharingType ?? null, listeners: [], triggers: [] },
     });
+    return drive.state;
   },
 });
 
@@ -78,10 +81,11 @@ export const deleteDrive = mutationField('deleteDrive', {
   args: {
     id: nonNull('String'),
   },
-  resolve: async (_parent, { id }, ctx) => {
+  resolve: async (_parent, { id }, ctx: Context) => {
     try {
-      await ctx.prisma.drive.deleteDrive(id);
+      await ctx.prisma.document.deleteDrive(id);
     } catch (e) {
+      logger.error(e);
       return false;
     }
 
