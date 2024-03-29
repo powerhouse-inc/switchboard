@@ -20,7 +20,7 @@ describe("Document Drive Server", () => {
   it("it syncs with listener", async () => {
     // add drive without listener
     const addDriveResponse = await addDrive();
-    expect(addDriveResponse.global.id).not.toBeNull();
+    expect(addDriveResponse.global.id).toBe("1");
 
     // add file
     const pushUpdatesResponse = await addBudgetStatement();

@@ -4,6 +4,7 @@ import {
   list, mutationField, nonNull, objectType, queryField, scalarType, stringArg,
 } from 'nexus';
 import logger from '../../logger';
+import { Context } from '../../graphql/server/index/context';
 
 
 
@@ -12,7 +13,7 @@ export const authType = objectType({
   definition(t) {
     t.field('me', {
       type: 'User',
-      resolve: async (_, __, ctx) => {
+      resolve: async (_, __, ctx: Context) => {
         const { createdBy } = await ctx.getSession();
         return ctx.prisma.user.findUnique({
           where: {
@@ -22,7 +23,7 @@ export const authType = objectType({
       },
     });
     t.field('sessions', {
-      resolve: async (_, __, ctx) => {
+      resolve: async (_, __, ctx: Context) => {
         const { createdBy } = await ctx.getSession();
         return ctx.prisma.session.listSessions(createdBy);
       },

@@ -1,5 +1,6 @@
 import { interfaceType, nonNull, objectType, queryField } from 'nexus';
 import { GQLDateBase } from '../system';
+import { Context } from '../../graphql/server/drive/context';
 
 // todo: resolveType should be moved to somewhere else
 export const operationModelInterface = interfaceType({
@@ -51,7 +52,10 @@ export const documentQuery = queryField('document', {
   args: {
     id: nonNull('String'),
   },
-  resolve: async (_root, { id }, ctx) => {
+  resolve: async (_root, { id }, ctx: Context) => {
+    if (!ctx.driveId) {
+      throw new Error("DriveId is not defined")
+    }
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
     return doc;
   },
