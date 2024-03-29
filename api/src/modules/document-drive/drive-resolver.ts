@@ -231,7 +231,7 @@ export const getDrive = queryField('drive', {
   resolve: async (_parent, args, ctx) => {
     try {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1');
-      return drive.global;
+      return drive;
     } catch (e) {
       return null;
     }
