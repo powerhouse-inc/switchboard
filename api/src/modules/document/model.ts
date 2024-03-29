@@ -63,7 +63,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       transmitters[driveId] = {};
     }
 
-
     let transmitter = transmitters[driveId][transmitterId];
     if (!transmitter) {
       transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
