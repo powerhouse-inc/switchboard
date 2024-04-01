@@ -56,41 +56,44 @@ model Document {
     lastModified        DateTime             @default(now())
     revision            Json
     name                String?
+    operations          Operation[]
     initialState        Json // json object with the scope as keys of the root object
     documentType        String
     syncronizationUnits SyncronizationUnit[]
-    operations          Operation[]
 
     @@id([id, driveId])
 }
 
 model Operation {
-    id      String @id @default(uuid())
-    driveId String
+    id          String       @id @default(uuid())
+    driveId     String
+    Document    Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
+    documentId  String
+    scope       String
+    branch      String
+    index       Int
+    skip        Int
+    hash        String
+    timestamp   DateTime
+    input       Json
+    type        String
+    attachments Attachment[]
+    syncId      String?
+    clipboard   Boolean?     @default(false)
 
-    documentId         String
-    scope              String
-    branch             String
-    index              Int
-    skip               Int
-    hash               String
-    timestamp          DateTime
-    input              Json
-    type               String
-    syncId             String?
-    clipboard          Boolean?            @default(false)
-    Document           Document?           @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
-    attachments        Attachment[]
     SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId], onDelete: Cascade)
+
+    @@unique([driveId, documentId, scope, branch, index], name: "unique_operation")
 }
 
 model SyncronizationUnit {
     id         String
     driveId    String
     documentId String
+
+    Document   Document    @relation(fields: [documentId, driveId], references: [id, driveId], onDelete: Cascade)
     scope      String
     branch     String
-    Document   Document    @relation(fields: [documentId, driveId], references: [id, driveId], onDelete: Cascade)
     operations Operation[]
 
     @@id([id, driveId])
@@ -99,22 +102,25 @@ model SyncronizationUnit {
 model Attachment {
     id          String    @id @default(uuid())
     operationId String
-    mimeType    String
-    data        String
-    filename    String
-    extension   String
-    hash        String
     Operation   Operation @relation(fields: [operationId], references: [id], onDelete: Cascade)
+
+    mimeType  String
+    data      String
+    filename  String
+    extension String
+    hash      String
 }
 
 model Listener {
-    listenerId String  @id @default(uuid())
+    listenerId String @id @default(uuid())
     driveId    String
-    label      String?
-    block      Boolean
-    system     Boolean
-    filter     Json
-    callInfo   Json
+
+    label  String?
+    block  Boolean
+    system Boolean
+
+    filter   Json
+    callInfo Json
 }
 
 // RWA Operational Data
