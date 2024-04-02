@@ -27,6 +27,7 @@ import {
 
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
+import DocumentDriveError from '../../errors/DocumentDriveError';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -48,8 +49,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     try {
       await driveServer.initialize();
       await init(driveServer, prisma);
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to initialize drive server", logging: true, context: e })
     }
   }
 
@@ -217,7 +218,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         listenerId: uuid,
         system: false,
       };
-     
+
       const result = await driveServer.addDriveAction(driveId, actions.addListener({ listener }));
       if (result.status !== "SUCCESS") {
         result.error && logger.error(result.error);
