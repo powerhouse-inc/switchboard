@@ -45,8 +45,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   );
 
   async function initialize() {
-    await driveServer.initialize();
-    await init(driveServer, prisma);
+    try {
+      await driveServer.initialize();
+      await init(driveServer, prisma);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function clearDriveCache() {

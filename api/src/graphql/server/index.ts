@@ -9,9 +9,11 @@ import cors from 'cors';
 import { PORT } from '../../env';
 import { schemaWithMiddleware as indexSchema } from './index/schema';
 import { schemaWithMiddleware as driveSchema } from './drive/schema';
-import { Context as IndexContext, createContext as createIndexContext } from './index/context';
+import { Context, Context as IndexContext, createContext as createIndexContext } from './index/context';
 import { Context as DriveContext, createContext as createDriveContext } from './drive/context';
 import { getChildLogger } from '../../logger';
+import "express-async-errors";
+import { errorHandler } from '../../middleware/errors';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
@@ -72,6 +74,7 @@ export const startServer = async (
     }),
   );
 
+  app.use(errorHandler);
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);
   });
