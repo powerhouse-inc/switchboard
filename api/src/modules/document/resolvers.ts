@@ -1,4 +1,4 @@
-import { interfaceType, nonNull, objectType, queryField } from 'nexus';
+import { interfaceType, list, nonNull, objectType, queryField } from 'nexus';
 import { GQLDateBase } from '../system';
 import { Context } from '../../graphql/server/drive/context';
 
@@ -58,5 +58,19 @@ export const documentQuery = queryField('document', {
     }
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
     return doc;
+  },
+});
+
+export const documentsQuery = queryField('documents', {
+  type: list(documentModelInterface),
+  resolve: async (_root, { id }, ctx: Context) => {
+    if (!ctx.driveId) {
+      throw new Error("DriveId is not defined")
+    }
+    const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
+    const docs = await Promise.all(docIds.map(doc => {
+      return ctx.prisma.document.getDocument(ctx.driveId!, doc);
+    }));
+    return docs;
   },
 });

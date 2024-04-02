@@ -415,6 +415,7 @@ type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   document(id: String!): IDocument
+  documents: [IDocument]
   drive: DocumentDriveState
   rwaPortfolios: [RealWorldAssetsPortfolio]
   system: SwitchboardDrive
