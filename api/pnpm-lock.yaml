@@ -24,8 +24,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.24
-    version: 1.0.0-alpha.24(@prisma/client@5.11.0)(document-model-libs@1.17.1)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    specifier: 1.0.0-alpha.25
+    version: 1.0.0-alpha.25(@prisma/client@5.11.0)(document-model-libs@1.17.1)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.35
     version: 1.0.35
@@ -41,6 +41,9 @@ dependencies:
   express:
     specifier: ^4.19.2
     version: 4.19.2
+  express-async-errors:
+    specifier: ^3.1.1
+    version: 3.1.1(express@4.19.2)
   graphql:
     specifier: ^16.8.1
     version: 16.8.1
@@ -4701,8 +4704,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.24(@prisma/client@5.11.0)(document-model-libs@1.17.1)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
-    resolution: {integrity: sha512-wYE3+iax4a5WC5neFla/MQ8iBUvMP0grQh3OuOt07kkq4CDrQY5+3fZlIZ5Azq3voC3cF1+XC2XnDpA/vZPqjg==}
+  /document-drive@1.0.0-alpha.25(@prisma/client@5.11.0)(document-model-libs@1.17.1)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+    resolution: {integrity: sha512-tM5an9gvPdEYXWU7EVFDgaiBwcNCZxx88uPqwztrCVXijUTG+1qFOWhg7i6MHMsK6+r22ifp6FfvLHNeK1B8Iw==}
     peerDependencies:
       '@prisma/client': 5.11.0
       document-model: ^1.0.35
@@ -5284,6 +5287,14 @@ packages:
   /expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
     engines: {node: '>=6'}
+    dev: false
+
+  /express-async-errors@3.1.1(express@4.19.2):
+    resolution: {integrity: sha512-h6aK1da4tpqWSbyCa3FxB/V6Ehd4EEB15zyQq9qe75OZBp0krinNKuH4rAY+S/U/2I36vdLAUFSjQJ+TFmODng==}
+    peerDependencies:
+      express: ^4.16.2
+    dependencies:
+      express: 4.19.2
     dev: false
 
   /express@4.19.2:
