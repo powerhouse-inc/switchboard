@@ -255,5 +255,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       };
       return response;
     },
+
+    getDocuments: async (driveId: string) => {
+      const documents = await driveServer.getDocuments(driveId);
+      return documents;
+    }
   }
 }
