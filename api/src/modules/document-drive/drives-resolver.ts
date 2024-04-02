@@ -9,6 +9,7 @@ import {
 import { DocumentDriveState } from './drive-resolver';
 import { Context } from '../../graphql/server/drive/context';
 import logger from '../../logger';
+import DocumentDriveError from '../../errors/DocumentDriveError';
 
 export const DocumentDriveLocalState = objectType({
   name: 'DocumentDriveLocalState',
@@ -68,11 +69,15 @@ export const addDrive = mutationField('addDrive', {
     local: nonNull(DocumentDriveLocalStateInput),
   },
   resolve: async (_parent, { global, local }, ctx: Context) => {
-    const drive = await ctx.prisma.document.addDrive({
-      global: { id: global.id, name: global.name, icon: global.icon ?? null, slug: global.slug ?? null },
-      local: { availableOffline: local.availableOffline, sharingType: local.sharingType ?? null, listeners: [], triggers: [] },
-    });
-    return drive.state;
+    try {
+      const drive = await ctx.prisma.document.addDrive({
+        global: { id: global.id, name: global.name, icon: global.icon ?? null, slug: global.slug ?? null },
+        local: { availableOffline: local.availableOffline, sharingType: local.sharingType ?? null, listeners: [], triggers: [] },
+      });
+      return drive.state;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to add drive", logging: true, context: e })
+    }
   },
 });
 
@@ -84,9 +89,8 @@ export const deleteDrive = mutationField('deleteDrive', {
   resolve: async (_parent, { id }, ctx: Context) => {
     try {
       await ctx.prisma.document.deleteDrive(id);
-    } catch (e) {
-      logger.error(e);
-      return false;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete drive", logging: true, context: e })
     }
 
     return true;
