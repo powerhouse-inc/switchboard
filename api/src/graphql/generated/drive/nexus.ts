@@ -856,6 +856,7 @@ export interface NexusGenFieldTypes {
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     document: NexusGenRootTypes['IDocument'] | null; // IDocument
+    documents: Array<NexusGenRootTypes['IDocument'] | null> | null; // [IDocument]
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
     rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsPortfolio'] | null> | null; // [RealWorldAssetsPortfolio]
     system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
@@ -1347,6 +1348,7 @@ export interface NexusGenFieldTypeNames {
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
     document: 'IDocument'
+    documents: 'IDocument'
     drive: 'DocumentDriveState'
     rwaPortfolios: 'RealWorldAssetsPortfolio'
     system: 'SwitchboardDrive'
