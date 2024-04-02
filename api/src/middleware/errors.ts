@@ -10,6 +10,5 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     msg: err.message,
   });
 
-  console.log("TEST TEST TEST")
   res.status(500).send({ errors: err.message });
 };
