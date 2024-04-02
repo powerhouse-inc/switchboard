@@ -1,6 +1,9 @@
 import { interfaceType, list, nonNull, objectType, queryField } from 'nexus';
 import { GQLDateBase } from '../system';
 import { Context } from '../../graphql/server/drive/context';
+import { getChildLogger } from '../../logger';
+
+const logger = getChildLogger({ msgPrefix: 'DOCUMENT RESOLVER' });
 
 // todo: resolveType should be moved to somewhere else
 export const operationModelInterface = interfaceType({
@@ -56,8 +59,12 @@ export const documentQuery = queryField('document', {
     if (!ctx.driveId) {
       throw new Error("DriveId is not defined")
     }
-    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
-    return doc;
+    try {
+      const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
+      return doc;
+    } catch (e: any) {
+      logger.error({ msg: e.message });
+    }
   },
 });
 
@@ -67,10 +74,14 @@ export const documentsQuery = queryField('documents', {
     if (!ctx.driveId) {
       throw new Error("DriveId is not defined")
     }
-    const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
-    const docs = await Promise.all(docIds.map(doc => {
-      return ctx.prisma.document.getDocument(ctx.driveId!, doc);
-    }));
-    return docs;
+    try {
+      const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
+      const docs = await Promise.all(docIds.map(doc => {
+        return ctx.prisma.document.getDocument(ctx.driveId!, doc);
+      }));
+      return docs;
+    } catch (e: any) {
+      logger.error({ msg: e.message });
+    }
   },
 });
