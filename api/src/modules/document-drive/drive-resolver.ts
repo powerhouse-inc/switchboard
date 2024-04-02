@@ -17,6 +17,7 @@ import stringify from 'json-stringify-deterministic';
 import { getChildLogger } from '../../logger';
 import { Context } from '../../graphql/server/drive/context';
 import { DocumentDriveAction } from 'document-model-libs/document-drive';
+import DocumentDriveError from '../../errors/DocumentDriveError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -234,9 +235,8 @@ export const getDrive = queryField('drive', {
     try {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1');
       return drive;
-    } catch (e) {
-      logger.error(e);
-      return null;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to get drive", logging: true, context: e })
     }
   },
 });
@@ -247,17 +247,23 @@ export const registerListener = mutationField('registerPullResponderListener', {
     filter: nonNull(InputListenerFilter),
   },
   resolve: async (_parent, { filter }, ctx: Context) => {
-    const result = await ctx.prisma.document.registerPullResponderListener(
-      ctx.driveId ?? '1',
-      {
+    try {
+      const result = await ctx.prisma.document.registerPullResponderListener(
+        ctx.driveId ?? '1',
+        {
           branch: filter.branch?.filter(b => !!b) as string[] ?? [],
           documentId: filter.documentId?.filter(b => !!b) as string[] ?? [],
           documentType: filter.documentType?.filter(b => !!b) as string[] ?? [],
           scope: filter.scope?.filter(b => !!b) as string[] ?? [],
-      },
-    );
+        },
+      );
 
-    return result;
+      return result;
+
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to register listener", logging: true, context: e })
+    }
+
   },
 });
 
@@ -268,12 +274,16 @@ export const deleteListener = mutationField('deletePullResponderListener', {
     filter: nonNull(InputListenerFilter),
   },
   resolve: async (_parent, { filter }, ctx: Context) => {
-    const result = await ctx.prisma.document.deletePullResponderListener(
-      ctx.driveId ?? '1',
-      filter,
-    );
+    try {
+      const result = await ctx.prisma.document.deletePullResponderListener(
+        ctx.driveId ?? '1',
+        filter,
+      );
 
-    return result;
+      return result;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete listener", logging: true, context: e })
+    }
   },
 });
 
@@ -286,36 +296,42 @@ export const pushUpdates = mutationField('pushUpdates', {
     logger.info('pushUpdates')
     if (!strands || strands?.length === 0) return [];
 
-    const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
-      const operations = s.operations?.map((o) => ({
-        ...o,
-        input: JSON.parse(o.input),
-        skip: o.skip ?? 0,
-        scope: s.scope as OperationScope,
-        branch: 'main',
-        scopes: ['global', 'local'],
-      })) ?? [];
+    try {
+      const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
+        const operations = s.operations?.map((o) => ({
+          ...o,
+          input: JSON.parse(o.input),
+          skip: o.skip ?? 0,
+          scope: s.scope as OperationScope,
+          branch: 'main',
+          scopes: ['global', 'local'],
+        })) ?? [];
 
-      const result = await ctx.prisma.document.pushUpdates(
-        s.driveId,
-        operations as Operation<DocumentDriveAction>[],
-        s.documentId ?? undefined,
-      );
+        const result = await ctx.prisma.document.pushUpdates(
+          s.driveId,
+          operations as Operation<DocumentDriveAction>[],
+          s.documentId ?? undefined,
+        );
 
-      if (result.status !== "SUCCESS") logger.error(result.error);
+        if (result.status !== "SUCCESS") logger.error(result.error);
 
-      const revision = result.document?.operations[s.scope as OperationScope].slice().pop()?.index ?? -1;
-      return {
-        revision,
-        branch: s.branch,
-        documentId: s.documentId ?? '',
-        driveId: s.driveId,
-        scope: s.scope as OperationScope,
-        status: result.status,
-      };
-    }));
+        const revision = result.document?.operations[s.scope as OperationScope].slice().pop()?.index ?? -1;
+        return {
+          revision,
+          branch: s.branch,
+          documentId: s.documentId ?? '',
+          driveId: s.driveId,
+          scope: s.scope as OperationScope,
+          status: result.status,
+        };
 
-    return listenerRevisions;
+      }));
+
+
+      return listenerRevisions;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to push updates", logging: true, context: e })
+    }
   },
 });
 
@@ -346,9 +362,8 @@ export const acknowledge = mutationField('acknowledge', {
       );
 
       return result;
-    } catch (e) {
-      logger.error(e)
-      return false;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to acknowledge", logging: true, context: e })
     }
   },
 });
