@@ -1,6 +1,9 @@
 import { enumType, interfaceType, list, objectType, queryField, unionType } from 'nexus';
 import { GQLDateBase } from '../system';
 import { documentModelInterface } from '../document';
+import { getChildLogger } from '../../logger';
+
+const logger = getChildLogger({ msgPrefix: 'REAL WORLD ASSETS RESOLVER' });
 
 export const Account = objectType({
   name: "Account",
@@ -165,8 +168,12 @@ export const rwaQuery = queryField('rwaPortfolios', {
   //   ),
   // },
   resolve: async (_root, args, ctx) => {
-    const doc = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
-    return doc;
+    try {
+      const doc = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
+      return doc;
+    } catch (e: any) {
+      logger.error({ msg: e.message });
+    }
   },
 });
 
