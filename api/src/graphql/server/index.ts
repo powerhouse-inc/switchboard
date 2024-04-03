@@ -14,7 +14,7 @@ import { Context as DriveContext, createContext as createDriveContext } from './
 import { getChildLogger } from '../../logger';
 import "express-async-errors";
 import { errorHandler } from '../../middleware/errors';
-
+import * as Sentry from "@sentry/node";
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
 function loggerPlugin(): ApolloServerPlugin<Context> {
@@ -75,6 +75,9 @@ export const startServer = async (
   );
 
   app.use(errorHandler);
+  if (process.env.SENTRY_DSN) {
+    app.use(Sentry.Handlers.errorHandler());
+  }
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);
   });
