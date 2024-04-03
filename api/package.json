@@ -17,6 +17,8 @@
   "dependencies": {
     "@apollo/server": "^4.10.2",
     "@prisma/client": "^5.11.0",
+    "@sentry/node": "^7.109.0",
+    "@sentry/profiling-node": "^7.109.0",
     "@types/cookie-parser": "^1.4.7",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -40,6 +42,7 @@
     "pino": "^8.19.0",
     "pino-http": "^8.6.1",
     "pino-pretty": "^10.3.1",
+    "pino-sentry-transport": "^1.1.0",
     "siwe": "^2.1.4",
     "vite-node": "^0.29.8",
     "vitest": "^0.32.4",

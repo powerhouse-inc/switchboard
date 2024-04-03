@@ -29,13 +29,18 @@ export const listener: IReceiverOptions = {
 export async function transmit(strands: InternalTransmitterUpdate<RealWorldAssetsDocument | DocumentDriveDocument, "global">[], prisma: Prisma.TransactionClient) {
     // logger.debug(strands);
     for (const strand of strands) {
-
-        if (strand.documentId === "") {
-            await handleDriveStrand(strand as InternalTransmitterUpdate<DocumentDriveDocument, "global">, prisma);
-        } else {
-            await handleRwaDocumentStrand(strand as InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, prisma);
+        try {
+            if (strand.documentId === "") {
+                await handleDriveStrand(strand as InternalTransmitterUpdate<DocumentDriveDocument, "global">, prisma);
+            } else {
+                await handleRwaDocumentStrand(strand as InternalTransmitterUpdate<RealWorldAssetsDocument, "global">, prisma);
+            }
+        } catch (e) {
+            logger.error({ msg: "Error processing strand", error: e });
+            continue;
         }
     }
+
 }
 
 async function handleDriveStrand(strand: InternalTransmitterUpdate<DocumentDriveDocument, "global">, prisma: Prisma.TransactionClient) {
