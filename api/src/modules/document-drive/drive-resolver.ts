@@ -323,6 +323,7 @@ export const pushUpdates = mutationField('pushUpdates', {
           driveId: s.driveId,
           scope: s.scope as OperationScope,
           status: result.status,
+          error: result.error
         };
 
       }));
