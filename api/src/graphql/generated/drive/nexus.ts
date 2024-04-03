@@ -134,7 +134,7 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['AccountSnapshotState']; // AccountSnapshotState!
   }
@@ -195,7 +195,7 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
   }
@@ -257,8 +257,14 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
+  }
+  DefaultOperation: { // root type
+    hash: string; // String!
+    index: number; // Int!
+    timestamp: NexusGenScalars['Date']; // Date!
+    type: string; // String!
   }
   DocumentDriveState: { // root type
     icon?: string | null; // String
@@ -393,7 +399,7 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
   }
@@ -432,7 +438,7 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
   }
@@ -562,8 +568,8 @@ export interface NexusGenObjects {
 
 export interface NexusGenInterfaces {
   IDocument: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
+  IOperation: NexusGenRootTypes['DefaultOperation'];
   IRealWorldAssetsState: NexusGenRootTypes['RealWorldAssetsPortfolio'] | NexusGenRootTypes['RealWorldAssetsState'];
-  Operation: any;
   System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
 
@@ -588,7 +594,7 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['AccountSnapshotState']; // AccountSnapshotState!
   }
@@ -652,7 +658,7 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
   }
@@ -714,8 +720,14 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
+  }
+  DefaultOperation: { // field return type
+    hash: string; // String!
+    index: number; // Int!
+    timestamp: NexusGenScalars['Date']; // Date!
+    type: string; // String!
   }
   DocumentDriveState: { // field return type
     icon: string | null; // String
@@ -867,7 +879,7 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
   }
@@ -906,7 +918,7 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
   }
@@ -1045,8 +1057,14 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['Operation'][]; // [Operation!]!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
+  }
+  IOperation: { // field return type
+    hash: string; // String!
+    index: number; // Int!
+    timestamp: NexusGenScalars['Date']; // Date!
+    type: string; // String!
   }
   IRealWorldAssetsState: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
@@ -1056,12 +1074,6 @@ export interface NexusGenFieldTypes {
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  }
-  Operation: { // field return type
-    hash: string; // String!
-    index: number; // Int!
-    timestamp: NexusGenScalars['Date']; // Date!
-    type: string; // String!
   }
   System: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -1080,7 +1092,7 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     lastModified: 'Date'
     name: 'String'
-    operations: 'Operation'
+    operations: 'DefaultOperation'
     revision: 'Int'
     state: 'AccountSnapshotState'
   }
@@ -1144,7 +1156,7 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     lastModified: 'Date'
     name: 'String'
-    operations: 'Operation'
+    operations: 'DefaultOperation'
     revision: 'Int'
     state: 'BudgetStatementState'
   }
@@ -1206,8 +1218,14 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     lastModified: 'Date'
     name: 'String'
-    operations: 'Operation'
+    operations: 'DefaultOperation'
     revision: 'Int'
+  }
+  DefaultOperation: { // field return type name
+    hash: 'String'
+    index: 'Int'
+    timestamp: 'Date'
+    type: 'String'
   }
   DocumentDriveState: { // field return type name
     icon: 'String'
@@ -1359,7 +1377,7 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     lastModified: 'Date'
     name: 'String'
-    operations: 'Operation'
+    operations: 'DefaultOperation'
     revision: 'Int'
     state: 'RealWorldAssetsState'
   }
@@ -1398,7 +1416,7 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     lastModified: 'Date'
     name: 'String'
-    operations: 'Operation'
+    operations: 'DefaultOperation'
     revision: 'Int'
     state: 'ScopeFrameworkState'
   }
@@ -1537,8 +1555,14 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     lastModified: 'Date'
     name: 'String'
-    operations: 'Operation'
+    operations: 'DefaultOperation'
     revision: 'Int'
+  }
+  IOperation: { // field return type name
+    hash: 'String'
+    index: 'Int'
+    timestamp: 'Date'
+    type: 'String'
   }
   IRealWorldAssetsState: { // field return type name
     accounts: 'Account'
@@ -1548,12 +1572,6 @@ export interface NexusGenFieldTypeNames {
     serviceProviderFeeTypes: 'ServiceProviderFeeType'
     spvs: 'Spv'
     transactions: 'GroupTransaction'
-  }
-  Operation: { // field return type name
-    hash: 'String'
-    index: 'Int'
-    timestamp: 'Date'
-    type: 'String'
   }
   System: { // field return type name
     auth: 'Auth'
@@ -1609,6 +1627,7 @@ export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
   IDocument: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
+  IOperation: "DefaultOperation"
   IRealWorldAssetsState: "RealWorldAssetsPortfolio" | "RealWorldAssetsState"
   System: "SwitchboardDrive" | "SwitchboardHost"
 }
@@ -1617,6 +1636,7 @@ export interface NexusGenTypeInterfaces {
   AccountSnapshot: "IDocument"
   BudgetStatement: "IDocument"
   DefaultDocument: "IDocument"
+  DefaultOperation: "IOperation"
   RealWorldAssets: "IDocument"
   RealWorldAssetsPortfolio: "IRealWorldAssetsState"
   RealWorldAssetsState: "IRealWorldAssetsState"
@@ -1639,7 +1659,7 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IRealWorldAssetsState" | "Operation" | "System";
+export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IOperation" | "IRealWorldAssetsState" | "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
