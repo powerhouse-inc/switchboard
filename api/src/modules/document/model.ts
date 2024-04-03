@@ -112,7 +112,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     getDrive: async (id: string) => {
       try {
         let drive = drives[id];
-        if (!drive) {
+        if (drive !== {} as DocumentDriveState) {
           const { state } = await driveServer.getDrive(id);
           drives[id] = state.global;
           return state.global;
@@ -162,7 +162,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         documentId,
         operations,
       );
-
+      drives[driveId] = {} as DocumentDriveState;
       return result;
     },
 
