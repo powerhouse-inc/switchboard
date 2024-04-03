@@ -7,14 +7,23 @@ const logger = getChildLogger({ msgPrefix: 'DOCUMENT RESOLVER' });
 
 // todo: resolveType should be moved to somewhere else
 export const operationModelInterface = interfaceType({
-  name: 'Operation',
+  name: 'IOperation',
   definition(t) {
     t.nonNull.string('type');
     t.nonNull.int('index');
     t.nonNull.field('timestamp', { type: GQLDateBase });
     t.nonNull.string('hash');
   },
-  resolveType: (e) => 'Operation',
+  resolveType: (e) => {
+    return "DefaultOperation"
+  },
+});
+
+export const operationModel = objectType({
+  name: 'DefaultOperation',
+  definition(t) {
+    t.implements(operationModelInterface)
+  },
 });
 
 // todo: resolveType should be moved to somewhere else
@@ -27,7 +36,7 @@ export const documentModelInterface = interfaceType({
     t.nonNull.int('revision');
     t.nonNull.field('created', { type: GQLDateBase });
     t.nonNull.field('lastModified', { type: GQLDateBase });
-    t.nonNull.list.nonNull.field('operations', { type: operationModelInterface });
+    t.nonNull.list.nonNull.field('operations', { type: operationModel });
   },
   resolveType: (e) => {
     switch (e.documentType) {
