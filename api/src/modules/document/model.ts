@@ -252,6 +252,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         id: documentId,
         revision: document.revision.global,
         state: document.state.global,
+        operations: document.operations.global,
       };
       return response;
     },
