@@ -11,6 +11,12 @@ dependencies:
   '@prisma/client':
     specifier: ^5.11.0
     version: 5.11.0(prisma@5.11.0)
+  '@sentry/node':
+    specifier: ^7.109.0
+    version: 7.109.0
+  '@sentry/profiling-node':
+    specifier: ^7.109.0
+    version: 7.109.0
   '@types/cookie-parser':
     specifier: ^1.4.7
     version: 1.4.7
@@ -80,6 +86,9 @@ dependencies:
   pino-pretty:
     specifier: ^10.3.1
     version: 10.3.1
+  pino-sentry-transport:
+    specifier: ^1.1.0
+    version: 1.1.0(@sentry/node@7.109.0)(pino@8.19.0)
   siwe:
     specifier: ^2.1.4
     version: 2.1.4(ethers@5.7.2)
@@ -3206,6 +3215,55 @@ packages:
       '@react-types/overlays': 3.8.5(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       react: 18.2.0
+    dev: false
+
+  /@sentry-internal/tracing@7.109.0:
+    resolution: {integrity: sha512-PzK/joC5tCuh2R/PRh+7dp+uuZl7pTsBIjPhVZHMTtb9+ls65WkdZJ1/uKXPouyz8NOo9Xok7aEvEo9seongyw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.109.0
+      '@sentry/types': 7.109.0
+      '@sentry/utils': 7.109.0
+    dev: false
+
+  /@sentry/core@7.109.0:
+    resolution: {integrity: sha512-xwD4U0IlvvlE/x/g/W1I8b4Cfb16SsCMmiEuBf6XxvAa3OfWBxKoqLifb3GyrbxMC4LbIIZCN/SvLlnGJPgszA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.109.0
+      '@sentry/utils': 7.109.0
+    dev: false
+
+  /@sentry/node@7.109.0:
+    resolution: {integrity: sha512-tqMNAES4X/iBl1eZRCmc29p//0id01FBLEiesNo5nk6ECl6/SaGMFAEwu1gsn90h/Bjgr04slwFOS4cR45V2PQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.109.0
+      '@sentry/core': 7.109.0
+      '@sentry/types': 7.109.0
+      '@sentry/utils': 7.109.0
+    dev: false
+
+  /@sentry/profiling-node@7.109.0:
+    resolution: {integrity: sha512-wdDxJ86/A71QTpbbn4LaiB6vmvGd3QEq7UOdZS/y/3SwV66zpkvNB8yPER41BgqDjqcmIY/va9fNi319iTREFw==}
+    engines: {node: '>=8.0.0'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      detect-libc: 2.0.3
+      node-abi: 3.57.0
+    dev: false
+
+  /@sentry/types@7.109.0:
+    resolution: {integrity: sha512-egCBnDv3YpVFoNzRLdP0soVrxVLCQ+rovREKJ1sw3rA2/MFH9WJ+DZZexsX89yeAFzy1IFsCp7/dEqudusml6g==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /@sentry/utils@7.109.0:
+    resolution: {integrity: sha512-3RjxMOLMBwZ5VSiH84+o/3NY2An4Zldjz0EbfEQNRY9yffRiCPJSQiCJID8EoylCFOh/PAhPimBhqbtWJxX6iw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.109.0
     dev: false
 
   /@sinclair/typebox@0.27.8:
@@ -6435,6 +6493,10 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash.get@4.4.2:
+    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    dev: false
+
   /lodash.includes@4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
     dev: false
@@ -7192,6 +7254,19 @@ packages:
       secure-json-parse: 2.7.0
       sonic-boom: 3.8.0
       strip-json-comments: 3.1.1
+    dev: false
+
+  /pino-sentry-transport@1.1.0(@sentry/node@7.109.0)(pino@8.19.0):
+    resolution: {integrity: sha512-XMipEZ415MORLARR+Az+ZghUD/JRPQRRRH/OG3l5XfTvRLQtSuceHWKdKcw3YSjqTTtlBtqK0pWtXR0vIODyPw==}
+    engines: {node: '> 14'}
+    peerDependencies:
+      '@sentry/node': ^7.0.0
+      pino: ^7.0.0 || ^8.0.0
+    dependencies:
+      '@sentry/node': 7.109.0
+      lodash.get: 4.4.2
+      pino: 8.19.0
+      pino-abstract-transport: 1.1.0
     dev: false
 
   /pino-std-serializers@6.2.2:

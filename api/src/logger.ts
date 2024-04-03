@@ -2,7 +2,7 @@ import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import { loggerConfig } from '../logger.config';
-
+import { createWriteStream, Sentry } from "pino-sentry";
 const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
 } = loggerConfig;
@@ -48,19 +48,30 @@ const doesPassFilters = (config: {
   bindings: pino.Bindings;
 }): boolean => FILTERS.every((f) => f(config));
 
+const transport = process.env.SENTRY_DSN ? {
+  target: "pino-sentry-transport",
+  options: {
+    sentry: {
+      dsn: process.env.SENTRY_DSN,
+      // additional options for sentry
+    },
+    withLogRecord: true, // default false - send the log record to sentry as a context.(if its more then 8Kb Sentry will throw an error)
+    tags: ['id'], // sentry tags to add to the event, uses lodash.get to get the value from the log record
+    context: ['hostname'], // sentry context to add to the event, uses lodash.get to get the value from the log record,
+    minLevel: 40, // which level to send to sentry
+  }
+} : {
+  target: 'pino-pretty',
+}
 export const expressLogger = pinoHttp({
   level: httpLogLevel,
   msgPrefix: formatPrefix('express'),
-  transport: {
-    target: 'pino-pretty',
-  },
+  transport,
 });
 
 const logger = pino({
   level: logLevel,
-  transport: {
-    target: 'pino-pretty',
-  },
+  transport,
 });
 
 export const getChildLogger = (
