@@ -14,7 +14,7 @@ type AccountSnapshot implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [Operation!]!
+  operations: [DefaultOperation!]!
   revision: Int!
   state: AccountSnapshotState!
 }
@@ -100,7 +100,7 @@ type BudgetStatement implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [Operation!]!
+  operations: [DefaultOperation!]!
   revision: Int!
   state: BudgetStatementState!
 }
@@ -181,8 +181,15 @@ type DefaultDocument implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [Operation!]!
+  operations: [DefaultOperation!]!
   revision: Int!
+}
+
+type DefaultOperation implements IOperation {
+  hash: String!
+  index: Int!
+  timestamp: Date!
+  type: String!
 }
 
 type DocumentDriveState {
@@ -257,8 +264,15 @@ interface IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [Operation!]!
+  operations: [DefaultOperation!]!
   revision: Int!
+}
+
+interface IOperation {
+  hash: String!
+  index: Int!
+  timestamp: Date!
+  type: String!
 }
 
 interface IRealWorldAssetsState {
@@ -389,13 +403,6 @@ type Node {
   parentFolder: String
 }
 
-interface Operation {
-  hash: String!
-  index: Int!
-  timestamp: Date!
-  type: String!
-}
-
 type OperationUpdate {
   hash: String!
   index: Int!
@@ -427,7 +434,7 @@ type RealWorldAssets implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [Operation!]!
+  operations: [DefaultOperation!]!
   revision: Int!
   state: RealWorldAssetsState!
 }
@@ -472,7 +479,7 @@ type ScopeFramework implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [Operation!]!
+  operations: [DefaultOperation!]!
   revision: Int!
   state: ScopeFrameworkState!
 }
