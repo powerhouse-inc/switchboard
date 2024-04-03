@@ -5,6 +5,9 @@ import basePrisma from './database';
 import {
   renderPlaygroundPage,
 } from 'graphql-playground-html'
+import * as Sentry from "@sentry/node";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
+
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
@@ -13,6 +16,21 @@ export const createApp = (): Express => {
   logger.debug('Creating app');
   const app = express();
 
+  if (process.env.SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [
+        nodeProfilingIntegration(),
+        new Sentry.Integrations.Express({
+          app,
+        }),
+      ],
+      tracesSampleRate: 1.0,
+    });
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+  }
   app.get('/healthz', async (_req, res) => {
     try {
       await basePrisma.user.findFirst();
