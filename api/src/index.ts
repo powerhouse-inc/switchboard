@@ -4,10 +4,10 @@ import { getChildLogger } from './logger';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
-const application = createApp();
+const { app, router } = createApp();
 
 /* istanbul ignore next @preserve */
-startServer(application)
+startServer(app, router)
   .then((e) => {
     // Hot Module Replacement
     if (import.meta.hot) {
