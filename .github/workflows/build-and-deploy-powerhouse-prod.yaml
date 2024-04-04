@@ -30,7 +30,7 @@ jobs:
           dockerfile_directory: ./frontend
           dockerfile_name: Dockerfile
           process_type: web
-          docker_options: "--build-arg NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST=${{ secrets.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST }}"
+          docker_options: "--build-arg NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST=${{ secrets.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST }} --build-arg BASE_PATH=/powerhouse/switchboard"
       - name: Build, Push and Release NGINX to Heroku. # Your custom step name
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
