@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
+import logo from "../../../public/assets/logo.svg";
+import github from "../../../public/assets/github.svg";
 export default function Header() {
   const address = authStore((state) => state.address);
   const gqlToken = authStore((state) => state.gqlToken);
@@ -40,7 +41,13 @@ export default function Header() {
         <div className="flex items-start">
           <SwitchboardLink href="/">
             <div className="flex flex-row items-center">
-              <img src="/assets/logo.svg" className="w-10" />
+              <Image
+                src={logo}
+                alt="Switchboard Logo"
+                className="w-10"
+                width="32"
+                height="32"
+              />
               Switchboard API
             </div>
           </SwitchboardLink>
@@ -87,12 +94,7 @@ export default function Header() {
               href="https://github.com/powerhouse-inc/switchboard-boilerplate"
               target="_blank"
             >
-              <Image
-                src="/assets/github.svg"
-                alt="GitHub"
-                width="32"
-                height="32"
-              />
+              <Image src={github} alt="GitHub" width="32" height="32" />
             </Link>
           </div>
         </div>

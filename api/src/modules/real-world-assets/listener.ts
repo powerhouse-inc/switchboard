@@ -225,15 +225,15 @@ async function rebuildRwaPortfolio(driveId: string, documentId: string, state: R
         })
 
         // add fees
-        for (const fee of transaction.fees ?? []) {
-            await prisma.rWAGroupTransactionFee.create({
-                data: {
+        if (transaction.fees) {
+            await prisma.rWAGroupTransactionFee.createMany({
+                data: transaction.fees.map(fee => ({
                     ...fee,
                     portfolioId: portfolioEntity.id,
                     groupTransactionId: transaction.id,
                     id: fee.id ?? undefined
-                }
-            })
+                }))
+            });
         }
 
         // add relationships for fees
@@ -713,16 +713,19 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
 
     "ADD_FEES_TO_GROUP_TRANSACTION": async (input: AddFeesToGroupTransactionInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Adding fee transactions to group transaction", input });
-        for (const fee of input.fees ?? []) {
-            prisma.rWAGroupTransactionFee.create({
-                data: {
-                    ...fee,
-                    portfolioId: portfolio.id,
-                    groupTransactionId: input.id ?? undefined,
-                    id: fee.id ?? undefined
-                }
-            });
+        // add fees
+        if (!input.fees) {
+            return;
         }
+
+        await prisma.rWAGroupTransactionFee.createMany({
+            data: input.fees.map(fee => ({
+                ...fee,
+                portfolioId: portfolio.id,
+                groupTransactionId: input.id,
+                id: fee.id ?? undefined
+            }))
+        });
     },
     "EDIT_GROUP_TRANSACTION_FEES": async (input: EditGroupTransactionFeesInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing fee transaction", input });
@@ -742,8 +745,8 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 data: {
                     ...fee,
                     portfolioId: portfolio.id,
-                    groupTransactionId: input.id ?? undefined,
-                    id: fee.id ?? undefined
+                    groupTransactionId: input.id,
+                    id: fee.id
                 }
             });
         }
