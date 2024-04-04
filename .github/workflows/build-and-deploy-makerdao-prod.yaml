@@ -1,11 +1,11 @@
-name: Deploy Switchboard Staging
+name: Deploy Switchboard MakerDAO
 
 on:
   push:
-    branches: [staging]
+    branches: [deployments/makerdao]
 jobs:
   build:
-    environment: Staging
+    environment: MakerDAO Production
     runs-on: ubuntu-latest
     steps:
       # Check-out your repository.
@@ -30,16 +30,7 @@ jobs:
           dockerfile_directory: ./frontend
           dockerfile_name: Dockerfile
           process_type: web
-          docker_options: "--build-arg NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST=${{ secrets.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST }} --build-arg BASE_PATH=/makerdao/switchboard"
-      - name: Build, Push and Release Wundergraph to Heroku. # Your custom step name
-        uses: gonuit/heroku-docker-deploy@v1.3.3
-        with:
-          email: ${{ secrets.HEROKU_EMAIL }}
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ secrets.HEROKU_WGRAPH_NAME }}
-          dockerfile_directory: ./wundergraph
-          dockerfile_name: Dockerfile
-          process_type: web
+          docker_options: "--build-arg NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST=${{ secrets.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST }}"
       - name: Build, Push and Release NGINX to Heroku. # Your custom step name
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
