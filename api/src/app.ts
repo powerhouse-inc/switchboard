@@ -12,9 +12,26 @@ import { nodeProfilingIntegration } from "@sentry/profiling-node";
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
 
-export const createApp = (): Express => {
+export const createApp = (): { app: Express, router: express.Router } => {
   logger.debug('Creating app');
   const app = express();
+  const router = express.Router();
+
+  if (process.env.SENTRY_DSN) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      integrations: [
+        nodeProfilingIntegration(),
+        new Sentry.Integrations.Express({
+          app,
+        }),
+      ],
+      tracesSampleRate: 1.0,
+    });
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+  }
 
   if (process.env.SENTRY_DSN) {
     Sentry.init({
@@ -48,11 +65,12 @@ export const createApp = (): Express => {
     });
   });
 
-  app.get(
+  router.get(
     '/explorer/:driveId?',
     (req, res) => {
       res.setHeader('Content-Type', 'text/html')
-      const endpoint = req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
+      const basePath = process.env.BASE_PATH === "/" ? "" : process.env.BASE_PATH || '';
+      const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'}`
       res.send(renderPlaygroundPage({
         endpoint: endpoint,
         settings: {
@@ -62,5 +80,5 @@ export const createApp = (): Express => {
     }
   );
 
-  return app;
+  return { app, router };
 };
