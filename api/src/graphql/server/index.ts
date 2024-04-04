@@ -77,15 +77,11 @@ export const startServer = async (
 
   const basePath = process.env.BASE_PATH || '/';
   app.use(basePath, router);
-
-  const httpServer = createHttpServer(app);
   app.use(errorHandler);
   if (process.env.SENTRY_DSN) {
     app.use(Sentry.Handlers.errorHandler());
   }
-  const basePath = process.env.BASE_PATH || '/';
-  app.use(basePath, router);
-
+  
   const httpServer = createHttpServer(app);
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);
