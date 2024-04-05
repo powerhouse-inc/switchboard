@@ -363,6 +363,7 @@ export interface NexusGenObjects {
     branch: string; // String!
     documentId?: string | null; // String
     driveId: string; // String!
+    error?: string | null; // String
     revision: number; // Int!
     scope: string; // String!
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
@@ -826,6 +827,7 @@ export interface NexusGenFieldTypes {
     branch: string; // String!
     documentId: string | null; // String
     driveId: string; // String!
+    error: string | null; // String
     revision: number; // Int!
     scope: string; // String!
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
@@ -1324,6 +1326,7 @@ export interface NexusGenFieldTypeNames {
     branch: 'String'
     documentId: 'String'
     driveId: 'String'
+    error: 'String'
     revision: 'Int'
     scope: 'String'
     status: 'UpdateStatus'

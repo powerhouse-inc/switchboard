@@ -30,8 +30,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.27
-    version: 1.0.0-alpha.27(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    specifier: 1.0.0-alpha.28
+    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.35
     version: 1.0.35
@@ -4857,8 +4857,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.27(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
-    resolution: {integrity: sha512-XixL8lP4wuvE52yDM++gZgsD01zhf9JZNJ949rs8FcXhkDEM6S2CIWWySzSEK57i892jLYkAq5lVsVhtftn1fQ==}
+  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+    resolution: {integrity: sha512-6telWRQ+Il3mv/EXolcI7w7M2AC/CTi3Qd/qrtwud4xFrdgqq/3rxukZeZO7FE3oQS8jt7ZGc3yBT2erCadeiA==}
     peerDependencies:
       '@prisma/client': 5.11.0
       document-model: ^1.0.35

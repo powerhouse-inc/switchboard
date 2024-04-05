@@ -80,6 +80,7 @@ export const ListenerRevision = objectType({
     t.nonNull.string('branch');
     t.nonNull.field('status', { type: UpdateStatus });
     t.nonNull.int('revision');
+    t.string('error');
   },
 });
 
@@ -323,7 +324,7 @@ export const pushUpdates = mutationField('pushUpdates', {
           driveId: s.driveId,
           scope: s.scope as OperationScope,
           status: result.status,
-          error: result.error
+          error: result.error?.message,
         };
 
       }));
