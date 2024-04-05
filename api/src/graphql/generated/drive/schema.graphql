@@ -365,6 +365,7 @@ type ListenerRevision {
   branch: String!
   documentId: String
   driveId: String!
+  error: String
   revision: Int!
   scope: String!
   status: UpdateStatus!
