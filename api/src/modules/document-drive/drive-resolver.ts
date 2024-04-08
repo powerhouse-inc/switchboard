@@ -298,37 +298,47 @@ export const pushUpdates = mutationField('pushUpdates', {
     if (!strands || strands?.length === 0) return [];
 
     try {
-      const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
-        const operations = s.operations?.map((o) => ({
-          ...o,
-          input: JSON.parse(o.input),
-          skip: o.skip ?? 0,
-          scope: s.scope as OperationScope,
-          branch: 'main',
-          scopes: ['global', 'local'],
-        })) ?? [];
+      const listenerRevisions: IListenerRevision[] = [];
+
+      const sortedStrands = strands.reduce(
+        (acc, curr) =>
+            curr.documentId ? [...acc, curr] : [curr, ...acc],
+        [] as typeof strands
+      );
+
+      for (const s of sortedStrands) {
+        const operations =
+          s.operations?.map((o) => ({
+              ...o,
+              input: JSON.parse(o.input),
+              skip: o.skip ?? 0,
+              scope: s.scope as OperationScope,
+              branch: "main",
+          })) ?? [];
 
         const result = await ctx.prisma.document.pushUpdates(
           s.driveId,
           operations as Operation<DocumentDriveAction>[],
-          s.documentId ?? undefined,
+          s.documentId ?? undefined
         );
 
         if (result.status !== "SUCCESS") logger.error(result.error);
 
-        const revision = result.document?.operations[s.scope as OperationScope].slice().pop()?.index ?? -1;
-        return {
+        const revision =
+          result.document?.operations[s.scope as OperationScope]
+            .slice()
+            .pop()?.index ?? -1;
+
+        listenerRevisions.push({
           revision,
           branch: s.branch,
-          documentId: s.documentId ?? '',
+          documentId: s.documentId ?? "",
           driveId: s.driveId,
           scope: s.scope as OperationScope,
           status: result.status,
           error: result.error?.message,
-        };
-
-      }));
-
+        });
+      }
 
       return listenerRevisions;
     } catch (e: any) {
