@@ -224,7 +224,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         result.error && logger.error(result.error);
         throw new Error(`Listener couldn't be registered: ${result.error || result.status}`);
       }
-
       return listener;
     },
 

@@ -46,6 +46,8 @@ export const documentModelInterface = interfaceType({
         return 'AccountSnapshot';
       case 'makerdao/rwa-portfolio':
         return 'RealWorldAssets';
+      case 'ARBLTIPGrantee':
+        return 'ArbLtipGrantee';
       default:
         return 'DefaultDocument';
     }
