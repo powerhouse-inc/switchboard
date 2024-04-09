@@ -31,7 +31,7 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.28
-    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.21.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.35
     version: 1.0.35
@@ -4857,7 +4857,11 @@ packages:
       esutils: 2.0.3
     dev: true
 
+<<<<<<< HEAD
   /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+=======
+  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.21.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+>>>>>>> main
     resolution: {integrity: sha512-6telWRQ+Il3mv/EXolcI7w7M2AC/CTi3Qd/qrtwud4xFrdgqq/3rxukZeZO7FE3oQS8jt7ZGc3yBT2erCadeiA==}
     peerDependencies:
       '@prisma/client': 5.11.0
@@ -4869,7 +4873,11 @@ packages:
     dependencies:
       '@prisma/client': 5.11.0(prisma@5.11.0)
       document-model: 1.0.35
+<<<<<<< HEAD
       document-model-libs: 1.18.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+=======
+      document-model-libs: 1.21.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+>>>>>>> main
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4882,8 +4890,13 @@ packages:
       - encoding
     dev: false
 
+<<<<<<< HEAD
   /document-model-libs@1.18.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
     resolution: {integrity: sha512-897ENKiL6HqEX1h/R5cb2+CJU3eydLIMH44ACyDciQ+ujDoNQCqNJnJyZUCNoeOBeahFm1m/fwVtsYNoiVfLlA==}
+=======
+  /document-model-libs@1.21.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-bQi2M4hdCMxYF/GNr4OOsPoHL7OfftLKTzQ5jDGeV2ad/QdI6uF61ox/VMxx4pdynQ7np0mX1MTSYSp+zMhNMw==}
+>>>>>>> main
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
