@@ -25,7 +25,7 @@
     "cors": "^2.8.5",
     "document-drive": "1.0.0-alpha.28",
     "document-model": "^1.0.35",
-    "document-model-libs": "^1.21.0",
+    "document-model-libs": "^1.22.0",
     "dotenv": "^16.4.5",
     "ethers": "^5.7.2",
     "express": "^4.19.2",
