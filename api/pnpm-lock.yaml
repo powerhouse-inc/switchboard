@@ -31,13 +31,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.28
-    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.21.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.24.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.35
     version: 1.0.35
   document-model-libs:
-    specifier: 1.18.0-arbitrum.2
-    version: 1.18.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: 1.24.0-arbitrum.2
+    version: 1.24.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -1482,8 +1482,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@floating-ui/react@0.26.10(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-sh6f9gVvWQdEzLObrWbJ97c0clJObiALsFe0LiR/kb3tDRKwEhObASEH2QyfdoO/ZBPzwxa9j+nYFo+sqgbioA==}
+  /@floating-ui/react@0.26.11(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-fo01Cu+jzLDVG/AYAV2OtV6flhXvxP5rDaR1Fk8WWhtsFqwk478Dr2HGtB8s0HqQCsFWVbdHYpPjMiQiR/A9VA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -3667,16 +3667,16 @@ packages:
   /@types/react-datepicker@6.2.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-+JtO4Fm97WLkJTH8j8/v3Ldh7JCNRwjMYjRaKh4KHH0M3jJoXtwiD3JBCsdlg3tsFIw9eQSqyAPeVDN2H2oM9Q==}
     dependencies:
-      '@floating-ui/react': 0.26.10(react-dom@18.2.0)(react@18.2.0)
-      '@types/react': 18.2.74
+      '@floating-ui/react': 0.26.11(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.75
       date-fns: 3.6.0
     transitivePeerDependencies:
       - react
       - react-dom
     dev: false
 
-  /@types/react@18.2.74:
-    resolution: {integrity: sha512-9AEqNZZyBx8OdZpxzQlaFEVCSFUM2YXJH46yPOiOpm078k6ZLOCcuAzGum/zK8YBwY+dbahVNbHrbgrAwIRlqw==}
+  /@types/react@18.2.75:
+    resolution: {integrity: sha512-+DNnF7yc5y0bHkBTiLKqXFe+L4B3nvOphiMY3tuA5X10esmjqk7smyBZzbGTy2vsiy/Bnzj8yFIBL8xhRacoOg==}
     dependencies:
       '@types/prop-types': 15.7.12
       csstype: 3.1.3
@@ -4857,11 +4857,7 @@ packages:
       esutils: 2.0.3
     dev: true
 
-<<<<<<< HEAD
-  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.18.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
-=======
-  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.21.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
->>>>>>> main
+  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.24.0-arbitrum.2)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
     resolution: {integrity: sha512-6telWRQ+Il3mv/EXolcI7w7M2AC/CTi3Qd/qrtwud4xFrdgqq/3rxukZeZO7FE3oQS8jt7ZGc3yBT2erCadeiA==}
     peerDependencies:
       '@prisma/client': 5.11.0
@@ -4873,11 +4869,7 @@ packages:
     dependencies:
       '@prisma/client': 5.11.0(prisma@5.11.0)
       document-model: 1.0.35
-<<<<<<< HEAD
-      document-model-libs: 1.18.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
-=======
-      document-model-libs: 1.21.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
->>>>>>> main
+      document-model-libs: 1.24.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4890,13 +4882,8 @@ packages:
       - encoding
     dev: false
 
-<<<<<<< HEAD
-  /document-model-libs@1.18.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-897ENKiL6HqEX1h/R5cb2+CJU3eydLIMH44ACyDciQ+ujDoNQCqNJnJyZUCNoeOBeahFm1m/fwVtsYNoiVfLlA==}
-=======
-  /document-model-libs@1.21.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-bQi2M4hdCMxYF/GNr4OOsPoHL7OfftLKTzQ5jDGeV2ad/QdI6uF61ox/VMxx4pdynQ7np0mX1MTSYSp+zMhNMw==}
->>>>>>> main
+  /document-model-libs@1.24.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-OJy4/dSwTGaiGSiAXICaUhKOmfltZ+v+0CIIAVopHsBndYcRmTeq/FJYiJrr2+GqmJkpJRR1kAz8iW7qrAGcPw==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -7670,7 +7657,7 @@ packages:
       react: ^16.9.0 || ^17 || ^18
       react-dom: ^16.9.0 || ^17 || ^18
     dependencies:
-      '@floating-ui/react': 0.26.10(react-dom@18.2.0)(react@18.2.0)
+      '@floating-ui/react': 0.26.11(react-dom@18.2.0)(react@18.2.0)
       clsx: 2.1.0
       date-fns: 3.6.0
       prop-types: 15.8.1
