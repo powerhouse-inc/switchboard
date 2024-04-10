@@ -30,8 +30,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.30
-    version: 1.0.0-alpha.30(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    specifier: 1.0.0-alpha.31
+    version: 1.0.0-alpha.31(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.35
     version: 1.0.35
@@ -3239,57 +3239,12 @@ packages:
       '@sentry/utils': 7.109.0
     dev: false
 
-  /@sentry/core@6.19.7:
-    resolution: {integrity: sha512-tOfZ/umqB2AcHPGbIrsFLcvApdTm9ggpi/kQZFkej7kMphjT+SGBiQfYtjyg9jcRW+ilAR4JXC9BGKsdEQ+8Vw==}
-    engines: {node: '>=6'}
-    dependencies:
-      '@sentry/hub': 6.19.7
-      '@sentry/minimal': 6.19.7
-      '@sentry/types': 6.19.7
-      '@sentry/utils': 6.19.7
-      tslib: 1.14.1
-    dev: false
-
   /@sentry/core@7.109.0:
     resolution: {integrity: sha512-xwD4U0IlvvlE/x/g/W1I8b4Cfb16SsCMmiEuBf6XxvAa3OfWBxKoqLifb3GyrbxMC4LbIIZCN/SvLlnGJPgszA==}
     engines: {node: '>=8'}
     dependencies:
       '@sentry/types': 7.109.0
       '@sentry/utils': 7.109.0
-    dev: false
-
-  /@sentry/hub@6.19.7:
-    resolution: {integrity: sha512-y3OtbYFAqKHCWezF0EGGr5lcyI2KbaXW2Ik7Xp8Mu9TxbSTuwTe4rTntwg8ngPjUQU3SUHzgjqVB8qjiGqFXCA==}
-    engines: {node: '>=6'}
-    dependencies:
-      '@sentry/types': 6.19.7
-      '@sentry/utils': 6.19.7
-      tslib: 1.14.1
-    dev: false
-
-  /@sentry/minimal@6.19.7:
-    resolution: {integrity: sha512-wcYmSJOdvk6VAPx8IcmZgN08XTXRwRtB1aOLZm+MVHjIZIhHoBGZJYTVQS/BWjldsamj2cX3YGbGXNunaCfYJQ==}
-    engines: {node: '>=6'}
-    dependencies:
-      '@sentry/hub': 6.19.7
-      '@sentry/types': 6.19.7
-      tslib: 1.14.1
-    dev: false
-
-  /@sentry/node@6.19.7:
-    resolution: {integrity: sha512-gtmRC4dAXKODMpHXKfrkfvyBL3cI8y64vEi3fDD046uqYcrWdgoQsffuBbxMAizc6Ez1ia+f0Flue6p15Qaltg==}
-    engines: {node: '>=6'}
-    dependencies:
-      '@sentry/core': 6.19.7
-      '@sentry/hub': 6.19.7
-      '@sentry/types': 6.19.7
-      '@sentry/utils': 6.19.7
-      cookie: 0.4.2
-      https-proxy-agent: 5.0.1
-      lru_map: 0.3.3
-      tslib: 1.14.1
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /@sentry/node@7.109.0:
@@ -3312,22 +3267,9 @@ packages:
       node-abi: 3.57.0
     dev: false
 
-  /@sentry/types@6.19.7:
-    resolution: {integrity: sha512-jH84pDYE+hHIbVnab3Hr+ZXr1v8QABfhx39KknxqKWr2l0oEItzepV0URvbEhB446lk/S/59230dlUUIBGsXbg==}
-    engines: {node: '>=6'}
-    dev: false
-
   /@sentry/types@7.109.0:
     resolution: {integrity: sha512-egCBnDv3YpVFoNzRLdP0soVrxVLCQ+rovREKJ1sw3rA2/MFH9WJ+DZZexsX89yeAFzy1IFsCp7/dEqudusml6g==}
     engines: {node: '>=8'}
-    dev: false
-
-  /@sentry/utils@6.19.7:
-    resolution: {integrity: sha512-z95ECmE3i9pbWoXQrD/7PgkBAzJYR+iXtPuTkpBjDKs86O3mT+PXOT3BAn79w2wkn7/i3vOGD2xVr1uiMl26dA==}
-    engines: {node: '>=6'}
-    dependencies:
-      '@sentry/types': 6.19.7
-      tslib: 1.14.1
     dev: false
 
   /@sentry/utils@7.109.0:
@@ -3953,6 +3895,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+    optional: true
 
   /agentkeepalive@4.5.0:
     resolution: {integrity: sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==}
@@ -4592,11 +4535,6 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
-  /cookie@0.4.2:
-    resolution: {integrity: sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==}
-    engines: {node: '>= 0.6'}
-    dev: false
-
   /cookie@0.6.0:
     resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
     engines: {node: '>= 0.6'}
@@ -4860,8 +4798,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.30(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
-    resolution: {integrity: sha512-3UtPXQhE6+kzYH4muvHCsT5AFU3ehlHbDh4Mb13JE7aMtCCAzKtWllWf+wka7LJNdYJ9RWG5MCw0J2lj319C8Q==}
+  /document-drive@1.0.0-alpha.31(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+    resolution: {integrity: sha512-T2EgaOgkPXSOkvCQM+rY8YwSHtSB/FPs9KOeoWxKib5y/DQ4TgOAl3xh1ISo1YcOuET0u7BwUH95+/qVlXL7uQ==}
     peerDependencies:
       '@prisma/client': 5.11.0
       document-model: ^1.0.35
@@ -4882,10 +4820,8 @@ packages:
       sequelize: 6.37.2(sqlite3@5.1.7)
       sqlite3: 5.1.7
       winston: 3.13.0
-      winston-sentry-log: 1.0.26
     transitivePeerDependencies:
       - encoding
-      - supports-color
     dev: false
 
   /document-model-libs@1.24.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
@@ -6047,6 +5983,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+    optional: true
 
   /humanize-ms@1.2.1:
     resolution: {integrity: sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ==}
@@ -6721,10 +6658,6 @@ packages:
   /lru-cache@7.18.3:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
-    dev: false
-
-  /lru_map@0.3.3:
-    resolution: {integrity: sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==}
     dev: false
 
   /lz-string@1.5.0:
@@ -8523,6 +8456,7 @@ packages:
 
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+    dev: true
 
   /tslib@2.4.1:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
@@ -9003,17 +8937,6 @@ packages:
 
   /wildcard-match@5.1.3:
     resolution: {integrity: sha512-a95hPUk+BNzSGLntNXYxsjz2Hooi5oL7xOfJR6CKwSsSALh7vUNuTlzsrZowtYy38JNduYFRVhFv19ocqNOZlg==}
-    dev: false
-
-  /winston-sentry-log@1.0.26:
-    resolution: {integrity: sha512-SmZqanIyTLIrCSu99WPGO8XW7CKiTvAfBsHZpNiTH79xJinQwiBY8zUIl0/NVR0lYWeLNoesbQVzTpqPgW8ZIg==}
-    engines: {node: '>= 6.4.0'}
-    dependencies:
-      '@sentry/node': 6.19.7
-      lodash: 4.17.21
-      winston-transport: 4.7.0
-    transitivePeerDependencies:
-      - supports-color
     dev: false
 
   /winston-transport@4.7.0:
