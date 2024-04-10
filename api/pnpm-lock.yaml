@@ -30,14 +30,14 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.28
-    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.23.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    specifier: ^1.0.0-alpha.28
+    version: 1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
     specifier: ^1.0.35
     version: 1.0.35
   document-model-libs:
-    specifier: ^1.23.0
-    version: 1.23.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: ^1.24.0
+    version: 1.24.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -4762,7 +4762,7 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.23.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+  /document-drive@1.0.0-alpha.28(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.35)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
     resolution: {integrity: sha512-6telWRQ+Il3mv/EXolcI7w7M2AC/CTi3Qd/qrtwud4xFrdgqq/3rxukZeZO7FE3oQS8jt7ZGc3yBT2erCadeiA==}
     peerDependencies:
       '@prisma/client': 5.11.0
@@ -4774,7 +4774,7 @@ packages:
     dependencies:
       '@prisma/client': 5.11.0(prisma@5.11.0)
       document-model: 1.0.35
-      document-model-libs: 1.23.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model-libs: 1.24.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4787,8 +4787,8 @@ packages:
       - encoding
     dev: false
 
-  /document-model-libs@1.23.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-X/y9o22sheAPUK5IAxLqZb0IMCRSUvP5sSAF/slPHFJoOSMntsn0X+PHaMrunCP8ysT0ZQPsI3cIYILqQkPc7w==}
+  /document-model-libs@1.24.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-PO/RR6f2SIkFYnkXoznVBu0DIbDGdo2qdvwOM/shO54AatfsIeWkd/v149X7qGklaDvZ+FznGaVhDchFLG7OcQ==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
