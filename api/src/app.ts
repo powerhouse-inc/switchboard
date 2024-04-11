@@ -20,6 +20,7 @@ export const createApp = (): { app: Express, router: express.Router } => {
   if (process.env.SENTRY_DSN) {
     Sentry.init({
       dsn: process.env.SENTRY_DSN,
+      environment: process.env.SENTRY_ENV ?? 'dev',
       integrations: [
         nodeProfilingIntegration(),
         new Sentry.Integrations.Express({
@@ -33,21 +34,6 @@ export const createApp = (): { app: Express, router: express.Router } => {
     app.use(Sentry.Handlers.tracingHandler());
   }
 
-  if (process.env.SENTRY_DSN) {
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      integrations: [
-        nodeProfilingIntegration(),
-        new Sentry.Integrations.Express({
-          app,
-        }),
-      ],
-      tracesSampleRate: 1.0,
-    });
-
-    app.use(Sentry.Handlers.requestHandler());
-    app.use(Sentry.Handlers.tracingHandler());
-  }
   app.get('/healthz', async (_req, res) => {
     try {
       await basePrisma.user.findFirst();
