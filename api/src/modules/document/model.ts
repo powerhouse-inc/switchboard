@@ -6,16 +6,12 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
-  IReceiver,
-  InternalTransmitter,
-
-
 } from 'document-drive';
-
+import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
 import { module as DocumentModelLib } from 'document-model/document-model';
-import { DocumentModel, Operation, State } from 'document-model/document';
+import { DocumentModel, Operation } from 'document-model/document';
 import {
   Listener,
   ListenerFilter,
@@ -24,12 +20,23 @@ import {
   DocumentDriveAction
 } from 'document-model-libs/document-drive';
 
-
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
+
+// creates a child logger and provides it to the document drive lib
+const documentDriveLogger = getChildLogger({ msgPrefix: "Document Drive" });
+
+// patches the log method into the info method from pino
+const loggerAdapter = new Proxy<ILogger>(documentDriveLogger as unknown as ILogger, {
+    get: (target, prop) =>
+        prop === "log"
+            ? documentDriveLogger.info
+            : target[prop as keyof ILogger],
+});
+setLogger(loggerAdapter);
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
