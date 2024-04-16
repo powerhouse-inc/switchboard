@@ -31,13 +31,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.34
-    version: 1.0.0-alpha.34(@prisma/client@5.11.0)(document-model-libs@1.24.0-arbitrum.2)(document-model@1.0.38)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    version: 1.0.0-alpha.34(@prisma/client@5.11.0)(document-model-libs@1.28.0-arbitrum.3)(document-model@1.0.40)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
-    specifier: ^1.0.37
-    version: 1.0.38
+    specifier: ^1.0.40
+    version: 1.0.40
   document-model-libs:
-    specifier: 1.24.0-arbitrum.2
-    version: 1.24.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: 1.28.0-arbitrum.3
+    version: 1.28.0-arbitrum.3(document-model@1.0.40)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -4851,7 +4851,7 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.34(@prisma/client@5.11.0)(document-model-libs@1.24.0-arbitrum.2)(document-model@1.0.38)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+  /document-drive@1.0.0-alpha.34(@prisma/client@5.11.0)(document-model-libs@1.28.0-arbitrum.3)(document-model@1.0.40)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
     resolution: {integrity: sha512-qqAjSArx4I5IEXFHouipSwwuzxWjAvsjdPYIEnFkiFEA6esaVtLJqkGlplI1GYVySL9+J2D/APgC6p3thfrl5w==}
     peerDependencies:
       '@prisma/client': 5.11.0
@@ -4862,8 +4862,8 @@ packages:
       sqlite3: ^5.1.7
     dependencies:
       '@prisma/client': 5.11.0(prisma@5.11.0)
-      document-model: 1.0.38
-      document-model-libs: 1.24.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model: 1.0.40
+      document-model-libs: 1.28.0-arbitrum.3(document-model@1.0.40)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4876,9 +4876,10 @@ packages:
       - encoding
     dev: false
 
-  /document-model-libs@1.24.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-OJy4/dSwTGaiGSiAXICaUhKOmfltZ+v+0CIIAVopHsBndYcRmTeq/FJYiJrr2+GqmJkpJRR1kAz8iW7qrAGcPw==}
+  /document-model-libs@1.28.0-arbitrum.3(document-model@1.0.40)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-+mGKiPkp4iDbTlYrvJnRRzlvvFBIaKmSKsdiOvPrabNfcKOqJieccdGB3aQ6JLECEwzTDSeZRDK2seZRG+/YLg==}
     peerDependencies:
+      document-model: ^1.0.40
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
@@ -4892,6 +4893,7 @@ packages:
       copy-anything: 3.0.5
       date-fns: 3.6.0
       deep-object-diff: 1.1.9
+      document-model: 1.0.40
       jsonc-parser: 3.2.1
       jszip: 3.10.1
       react: 18.2.0
@@ -4911,8 +4913,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.0.38:
-    resolution: {integrity: sha512-gxpl19/x5kk1KNHYpGNnRoLDrH2eVoHW1UvRJRl4+2Q4jD1ot8xBoQgtq+WC+Bxw3xUfZaLG/6iYKCBqRnBbtA==}
+  /document-model@1.0.40:
+    resolution: {integrity: sha512-M2mKDXNsCDAqYYpQpk/dFoVAG2ThI1HlYMzGwYT/lDfO7MFAYhxYAq3Pk9CC5It9F9+DGaqdEZC0E+PHbETzqg==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
