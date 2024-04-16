@@ -30,11 +30,11 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.34
-    version: 1.0.0-alpha.34(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.37)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
+    specifier: 1.0.0-alpha.35
+    version: 1.0.0-alpha.35(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.41)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7)
   document-model:
-    specifier: ^1.0.37
-    version: 1.0.37
+    specifier: ^1.0.41
+    version: 1.0.41
   document-model-libs:
     specifier: ^1.24.0
     version: 1.24.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
@@ -4756,18 +4756,18 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.34(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.37)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
-    resolution: {integrity: sha512-qqAjSArx4I5IEXFHouipSwwuzxWjAvsjdPYIEnFkiFEA6esaVtLJqkGlplI1GYVySL9+J2D/APgC6p3thfrl5w==}
+  /document-drive@1.0.0-alpha.35(@prisma/client@5.11.0)(document-model-libs@1.24.0)(document-model@1.0.41)(localforage@1.10.0)(sequelize@6.37.2)(sqlite3@5.1.7):
+    resolution: {integrity: sha512-Y7QMSjWfb/Emxt3huNfCuWMg2IwQTaIuvyR/EsNT5QFjj4j7fc1Q3TJlJ2Q8ZUrC7nyVx68HUQLlaT+kPFxBjQ==}
     peerDependencies:
       '@prisma/client': 5.11.0
-      document-model: ^1.0.35
+      document-model: ^1.0.41
       document-model-libs: ^1.18.1
       localforage: ^1.10.0
       sequelize: ^6.35.2
       sqlite3: ^5.1.7
     dependencies:
       '@prisma/client': 5.11.0(prisma@5.11.0)
-      document-model: 1.0.37
+      document-model: 1.0.41
       document-model-libs: 1.24.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -4812,8 +4812,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.0.37:
-    resolution: {integrity: sha512-mZ1IzYZlwU68MtTLTv5OyOcxcJU2B2GS9suyUH8/LM8NAfWt+BOMf2fj1ngaq39xc+3ZnXIIK7mLnwIVzzfFEA==}
+  /document-model@1.0.41:
+    resolution: {integrity: sha512-RKcJjlt0YGOo6ElgSJfjy3vgHH8T9kGMLyph1NYaOc2doqQ4aYmGDsXp3kg0PbCvBDAUMR4Qxa+gdQHtMcd7tg==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
