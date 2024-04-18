@@ -6,16 +6,16 @@ settings:
 
 dependencies:
   '@apollo/server':
-    specifier: ^4.10.2
+    specifier: ^4.10.3
     version: 4.10.3(graphql@16.8.1)
   '@prisma/client':
     specifier: 5.11.0
     version: 5.11.0(prisma@5.11.0)
   '@sentry/node':
-    specifier: ^7.109.0
+    specifier: ^7.110.1
     version: 7.110.1
   '@sentry/profiling-node':
-    specifier: ^7.109.0
+    specifier: ^7.110.1
     version: 7.110.1
   '@types/cookie-parser':
     specifier: ^1.4.7

@@ -15,10 +15,10 @@
     "watch": "vitest watch"
   },
   "dependencies": {
-    "@apollo/server": "^4.10.2",
+    "@apollo/server": "^4.10.3",
     "@prisma/client": "5.11.0",
-    "@sentry/node": "^7.109.0",
-    "@sentry/profiling-node": "^7.109.0",
+    "@sentry/node": "^7.110.1",
+    "@sentry/profiling-node": "^7.110.1",
     "@types/cookie-parser": "^1.4.7",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
