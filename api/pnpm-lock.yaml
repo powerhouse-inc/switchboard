@@ -31,13 +31,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.39
-    version: 1.0.0-alpha.39(document-model-libs@1.33.0)(document-model@1.0.42)(prisma@5.11.0)
+    version: 1.0.0-alpha.39(document-model-libs@1.33.0)(document-model@1.0.43)(prisma@5.11.0)
   document-model:
-    specifier: ^1.0.42
-    version: 1.0.42
+    specifier: ^1.0.43
+    version: 1.0.43
   document-model-libs:
     specifier: ^1.33.0
-    version: 1.33.0(document-model@1.0.42)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    version: 1.33.0(document-model@1.0.43)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -89,6 +89,9 @@ dependencies:
   pino-sentry-transport:
     specifier: ^1.1.0
     version: 1.1.0(@sentry/node@7.110.1)(pino@8.20.0)
+  redis:
+    specifier: ^4.6.13
+    version: 4.6.13
   siwe:
     specifier: ^2.3.2
     version: 2.3.2(ethers@5.7.2)
@@ -3225,7 +3228,6 @@ packages:
     dependencies:
       '@redis/client': 1.5.14
     dev: false
-    optional: true
 
   /@redis/client@1.5.14:
     resolution: {integrity: sha512-YGn0GqsRBFUQxklhY7v562VMOP0DcmlrHHs3IV1mFE3cbxe31IITUkqhBcIhVSI/2JqtWAJXg5mjV4aU+zD0HA==}
@@ -3236,7 +3238,6 @@ packages:
       generic-pool: 3.9.0
       yallist: 4.0.0
     dev: false
-    optional: true
 
   /@redis/graph@1.1.1(@redis/client@1.5.14):
     resolution: {integrity: sha512-FEMTcTHZozZciLRl6GiiIB4zGm5z5F3F6a6FZCyrfxdKOhFlGkiAqlexWMBzCi4DcRoyiOsuLfW+cjlGWyExOw==}
@@ -3246,7 +3247,6 @@ packages:
     dependencies:
       '@redis/client': 1.5.14
     dev: false
-    optional: true
 
   /@redis/json@1.0.6(@redis/client@1.5.14):
     resolution: {integrity: sha512-rcZO3bfQbm2zPRpqo82XbW8zg4G/w4W3tI7X8Mqleq9goQjAGLL7q/1n1ZX4dXEAmORVZ4s1+uKLaUOg7LrUhw==}
@@ -3256,7 +3256,6 @@ packages:
     dependencies:
       '@redis/client': 1.5.14
     dev: false
-    optional: true
 
   /@redis/search@1.1.6(@redis/client@1.5.14):
     resolution: {integrity: sha512-mZXCxbTYKBQ3M2lZnEddwEAks0Kc7nauire8q20oA0oA/LoA+E/b5Y5KZn232ztPb1FkIGqo12vh3Lf+Vw5iTw==}
@@ -3266,7 +3265,6 @@ packages:
     dependencies:
       '@redis/client': 1.5.14
     dev: false
-    optional: true
 
   /@redis/time-series@1.0.5(@redis/client@1.5.14):
     resolution: {integrity: sha512-IFjIgTusQym2B5IZJG3XKr5llka7ey84fw/NOYqESP5WUfQs9zz1ww/9+qoz4ka/S6KcGBodzlCeZ5UImKbscg==}
@@ -3276,7 +3274,6 @@ packages:
     dependencies:
       '@redis/client': 1.5.14
     dev: false
-    optional: true
 
   /@sentry-internal/tracing@7.110.1:
     resolution: {integrity: sha512-4kTd6EM0OP1SVWl2yLn3KIwlCpld1lyhNDeR8G1aKLm1PN+kVsR6YB/jy9KPPp4Q3lN3W9EkTSES3qhP4jVffQ==}
@@ -4477,7 +4474,6 @@ packages:
     engines: {node: '>=0.10.0'}
     requiresBuild: true
     dev: false
-    optional: true
 
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -4842,14 +4838,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.39(document-model-libs@1.33.0)(document-model@1.0.42)(prisma@5.11.0):
+  /document-drive@1.0.0-alpha.39(document-model-libs@1.33.0)(document-model@1.0.43)(prisma@5.11.0):
     resolution: {integrity: sha512-CV4wHS1SH1dsUQXpERzC6NE8hyjOFi8pvqMqHkAtUtpf4Xtb2ldC8Ca3u7Nc111xKLL0mtB0fQf/msdAynkXpg==}
     peerDependencies:
       document-model: ^1.0.42
       document-model-libs: ^1.32.0
     dependencies:
-      document-model: 1.0.42
-      document-model-libs: 1.33.0(document-model@1.0.42)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model: 1.0.43
+      document-model-libs: 1.33.0(document-model@1.0.43)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4876,7 +4872,7 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.33.0(document-model@1.0.42)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+  /document-model-libs@1.33.0(document-model@1.0.43)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
     resolution: {integrity: sha512-bv85g42aFSGTqlRZC35eip48szj/2f8OTK1E3OP91RVCnt+zJ24o8fSj9bd2eeEaAycGbJVJL2u8gLBWb3AyyQ==}
     peerDependencies:
       document-model: ^1.0.42
@@ -4891,7 +4887,7 @@ packages:
       copy-anything: 3.0.5
       date-fns: 3.6.0
       deep-object-diff: 1.1.9
-      document-model: 1.0.42
+      document-model: 1.0.43
       jsonc-parser: 3.2.1
       jszip: 3.10.1
       react: 18.2.0
@@ -4909,8 +4905,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.0.42:
-    resolution: {integrity: sha512-Qp3sWjoruYkz920By46QrZZbNwmdIyGE/h3GY0AMeheRLnuR3ortFs94jHAcl8cCtdcE0FvNSnqGyJzeRcb51w==}
+  /document-model@1.0.43:
+    resolution: {integrity: sha512-9kZpRRbnuIfnvpsrDmDqoPt7sO8YHM3VESkGVzC9J1FNKk264Uhca0/hGBOMX1WQdWnBLDRfUYYnMpzM59aC7w==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
@@ -5750,7 +5746,6 @@ packages:
     engines: {node: '>= 4'}
     requiresBuild: true
     dev: false
-    optional: true
 
   /gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
@@ -5854,7 +5849,6 @@ packages:
 
   /graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-    requiresBuild: true
     dev: false
 
   /graphemer@1.4.0:
@@ -6112,7 +6106,6 @@ packages:
   /indent-string@4.0.0:
     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
     engines: {node: '>=8'}
-    requiresBuild: true
     dev: false
 
   /infer-owner@1.0.4:
@@ -7801,7 +7794,6 @@ packages:
       '@redis/search': 1.1.6(@redis/client@1.5.14)
       '@redis/time-series': 1.0.5(@redis/client@1.5.14)
     dev: false
-    optional: true
 
   /regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
@@ -8064,7 +8056,6 @@ packages:
 
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
-    requiresBuild: true
     dev: false
 
   /set-function-length@1.2.2:
@@ -8285,7 +8276,6 @@ packages:
   /string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
-    requiresBuild: true
     dependencies:
       emoji-regex: 8.0.0
       is-fullwidth-code-point: 3.0.0
