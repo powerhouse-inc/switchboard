@@ -19,10 +19,13 @@ import {
   DocumentDriveState,
   DocumentDriveAction
 } from 'document-model-libs/document-drive';
+import RedisCache from 'document-drive/cache/redis';
+import { RedisClientType, createClient } from 'redis';
 
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
+import { getRedisClient } from '../../redis';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -44,10 +47,18 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ...Object.values(DocumentModelsLibs),
   ] as DocumentModel[];
 
-  const driveServer = new DocumentDriveServer(
+  let redis: RedisClientType = getRedisClient();
+  while (redis === null) {
+    redis = getRedisClient()
+  }
+
+  let driveServer: DocumentDriveServer = new DocumentDriveServer(
     documentModels,
     new PrismaStorage(prisma as PrismaClient),
+    new RedisCache(redis),
   );
+
+  initialize();
 
   async function initialize() {
     try {
@@ -58,24 +69,18 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     }
   }
 
-
-
   async function getTransmitter(driveId: string, transmitterId: string) {
-
     const transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
     if (!transmitter) {
       throw new Error(`Transmitter ${transmitterId} not found`)
     }
-
     return transmitter
   }
-
-  initialize();
 
   return {
     addDrive: async (args: DriveInput) => {
       try {
-        const drive = await driveServer.addDrive(args);
+        const drive = await driveServer!.addDrive(args);
         await initialize();
         return drive;
       } catch (e) {
