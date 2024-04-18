@@ -10,15 +10,14 @@ createClient({
     rejectUnauthorized: false,
   }
 }).on('error', (err: string) => console.log('Redis Client Error', err))
-  .connect().then((redisClient) => {
-    redisClient = redisClient as RedisClientType;
+  .connect().then((redis) => {
+    redisClient = redis as RedisClientType;
   });
 
 
 export const getRedisClient = () => {
   if (!redisClient) {
-    throw new Error('Redis client not initialized');
-  }
+   }
 
   return redisClient;
 }

@@ -47,15 +47,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ...Object.values(DocumentModelsLibs),
   ] as DocumentModel[];
 
-  let redis: RedisClientType = getRedisClient();
-  while (redis === null) {
-    redis = getRedisClient()
-  }
 
   let driveServer: DocumentDriveServer = new DocumentDriveServer(
     documentModels,
     new PrismaStorage(prisma as PrismaClient),
-    new RedisCache(redis),
   );
 
   initialize();
