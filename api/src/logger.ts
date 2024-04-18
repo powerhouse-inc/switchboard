@@ -2,7 +2,7 @@ import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import { loggerConfig } from '../logger.config';
-import { createWriteStream, Sentry } from "pino-sentry";
+
 const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
 } = loggerConfig;

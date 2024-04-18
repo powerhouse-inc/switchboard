@@ -1,16 +1,27 @@
 import type { Express } from 'express';
 import express from 'express';
 import { getChildLogger } from './logger';
-import basePrisma from './database';
+import prisma, { prismaBase } from './database';
 import {
   renderPlaygroundPage,
 } from 'graphql-playground-html'
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
-
+import { initMetrics } from './metrics';
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
+
+initMetrics(prismaBase.$metrics);
+
+prismaBase.$on('query', (e) => {
+  if (!e.duration) {
+    return;
+  }
+  console.log('Query: ' + e.query)
+  console.log('Params: ' + e.params)
+  console.log('Duration: ' + e.duration + 'ms')
+})
 
 export const createApp = (): { app: Express, router: express.Router } => {
   logger.debug('Creating app');
@@ -36,7 +47,7 @@ export const createApp = (): { app: Express, router: express.Router } => {
 
   app.get('/healthz', async (_req, res) => {
     try {
-      await basePrisma.user.findFirst();
+      await prisma.user.findFirst();
     } catch (error: any) {
       return res.status(500).json({
         status: `Failed database initialization check with error: ${error?.message}`,
