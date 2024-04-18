@@ -30,14 +30,14 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.39
-    version: 1.0.0-alpha.39(document-model-libs@1.33.0)(document-model@1.0.43)(prisma@5.11.0)
+    specifier: 1.0.0-alpha.40
+    version: 1.0.0-alpha.40(document-model-libs@1.33.0)(document-model@1.0.45)(prisma@5.11.0)
   document-model:
-    specifier: ^1.0.43
-    version: 1.0.43
+    specifier: ^1.0.44
+    version: 1.0.45
   document-model-libs:
     specifier: ^1.33.0
-    version: 1.33.0(document-model@1.0.43)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    version: 1.33.0(document-model@1.0.45)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -4838,14 +4838,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.39(document-model-libs@1.33.0)(document-model@1.0.43)(prisma@5.11.0):
-    resolution: {integrity: sha512-CV4wHS1SH1dsUQXpERzC6NE8hyjOFi8pvqMqHkAtUtpf4Xtb2ldC8Ca3u7Nc111xKLL0mtB0fQf/msdAynkXpg==}
+  /document-drive@1.0.0-alpha.40(document-model-libs@1.33.0)(document-model@1.0.45)(prisma@5.11.0):
+    resolution: {integrity: sha512-p42lJUq23hpchx5IUFiEglSxbDm03DZFCcTkF7xkHRPMsURuvonbu5LlapXGOKmedEYHnJ6DZ69wC9Wu1TibOg==}
     peerDependencies:
-      document-model: ^1.0.42
-      document-model-libs: ^1.32.0
+      document-model: ^1.0.44
+      document-model-libs: ^1.34.0
     dependencies:
-      document-model: 1.0.43
-      document-model-libs: 1.33.0(document-model@1.0.43)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model: 1.0.45
+      document-model-libs: 1.33.0(document-model@1.0.45)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4872,7 +4872,7 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.33.0(document-model@1.0.43)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+  /document-model-libs@1.33.0(document-model@1.0.45)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
     resolution: {integrity: sha512-bv85g42aFSGTqlRZC35eip48szj/2f8OTK1E3OP91RVCnt+zJ24o8fSj9bd2eeEaAycGbJVJL2u8gLBWb3AyyQ==}
     peerDependencies:
       document-model: ^1.0.42
@@ -4887,7 +4887,7 @@ packages:
       copy-anything: 3.0.5
       date-fns: 3.6.0
       deep-object-diff: 1.1.9
-      document-model: 1.0.43
+      document-model: 1.0.45
       jsonc-parser: 3.2.1
       jszip: 3.10.1
       react: 18.2.0
@@ -4905,8 +4905,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.0.43:
-    resolution: {integrity: sha512-9kZpRRbnuIfnvpsrDmDqoPt7sO8YHM3VESkGVzC9J1FNKk264Uhca0/hGBOMX1WQdWnBLDRfUYYnMpzM59aC7w==}
+  /document-model@1.0.45:
+    resolution: {integrity: sha512-qlD1owtJJBzXjezbJ1LFcDwfMcmi6zDD+9023wjQqM1UuFgogploDmDTEqsujajUudQjFaznm/WGkf9gH9+bFQ==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
