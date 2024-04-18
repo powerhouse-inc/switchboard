@@ -31,10 +31,10 @@ const documentDriveLogger = getChildLogger({ msgPrefix: "Document Drive" });
 
 // patches the log method into the info method from pino
 const loggerAdapter = new Proxy<ILogger>(documentDriveLogger as unknown as ILogger, {
-    get: (target, prop) =>
-        prop === "log"
-            ? documentDriveLogger.info
-            : target[prop as keyof ILogger],
+  get: (target, prop) =>
+    prop === "log"
+      ? documentDriveLogger.info
+      : target[prop as keyof ILogger],
 });
 setLogger(loggerAdapter);
 
@@ -43,9 +43,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     DocumentModelLib,
     ...Object.values(DocumentModelsLibs),
   ] as DocumentModel[];
-
-  let transmitters: Record<string, Record<string, PullResponderTransmitter>> = {};
-  let drives: Record<string, DocumentDriveState> = {};
 
   const driveServer = new DocumentDriveServer(
     documentModels,
@@ -61,26 +58,13 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     }
   }
 
-  function clearDriveCache() {
-    drives = {};
-  }
 
-  function clearTransmitterCache() {
-    transmitters = {};
-  }
 
   async function getTransmitter(driveId: string, transmitterId: string) {
-    if (!transmitters[driveId]) {
-      transmitters[driveId] = {};
-    }
 
-    let transmitter = transmitters[driveId][transmitterId];
+    const transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
     if (!transmitter) {
-      transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
-      if (!transmitter) {
-        throw new Error(`Transmitter ${transmitterId} not found`)
-      }
-      transmitters[driveId][transmitterId] = transmitter;
+      throw new Error(`Transmitter ${transmitterId} not found`)
     }
 
     return transmitter
@@ -88,17 +72,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
   initialize();
 
-  setInterval(() => {
-    clearDriveCache();
-    clearTransmitterCache();
-  }, 1000 * 60 * 15);
-
   return {
     addDrive: async (args: DriveInput) => {
       try {
         const drive = await driveServer.addDrive(args);
         await initialize();
-        clearDriveCache();
         return drive;
       } catch (e) {
         logger.error(e);
@@ -108,7 +86,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     deleteDrive: async (id: string) => {
       try {
         await driveServer.deleteDrive(id);
-        clearDriveCache();
       } catch (e) {
         logger.error(e);
         throw new Error("Couldn't delete drive");
@@ -118,14 +95,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
     getDrive: async (id: string) => {
       try {
-        let drive = drives[id];
-        if (drive !== {} as DocumentDriveState) {
-          const { state } = await driveServer.getDrive(id);
-          drives[id] = state.global;
-          return state.global;
-        } else {
-          return drive;
-        }
+        const { state } = await driveServer.getDrive(id);
+        return state.global;
       } catch (e) {
         logger.error(e);
         throw new Error("Couldn't get drive");
@@ -133,15 +104,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
     getDrives: async () => {
       try {
-        let driveIds = Object.keys(drives);
-        if (driveIds.length > 0) {
-          return driveIds;
-        }
-        driveIds = await driveServer.getDrives()
-        driveIds.forEach((driveId) => {
-          transmitters[driveId] = {};
-        })
-
+        const driveIds = await driveServer.getDrives()
         return driveIds;
       } catch (e) {
         logger.error(e);
@@ -169,7 +132,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         documentId,
         operations,
       );
-      drives[driveId] = {} as DocumentDriveState;
       return result;
     },
 
@@ -245,7 +207,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         throw new Error(`Listener couldn't be deleted: ${result.error || result.status}`);
       }
 
-      delete transmitters[driveId][listenerId];
       return listenerId;
     },
 
