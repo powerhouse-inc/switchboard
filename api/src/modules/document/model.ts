@@ -20,6 +20,7 @@ import {
   DocumentDriveAction
 } from 'document-model-libs/document-drive';
 import RedisCache from 'document-drive/cache/redis';
+import MemoryCache from 'document-drive/cache/memory';
 import { RedisClientType, createClient } from 'redis';
 
 import { init } from './listenerManager';
@@ -48,12 +49,21 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   ] as DocumentModel[];
 
 
-  let driveServer: DocumentDriveServer = new DocumentDriveServer(
-    documentModels,
-    new PrismaStorage(prisma as PrismaClient),
-  );
-
-  initialize();
+  let driveServer: DocumentDriveServer;
+  getRedisClient().then((redisClient) => {
+    driveServer = new DocumentDriveServer(
+      documentModels,
+      new PrismaStorage(prisma as PrismaClient),
+      redisClient ? new RedisCache(redisClient as RedisClientType) : new MemoryCache(),
+    );
+  }).catch(() => {
+    driveServer = new DocumentDriveServer(
+      documentModels,
+      new PrismaStorage(prisma as PrismaClient)
+    );
+  }).finally(() => {
+    initialize();
+  })
 
   async function initialize() {
     try {
