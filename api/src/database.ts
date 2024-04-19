@@ -3,7 +3,7 @@ import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
 import { getUserCrud, getSessionCrud, getChallengeCrud, getRWACRUD } from './modules';
 import { getDocumentDriveCRUD } from './modules/document';
-import { createClient } from 'redis';
+
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 
 // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-prismaclient/logging#log-to-stdout
