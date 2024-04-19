@@ -16,7 +16,7 @@ import { Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import { getChildLogger } from '../../logger';
 import { Context } from '../../graphql/server/drive/context';
-import { DocumentDriveAction } from 'document-model-libs/document-drive';
+import { DocumentDriveAction, DocumentDriveState } from 'document-model-libs/document-drive';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
@@ -232,9 +232,9 @@ export const driveSystemQueryField = queryField('system', {
 
 export const getDrive = queryField('drive', {
   type: DocumentDriveState,
-  resolve: async (_parent, args, ctx: Context) => {
+  resolve: async (_parent, _args, ctx: Context) => {
     try {
-      const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1');
+      const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;
       return drive;
     } catch (e: any) {
       throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to get drive", logging: true, context: e })
@@ -302,18 +302,18 @@ export const pushUpdates = mutationField('pushUpdates', {
 
       const sortedStrands = strands.reduce(
         (acc, curr) =>
-            curr.documentId ? [...acc, curr] : [curr, ...acc],
+          curr.documentId ? [...acc, curr] : [curr, ...acc],
         [] as typeof strands
       );
 
       for (const s of sortedStrands) {
         const operations =
           s.operations?.map((o) => ({
-              ...o,
-              input: JSON.parse(o.input),
-              skip: o.skip ?? 0,
-              scope: s.scope as OperationScope,
-              branch: "main",
+            ...o,
+            input: JSON.parse(o.input),
+            skip: o.skip ?? 0,
+            scope: s.scope as OperationScope,
+            branch: "main",
           })) ?? [];
 
         const result = await ctx.prisma.document.pushUpdates(
