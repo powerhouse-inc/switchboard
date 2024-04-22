@@ -58,19 +58,23 @@ export async function init(driveServer: DocumentDriveServer, prisma: Prisma.Tran
         }
 
         for (const driveId of drives) {
-            const drive = await driveServer.getDrive(driveId);
-            if (!isListenerRegistered(drive, listener)) {
-                await registerListener(driveServer, driveId, listener);
-            }
+            try {
+                const drive = await driveServer.getDrive(driveId);
+                if (!isListenerRegistered(drive, listener)) {
+                    await registerListener(driveServer, driveId, listener);
+                }
 
-            const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId));
-            if (transmitter instanceof InternalTransmitter) {
-                logger.info(`Setting receiver for ${listener.listenerId}`);
-                transmitter.setReceiver({
-                    transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
-                        transmit(strands, prisma)
-                    }
-                })
+                const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId));
+                if (transmitter instanceof InternalTransmitter) {
+                    logger.info(`Setting receiver for ${listener.listenerId}`);
+                    transmitter.setReceiver({
+                        transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
+                            transmit(strands, prisma)
+                        }
+                    })
+                }
+            } catch (e) {
+                logger.error(`Error while initializing listener ${listener.listenerId} for drive ${driveId}`, e);
             }
         }
     }
