@@ -30,8 +30,13 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
+<<<<<<< Updated upstream
     specifier: 1.0.0-alpha.42
     version: 1.0.0-alpha.42(document-model-libs@1.36.0)(document-model@1.0.51)(prisma@5.11.0)
+=======
+    specifier: 1.0.0-alpha.44
+    version: 1.0.0-alpha.44(document-model-libs@1.36.0)(document-model@1.0.51)(prisma@5.11.0)
+>>>>>>> Stashed changes
   document-model:
     specifier: ^1.0.51
     version: 1.0.51
@@ -4838,11 +4843,11 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.42(document-model-libs@1.36.0)(document-model@1.0.51)(prisma@5.11.0):
-    resolution: {integrity: sha512-cn2pD9r2drNdFRp2RcLe/iU4A2tpJ6R7ZorA6gJm4ukOpe2siyExu7yGdfYZ3DRGQKfyZZL/gG+BFBQJftTZSA==}
+  /document-drive@1.0.0-alpha.44(document-model-libs@1.36.0)(document-model@1.0.51)(prisma@5.11.0):
+    resolution: {integrity: sha512-AgYrPgf4VOksjeV/xvdKfEXgezwJZGyeAzx5Ma/UeByqFPQetwfFWsueqowUB3Rn80IPdnbbH7ZULEfoef+i2w==}
     peerDependencies:
-      document-model: ^1.0.45
-      document-model-libs: ^1.34.0
+      document-model: ^1.0.52
+      document-model-libs: ^1.36.0
     dependencies:
       document-model: 1.0.51
       document-model-libs: 1.36.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
