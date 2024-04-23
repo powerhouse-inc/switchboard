@@ -31,10 +31,10 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.47
-    version: 1.0.0-alpha.47(document-model-libs@1.36.0)(document-model@1.0.51)(prisma@5.11.0)
+    version: 1.0.0-alpha.47(document-model-libs@1.36.0)(document-model@1.0.52)(prisma@5.11.0)
   document-model:
-    specifier: ^1.0.51
-    version: 1.0.51
+    specifier: ^1.0.52
+    version: 1.0.52
   document-model-libs:
     specifier: ^1.36.0
     version: 1.36.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
@@ -4838,13 +4838,13 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.47(document-model-libs@1.36.0)(document-model@1.0.51)(prisma@5.11.0):
+  /document-drive@1.0.0-alpha.47(document-model-libs@1.36.0)(document-model@1.0.52)(prisma@5.11.0):
     resolution: {integrity: sha512-zP9HGs3wCdj9IjtJlIA5Vrm0D9oP5vUnBT0n0Pe2e/LDCM1LPyYyfGsgp7MRXBEjxqvjxvNr9puRoE+rRaCe2w==}
     peerDependencies:
       document-model: ^1.0.52
       document-model-libs: ^1.36.0
     dependencies:
-      document-model: 1.0.51
+      document-model: 1.0.52
       document-model-libs: 1.36.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -4903,8 +4903,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.0.51:
-    resolution: {integrity: sha512-Bp4pWkCgK35f92jZCaZ6SZITdGH2yTvrfRYNyoUhBzu3pjBkOetAY7NxBCqW4H9Zs2pDYBP1Klk60NfaOOxA2w==}
+  /document-model@1.0.52:
+    resolution: {integrity: sha512-zP6jVkVVJWelsdYpagOtcIouHWUYnVVRWeAwSC2YC0SOxowERG+NtSRx2Uk2v6UFVWOA78sPAeY4NQaNB0yWOw==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
