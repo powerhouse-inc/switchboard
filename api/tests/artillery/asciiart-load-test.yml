@@ -1,0 +1,168 @@
+config:
+  # This is a test server run by team Artillery
+  # It's designed to be highly scalable
+  target: https://apps.powerhouse.io/alpha/powerhouse/switchboard/d/powerhouse
+  # target: http://localhost:3000/d/arbitrum
+  phases:
+    - duration: 60
+      arrivalRate: 1
+      rampTo: 5
+      name: Warm up phase
+    # - duration: 60
+    #   arrivalRate: 5
+    #   rampTo: 10
+    #   name: Ramp up load
+    # - duration: 30
+    #   arrivalRate: 10
+    #   rampTo: 30
+    #   name: Spike phase
+  # Load & configure a couple of useful plugins
+  # https://docs.art/reference/extensions
+  plugins:
+    ensure: {}
+    apdex: {}
+    metrics-by-endpoint: {}
+  apdex:
+    threshold: 100
+  ensure:
+    thresholds:
+      - http.response_time.p99: 150
+      - http.response_time.p95: 100
+scenarios:
+  - flow:
+      - post:
+          url: "/"
+          json:
+            query: |
+              query drive {
+                drive {
+                  id
+                  nodes {
+                    id
+                    name
+                    kind
+                  }
+                }
+              }
+      - post:
+          url: "/"
+          capture:
+            - json: "$.data.registerPullResponderListener.listenerId"
+              as: listenerId
+          json:
+            query: |
+              mutation registerPullResponderListener($filter:InputListenerFilter!) {
+                registerPullResponderListener(filter: $filter) {
+                  listenerId
+                }
+              }
+            variables:
+              filter:
+                {
+                  "documentId": ["*"],
+                  "documentType": ["*"],
+                  "branch": ["*"],
+                  "scope": ["*"],
+                }
+            operationName: "registerPullResponderListener"
+      - post:
+          url: "/"
+          json:
+            query: |
+              query drive {
+                drive {
+                  id
+                  nodes {
+                    id
+                    name
+                    kind
+                  }
+                }
+              }
+      - post:
+          url: "/"
+          json:
+            query: |
+              query drive {
+                drive {
+                  id
+                  nodes {
+                    id
+                    name
+                    kind
+                  }
+                }
+              }
+      - post:
+          url: "/"
+          json:
+            query: |
+              query drive {
+                drive {
+                  id
+                  nodes {
+                    id
+                    name
+                    kind
+                  }
+                }
+              }
+      - post:
+          url: "/"
+          json:
+            query: |
+              query drive {
+                drive {
+                  id
+                  nodes {
+                    id
+                    name
+                    kind
+                  }
+                }
+              }
+      # - post:
+      #     url: "/"
+      #     json:
+      #       operationName: "pushUpdates"
+      #       query: |
+      #         mutation pushUpdates($strands:[InputStrandUpdate!]) {
+      #           pushUpdates(strands: $strands) {
+      #             status
+      #           }
+      #         }
+      #       variables:
+      #         strands:
+      #           [
+      #             {
+      #               "driveId": "arbitrum",
+      #               "documentId": "",
+      #               "branch": "main",
+      #               "operations":
+      #                 [
+      #                   {
+      #                     "hash": "aXZuy4vL+XQRva2daAQeMgP71ag=",
+      #                     "index": 12,
+      #                     "timestamp": "2024-04-15T12:23:36.081Z",
+      #                     "type": "ADD_FOLDER",
+      #                     "input": '{"id":"fB1+8zHR3eaV1yMxFzEz+gSgFpk=","name":"New Folder"}',
+      #                     "skip": 0,
+      #                   },
+      #                 ],
+      #               "scope": "global",
+      #             },
+      #           ]
+      # - post:
+      #     url: "/"
+      #     json:
+      #       query: |
+      #         query drive {
+      #           drive {
+      #             id
+      #             nodes {
+      #               id
+      #               name
+      #               kind
+      #             }
+      #           }
+      #         }
