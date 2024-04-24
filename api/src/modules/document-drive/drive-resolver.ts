@@ -10,7 +10,7 @@ import {
 } from 'nexus';
 import { systemType } from '../system';
 import {
-  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus, StrandUpdate,
+  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
 } from 'document-drive';
 import { Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
@@ -84,6 +84,39 @@ export const ListenerRevision = objectType({
   },
 });
 
+export const OperationSignerUser = objectType({
+  name: 'OperationSignerUser',
+  definition(t) {
+    t.nonNull.string('address');
+    t.nonNull.string('networkId');
+    t.nonNull.int('chainId');
+  },
+});
+
+export const OperationSignerApp = objectType({
+  name: 'OperationSignerApp',
+  definition(t) {
+    t.nonNull.string('name');
+    t.nonNull.string('key');
+  },
+});
+
+export const OperationSigner = objectType({
+  name: 'OperationSigner',
+  definition(t) {
+    t.nonNull.field('user', { type: OperationSignerUser });
+    t.nonNull.field('app', { type: OperationSignerApp });
+    t.nonNull.string('signature');
+  }
+});
+
+export const OperationContext = objectType({
+  name: 'OperationContext',
+  definition(t) {
+    t.field('signer', { type: OperationSigner });
+  }
+})
+
 export const OperationUpdate = objectType({
   name: 'OperationUpdate',
   definition(t) {
@@ -93,8 +126,42 @@ export const OperationUpdate = objectType({
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
+    t.field('context', { type: OperationContext });
   },
 });
+
+export const InputOperationSignerUser = inputObjectType({
+  name: 'InputOperationSignerUser',
+  definition(t) {
+    t.nonNull.string('address');
+    t.nonNull.string('networkId');
+    t.nonNull.int('chainId');
+  },
+});
+
+export const InputOperationSignerApp = inputObjectType({
+  name: 'InputOperationSignerApp',
+  definition(t) {
+    t.nonNull.string('name');
+    t.nonNull.string('key');
+  },
+});
+
+export const InputOperationSigner = inputObjectType({
+  name: 'InputOperationSigner',
+  definition(t) {
+    t.nonNull.field('user', { type: InputOperationSignerUser });
+    t.nonNull.field('app', { type: InputOperationSignerApp });
+    t.nonNull.string('signature');
+  }
+});
+
+export const InputOperationContext = inputObjectType({
+  name: 'InputOperationContext',
+  definition(t) {
+    t.field('signer', { type: InputOperationSigner });
+  }
+})
 
 export const InputOperationUpdate = inputObjectType({
   name: 'InputOperationUpdate',
@@ -105,6 +172,7 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
+    t.field('context', { type: InputOperationContext });
   },
 });
 
@@ -190,7 +258,7 @@ export const syncType = objectType({
             listenerId,
             since,
           );
-          return result.map((e: StrandUpdate) => ({
+          return result.map((e) => ({
             driveId: e.driveId,
             documentId: e.documentId,
             scope: e.scope,
@@ -203,6 +271,7 @@ export const syncType = objectType({
               hash: o.hash,
               timestamp: o.timestamp,
               type: o.type,
+              context: o.context,
             })),
           }));
         } catch (e) {
