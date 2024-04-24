@@ -30,34 +30,14 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-<<<<<<< HEAD
-    specifier: 1.0.0-alpha.50
-    version: 1.0.0-alpha.50(document-model-libs@1.39.0-arbitrum.1)(document-model@1.0.53)(prisma@5.11.0)
-=======
-<<<<<<< HEAD
-    specifier: 1.0.0-alpha.50
-    version: 1.0.0-alpha.50(document-model-libs@1.39.0-arbitrum.1)(document-model@1.0.53)(prisma@5.11.0)
-=======
     specifier: 1.0.0-alpha.52
     version: 1.0.0-alpha.52(document-model-libs@1.38.0)(document-model@1.0.53)(prisma@5.11.0)
->>>>>>> staging
->>>>>>> arb-ltip
   document-model:
     specifier: ^1.0.53
     version: 1.0.53
   document-model-libs:
-<<<<<<< HEAD
     specifier: ^1.39.0-arbitrum.1
     version: 1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
-=======
-<<<<<<< HEAD
-    specifier: ^1.39.0-arbitrum.1
-    version: 1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
-=======
-    specifier: ^1.38.0
-    version: 1.38.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
->>>>>>> staging
->>>>>>> arb-ltip
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -4961,18 +4941,8 @@ packages:
       - tedious
     dev: false
 
-<<<<<<< HEAD
   /document-model-libs@1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
     resolution: {integrity: sha512-ta1xsAok9S+yZgdPOhSAgqYjp8DXpJV2+j/Hh14DcIo0XnWfZbzZBAGJWM+71slzcs3BvRnHDcMPGceI+8np1A==}
-=======
-<<<<<<< HEAD
-  /document-model-libs@1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-ta1xsAok9S+yZgdPOhSAgqYjp8DXpJV2+j/Hh14DcIo0XnWfZbzZBAGJWM+71slzcs3BvRnHDcMPGceI+8np1A==}
-=======
-  /document-model-libs@1.38.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-hS2bhC2ZgvXNIDyPTF/oPJLmtiCnymcCL/VuVUkZ1ehqwcebMWU+7fXOG7hoHR/SgW1BSgXgCDjK2G9rsIUvNA==}
->>>>>>> staging
->>>>>>> arb-ltip
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
