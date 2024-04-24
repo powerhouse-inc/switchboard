@@ -292,7 +292,29 @@ input InputListenerFilter {
   scope: [String]
 }
 
+input InputOperationContext {
+  signer: InputOperationSigner
+}
+
+input InputOperationSigner {
+  app: InputOperationSignerApp!
+  signature: String!
+  user: InputOperationSignerUser!
+}
+
+input InputOperationSignerApp {
+  key: String!
+  name: String!
+}
+
+input InputOperationSignerUser {
+  address: String!
+  chainId: Int!
+  networkId: String!
+}
+
 input InputOperationUpdate {
+  context: InputOperationContext
   hash: String!
   index: Int!
   input: String!
@@ -404,7 +426,29 @@ type Node {
   parentFolder: String
 }
 
+type OperationContext {
+  signer: OperationSigner
+}
+
+type OperationSigner {
+  app: OperationSignerApp!
+  signature: String!
+  user: OperationSignerUser!
+}
+
+type OperationSignerApp {
+  key: String!
+  name: String!
+}
+
+type OperationSignerUser {
+  address: String!
+  chainId: Int!
+  networkId: String!
+}
+
 type OperationUpdate {
+  context: OperationContext
   hash: String!
   index: Int!
   input: String!
