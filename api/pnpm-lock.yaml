@@ -30,14 +30,14 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.47
-    version: 1.0.0-alpha.47(document-model-libs@1.37.0-arbitrum.1)(document-model@1.0.52)(prisma@5.11.0)
+    specifier: 1.0.0-alpha.50
+    version: 1.0.0-alpha.50(document-model-libs@1.39.0-arbitrum.1)(document-model@1.0.53)(prisma@5.11.0)
   document-model:
-    specifier: ^1.0.52
-    version: 1.0.52
+    specifier: ^1.0.53
+    version: 1.0.53
   document-model-libs:
-    specifier: ^1.37.0-arbitrum.1
-    version: 1.37.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: ^1.39.0-arbitrum.1
+    version: 1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -3708,33 +3708,11 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/prop-types@15.7.12:
-    resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
-    dev: false
-
   /@types/qs@6.9.15:
     resolution: {integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==}
 
   /@types/range-parser@1.2.7:
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
-
-  /@types/react-datepicker@6.2.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-+JtO4Fm97WLkJTH8j8/v3Ldh7JCNRwjMYjRaKh4KHH0M3jJoXtwiD3JBCsdlg3tsFIw9eQSqyAPeVDN2H2oM9Q==}
-    dependencies:
-      '@floating-ui/react': 0.26.12(react-dom@18.2.0)(react@18.2.0)
-      '@types/react': 18.2.79
-      date-fns: 3.6.0
-    transitivePeerDependencies:
-      - react
-      - react-dom
-    dev: false
-
-  /@types/react@18.2.79:
-    resolution: {integrity: sha512-RwGAGXPl9kSXwdNTafkOEuFrTBD5SA2B3iEB96xi8+xu5ddUa/cpvyVCSNn+asgLCTHkb5ZxN8gbuibYJi4s1w==}
-    dependencies:
-      '@types/prop-types': 15.7.12
-      csstype: 3.1.3
-    dev: false
 
   /@types/semver@7.5.8:
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -4717,10 +4695,6 @@ packages:
     resolution: {integrity: sha512-FAaLDaplstoRsDR8XGYH51znUN0UY7nMc6Z9/fvE8EXGwvJE9hu7W2vHwx1+bd6gCYnln9nLbzxFTrcO9YQDZw==}
     dev: false
 
-  /csstype@3.1.3:
-    resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
-    dev: false
-
   /data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
     engines: {node: '>= 12'}
@@ -4933,14 +4907,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.47(document-model-libs@1.37.0-arbitrum.1)(document-model@1.0.52)(prisma@5.11.0):
-    resolution: {integrity: sha512-zP9HGs3wCdj9IjtJlIA5Vrm0D9oP5vUnBT0n0Pe2e/LDCM1LPyYyfGsgp7MRXBEjxqvjxvNr9puRoE+rRaCe2w==}
+  /document-drive@1.0.0-alpha.50(document-model-libs@1.39.0-arbitrum.1)(document-model@1.0.53)(prisma@5.11.0):
+    resolution: {integrity: sha512-SRZTnzvKxupeh5nj7b+ZtYmDOx6dRDdUKlwTlcCoWeC31vpPTRqNssp8O8K3yldl/ZomIMVlVxGv/66pzqUUoA==}
     peerDependencies:
-      document-model: ^1.0.52
-      document-model-libs: ^1.36.0
+      document-model: ^1.0.53
+      document-model-libs: ^1.37.0
     dependencies:
-      document-model: 1.0.52
-      document-model-libs: 1.37.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model: 1.0.53
+      document-model-libs: 1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
       json-stringify-deterministic: 1.0.12
@@ -4967,8 +4941,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.37.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-wgYOTUW4aZLmU4Q9/8xZj+Bq4ppo2mSMvEFgT+n3HUsCGx/GahTAHY59ZpkndtlY0tAAygjoZVQkuZ8Z+uZTag==}
+  /document-model-libs@1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-ta1xsAok9S+yZgdPOhSAgqYjp8DXpJV2+j/Hh14DcIo0XnWfZbzZBAGJWM+71slzcs3BvRnHDcMPGceI+8np1A==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -4979,7 +4953,6 @@ packages:
       '@headlessui/react': 1.7.19(react-dom@18.2.0)(react@18.2.0)
       '@internationalized/date': 3.5.2
       '@storybook/test': 8.0.8(vitest@0.32.4)
-      '@types/react-datepicker': 6.2.0(react-dom@18.2.0)(react@18.2.0)
       copy-anything: 3.0.5
       date-fns: 3.6.0
       deep-object-diff: 1.1.9
@@ -4990,7 +4963,6 @@ packages:
       react-datepicker: 6.9.0(react-dom@18.2.0)(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       tailwind-merge: 2.2.2
-      uuid: 9.0.1
     transitivePeerDependencies:
       - '@jest/globals'
       - '@types/bun'
@@ -5002,8 +4974,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.0.52:
-    resolution: {integrity: sha512-zP6jVkVVJWelsdYpagOtcIouHWUYnVVRWeAwSC2YC0SOxowERG+NtSRx2Uk2v6UFVWOA78sPAeY4NQaNB0yWOw==}
+  /document-model@1.0.53:
+    resolution: {integrity: sha512-Ld+ECcBFEP6l83YArZJH/TmUqYGX1n+sC9dvKw2icnvlzxnlkjzMJUdsVBcGX8pLRx+pHd6v2Vu5N3ffaKMsqg==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
