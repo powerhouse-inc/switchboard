@@ -23,7 +23,7 @@
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "document-drive": "1.0.0-alpha.50",
+    "document-drive": "1.0.0-alpha.52",
     "document-model": "^1.0.53",
     "document-model-libs": "^1.39.0-arbitrum.1",
     "dotenv": "^16.4.5",
