@@ -275,8 +275,12 @@ export const syncType = objectType({
             })),
           }));
         } catch (e) {
-          logger.error(e);
-          throw new Error('Failed to fetch strands');
+          if ((e as Error).message?.match(/Transmitter .+ not found/)) {
+            throw e;
+          } else {
+            logger.error(e);
+            throw new Error('Failed to fetch strands');
+          }
         }
       },
     });
