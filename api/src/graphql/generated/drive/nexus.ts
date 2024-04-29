@@ -54,7 +54,25 @@ export interface NexusGenInputs {
     documentType?: Array<string | null> | null; // [String]
     scope?: Array<string | null> | null; // [String]
   }
+  InputOperationContext: { // input type
+    signer?: NexusGenInputs['InputOperationSigner'] | null; // InputOperationSigner
+  }
+  InputOperationSigner: { // input type
+    app: NexusGenInputs['InputOperationSignerApp']; // InputOperationSignerApp!
+    signature: string; // String!
+    user: NexusGenInputs['InputOperationSignerUser']; // InputOperationSignerUser!
+  }
+  InputOperationSignerApp: { // input type
+    key: string; // String!
+    name: string; // String!
+  }
+  InputOperationSignerUser: { // input type
+    address: string; // String!
+    chainId: number; // Int!
+    networkId: string; // String!
+  }
   InputOperationUpdate: { // input type
+    context?: NexusGenInputs['InputOperationContext'] | null; // InputOperationContext
     hash: string; // String!
     index: number; // Int!
     input: string; // String!
@@ -380,7 +398,25 @@ export interface NexusGenObjects {
     name: string; // String!
     parentFolder?: string | null; // String
   }
+  OperationContext: { // root type
+    signer?: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
+  }
+  OperationSigner: { // root type
+    app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
+    signature: string; // String!
+    user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
+  }
+  OperationSignerApp: { // root type
+    key: string; // String!
+    name: string; // String!
+  }
+  OperationSignerUser: { // root type
+    address: string; // String!
+    chainId: number; // Int!
+    networkId: string; // String!
+  }
   OperationUpdate: { // root type
+    context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
     index: number; // Int!
     input: string; // String!
@@ -853,7 +889,25 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     parentFolder: string | null; // String
   }
+  OperationContext: { // field return type
+    signer: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
+  }
+  OperationSigner: { // field return type
+    app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
+    signature: string; // String!
+    user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
+  }
+  OperationSignerApp: { // field return type
+    key: string; // String!
+    name: string; // String!
+  }
+  OperationSignerUser: { // field return type
+    address: string; // String!
+    chainId: number; // Int!
+    networkId: string; // String!
+  }
   OperationUpdate: { // field return type
+    context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
     index: number; // Int!
     input: string; // String!
@@ -1352,7 +1406,25 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     parentFolder: 'String'
   }
+  OperationContext: { // field return type name
+    signer: 'OperationSigner'
+  }
+  OperationSigner: { // field return type name
+    app: 'OperationSignerApp'
+    signature: 'String'
+    user: 'OperationSignerUser'
+  }
+  OperationSignerApp: { // field return type name
+    key: 'String'
+    name: 'String'
+  }
+  OperationSignerUser: { // field return type name
+    address: 'String'
+    chainId: 'Int'
+    networkId: 'String'
+  }
   OperationUpdate: { // field return type name
+    context: 'OperationContext'
     hash: 'String'
     index: 'Int'
     input: 'String'
