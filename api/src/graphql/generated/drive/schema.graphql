@@ -253,6 +253,7 @@ enum GroupTransactionType {
   AssetSale
   FeesPayment
   InterestDraw
+  InterestPayment
   InterestReturn
   PrincipalDraw
   PrincipalReturn
