@@ -50,21 +50,24 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
 
   let driveServer: DocumentDriveServer;
-  getRedisClient().then((redisClient) => {
-    driveServer = new DocumentDriveServer(
-      documentModels,
-      new PrismaStorage(prisma as PrismaClient),
-      redisClient ? new RedisCache(redisClient as RedisClientType) : new MemoryCache(),
-    );
-  }).catch(() => {
-    driveServer = new DocumentDriveServer(
-      documentModels,
-      new PrismaStorage(prisma as PrismaClient)
-    );
-  }).finally(() => {
-    initialize();
-  })
+  // getRedisClient().then((redisClient) => {
+  //   driveServer = new DocumentDriveServer(
+  //     documentModels,
+  //     new PrismaStorage(prisma as PrismaClient),
+  //     redisClient ? new RedisCache(redisClient as RedisClientType) : new MemoryCache(),
+  //   );
+  // }).catch((e) => {
 
+  // }).finally(() => {
+  //   initialize();
+  // })
+
+  driveServer = new DocumentDriveServer(
+    documentModels,
+    new PrismaStorage(prisma as PrismaClient)
+  );
+
+  initialize();
   async function initialize() {
     try {
       await driveServer.initialize();
