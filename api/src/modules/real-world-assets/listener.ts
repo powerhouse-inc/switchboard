@@ -302,6 +302,13 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 portfolioId: portfolio.id
             }
         });
+
+        await prisma.rWAPortfolioSpvOnPortfolio.create({
+            data: {
+                portfolioId: portfolio.id,
+                spvId: input.id
+            }
+        });
     },
     "EDIT_SPV": async (input: EditSpvInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing SPV", input });
@@ -319,6 +326,15 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
     },
     "DELETE_SPV": async (input: DeleteSpvInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Deleting SPV", input });
+        await prisma.rWAPortfolioSpvOnPortfolio.delete({
+            where: {
+                spvId_portfolioId: {
+                    portfolioId: portfolio.id,
+                    spvId: input.id
+                }
+            }
+        });
+
         await prisma.rWAPortfolioSpv.delete({
             where: {
                 id_portfolioId: {
@@ -330,12 +346,22 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
     },
     "CREATE_SERVICE_PROVIDER_FEE_TYPE": async (input: CreateServiceProviderFeeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Creating service provider", input });
-        await prisma.rWAPortfolioServiceProviderFeeType.create({
-            data: {
-                ...input,
-                portfolioId: portfolio.id
-            }
-        });
+        try {
+            await prisma.rWAPortfolioServiceProviderFeeType.create({
+                data: {
+                    ...input,
+                    portfolioId: portfolio.id
+                }
+            });
+            await prisma.rWAPortfolioServiceProviderOnPortfolio.create({
+                data: {
+                    portfolioId: portfolio.id,
+                    spvId: input.id
+                }
+            });
+        } catch (e) {
+            logger.debug(e);
+        }
     },
     "EDIT_SERVICE_PROVIDER_FEE_TYPE": async (input: EditServiceProviderFeeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing service provider", input });
@@ -364,6 +390,15 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
     },
     "DELETE_SERVICE_PROVIDER_FEE_TYPE": async (input: DeleteServiceProviderFeeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Deleting service provider", input });
+        await prisma.rWAPortfolioServiceProviderOnPortfolio.delete({
+            where: {
+                spvId_portfolioId: {
+                    portfolioId: portfolio.id,
+                    spvId: input.id
+                }
+            }
+        });
+
         await prisma.rWAPortfolioServiceProviderFeeType.delete({
             where: {
                 id_portfolioId: {
@@ -379,6 +414,13 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             data: {
                 ...input,
                 portfolioId: portfolio.id
+            }
+        });
+
+        await prisma.rWAAccountOnPortfolio.create({
+            data: {
+                portfolioId: portfolio.id,
+                accountId: input.id
             }
         });
     },
@@ -399,6 +441,16 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
     },
     "DELETE_ACCOUNT": async (input: DeleteAccountInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Deleting account", input });
+
+        await prisma.rWAAccountOnPortfolio.delete({
+            where: {
+                accountId_portfolioId: {
+                    portfolioId: portfolio.id,
+                    accountId: input.id
+                }
+            }
+        });
+
         await prisma.rWAPortfolioAccount.delete({
             where: {
                 id_portfolioId: {
@@ -416,6 +468,12 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 portfolioId: portfolio.id
             }
         });
+        await prisma.rWAPortfolioFixedIncomeTypeOnPortfolio.create({
+            data: {
+                portfolioId: portfolio.id,
+                fixedIncomeTypeId: input.id
+            }
+        });
     },
     "EDIT_FIXED_INCOME_TYPE": async (input: EditFixedIncomeTypeInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
         logger.debug({ msg: "Editing fixed income type", input });
@@ -429,6 +487,24 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
             data: {
                 ...input,
                 name: input.name ?? undefined,
+            }
+        });
+    },
+    "DELETE_FIXED_INCOME_TYPE": async (input: DeleteFixedIncomeAssetInput, portfolio: RWAPortfolio, prisma: Prisma.TransactionClient) => {
+        await prisma.rWAPortfolioFixedIncomeTypeOnPortfolio.delete({
+            where: {
+                fixedIncomeTypeId_portfolioId: {
+                    portfolioId: portfolio.id,
+                    fixedIncomeTypeId: input.id
+                }
+            }
+        });
+        await prisma.rWAPortfolioFixedIncomeType.delete({
+            where: {
+                id_portfolioId: {
+                    id: input.id,
+                    portfolioId: portfolio.id
+                }
             }
         });
     },
@@ -486,16 +562,18 @@ const surgicalOperations: Record<string, (input: any, portfolio: RWAPortfolio, p
                 id: input.id,
                 portfolioId: portfolio.id,
                 type: input.type,
-                entryTime: input.entryTime
+                entryTime: input.entryTime,
+                cashBalanceChange: input.cashBalanceChange.toString(),
+                unitPrice: input.unitPrice?.toString() ?? undefined,
             }
         });
 
         for (const feeTx of input.fees ?? []) {
+            const { amount, serviceProviderFeeTypeId } = feeTx
             const feeTxEntity = await prisma.rWABaseTransaction.create({
                 data: {
-                    ...feeTx,
-                    id: feeTx.id ?? undefined,
-                    amount: feeTx.amount,
+                    id: id ?? undefined,
+                    amount: amount,
                     portfolioId: portfolio.id,
                 }
             });
