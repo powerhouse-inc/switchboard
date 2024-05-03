@@ -16,17 +16,15 @@ import {
   Listener,
   ListenerFilter,
   actions,
-  DocumentDriveState,
   DocumentDriveAction
 } from 'document-model-libs/document-drive';
 import RedisCache from 'document-drive/cache/redis';
 import MemoryCache from 'document-drive/cache/memory';
-import { RedisClientType, createClient } from 'redis';
 
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
-import { getRedisClient } from '../../redis';
+import { redisClient } from '../../redis';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -50,21 +48,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
 
 
   let driveServer: DocumentDriveServer;
-  // getRedisClient().then((redisClient) => {
-  //   driveServer = new DocumentDriveServer(
-  //     documentModels,
-  //     new PrismaStorage(prisma as PrismaClient),
-  //     redisClient ? new RedisCache(redisClient as RedisClientType) : new MemoryCache(),
-  //   );
-  // }).catch((e) => {
-
-  // }).finally(() => {
-  //   initialize();
-  // })
 
   driveServer = new DocumentDriveServer(
     documentModels,
-    new PrismaStorage(prisma as PrismaClient)
+    new PrismaStorage(prisma as PrismaClient),
+    redisClient ? new RedisCache(redisClient) : new MemoryCache()
   );
 
   initialize();
