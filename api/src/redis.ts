@@ -3,7 +3,7 @@ import { createClient, RedisClientType } from 'redis';
 
 export let redisClient: RedisClientType | null = null;
 
-export const getRedisClient = async () => {
+export const initRedis = async () => {
   if (!redisClient) {
     redisClient = await createClient({
       url: process.env.REDIS_TLS_URL,

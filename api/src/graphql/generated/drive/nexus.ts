@@ -123,7 +123,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   AuditReportStatus: "Approved" | "ApprovedWithComments" | "Escalated" | "NeedsAction"
   BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
-  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
+  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestPayment" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
   TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"

@@ -50,7 +50,6 @@ export function getRWACRUD(prisma: Prisma.TransactionClient) {
                                     }
                                 },
                                 fixedIncomeTransaction: true,
-                                interestTransaction: true,
                                 fees: true,
                             }
                         },
