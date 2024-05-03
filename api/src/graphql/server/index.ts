@@ -50,15 +50,17 @@ export const startServer = async (
 ): Promise<Server> => {
   logger.debug('Starting server');
 
+  if (process.env.REDIS_TLS_URL) {
+    await initRedis();
+  }
+
   const apolloIndex = createApolloIndexServer();
   const apolloDrive = createApolloDriveServer();
 
   await apolloIndex.start();
   await apolloDrive.start();
 
-  if (process.env.REDIS_TLS_URL) {
-    await initRedis()
-  }
+
 
   router.use(
     '/drives',

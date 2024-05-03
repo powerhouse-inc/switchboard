@@ -17,3 +17,18 @@ export const initRedis = async () => {
 
   return redisClient;
 }
+
+
+
+const timer = setInterval(async () => {
+  try {
+    redisClient && await redisClient.ping();
+  } catch (err) {
+    console.error('Ping Interval Error', err);
+  }
+}, 1000 * 60 * 4);
+
+export const closeRedis = () => {
+  clearInterval(timer);
+  redisClient && redisClient.disconnect();
+}
