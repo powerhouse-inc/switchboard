@@ -1,6 +1,7 @@
 import { createApp } from './app';
 import { startServer } from './graphql/server';
 import { getChildLogger } from './logger';
+import { closeRedis } from './redis';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
@@ -18,6 +19,7 @@ startServer(app, router)
   })
   .catch((err) => {
     logger.warn('Shutting down...');
+    closeRedis();
     if (err instanceof Error) {
       logger.error(err);
     } else {
