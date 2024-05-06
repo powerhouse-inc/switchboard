@@ -6,6 +6,7 @@ import {
   StrandUpdate,
   generateUUID,
   PullResponderTransmitter,
+  SubscriptionTransmitter,
 } from 'document-drive';
 import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
@@ -17,6 +18,7 @@ import {
   ListenerFilter,
   actions,
   DocumentDriveAction
+  TransmitterType
 } from 'document-model-libs/document-drive';
 import RedisCache from 'document-drive/cache/redis';
 import MemoryCache from 'document-drive/cache/memory';
@@ -66,7 +68,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   }
 
   async function getTransmitter(driveId: string, transmitterId: string) {
-    const transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
+    const transmitter = await driveServer.getTransmitter(driveId, transmitterId);
     if (!transmitter) {
       throw new Error(`Transmitter ${transmitterId} not found`)
     }
@@ -74,6 +76,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   }
 
   return {
+    getTransmitter,
     addDrive: async (args: DriveInput) => {
       try {
         const drive = await driveServer!.addDrive(args);
@@ -143,12 +146,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ): Promise<StrandUpdate[]> => {
 
       const transmitter = await getTransmitter(driveId, listenerId);
-      if (transmitter.getStrands) {
+      if (transmitter instanceof PullResponderTransmitter) {
         const result = await transmitter.getStrands(since || undefined);
         return result;
+      } else {
+        throw new Error("Transmitter is not a PullResponder");
       }
-
-      return []
     },
 
     processAcknowledge: async (
@@ -157,26 +160,31 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       revisions: ListenerRevision[],
     ) => {
       const transmitter = await getTransmitter(driveId, listenerId);
-      const result = await transmitter.processAcknowledge(
-        driveId,
-        listenerId,
-        revisions,
-      );
+      if (transmitter instanceof PullResponderTransmitter || transmitter instanceof SubscriptionTransmitter) {
+        const result = await transmitter.processAcknowledge(
+          driveId,
+          listenerId,
+          revisions,
+        );
 
-      return result;
+        return result;
+      } else {
+        throw new Error("Transmitter does not support processAcknowledge");
+      }
     },
 
-    registerPullResponderListener: async (
+    registerListener: async (
       driveId: string,
       filter: ListenerFilter,
+      transmitterType: TransmitterType,
     ): Promise<Listener> => {
       const uuid = generateUUID();
       const listener: Listener = {
         block: false,
         callInfo: {
           data: '',
-          name: 'PullResponder',
-          transmitterType: 'PullResponder',
+          name: transmitterType,
+          transmitterType,
         },
         filter: {
           branch: filter.branch ?? [],
@@ -184,7 +192,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
           documentType: filter.documentType ?? [],
           scope: filter.scope ?? [],
         },
-        label: `Pullresponder #${uuid}`,
+        label: `${transmitterType} #${uuid}`,
         listenerId: uuid,
         system: false,
       };
@@ -198,7 +206,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return listener;
     },
 
-    deletePullResponderListener: async (
+    deleteListener: async (
       driveId: string,
       listenerId: string,
     ) => {

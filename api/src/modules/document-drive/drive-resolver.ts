@@ -7,16 +7,18 @@ import {
   nonNull,
   objectType,
   queryField,
+  subscriptionType,
 } from 'nexus';
 import { systemType } from '../system';
 import {
   ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
+  SubscriptionTransmitter,
 } from 'document-drive';
 import { Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import { getChildLogger } from '../../logger';
 import { Context } from '../../graphql/server/drive/context';
-import { DocumentDriveAction, DocumentDriveState } from 'document-model-libs/document-drive';
+import { DocumentDriveAction, TransmitterType as ITransmitterType } from 'document-model-libs/document-drive';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
@@ -217,6 +219,7 @@ export const TransmitterType = enumType({
     'SecureConnect',
     'MatrixConnect',
     'RESTWebhook',
+    'Subscription',
   ],
 });
 
@@ -241,6 +244,39 @@ export const Listener = objectType({
   },
 });
 
+export const DeleteListener = objectType({
+  name: 'DeleteListener',
+  definition(t) {
+    t.nonNull.id('listenerId');
+    t.nonNull.boolean('deleted');
+  }
+});
+
+async function getStrands(ctx: Context, listenerId: string, since?: string) {
+
+  const result = await ctx.prisma.document.pullStrands(
+    ctx.driveId ?? '1',
+    listenerId,
+    since,
+  );
+  return result.map((e) => ({
+    driveId: e.driveId,
+    documentId: e.documentId,
+    scope: e.scope,
+    branch: e.branch,
+    operations: e.operations.map((o) => ({
+      index: o.index,
+      skip: o.skip,
+      name: o.type,
+      input: stringify(o.input),
+      hash: o.hash,
+      timestamp: o.timestamp,
+      type: o.type,
+      context: o.context,
+    })),
+  }));
+}
+
 export const syncType = objectType({
   name: 'Sync',
   definition(t) {
@@ -253,27 +289,7 @@ export const syncType = objectType({
       resolve: async (_parent, { listenerId, since }, ctx: Context) => {
         if (!listenerId) throw new Error('Listener ID is required');
         try {
-          const result = await ctx.prisma.document.pullStrands(
-            ctx.driveId ?? '1',
-            listenerId,
-            since,
-          );
-          return result.map((e) => ({
-            driveId: e.driveId,
-            documentId: e.documentId,
-            scope: e.scope,
-            branch: e.branch,
-            operations: e.operations.map((o) => ({
-              index: o.index,
-              skip: o.skip,
-              name: o.type,
-              input: stringify(o.input),
-              hash: o.hash,
-              timestamp: o.timestamp,
-              type: o.type,
-              context: o.context,
-            })),
-          }));
+          return getStrands(ctx, listenerId, since);
         } catch (e) {
           if ((e as Error).message?.match(/Transmitter .+ not found/)) {
             throw e;
@@ -284,6 +300,33 @@ export const syncType = objectType({
         }
       },
     });
+  },
+});
+
+export const subscribeStrandsType = subscriptionType({
+  definition(t) {
+    t.field('subscribeStrands', {
+      type: list(IStrandUpdate),
+      args: {
+        listenerId: idArg(),
+        since: 'Date',
+      },
+      subscribe: async function* (_root, { listenerId, since }, ctx: Context) {
+        if (!listenerId) throw new Error('Listener ID is required');
+        const listener = await ctx.prisma.document.getTransmitter(ctx.driveId ?? '1', listenerId);
+        if (!(listener instanceof SubscriptionTransmitter)) {
+          throw new Error("Invalid listener id");
+        }
+        const strandsGenerator = listener.strandsGenerator(since);
+        for await (const value of strandsGenerator) {
+          console.log("yield", value.map(v => v.operations.length));
+          yield value;
+        }
+      },
+      resolve(strands) {
+        return strands.map(s => ({ ...s, operations: s.operations.map(o => ({ ...o, input: JSON.stringify(o.input) })) }));
+      },
+    })
   },
 });
 
@@ -307,7 +350,7 @@ export const getDrive = queryField('drive', {
   type: DocumentDriveState,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
-      const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;
+      const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1');
       return drive;
     } catch (e: any) {
       throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to get drive", logging: true, context: e })
@@ -315,14 +358,14 @@ export const getDrive = queryField('drive', {
   },
 });
 
-export const registerListener = mutationField('registerPullResponderListener', {
+export const registerPullResponderListener = mutationField('registerPullResponderListener', {
   type: Listener,
   args: {
     filter: nonNull(InputListenerFilter),
   },
   resolve: async (_parent, { filter }, ctx: Context) => {
     try {
-      const result = await ctx.prisma.document.registerPullResponderListener(
+      const result = await ctx.prisma.document.registerListener(
         ctx.driveId ?? '1',
         {
           branch: filter.branch?.filter(b => !!b) as string[] ?? [],
@@ -330,6 +373,7 @@ export const registerListener = mutationField('registerPullResponderListener', {
           documentType: filter.documentType?.filter(b => !!b) as string[] ?? [],
           scope: filter.scope?.filter(b => !!b) as string[] ?? [],
         },
+        "PullResponder"
       );
 
       return result;
@@ -341,17 +385,63 @@ export const registerListener = mutationField('registerPullResponderListener', {
   },
 });
 
+export const deletePullResponderListener = mutationField('deletePullResponderListener', {
+  type: DeleteListener,
+  args: {
+    listenerId: idArg(),
+  },
+  resolve: async (_parent, { listenerId }, ctx: Context) => {
+    try {
+      const result = await ctx.prisma.document.deleteListener(
+        ctx.driveId ?? '1',
+        listenerId,
+      );
 
-export const deleteListener = mutationField('deletePullResponderListener', {
+      return result;
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete listener", logging: true, context: e })
+    }
+  },
+});
+
+export const registerListener = mutationField('registerListener', {
   type: Listener,
   args: {
+    type: nonNull(TransmitterType),
     filter: nonNull(InputListenerFilter),
   },
-  resolve: async (_parent, { filter }, ctx: Context) => {
+  resolve: async (_parent, { type, filter }, ctx: Context) => {
     try {
-      const result = await ctx.prisma.document.deletePullResponderListener(
+      const result = await ctx.prisma.document.registerListener(
         ctx.driveId ?? '1',
-        filter,
+        {
+          branch: filter.branch?.filter(b => !!b) as string[] ?? [],
+          documentId: filter.documentId?.filter(b => !!b) as string[] ?? [],
+          documentType: filter.documentType?.filter(b => !!b) as string[] ?? [],
+          scope: filter.scope?.filter(b => !!b) as string[] ?? [],
+        },
+        type as ITransmitterType
+      );
+
+      return result;
+
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to register listener", logging: true, context: e })
+    }
+
+  },
+});
+
+export const deleteListener = mutationField('deleteListener', {
+  type: DeleteListener,
+  args: {
+    listenerId: idArg(),
+  },
+  resolve: async (_parent, { listenerId }, ctx: Context) => {
+    try {
+      const result = await ctx.prisma.document.deleteListener(
+        ctx.driveId ?? '1',
+        listenerId,
       );
 
       return result;
@@ -428,6 +518,7 @@ export const acknowledge = mutationField('acknowledge', {
   },
   resolve: async (_parent, { revisions, listenerId }, ctx: Context) => {
     try {
+      console.log("ACKKKK", revisions)
       if (!listenerId || !revisions) return false;
       const validEntries: IListenerRevision[] = revisions
         .filter((r) => r !== null)

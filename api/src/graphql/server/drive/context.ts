@@ -3,6 +3,7 @@ import pino from 'pino';
 import { Session } from '@prisma/client';
 import { getChildLogger } from '../../../logger';
 import { getExtendedPrisma } from '../../../importedModules';
+import type { Extra } from "graphql-ws/lib/use/ws";
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
@@ -38,6 +39,31 @@ export function createContext(params: CreateContextParams): Context {
 
   return {
     request: params,
+    prisma,
+    apolloLogger,
+    getSession: async () => prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
+    origin,
+    driveId,
+  };
+}
+
+export function createContextWebsocket(request: Extra["request"]): Context {
+  const authorizationHeader = request.headers.authorization;
+  // const cookies = cookieParser(request.headers?.cookie);
+  // const cookieAuthHeader = request.coo.cookies['gql:default'];
+  const token = authorizationHeader?.replace('Bearer ', '');
+
+  const url = request.url ?? "";
+  const match = url.match(/(?<=\/d\/)([^\/]*)/);
+  const driveId = match?.[0];
+  if (!driveId) {
+    throw Error("No drive id found in url");
+  }
+  const origin = request.headers.host ?? "";
+  const prisma = getExtendedPrisma();
+
+  return {
+    // request: params,
     prisma,
     apolloLogger,
     getSession: async () => prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
