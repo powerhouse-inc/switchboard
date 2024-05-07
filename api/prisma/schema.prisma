@@ -49,6 +49,11 @@ model Challenge {
 }
 
 // Document Drive
+model Drive {
+    slug String @id
+    id   String
+}
+
 model Document {
     id                  String
     driveId             String
