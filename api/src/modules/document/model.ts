@@ -123,7 +123,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ) => {
       if (!documentId) {
         logger.info('adding drive operations')
-        const result = await driveServer.addDriveOperations(
+        const result = await driveServer.queueDriveOperations(
           driveId,
           operations,
         );
@@ -131,7 +131,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         return result;
       }
       logger.info('adding operations to document')
-      const result = await driveServer.addOperations(
+      const result = await driveServer.queueOperations(
         driveId,
         documentId,
         operations,
