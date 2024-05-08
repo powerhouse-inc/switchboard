@@ -20,6 +20,8 @@ import {
 } from 'document-model-libs/document-drive';
 import RedisCache from 'document-drive/cache/redis';
 import MemoryCache from 'document-drive/cache/memory';
+import { RedisQueueManager } from 'document-drive/queue/redis';
+import { BaseQueueManager } from 'document-drive/queue/base';
 
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
@@ -52,7 +54,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   driveServer = new DocumentDriveServer(
     documentModels,
     new PrismaStorage(prisma as PrismaClient),
-    redisClient ? new RedisCache(redisClient) : new MemoryCache()
+    redisClient ? new RedisCache(redisClient) : new MemoryCache(),
+    redisClient ? new RedisQueueManager(3, 10, redisClient) : new BaseQueueManager(3, 10),
   );
 
   initialize();
