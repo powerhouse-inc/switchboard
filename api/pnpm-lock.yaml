@@ -31,13 +31,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-experimental.4
-    version: 1.0.0-experimental.4(document-model-libs@1.41.0)(document-model@1.1.0-experimental.1)(prisma@5.11.0)
+    version: 1.0.0-experimental.4(document-model-libs@1.45.0)(document-model@1.1.0-experimental.1)(prisma@5.11.0)
   document-model:
     specifier: 1.1.0-experimental.1
     version: 1.1.0-experimental.1
   document-model-libs:
-    specifier: ^1.42.0
-    version: 1.42.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: ^1.45.0
+    version: 1.45.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -4838,14 +4838,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-experimental.4(document-model-libs@1.41.0)(document-model@1.1.0-experimental.1)(prisma@5.11.0):
+  /document-drive@1.0.0-experimental.4(document-model-libs@1.45.0)(document-model@1.1.0-experimental.1)(prisma@5.11.0):
     resolution: {integrity: sha512-5by4zaGGcE+k1/vNUgR+K56bHBMfI0Rc6t5xww7hwP9wt0jh4jxLMmP6VWFVg0BMX/kbQqb4CEdsGFyD5vadgA==}
     peerDependencies:
       document-model: 1.1.0-experimental.1
       document-model-libs: ^1.37.0
     dependencies:
       document-model: 1.1.0-experimental.1
-      document-model-libs: 1.41.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model-libs: 1.45.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -4873,8 +4873,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.42.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-TKIYj2VBE710dxdfQyyI5SrfwszZJkssGJHrY+dRz4SBZPzIb+T3MhvMXaoUBmNcR31+yt9kUiPgIYMJktTnUw==}
+  /document-model-libs@1.45.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-lQPZDNsxUDNAGaX+/qGA1VjTJcoNs0J4YJBzyYTOje5uKo5OSjztSXPJtNIkgDKNIFMQQ5+Wt6QMgcc/7n9urg==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -8236,6 +8236,9 @@ packages:
   /sqlite3@5.1.7:
     resolution: {integrity: sha512-GGIyOiFaG+TUra3JIfkI/zGP8yZYLPQ0pl1bH+ODjiX57sPhrLU5sQJn1y9bDKZUFYkX1crlrPfSYt0BKKdkog==}
     requiresBuild: true
+    peerDependenciesMeta:
+      node-gyp:
+        optional: true
     dependencies:
       bindings: 1.5.0
       node-addon-api: 7.1.0
