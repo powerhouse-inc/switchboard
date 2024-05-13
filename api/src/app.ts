@@ -67,5 +67,8 @@ export const createApp = (): { app: Express, router: express.Router } => {
     }
   );
 
+  const basePath = process.env.BASE_PATH || '/';
+  app.use(basePath, router);
+
   return { app, router };
 };
