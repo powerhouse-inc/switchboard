@@ -53,6 +53,7 @@ const transport = process.env.SENTRY_DSN ? {
   options: {
     sentry: {
       dsn: process.env.SENTRY_DSN,
+      environment: process.env.SENTRY_ENV ?? 'dev',
       ignoreErrors: [/Transmitter .+ not found/, /^Failed to fetch strands$/, /Drive with id .+ not found/],
       // additional options for sentry
     },

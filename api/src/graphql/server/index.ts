@@ -1,22 +1,14 @@
-import type { Server } from 'http';
-import { createServer as createHttpServer } from 'http';
+
 import type express from 'express';
 import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
 import cookierParser from 'cookie-parser';
 import cors from 'cors';
-import { PORT } from '../../env';
 import { schemaWithMiddleware as indexSchema } from './index/schema';
 import { schemaWithMiddleware as driveSchema } from './drive/schema';
 import { Context, Context as IndexContext, createContext as createIndexContext } from './index/context';
 import { Context as DriveContext, createContext as createDriveContext } from './drive/context';
-import { getChildLogger } from '../../logger';
-import "express-async-errors";
-import { errorHandler } from '../../middleware/errors';
-import * as Sentry from "@sentry/node";
-import { initRedis } from '../../redis';
-const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
 function loggerPlugin(): ApolloServerPlugin<Context> {
   return {
@@ -44,23 +36,14 @@ const createApolloDriveServer = (): ApolloServer<DriveContext> => new ApolloServ
   plugins: [loggerPlugin()],
 });
 
-export const startServer = async (
-  app: express.Application,
+export const addGraphqlRoutes = async (
   router: express.Router,
-): Promise<Server> => {
-  logger.debug('Starting server');
-
-  if (process.env.REDIS_TLS_URL) {
-    await initRedis();
-  }
-
+) => {
   const apolloIndex = createApolloIndexServer();
   const apolloDrive = createApolloDriveServer();
 
   await apolloIndex.start();
   await apolloDrive.start();
-
-
 
   router.use(
     '/drives',
@@ -81,16 +64,4 @@ export const startServer = async (
       context: async (params) => createDriveContext(params),
     }),
   );
-
-  const basePath = process.env.BASE_PATH || '/';
-  app.use(basePath, router);
-  app.use(errorHandler);
-  if (process.env.SENTRY_DSN) {
-    app.use(Sentry.Handlers.errorHandler());
-  }
-
-  const httpServer = createHttpServer(app);
-  return httpServer.listen({ port: PORT }, () => {
-    logger.info(`Running on ${PORT}`);
-  });
 };
