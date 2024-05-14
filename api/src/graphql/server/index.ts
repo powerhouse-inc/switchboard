@@ -15,6 +15,7 @@ import { getChildLogger } from '../../logger';
 import "express-async-errors";
 import { errorHandler } from '../../middleware/errors';
 import * as Sentry from "@sentry/node";
+import { initRedis } from '../../redis';
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
 function loggerPlugin(): ApolloServerPlugin<Context> {
@@ -49,11 +50,17 @@ export const startServer = async (
 ): Promise<Server> => {
   logger.debug('Starting server');
 
+  if (process.env.REDIS_TLS_URL) {
+    await initRedis();
+  }
+
   const apolloIndex = createApolloIndexServer();
   const apolloDrive = createApolloDriveServer();
 
   await apolloIndex.start();
   await apolloDrive.start();
+
+
 
   router.use(
     '/drives',
@@ -81,7 +88,7 @@ export const startServer = async (
   if (process.env.SENTRY_DSN) {
     app.use(Sentry.Handlers.errorHandler());
   }
-  
+
   const httpServer = createHttpServer(app);
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);

@@ -139,7 +139,7 @@ export const AssetUnion = unionType({
 
 export const GroupTransactionType = enumType({
   name: "GroupTransactionType",
-  members: ['AssetPurchase', 'AssetSale', 'InterestDraw', 'InterestReturn', 'FeesPayment', 'PrincipalDraw', 'PrincipalReturn'],
+  members: ['AssetPurchase', 'AssetSale', 'InterestDraw', 'InterestReturn', 'FeesPayment', 'PrincipalDraw', 'PrincipalReturn', 'InterestPayment'],
 });
 
 export const RealWorldAssetsPortfolio = objectType({
