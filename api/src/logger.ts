@@ -7,8 +7,18 @@ const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
 } = loggerConfig;
 
+export const dirname = (() => {
+  if (typeof __dirname !== 'undefined') {
+    return __dirname;
+  }
+  if (import.meta.dirname) {
+    return import.meta.dirname;
+  }
+  return process.cwd();
+})();
+
 const formatPrefix = (prefix: string): string => `[${prefix.toUpperCase()}] `;
-const PROJECT_ROOT = path.resolve(import.meta.dirname, '..');
+const PROJECT_ROOT = path.resolve(dirname, '..');
 
 const filterPrefix = (config: {
   options: pino.ChildLoggerOptions;
@@ -48,32 +58,40 @@ const doesPassFilters = (config: {
   bindings: pino.Bindings;
 }): boolean => FILTERS.every((f) => f(config));
 
-const transport = process.env.SENTRY_DSN ? {
-  target: "pino-sentry-transport",
-  options: {
-    sentry: {
-      dsn: process.env.SENTRY_DSN,
-      environment: process.env.SENTRY_ENV ?? 'dev',
-      ignoreErrors: [/Transmitter .+ not found/, /^Failed to fetch strands$/, /Drive with id .+ not found/],
-      // additional options for sentry
-    },
-    withLogRecord: true, // default false - send the log record to sentry as a context.(if its more then 8Kb Sentry will throw an error)
-    tags: ['id'], // sentry tags to add to the event, uses lodash.get to get the value from the log record
-    context: ['hostname'], // sentry context to add to the event, uses lodash.get to get the value from the log record,
-    minLevel: 40, // which level to send to sentry
-  }
-} : {
+const transportTargets: pino.TransportTargetOptions[] = [{
   target: 'pino-pretty',
+}];
+
+if (process.env.SENTRY_DSN) {
+  transportTargets.push({
+    target: 'pino-sentry-transport',
+    options: {
+      sentry: {
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.SENTRY_ENV ?? 'dev',
+        ignoreErrors: [/Transmitter .+ not found/, /^Failed to fetch strands$/, /Drive with id .+ not found/],
+        // additional options for sentry
+      },
+      withLogRecord: true, // default false - send the log record to sentry as a context.(if its more then 8Kb Sentry will throw an error)
+      tags: ['id'], // sentry tags to add to the event, uses lodash.get to get the value from the log record
+      context: ['hostname'], // sentry context to add to the event, uses lodash.get to get the value from the log record,
+      minLevel: 40, // which level to send to sentry
+    },
+  });
 }
 export const expressLogger = pinoHttp({
   level: httpLogLevel,
   msgPrefix: formatPrefix('express'),
-  transport,
+  transport: {
+    targets: transportTargets,
+  },
 });
 
 const logger = pino({
   level: logLevel,
-  transport,
+  transport: {
+    targets: transportTargets,
+  },
 });
 
 export const getChildLogger = (
