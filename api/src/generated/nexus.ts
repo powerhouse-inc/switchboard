@@ -4,10 +4,10 @@
  */
 
 
-import type { Context } from "./../graphql/context"
-import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import type { Context } from "../graphql/server/index";
+import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin.js"
 import type { core, connectionPluginCore } from "nexus"
-import type { ArgsValidationConfig, HasTypeField } from "nexus-validation-plugin/utils"
+import type { ArgsValidationConfig, HasTypeField } from "nexus-validation-plugin/utils.js"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
@@ -36,7 +36,7 @@ declare global {
 
 
 declare global {
-  interface NexusGen extends NexusGenTypes {}
+  interface NexusGen extends NexusGenTypes { }
 }
 
 export interface NexusGenInputs {
@@ -576,15 +576,15 @@ declare global {
      * resolver from executing.
      */
     authorize?: FieldAuthorizeResolver<TypeName, FieldName>
-    
+
     /**
      * Async validation function. Reject when validation fails. Resolve otherwise.
      */
-    validate?: 
-        NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
-        ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
-        : never
-        
+    validate?:
+    NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
+    ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
+    : never
+
   }
   interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
   }

@@ -2,13 +2,13 @@ import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import { loggerConfig } from '../logger.config';
-import { createWriteStream, Sentry } from "pino-sentry";
+
 const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
 } = loggerConfig;
 
 const formatPrefix = (prefix: string): string => `[${prefix.toUpperCase()}] `;
-const PROJECT_ROOT = path.resolve(__dirname, '..');
+const PROJECT_ROOT = path.resolve(import.meta.dirname, '..');
 
 const filterPrefix = (config: {
   options: pino.ChildLoggerOptions;
@@ -81,7 +81,7 @@ export const getChildLogger = (
   bindings?: pino.Bindings,
 ) => {
   // get caller module of this function
-  const caller = Error().stack?.split('at ')[2].trim().split(':')[0] || '';
+  const caller = Error().stack?.split('at ').at(2)?.trim().split(':')[0] || '';
   const localOptions = { ...options };
   const appliedBindings: pino.Bindings = {
     module: path.relative(PROJECT_ROOT, caller),

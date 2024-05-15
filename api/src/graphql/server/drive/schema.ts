@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { connectionPlugin, fieldAuthorizePlugin, makeSchema } from 'nexus/dist';
+import nexus from 'nexus';
 import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import * as driveResolver from '../../../modules/document-drive/drive-resolver';
@@ -12,7 +12,7 @@ import * as scopeFramework from '../../../modules/scope-framework';
 import { getExtraResolvers } from '../../../importedModules';
 
 /* istanbul ignore next @preserve */
-export const schema = makeSchema({
+export const schema = nexus.makeSchema({
   types: {
     ...systemResolver,
     ...driveResolver,
@@ -24,10 +24,10 @@ export const schema = makeSchema({
     ...getExtraResolvers(),
   },
   plugins: [
-    fieldAuthorizePlugin({
+    nexus.fieldAuthorizePlugin({
       formatError: (authConfig) => authConfig.error,
     }),
-    connectionPlugin({
+    nexus.connectionPlugin({
       cursorFromNode(node: any) {
         return node.id;
       },
@@ -35,11 +35,11 @@ export const schema = makeSchema({
     validationPlugin(),
   ],
   outputs: {
-    schema: path.join(__dirname, '../../generated/drive/schema.graphql'),
-    typegen: path.join(__dirname, '../../generated/drive/nexus.ts'),
+    schema: path.join(import.meta.dirname, '../../generated/drive/schema.graphql'),
+    typegen: path.join(import.meta.dirname, '../../generated/drive/nexus.ts'),
   },
   contextType: {
-    module: path.join(__dirname, './context.ts'),
+    module: path.resolve(import.meta.dirname, '../src/graphql/server/drive/context.ts'),
     export: 'Context',
   },
 });

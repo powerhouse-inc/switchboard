@@ -4,7 +4,7 @@ import type { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
 import wildcard from 'wildcard-match';
-import { sign, verify as jwtVerify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../../../env';
 
 const jwtSchema = z.object({
@@ -23,16 +23,16 @@ const generateToken = (
   expiryDurationSeconds?: number | null,
 ) => {
   if (expiryDurationSeconds === null) {
-    return sign({ sessionId }, JWT_SECRET);
+    return jwt.sign({ sessionId }, JWT_SECRET);
   }
   const expiresIn = typeof expiryDurationSeconds !== 'undefined'
     ? ms(expiryDurationSeconds * 1000)
     : JWT_EXPIRATION_PERIOD;
-  return sign({ sessionId }, JWT_SECRET, { expiresIn });
+  return jwt.sign({ sessionId }, JWT_SECRET, { expiresIn });
 };
 
 const getExpiryDateFromToken = (token: string) => {
-  const { exp } = jwtSchema.parse(jwtVerify(token, JWT_SECRET));
+  const { exp } = jwtSchema.parse(jwt.verify(token, JWT_SECRET));
   if (!exp) {
     return null;
   }
@@ -40,7 +40,7 @@ const getExpiryDateFromToken = (token: string) => {
 };
 
 export const verifyToken = (token: string) => {
-  const verified = jwtVerify(token, JWT_SECRET, (err, decoded) => {
+  const verified = jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       throw new GraphQLError(
         err.name === 'TokenExpiredError'
