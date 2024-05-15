@@ -1,8 +1,11 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { Level as PinoLevel } from 'pino';
 import { getChildLogger } from './logger';
-import { getUserCrud, getSessionCrud, getChallengeCrud, getRWACRUD } from './modules';
-import { getDocumentDriveCRUD } from './modules/document';
+import { getUserCrud } from './modules/system/user/model';
+import { getSessionCrud } from './modules/system/session/model';
+import { getChallengeCrud } from './modules/system/challenge/model';
+import { getRWACRUD } from './modules/real-world-assets/model';
+import { getDocumentDriveCRUD } from './modules/document/model';
 
 const dbLogger = getChildLogger({ msgPrefix: 'DATABASE' });
 

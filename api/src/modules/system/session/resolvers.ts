@@ -2,11 +2,9 @@ import {
   mutationField,
   nonNull,
   stringArg,
-  queryField,
-  list,
   inputObjectType,
   objectType,
-} from 'nexus/dist';
+} from 'nexus';
 import { Context } from '../../../graphql/server/index/context';
 
 export const Session = objectType({

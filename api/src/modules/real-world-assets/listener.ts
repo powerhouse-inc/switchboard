@@ -6,14 +6,7 @@ import { getChildLogger } from "../../logger";
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
 
-export interface IReceiverOptions {
-    listenerId: string;
-    label: string;
-    block: boolean;
-    filter: ListenerFilter;
-}
-
-export const listener: IReceiverOptions = {
+export const options: IReceiverOptions = {
     listenerId: "real-world-assets",
     filter: {
         branch: ["main"],

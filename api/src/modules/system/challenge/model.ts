@@ -4,9 +4,9 @@ import { GraphQLError } from 'graphql';
 import url from 'url';
 import { randomUUID } from 'crypto';
 import { getUserCrud } from '../user';
-import { getSessionCrud } from '../session';
 import { getChildLogger } from '../../../logger';
 import { API_ORIGIN } from '../../../env';
+import { getSessionCrud } from '../session/model';
 
 const logger = getChildLogger({ msgPrefix: 'Challenge' });
 

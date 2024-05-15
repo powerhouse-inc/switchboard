@@ -65,3 +65,5 @@ export const addGraphqlRoutes = async (
     }),
   );
 };
+
+export { Context };

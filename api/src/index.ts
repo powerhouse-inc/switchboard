@@ -4,7 +4,7 @@ import { createApp } from './app';
 import { addGraphqlRoutes } from './graphql/server';
 import { getChildLogger } from './logger';
 import { closeRedis } from './redis';
-import { Server, createServer as createHttpServer } from 'http';
+import { type Server, createServer as createHttpServer } from 'http';
 import { PORT } from './env';
 import { errorHandler } from './middleware/errors';
 import { initRedis } from './redis';
@@ -46,8 +46,9 @@ async function startServer(
 startServer(app, router)
   .then((e) => {
     // Hot Module Replacement
-    if (import.meta.hot) {
-      import.meta.hot.on("vite:beforeFullReload", () => {
+    const { hot } = (import.meta as any);
+    if (hot) {
+      hot.on('vite:beforeFullReload', () => {
         e.close();
       });
     }
