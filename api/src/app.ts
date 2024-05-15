@@ -28,7 +28,12 @@ export const createApp = (): { app: Express, router: express.Router } => {
         }),
       ],
       tracesSampleRate: 1.0,
-      ignoreErrors: [/Transmitter .+ not found/, /^Failed to fetch strands$/, /Drive with id .+ not found/],
+      ignoreErrors: [
+        /Transmitter .+ not found/,
+        /^Failed to fetch strands$/,
+        /Drive with id .+ not found/,
+        /Document with id .+ not found/,
+      ],
     });
 
     app.use(Sentry.Handlers.requestHandler());
