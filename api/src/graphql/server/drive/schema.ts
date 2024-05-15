@@ -1,5 +1,6 @@
 import * as path from 'path';
-import nexus from 'nexus';
+// eslint-disable-next-line import/extensions
+import nexus from 'nexus/dist/index.js';
 import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
 import * as driveResolver from '../../../modules/document-drive/drive-resolver';
@@ -10,6 +11,16 @@ import * as accountSnapshotResolver from '../../../modules/account-snapshot';
 import * as budgetStatement from '../../../modules/budget-statement';
 import * as scopeFramework from '../../../modules/scope-framework';
 import { getExtraResolvers } from '../../../importedModules';
+
+export const dirname = (() => {
+  if (typeof __dirname !== 'undefined') {
+    return __dirname;
+  }
+  if (import.meta.dirname) {
+    return import.meta.dirname;
+  }
+  return process.cwd();
+})();
 
 /* istanbul ignore next @preserve */
 export const schema = nexus.makeSchema({
@@ -35,11 +46,11 @@ export const schema = nexus.makeSchema({
     validationPlugin(),
   ],
   outputs: {
-    schema: path.join(import.meta.dirname, '../../generated/drive/schema.graphql'),
-    typegen: path.join(import.meta.dirname, '../../generated/drive/nexus.ts'),
+    schema: path.join(dirname, '../generated/drive/schema.graphql'),
+    typegen: path.join(dirname, '../generated/drive/nexus.ts'),
   },
   contextType: {
-    module: path.resolve(import.meta.dirname, '../src/graphql/server/drive/context.ts'),
+    module: path.join(dirname, 'context.ts'),
     export: 'Context',
   },
 });
