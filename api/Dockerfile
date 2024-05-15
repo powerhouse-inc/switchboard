@@ -26,3 +26,5 @@ ENV PORT=3000
 RUN useradd -m myuser
 USER myuser
 CMD npx prisma db push && pnpm start
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD curl -f http://localhost:3000/healthz || exit 1
