@@ -2,6 +2,7 @@ import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import { loggerConfig } from '../logger.config';
+import { isDevelopment } from './env';
 
 const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
@@ -58,9 +59,13 @@ const doesPassFilters = (config: {
   bindings: pino.Bindings;
 }): boolean => FILTERS.every((f) => f(config));
 
-const transportTargets: pino.TransportTargetOptions[] = [{
-  target: 'pino-pretty',
-}];
+const transportTargets: pino.TransportTargetOptions[] = [];
+
+if (isDevelopment) {
+  transportTargets.push({
+    target: 'pino-pretty',
+  });
+}
 
 if (process.env.SENTRY_DSN) {
   transportTargets.push({
