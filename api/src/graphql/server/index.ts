@@ -1,5 +1,5 @@
 
-import type express from 'express';
+import express from 'express';
 import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
@@ -45,11 +45,14 @@ export const addGraphqlRoutes = async (
   await apolloIndex.start();
   await apolloDrive.start();
 
+  router.use(bodyParser.json({ limit: "50mb" }));
+  router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+
+
   router.use(
     '/drives',
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
-    bodyParser.json(),
     expressMiddleware(apolloIndex, {
       context: async (params) => createIndexContext(params),
     }),
@@ -59,7 +62,6 @@ export const addGraphqlRoutes = async (
     '/d/:driveId',
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
-    bodyParser.json(),
     expressMiddleware(apolloDrive, {
       context: async (params) => createDriveContext(params),
     }),
