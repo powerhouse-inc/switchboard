@@ -1,5 +1,5 @@
 
-import express from 'express';
+import type express from 'express';
 import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import bodyParser from 'body-parser';
@@ -45,6 +45,7 @@ export const addGraphqlRoutes = async (
   await apolloIndex.start();
   await apolloDrive.start();
 
+  // fixes request entity too large
   router.use(bodyParser.json({ limit: "50mb" }));
   router.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 
