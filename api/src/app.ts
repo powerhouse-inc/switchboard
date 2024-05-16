@@ -7,6 +7,7 @@ import {
 } from 'graphql-playground-html'
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
+import bodyParser from 'body-parser';
 
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
@@ -16,6 +17,11 @@ export const createApp = (): { app: Express, router: express.Router } => {
   logger.debug('Creating app');
   const app = express();
   const router = express.Router();
+
+  // fixes request entity too large
+  app.use(bodyParser.json({ limit: "50mb" }));
+  app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+
 
   if (process.env.SENTRY_DSN) {
     Sentry.init({
