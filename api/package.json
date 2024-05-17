@@ -26,7 +26,7 @@
     "cors": "^2.8.5",
     "document-drive": "1.0.0-experimental.7",
     "document-model": "1.1.0-experimental.1",
-    "document-model-libs": "^1.45.0",
+    "document-model-libs": "^1.51.0",
     "dotenv": "^16.4.5",
     "esbuild": "^0.21.2",
     "ethers": "^5.7.2",
