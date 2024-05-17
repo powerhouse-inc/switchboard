@@ -1,81 +1,77 @@
-import path from 'path';
-import fs from 'fs';
-import { DocumentDriveServer, IReceiver, InternalTransmitter, InternalTransmitterUpdate } from 'document-drive';
+import {
+  DocumentDriveServer, IReceiver, InternalTransmitter, InternalTransmitterUpdate,
+} from 'document-drive';
 import { Listener, DocumentDriveDocument } from 'document-model-libs/document-drive';
-import { Document, OperationScope } from "document-model/document"
+import { Document, OperationScope } from 'document-model/document';
 import { Prisma } from '@prisma/client';
 import { getChildLogger } from '../../logger';
+// eslint-disable-next-line import/no-cycle
+import * as modules from '..';
+import type { SwitchboardModule, SwitchboardTransmitter } from '../types';
 
 const logger = getChildLogger({ msgPrefix: 'Listener Manager' }, { module: 'Listener Manager' });
 
-const listeners: Promise<any>[] = [];
-function loadModules(startPath: string, filter: string): Promise<any>[] {
-    if (!fs.existsSync(startPath)) {
-        logger.error(`Directory not found: ${startPath}`);
-        return [];
+const transmitters: SwitchboardTransmitter[] = [];
+function loadModules(): SwitchboardTransmitter[] {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const moduleName of Object.keys(modules)) {
+    const module = modules[moduleName] as SwitchboardModule;
+    if (module.transmitter) {
+      logger.info(`Loading listener from ${moduleName}`);
+      transmitters.push(module.transmitter);
     }
-
-    var files = fs.readdirSync(startPath);
-    for (var i = 0; i < files.length; i++) {
-        var filename = path.join(startPath, files[i]);
-        var stat = fs.lstatSync(filename);
-        if (stat.isDirectory()) {
-            loadModules(filename, filter); //recursive
-        } else if (filename.endsWith(filter)) {
-            logger.info(`Loading listener from ${filename}`);
-            listeners.push(import(filename));
-        };
-    };
-    return listeners;
-};
+  }
+  return transmitters;
+}
 
 function isListenerRegistered(drive: DocumentDriveDocument, listener: Listener) {
-    const listeners = drive.state.local.listeners;
-    return listeners.filter((l) => l.listenerId === listener.listenerId).length > 0;
+  const { listeners } = drive.state.local;
+  return listeners.filter((l) => l.listenerId === listener.listenerId).length > 0;
 }
 
 async function registerListener(driveServer: DocumentDriveServer, driveId: string, listener: Listener) {
-    const receiver: IReceiver = {
-        transmit: async () => { }
-    }
-    await driveServer.addInternalListener(driveId, receiver, {
-        listenerId: listener.listenerId,
-        filter: listener.filter,
-        block: false,
-        label: listener.label!,
-    })
+  const receiver: IReceiver = {
+    transmit: async () => { },
+  };
+  await driveServer.addInternalListener(driveId, receiver, {
+    listenerId: listener.listenerId,
+    filter: listener.filter,
+    block: false,
+    label: listener.label!,
+  });
 
-    logger.info(`Listener ${listener.label}(${listener.listenerId}) registered for drive ${driveId}`);
+  logger.info(`Listener ${listener.label}(${listener.listenerId}) registered for drive ${driveId}`);
 }
 
 export async function init(driveServer: DocumentDriveServer, prisma: Prisma.TransactionClient) {
-    loadModules('./src/modules', 'listener.ts');
-    const modules = await Promise.all(listeners);
-    const drives = await driveServer.getDrives();
-    for (const { listener, transmit } of modules) {
-        if (!listener || !transmit) {
-            continue;
-        }
-
-        for (const driveId of drives) {
-            try {
-                const drive = await driveServer.getDrive(driveId);
-                if (!isListenerRegistered(drive, listener)) {
-                    await registerListener(driveServer, driveId, listener);
-                }
-
-                const transmitter = (await driveServer.getTransmitter(driveId, listener.listenerId));
-                if (transmitter instanceof InternalTransmitter) {
-                    logger.info(`Setting receiver for ${listener.listenerId}`);
-                    transmitter.setReceiver({
-                        transmit: async (strands: InternalTransmitterUpdate<Document, OperationScope>[]) => {
-                            transmit(strands, prisma)
-                        }
-                    })
-                }
-            } catch (e) {
-                logger.error(`Error while initializing listener ${listener.listenerId} for drive ${driveId}`, e);
-            }
-        }
+  const listeners = loadModules();
+  const drives = await driveServer.getDrives();
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { options, transmit } of listeners) {
+    if (!options || !transmit) {
+      continue;
     }
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const driveId of drives) {
+      try {
+        const drive = await driveServer.getDrive(driveId);
+        if (!isListenerRegistered(drive, options)) {
+          await registerListener(driveServer, driveId, options);
+        }
+
+        const transmitter = (await driveServer.getTransmitter(driveId, options.listenerId));
+        if (transmitter instanceof InternalTransmitter) {
+          logger.info(`Setting receiver for ${options.listenerId}`);
+          transmitter.setReceiver({
+            transmit: async (strands: InternalTransmitterUpdate[]) => {
+              transmit(strands, prisma);
+            },
+          });
+        }
+      } catch (e) {
+        logger.error(`Error while initializing listener ${options.listenerId} for drive ${driveId}`, e);
+      }
+    }
+  }
 }
