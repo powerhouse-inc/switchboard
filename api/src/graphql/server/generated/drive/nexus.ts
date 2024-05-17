@@ -4,7 +4,7 @@
  */
 
 
-import type { Context } from "./../../server/drive/context"
+import type { Context } from "./../../drive/context"
 import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
 import type { core, connectionPluginCore } from "nexus"
 import type { ArgsValidationConfig, HasTypeField } from "nexus-validation-plugin/utils"

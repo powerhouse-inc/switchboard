@@ -49,6 +49,11 @@ model Challenge {
 }
 
 // Document Drive
+model Drive {
+    slug String @id
+    id   String
+}
+
 model Document {
     id                  String
     driveId             String
@@ -181,6 +186,7 @@ model RWAPortfolioAsset {
     balance           Float?
     currency          String?
     assetType         String
+    assetProceeds     Float?
     portfolio         RWAPortfolio                 @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
     spv               RWAPortfolioSpv?             @relation(fields: [spvId, portfolioId], references: [id, portfolioId])

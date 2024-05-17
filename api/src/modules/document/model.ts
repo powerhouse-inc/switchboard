@@ -20,6 +20,8 @@ import {
 } from 'document-model-libs/document-drive';
 import RedisCache from 'document-drive/cache/redis';
 import MemoryCache from 'document-drive/cache/memory';
+import { RedisQueueManager } from 'document-drive/queue/redis';
+import { BaseQueueManager } from 'document-drive/queue/base';
 
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
@@ -52,7 +54,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   driveServer = new DocumentDriveServer(
     documentModels,
     new PrismaStorage(prisma as PrismaClient),
-    redisClient ? new RedisCache(redisClient) : new MemoryCache()
+    redisClient ? new RedisCache(redisClient) : new MemoryCache(),
+    redisClient ? new RedisQueueManager(3, 10, redisClient) : new BaseQueueManager(3, 10),
   );
 
   initialize();
@@ -120,7 +123,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ) => {
       if (!documentId) {
         logger.info('adding drive operations')
-        const result = await driveServer.addDriveOperations(
+        const result = await driveServer.queueDriveOperations(
           driveId,
           operations,
         );
@@ -128,7 +131,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         return result;
       }
       logger.info('adding operations to document')
-      const result = await driveServer.addOperations(
+      const result = await driveServer.queueOperations(
         driveId,
         documentId,
         operations,
