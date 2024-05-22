@@ -30,13 +30,13 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-experimental.7
-    version: 1.0.0-experimental.7(document-model-libs@1.53.0)(document-model@1.1.0-experimental.1)(prisma@5.14.0)
+    specifier: 1.0.0-experimental.22
+    version: 1.0.0-experimental.22(document-model-libs@1.53.0)(document-model@1.1.0-experimental.4)(prisma@5.14.0)
   document-model:
-    specifier: 1.1.0-experimental.1
-    version: 1.1.0-experimental.1
+    specifier: 1.1.0-experimental.4
+    version: 1.1.0-experimental.4
   document-model-libs:
-    specifier: ^1.51.0
+    specifier: ^1.53.0
     version: 1.53.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
@@ -2208,6 +2208,20 @@ packages:
     dependencies:
       prisma: 5.14.0
     dev: false
+
+  /@prisma/client@5.14.0(prisma@5.14.0):
+    resolution: {integrity: sha512-akMSuyvLKeoU4LeyBAUdThP/uhVP3GuLygFE3MlYzaCb3/J8SfsYBE5PkaFuLuVpLyA6sFoW+16z/aPhNAESqg==}
+    engines: {node: '>=16.13'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      prisma: 5.14.0
+    dev: false
+    optional: true
 
   /@prisma/debug@5.14.0:
     resolution: {integrity: sha512-iq56qBZuFfX3fCxoxT8gBX33lQzomBU0qIUaEj1RebsKVz1ob/BVH1XSBwwwvRVtZEV1b7Fxx2eVu34Ge/mg3w==}
@@ -5238,13 +5252,13 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-experimental.7(document-model-libs@1.53.0)(document-model@1.1.0-experimental.1)(prisma@5.14.0):
-    resolution: {integrity: sha512-p4fk3b1dRuPmmzS5fZI5De1bndBACo9Oq49MKQOBujaLywS+Pi/OoPXX0yuklQ3+fUJuNVnA7VTGsYbeqKoadQ==}
+  /document-drive@1.0.0-experimental.22(document-model-libs@1.53.0)(document-model@1.1.0-experimental.4)(prisma@5.14.0):
+    resolution: {integrity: sha512-QP6GIAFWttEdSmGGKXQ3iH0La3n2/lvZRb1PQaAfZcAuucL7WZyigdaRvWgeM5mvZTkjp2C0pKlq3kDXW764jg==}
     peerDependencies:
-      document-model: 1.1.0-experimental.1
-      document-model-libs: ^1.37.0
+      document-model: 1.1.0-experimental.4
+      document-model-libs: ^1.52.0
     dependencies:
-      document-model: 1.1.0-experimental.1
+      document-model: 1.1.0-experimental.4
       document-model-libs: 1.53.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.8.1
@@ -5254,7 +5268,7 @@ packages:
       sanitize-filename: 1.6.3
       uuid: 9.0.1
     optionalDependencies:
-      '@prisma/client': 5.11.0(prisma@5.14.0)
+      '@prisma/client': 5.14.0(prisma@5.14.0)
       localforage: 1.10.0
       redis: 4.6.13
       sequelize: 6.37.3(sqlite3@5.1.7)
@@ -5305,8 +5319,8 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.1.0-experimental.1:
-    resolution: {integrity: sha512-5xO3T/vGu1g8UeJGZVokVBr+/GfJDmDSYMkrA/6POmJawF+pZ9GkoudsDWi6CjXuNMWc/ejHWbTV68S+dudKkw==}
+  /document-model@1.1.0-experimental.4:
+    resolution: {integrity: sha512-UdhEv2klnKmnBo4gHtDZC0cjDdc3iMIvwmAQ+BL6NgPOpPG7ADqls51TEpfy6dxLlCu5rLE3RPA2F0Rnw/h1lw==}
     dependencies:
       change-case: 5.4.4
       immer: 10.0.4
