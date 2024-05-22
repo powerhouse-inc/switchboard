@@ -65,7 +65,7 @@ model Document {
     initialState        Json // json object with the scope as keys of the root object
     documentType        String
     syncronizationUnits SyncronizationUnit[]
-
+    state               String?
     @@id([id, driveId])
 }
 
@@ -86,7 +86,7 @@ model Operation {
     syncId      String?
     clipboard   Boolean?     @default(false)
     context     Json?
-
+    resultingState String?
     SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId], onDelete: Cascade)
 
     @@unique([driveId, documentId, scope, branch, index], name: "unique_operation")
