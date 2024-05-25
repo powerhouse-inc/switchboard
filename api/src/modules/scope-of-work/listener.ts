@@ -25,10 +25,9 @@ export const options: any = {
 
 
 export async function transmit(strands: InternalTransmitterUpdate<ScopeOfWorkDocument, "global">[], prisma: Prisma.TransactionClient) {
-    // logger.debug(strands);
     for (const strand of strands) {
         try {
-                await handleScopeOfWorkDocument(strand as InternalTransmitterUpdate<ScopeOfWorkDocument, "global">, prisma);
+            await handleScopeOfWorkDocument(strand as InternalTransmitterUpdate<ScopeOfWorkDocument, "global">, prisma);
         } catch (e) {
             logger.error({ msg: "Error processing strand", error: e });
             continue;
@@ -39,7 +38,6 @@ export async function transmit(strands: InternalTransmitterUpdate<ScopeOfWorkDoc
 
 
 async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<ScopeOfWorkDocument, "global">, prisma: Prisma.TransactionClient) {
-
     for(let op  of strand.operations) {
         if(op.type === "CREATE_DELIVERABLE") {
             const input = op.input as CreateDeliverableInput;
@@ -50,7 +48,7 @@ async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<Scope
 
 async function updateDeliverableInDb(driveId: string, documentId: string, deliverableId: string, prisma: Prisma.TransactionClient) {
     try {
-        const result = await prisma.scopeOfWorkDeliverable.findUnique({
+        await prisma.scopeOfWorkDeliverable.findUnique({
             where: {
                 id_driveId_documentId: {
                     id: deliverableId,
@@ -63,7 +61,6 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
     } catch (e) {
         console.log("deliverable not found in db")
     }
-
 
     try {
         await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
@@ -85,15 +82,14 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
 
 async function createGitHubIssue(title: string, body: string) {
     try {
-      const response = await octokit.issues.create({
-        owner: GITHUB_REPO_OWNER,
-        repo: GITHUB_REPO_NAME,
-        title: title,
-        body: body,
-      });
-      console.log("GitHub issue created:", response.data.html_url);
+        await octokit.issues.create({
+            owner: GITHUB_REPO_OWNER,
+            repo: GITHUB_REPO_NAME,
+            title: title,
+            body: body,
+        });
     } catch (error) {
-      console.error("Error creating GitHub issue:", error);
+      logger.error("Error creating GitHub issue:", error);
       throw error;
     }
 }
