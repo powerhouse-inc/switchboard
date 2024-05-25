@@ -4,8 +4,8 @@ import { getChildLogger } from "../../logger";
 import { Prisma } from "@prisma/client";
 import { Octokit } from "@octokit/rest";
 
-const GITHUB_REPO_OWNER = "powerhouse";
-const GITHUB_REPO_NAME = "rwa";
+const GITHUB_REPO_OWNER = "powerhouse-inc";
+const GITHUB_REPO_NAME = "powerhouse-mirror";
 const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
   });
@@ -48,22 +48,20 @@ async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<Scope
 
 async function updateDeliverableInDb(driveId: string, documentId: string, deliverableId: string, prisma: Prisma.TransactionClient) {
     try {
-        await prisma.scopeOfWorkDeliverable.findUnique({
+        await prisma.scopeOfWorkDeliverable.findFirstOrThrow({
             where: {
-                id_driveId_documentId: {
-                    id: deliverableId,
-                    driveId: driveId,
-                    documentId: documentId,
-                }
+                id: deliverableId,
+                driveId: driveId,
+                documentId: documentId
             }
         })
-        return false;
+        return true;
     } catch (e) {
-        console.log("deliverable not found in db")
+        logger.info("deliverable not found in db")
     }
 
     try {
-        await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
+        
         await prisma.scopeOfWorkDeliverable.create({
             data: {
                 id: deliverableId,
@@ -75,8 +73,10 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
                 githubCreated: true
             }
         })
+
+        await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
     } catch (e) {
-        console.log("   Error creating github issue")
+        console.log("Error creating github issue")
     }
 }
 
@@ -89,7 +89,7 @@ async function createGitHubIssue(title: string, body: string) {
             body: body,
         });
     } catch (error) {
-      logger.error("Error creating GitHub issue:", error);
+      logger.error({msg: "Error creating GitHub issue:", error});
       throw error;
     }
 }
