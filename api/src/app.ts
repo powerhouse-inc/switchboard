@@ -82,6 +82,12 @@ export const createApp = (): { app: Express, router: express.Router } => {
   // Hooks
   router.post('/h/github', async (req, res) => {
     const issueId = req.body?.issue?.number;
+    const action = req.body?.action;
+
+    if (action !== "closed") {
+      return res.sendStatus(200);
+    }
+
     if (!issueId) {
       throw new Error('Issue number not found in request body')
     }
@@ -90,7 +96,8 @@ export const createApp = (): { app: Express, router: express.Router } => {
     if (!result) {
       throw new Error('Failed to close issue')
     }
-    res.sendStatus(200).send(result);
+
+    return res.sendStatus(200).send(result);
   });
 
   const basePath = process.env.BASE_PATH || '/';

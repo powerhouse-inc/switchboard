@@ -41,16 +41,16 @@ async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<Scope
     for (let op of strand.operations) {
         if (op.type === "CREATE_DELIVERABLE") {
             const input = op.input as CreateDeliverableInput;
-            await updateDeliverableInDb(strand.driveId, strand.documentId, input.id, prisma)
+            await updateDeliverableInDb(strand.driveId, strand.documentId, input, prisma)
         }
     }
 }
 
-async function updateDeliverableInDb(driveId: string, documentId: string, deliverableId: string, prisma: Prisma.TransactionClient) {
+async function updateDeliverableInDb(driveId: string, documentId: string, input: CreateDeliverableInput, prisma: Prisma.TransactionClient) {
     try {
         await prisma.scopeOfWorkDeliverable.findFirstOrThrow({
             where: {
-                id: deliverableId,
+                id: input.id,
                 driveId: driveId,
                 documentId: documentId
             }
@@ -63,10 +63,12 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
     }
 
     try {
-        const result = await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
+        const title = input.title;
+        const description = input.description;
+        const result = await createGitHubIssue(title, description ?? "A new deliverable has been created in the scope of work document.")
         await prisma.scopeOfWorkDeliverable.create({
             data: {
-                id: deliverableId,
+                id: input.id,
                 driveId: driveId,
                 documentId: documentId,
                 title: "Deliverable",

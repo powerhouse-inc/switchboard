@@ -237,7 +237,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
             return documents;
         },
 
-        closeScopeOfWorkIssue: async (githubId: string) => {
+        closeScopeOfWorkIssue: async (githubId: number) => {
             const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
                 where: {
                     githubId: githubId
