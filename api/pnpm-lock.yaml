@@ -40,7 +40,7 @@ dependencies:
     version: 1.2.0
   document-model-libs:
     specifier: ^1.53.1
-    version: 1.53.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    version: link:../../document-model-libs
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5

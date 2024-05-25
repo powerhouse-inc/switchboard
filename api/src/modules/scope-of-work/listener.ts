@@ -11,7 +11,6 @@ const octokit = new Octokit({
   });
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
-
 export const options: any = {
     listenerId: "scope-of-work-github",
     filter: {
