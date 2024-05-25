@@ -43,53 +43,46 @@ async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<Scope
 
     for(let op  of strand.operations) {
         if(op.type === "CREATE_DELIVERABLE") {
-            await updateDeliverableInDb(strand.driveId, strand.documentId, op.input.id, prisma)
+            const input = op.input as CreateDeliverableInput;
+            await updateDeliverableInDb(strand.driveId, strand.documentId, input.id, prisma)
         }
     }
 }
 
 async function updateDeliverableInDb(driveId: string, documentId: string, deliverableId: string, prisma: Prisma.TransactionClient) {
     try {
-    const result = await prisma.scopeOfWorkDeliverable.findUnique({
-        where: {
-            id_driveId_documentId: {
+        const result = await prisma.scopeOfWorkDeliverable.findUnique({
+            where: {
+                id_driveId_documentId: {
+                    id: deliverableId,
+                    driveId: driveId,
+                    documentId: documentId,
+                }
+            }
+        })
+        return false;
+    } catch (e) {
+        console.log("deliverable not found in db")
+    }
+
+
+    try {
+        await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
+        await prisma.scopeOfWorkDeliverable.create({
+            data: {
                 id: deliverableId,
                 driveId: driveId,
                 documentId: documentId,
+                title: "Deliverable",
+                description: "Description",
+                status: "NOT_STARTED",
+                githubCreated: true
             }
-        }
-    })
-
-    return false;
-
-} catch (e) {
-
-    console.log("deliverable not found in db")
-    
-}
-
-
-try {
-await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
-await prisma.scopeOfWorkDeliverable.create({
-    data: {
-        id: deliverableId,
-        driveId: driveId,
-        documentId: documentId,
-        title: "Deliverable",
-        description: "Description",
-        status: "NOT_STARTED",
-        githubCreated: true
+        })
+    } catch (e) {
+        console.log("   Error creating github issue")
     }
-})
-} catch (e) {
-
-    console.log("Error creating github issue")
 }
-}
-
-
-
 
 async function createGitHubIssue(title: string, body: string) {
     try {
@@ -104,4 +97,4 @@ async function createGitHubIssue(title: string, body: string) {
       console.error("Error creating GitHub issue:", error);
       throw error;
     }
-  }
+}
