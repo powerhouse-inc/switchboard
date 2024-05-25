@@ -1,5 +1,5 @@
 import { InternalTransmitterUpdate } from "document-drive";
-import {ScopeOfWorkDocument, CreateDeliverableInput } from "document-model-libs/scope-of-work";
+import { ScopeOfWorkDocument, CreateDeliverableInput } from "document-model-libs/scope-of-work";
 import { getChildLogger } from "../../logger";
 import { Prisma } from "@prisma/client";
 import { Octokit } from "@octokit/rest";
@@ -8,7 +8,7 @@ const GITHUB_REPO_OWNER = "powerhouse-inc";
 const GITHUB_REPO_NAME = "powerhouse-mirror";
 const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
-  });
+});
 
 const logger = getChildLogger({ msgPrefix: 'RWA Internal Listener' }, { moduleName: "RWA Internal Listener" });
 export const options: any = {
@@ -38,8 +38,8 @@ export async function transmit(strands: InternalTransmitterUpdate<ScopeOfWorkDoc
 
 
 async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<ScopeOfWorkDocument, "global">, prisma: Prisma.TransactionClient) {
-    for(let op  of strand.operations) {
-        if(op.type === "CREATE_DELIVERABLE") {
+    for (let op of strand.operations) {
+        if (op.type === "CREATE_DELIVERABLE") {
             const input = op.input as CreateDeliverableInput;
             await updateDeliverableInDb(strand.driveId, strand.documentId, input.id, prisma)
         }
@@ -55,13 +55,15 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
                 documentId: documentId
             }
         })
+
+        // already exists in db
         return true;
     } catch (e) {
         logger.info("deliverable not found in db")
     }
 
     try {
-        
+        const result = await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
         await prisma.scopeOfWorkDeliverable.create({
             data: {
                 id: deliverableId,
@@ -70,11 +72,10 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
                 title: "Deliverable",
                 description: "Description",
                 status: "NOT_STARTED",
-                githubCreated: true
+                githubCreated: true,
+                githubId: result.data.number
             }
         })
-
-        await createGitHubIssue("New Deliverable Created", "A new deliverable has been created in the scope of work document")
     } catch (e) {
         console.log("Error creating github issue")
     }
@@ -82,14 +83,16 @@ async function updateDeliverableInDb(driveId: string, documentId: string, delive
 
 async function createGitHubIssue(title: string, body: string) {
     try {
-        await octokit.issues.create({
+        const result = await octokit.issues.create({
             owner: GITHUB_REPO_OWNER,
             repo: GITHUB_REPO_NAME,
             title: title,
             body: body,
         });
+
+        return result;
     } catch (error) {
-      logger.error({msg: "Error creating GitHub issue:", error});
-      throw error;
+        logger.error({ msg: "Error creating GitHub issue:", error });
+        throw error;
     }
 }
