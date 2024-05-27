@@ -120,6 +120,7 @@ export const OperationContext = objectType({
 export const OperationUpdate = objectType({
   name: 'OperationUpdate',
   definition(t) {
+    t.string('id');
     t.nonNull.int('index');
     t.nonNull.int('skip');
     t.nonNull.string('type');
@@ -172,6 +173,7 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
+    t.string('id');
     t.field('context', { type: InputOperationContext });
   },
 });
@@ -272,6 +274,7 @@ export const syncType = objectType({
               timestamp: o.timestamp,
               type: o.type,
               context: o.context,
+              id: o.id,
             })),
           }));
         } catch (e) {
