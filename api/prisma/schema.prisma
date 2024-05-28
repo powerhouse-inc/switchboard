@@ -62,7 +62,7 @@ model Document {
     revision            Json
     name                String?
     operations          Operation[]
-    initialState        Json // json object with the scope as keys of the root object
+    initialState        String // json object with the scope as keys of the root object
     documentType        String
     syncronizationUnits SyncronizationUnit[]
     state               String?
@@ -81,7 +81,7 @@ model Operation {
     skip               Int
     hash               String
     timestamp          DateTime
-    input              Json
+    input              String
     type               String
     attachments        Attachment[]
     syncId             String?
