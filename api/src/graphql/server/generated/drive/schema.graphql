@@ -133,7 +133,8 @@ type Cash {
   balance: Float!
   currency: String!
   id: ID!
-  spvId: ID!
+  spv: Spv
+  spvId: ID
 }
 
 type Challenge {
@@ -208,6 +209,7 @@ type FixedIncome {
   ISIN: String
   annualizedYield: Float!
   coupon: Float
+  fixedIncomeType: FixedIncomeType!
   fixedIncomeTypeId: ID!
   id: ID!
   maturity: Date!
@@ -218,7 +220,8 @@ type FixedIncome {
   purchaseProceeds: Float!
   realizedSurplus: Float!
   salesProceeds: Float
-  spvId: ID!
+  spv: Spv
+  spvId: ID
   totalDiscount: Float!
 }
 
@@ -474,7 +477,7 @@ type Query {
   document(id: String!): IDocument
   documents: [IDocument]
   drive: DocumentDriveState
-  rwaPortfolios: [RealWorldAssetsPortfolio]
+  rwaPortfolios(id: String): [RealWorldAssetsPortfolio]
   system: SwitchboardDrive
 }
 

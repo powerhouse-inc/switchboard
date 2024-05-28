@@ -237,7 +237,8 @@ export interface NexusGenObjects {
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
-    spvId: string; // ID!
+    spv?: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId?: string | null; // ID
   }
   Challenge: { // root type
     hex: string; // String!
@@ -298,6 +299,7 @@ export interface NexusGenObjects {
     ISIN?: string | null; // String
     annualizedYield: number; // Float!
     coupon?: number | null; // Float
+    fixedIncomeType: NexusGenRootTypes['FixedIncomeType']; // FixedIncomeType!
     fixedIncomeTypeId: string; // ID!
     id: string; // ID!
     maturity: NexusGenScalars['Date']; // Date!
@@ -308,7 +310,8 @@ export interface NexusGenObjects {
     purchaseProceeds: number; // Float!
     realizedSurplus: number; // Float!
     salesProceeds?: number | null; // Float
-    spvId: string; // ID!
+    spv?: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId?: string | null; // ID
     totalDiscount: number; // Float!
   }
   FixedIncomeType: { // root type
@@ -721,7 +724,8 @@ export interface NexusGenFieldTypes {
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
-    spvId: string; // ID!
+    spv: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId: string | null; // ID
   }
   Challenge: { // field return type
     hex: string; // String!
@@ -782,6 +786,7 @@ export interface NexusGenFieldTypes {
     ISIN: string | null; // String
     annualizedYield: number; // Float!
     coupon: number | null; // Float
+    fixedIncomeType: NexusGenRootTypes['FixedIncomeType']; // FixedIncomeType!
     fixedIncomeTypeId: string; // ID!
     id: string; // ID!
     maturity: NexusGenScalars['Date']; // Date!
@@ -792,7 +797,8 @@ export interface NexusGenFieldTypes {
     purchaseProceeds: number; // Float!
     realizedSurplus: number; // Float!
     salesProceeds: number | null; // Float
-    spvId: string; // ID!
+    spv: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId: string | null; // ID
     totalDiscount: number; // Float!
   }
   FixedIncomeType: { // field return type
@@ -1241,6 +1247,7 @@ export interface NexusGenFieldTypeNames {
     balance: 'Float'
     currency: 'String'
     id: 'ID'
+    spv: 'Spv'
     spvId: 'ID'
   }
   Challenge: { // field return type name
@@ -1302,6 +1309,7 @@ export interface NexusGenFieldTypeNames {
     ISIN: 'String'
     annualizedYield: 'Float'
     coupon: 'Float'
+    fixedIncomeType: 'FixedIncomeType'
     fixedIncomeTypeId: 'ID'
     id: 'ID'
     maturity: 'Date'
@@ -1312,6 +1320,7 @@ export interface NexusGenFieldTypeNames {
     purchaseProceeds: 'Float'
     realizedSurplus: 'Float'
     salesProceeds: 'Float'
+    spv: 'Spv'
     spvId: 'ID'
     totalDiscount: 'Float'
   }
@@ -1697,6 +1706,9 @@ export interface NexusGenArgTypes {
     }
     document: { // args
       id: string; // String!
+    }
+    rwaPortfolios: { // args
+      id?: string | null; // String
     }
   }
   Sync: {
