@@ -1,4 +1,4 @@
-import { LoggerConfig } from './src/types';
+import type { LoggerConfig } from './src/types';
 
 export const defaultLoggerConfig: LoggerConfig = {
   // Filter by module name

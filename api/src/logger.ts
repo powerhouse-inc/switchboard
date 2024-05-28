@@ -2,13 +2,24 @@ import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
 import { loggerConfig } from '../logger.config';
-import { createWriteStream, Sentry } from "pino-sentry";
+import { isDevelopment } from './env';
+
 const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
 } = loggerConfig;
 
+export const dirname = (() => {
+  if (typeof __dirname !== 'undefined') {
+    return __dirname;
+  }
+  if (import.meta.dirname) {
+    return import.meta.dirname;
+  }
+  return process.cwd();
+})();
+
 const formatPrefix = (prefix: string): string => `[${prefix.toUpperCase()}] `;
-const PROJECT_ROOT = path.resolve(__dirname, '..');
+const PROJECT_ROOT = path.resolve(dirname, '..');
 
 const filterPrefix = (config: {
   options: pino.ChildLoggerOptions;
@@ -48,31 +59,49 @@ const doesPassFilters = (config: {
   bindings: pino.Bindings;
 }): boolean => FILTERS.every((f) => f(config));
 
-const transport = process.env.SENTRY_DSN ? {
-  target: "pino-sentry-transport",
-  options: {
-    sentry: {
-      dsn: process.env.SENTRY_DSN,
-      ignoreErrors: [/Transmitter .+ not found/, /^Failed to fetch strands$/, /Drive with id .+ not found/],
-      // additional options for sentry
+const transportTargets: pino.TransportTargetOptions[] = [];
+
+if (isDevelopment) {
+  transportTargets.push({
+    target: 'pino-pretty',
+  });
+}
+
+if (process.env.SENTRY_DSN) {
+  transportTargets.push({
+    target: 'pino-sentry-transport',
+    options: {
+      sentry: {
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.SENTRY_ENV ?? 'dev',
+        ignoreErrors: [
+          /Transmitter .+ not found/,
+          /^Failed to fetch strands$/,
+          /Drive with id .+ not found/,
+          /Document with id .+ not found/,
+        ],
+        // additional options for sentry
+      },
+      withLogRecord: true, // default false - send the log record to sentry as a context.(if its more then 8Kb Sentry will throw an error)
+      tags: ['id'], // sentry tags to add to the event, uses lodash.get to get the value from the log record
+      context: ['hostname'], // sentry context to add to the event, uses lodash.get to get the value from the log record,
+      minLevel: 40, // which level to send to sentry
     },
-    withLogRecord: true, // default false - send the log record to sentry as a context.(if its more then 8Kb Sentry will throw an error)
-    tags: ['id'], // sentry tags to add to the event, uses lodash.get to get the value from the log record
-    context: ['hostname'], // sentry context to add to the event, uses lodash.get to get the value from the log record,
-    minLevel: 40, // which level to send to sentry
-  }
-} : {
-  target: 'pino-pretty',
+  });
 }
 export const expressLogger = pinoHttp({
   level: httpLogLevel,
   msgPrefix: formatPrefix('express'),
-  transport,
+  transport: {
+    targets: transportTargets,
+  },
 });
 
 const logger = pino({
   level: logLevel,
-  transport,
+  transport: {
+    targets: transportTargets,
+  },
 });
 
 export const getChildLogger = (
@@ -80,7 +109,7 @@ export const getChildLogger = (
   bindings?: pino.Bindings,
 ) => {
   // get caller module of this function
-  const caller = Error().stack?.split('at ')[2].trim().split(':')[0] || '';
+  const caller = Error().stack?.split('at ').at(2)?.trim().split(':')[0] || '';
   const localOptions = { ...options };
   const appliedBindings: pino.Bindings = {
     module: path.relative(PROJECT_ROOT, caller),

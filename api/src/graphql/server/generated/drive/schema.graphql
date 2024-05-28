@@ -187,6 +187,7 @@ type DefaultDocument implements IDocument {
 
 type DefaultOperation implements IOperation {
   hash: String!
+  id: String
   index: Int!
   timestamp: Date!
   type: String!
@@ -271,6 +272,7 @@ interface IDocument {
 
 interface IOperation {
   hash: String!
+  id: String
   index: Int!
   timestamp: Date!
   type: String!
@@ -317,6 +319,7 @@ input InputOperationSignerUser {
 input InputOperationUpdate {
   context: InputOperationContext
   hash: String!
+  id: String
   index: Int!
   input: String!
   skip: Int
@@ -451,6 +454,7 @@ type OperationSignerUser {
 type OperationUpdate {
   context: OperationContext
   hash: String!
+  id: String
   index: Int!
   input: String!
   skip: Int!
