@@ -34,13 +34,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.57
-    version: 1.0.0-alpha.57(document-model-libs@1.54.0-experimental.3)(document-model@1.2.0)(prisma@5.14.0)
+    version: 1.0.0-alpha.57(document-model-libs@1.54.0)(document-model@1.2.0)(prisma@5.14.0)
   document-model:
     specifier: 1.2.0
     version: 1.2.0
   document-model-libs:
-    specifier: ^1.54.0-experimental.3
-    version: 1.54.0-experimental.3(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: ^1.54.0
+    version: 1.54.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -5366,14 +5366,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.57(document-model-libs@1.54.0-experimental.3)(document-model@1.2.0)(prisma@5.14.0):
+  /document-drive@1.0.0-alpha.57(document-model-libs@1.54.0)(document-model@1.2.0)(prisma@5.14.0):
     resolution: {integrity: sha512-Mawdw0/dqRLi0ffTIWs2npyIIf81AR78Q1fRDsDEWWQbT4p3TC2wX+h6iMCXXbYdhjkEIHHZ36wGEb2b6Rzk4w==}
     peerDependencies:
       document-model: 1.2.0
       document-model-libs: ^1.53.1
     dependencies:
       document-model: 1.2.0
-      document-model-libs: 1.54.0-experimental.3(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model-libs: 1.54.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -5402,8 +5402,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.54.0-experimental.3(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-rwkT822L4YYFDTpknGg2LnKrMbqTzHaBaGJDdmYYMEzgtXNEnlMW6NuGF8Njwb53up/Te2dUp41Km9N3T/3Dhg==}
+  /document-model-libs@1.54.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-fB9MaSFPGQ5h4iW7kHp0pkV/td63/e7Hhd+dhmkAVPqKD6p0Ob2cnDdSS0DdYnMdYJcNlvxWjhbXRYFXKv5kng==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
