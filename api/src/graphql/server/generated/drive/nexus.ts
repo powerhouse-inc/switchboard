@@ -4,7 +4,7 @@
  */
 
 
-import type { Context } from "./../../server/drive/context"
+import type { Context } from "./../../drive/context"
 import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
 import type { core, connectionPluginCore } from "nexus"
 import type { ArgsValidationConfig, HasTypeField } from "nexus-validation-plugin/utils"
@@ -74,6 +74,7 @@ export interface NexusGenInputs {
   InputOperationUpdate: { // input type
     context?: NexusGenInputs['InputOperationContext'] | null; // InputOperationContext
     hash: string; // String!
+    id?: string | null; // String
     index: number; // Int!
     input: string; // String!
     skip?: number | null; // Int
@@ -123,7 +124,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   AuditReportStatus: "Approved" | "ApprovedWithComments" | "Escalated" | "NeedsAction"
   BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
-  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
+  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestPayment" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
   TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
@@ -280,6 +281,7 @@ export interface NexusGenObjects {
   }
   DefaultOperation: { // root type
     hash: string; // String!
+    id?: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
@@ -418,6 +420,7 @@ export interface NexusGenObjects {
   OperationUpdate: { // root type
     context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
+    id?: string | null; // String
     index: number; // Int!
     input: string; // String!
     skip: number; // Int!
@@ -762,6 +765,7 @@ export interface NexusGenFieldTypes {
   }
   DefaultOperation: { // field return type
     hash: string; // String!
+    id: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
@@ -909,6 +913,7 @@ export interface NexusGenFieldTypes {
   OperationUpdate: { // field return type
     context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
+    id: string | null; // String
     index: number; // Int!
     input: string; // String!
     skip: number; // Int!
@@ -1118,6 +1123,7 @@ export interface NexusGenFieldTypes {
   }
   IOperation: { // field return type
     hash: string; // String!
+    id: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
@@ -1279,6 +1285,7 @@ export interface NexusGenFieldTypeNames {
   }
   DefaultOperation: { // field return type name
     hash: 'String'
+    id: 'String'
     index: 'Int'
     timestamp: 'Date'
     type: 'String'
@@ -1426,6 +1433,7 @@ export interface NexusGenFieldTypeNames {
   OperationUpdate: { // field return type name
     context: 'OperationContext'
     hash: 'String'
+    id: 'String'
     index: 'Int'
     input: 'String'
     skip: 'Int'
@@ -1635,6 +1643,7 @@ export interface NexusGenFieldTypeNames {
   }
   IOperation: { // field return type name
     hash: 'String'
+    id: 'String'
     index: 'Int'
     timestamp: 'Date'
     type: 'String'

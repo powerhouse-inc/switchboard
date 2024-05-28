@@ -41,7 +41,6 @@ export function transformPortfolioToState(portfolios: Prisma.RWAPortfolioGetPayl
                     }
                 },
                 fixedIncomeTransaction: true,
-                interestTransaction: true,
                 fees: true,
             }
         },
@@ -86,12 +85,13 @@ export function transformPortfolioToState(portfolios: Prisma.RWAPortfolioGetPayl
             id: transaction.id,
             type: transaction.type,
             cashTransaction: transaction.cashTransaction,
+            entryTime: transaction.entryTime,
+            cashBalanceChange: transaction.cashBalanceChange,
             feeTransactions: transaction.feeTransactions.map(feeTransaction => ({
                 id: feeTransaction.baseTransaction.id,
                 amount: feeTransaction.baseTransaction.amount,
             })),
             fixedIncomeTransaction: transaction.fixedIncomeTransaction,
-            interestTransaction: transaction.interestTransaction,
             fees: transaction.fees.map(fee => ({
                 id: fee.id,
                 serviceProviderFeeTypeId: fee.serviceProviderFeeTypeId,

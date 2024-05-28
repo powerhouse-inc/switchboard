@@ -1,7 +1,7 @@
 import {
   stringArg, list, queryField, objectType,
-} from 'nexus/dist';
-import { Context } from '../../../graphql/server/index/context';
+} from 'nexus';
+import { Context } from '../../../graphql/server/drive/context';
 
 export const CoreUnit = objectType({
   name: 'CoreUnit',

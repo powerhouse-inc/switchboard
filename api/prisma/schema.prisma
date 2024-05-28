@@ -49,6 +49,11 @@ model Challenge {
 }
 
 // Document Drive
+model Drive {
+    slug String @id
+    id   String
+}
+
 model Document {
     id                  String
     driveId             String
@@ -57,31 +62,33 @@ model Document {
     revision            Json
     name                String?
     operations          Operation[]
-    initialState        Json // json object with the scope as keys of the root object
+    initialState        String // json object with the scope as keys of the root object
     documentType        String
     syncronizationUnits SyncronizationUnit[]
+    state               String?
 
     @@id([id, driveId])
 }
 
 model Operation {
-    id          String       @id @default(uuid())
-    driveId     String
-    Document    Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
-    documentId  String
-    scope       String
-    branch      String
-    index       Int
-    skip        Int
-    hash        String
-    timestamp   DateTime
-    input       Json
-    type        String
-    attachments Attachment[]
-    syncId      String?
-    clipboard   Boolean?     @default(false)
-    context     Json?
-
+    id                 String              @id @default(uuid())
+    opId               String?
+    driveId            String
+    Document           Document?           @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
+    documentId         String
+    scope              String
+    branch             String
+    index              Int
+    skip               Int
+    hash               String
+    timestamp          DateTime
+    input              String
+    type               String
+    attachments        Attachment[]
+    syncId             String?
+    clipboard          Boolean?            @default(false)
+    context            Json?
+    resultingState     String?
     SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId], onDelete: Cascade)
 
     @@unique([driveId, documentId, scope, branch, index], name: "unique_operation")
@@ -181,6 +188,8 @@ model RWAPortfolioAsset {
     balance           Float?
     currency          String?
     assetType         String
+    assetProceeds     Float?
+    type              String?
     portfolio         RWAPortfolio                 @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
     spv               RWAPortfolioSpv?             @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
@@ -201,13 +210,12 @@ model RWAPortfolioFixedIncomeType {
 }
 
 model RWAPortfolioSpv {
-    id                                     String                                   @default(uuid())
-    portfolioId                            String
-    name                                   String?
-    portfolio                              RWAPortfolio                             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-    RWAPortfolioSpvOnPortfolio             RWAPortfolioSpvOnPortfolio[]
-    RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
-    RWAPortfolioAsset                      RWAPortfolioAsset[]
+    id                         String                       @default(uuid())
+    portfolioId                String
+    name                       String?
+    portfolio                  RWAPortfolio                 @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+    RWAPortfolioSpvOnPortfolio RWAPortfolioSpvOnPortfolio[]
+    RWAPortfolioAsset          RWAPortfolioAsset[]
 
     @@id([id, portfolioId])
 }
@@ -233,8 +241,8 @@ model RWAAccountOnPortfolio {
 model RWAPortfolioServiceProviderOnPortfolio {
     portfolioId String
     spvId       String
-    portfolio   RWAPortfolio    @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-    spv         RWAPortfolioSpv @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
+    portfolio   RWAPortfolio                       @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+    spv         RWAPortfolioServiceProviderFeeType @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
 
     @@id([spvId, portfolioId])
 }
@@ -249,14 +257,15 @@ model RWAPortfolioFixedIncomeTypeOnPortfolio {
 }
 
 model RWAPortfolioServiceProviderFeeType {
-    id                     String                   @default(uuid())
-    portfolioId            String
-    name                   String?
-    feeType                String?
-    accountId              String?
-    portfolio              RWAPortfolio             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
-    account                RWAPortfolioAccount?     @relation(fields: [accountId, portfolioId], references: [id, portfolioId])
-    RWAGroupTransactionFee RWAGroupTransactionFee[]
+    id                                     String                                   @default(uuid())
+    portfolioId                            String
+    name                                   String?
+    feeType                                String?
+    accountId                              String?
+    portfolio                              RWAPortfolio                             @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+    account                                RWAPortfolioAccount?                     @relation(fields: [accountId, portfolioId], references: [id, portfolioId])
+    RWAGroupTransactionFee                 RWAGroupTransactionFee[]
+    RWAPortfolioServiceProviderOnPortfolio RWAPortfolioServiceProviderOnPortfolio[]
 
     @@id([id, portfolioId])
 }
@@ -275,7 +284,6 @@ model RWABaseTransaction {
     portfolio               RWAPortfolio                           @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     cashTransactions        RWAGroupTransaction[]                  @relation(name: "cashTransaction")
     fixedIncomeTransactions RWAGroupTransaction[]                  @relation(name: "fixedIncomeTransaction")
-    RWAGroupTransaction     RWAGroupTransaction[]                  @relation(name: "interestTransaction")
     feeTransactions         RWABaseTransactionOnGroupTransaction[]
 
     @@id([id, portfolioId])
@@ -286,13 +294,13 @@ model RWAGroupTransaction {
     portfolioId              String
     type                     String
     entryTime                DateTime?
+    cashBalanceChange        String?
+    unitPrice                String?
     cashTransactionId        String?
     fixedIncomeTransactionId String?
-    interestTransactionId    String?
     portfolio                RWAPortfolio                           @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     fixedIncomeTransaction   RWABaseTransaction?                    @relation(name: "fixedIncomeTransaction", fields: [fixedIncomeTransactionId, portfolioId], references: [id, portfolioId])
     cashTransaction          RWABaseTransaction?                    @relation(name: "cashTransaction", fields: [cashTransactionId, portfolioId], references: [id, portfolioId])
-    interestTransaction      RWABaseTransaction?                    @relation(name: "interestTransaction", fields: [interestTransactionId, portfolioId], references: [id, portfolioId])
     feeTransactions          RWABaseTransactionOnGroupTransaction[]
     fees                     RWAGroupTransactionFee[]
 
@@ -322,4 +330,17 @@ model RWABaseTransactionOnGroupTransaction {
     baseTransaction    RWABaseTransaction  @relation(fields: [baseTransactionId, portfolioId], references: [id, portfolioId], onDelete: Cascade)
 
     @@id([id, portfolioId])
+}
+
+model ScopeOfWorkDeliverable {
+    driveId       String
+    documentId    String
+    id            String
+    title         String
+    description   String
+    status        String
+    githubCreated Boolean
+    githubId      Int?
+
+    @@id([id, driveId, documentId])
 }
