@@ -19,7 +19,7 @@ import {
     DocumentDriveAction
 } from 'document-model-libs/document-drive';
 
-import * as sow from 'document-model-libs/scope-of-work';
+// import * as sow from 'document-model-libs/scope-of-work';
 import RedisCache from 'document-drive/cache/redis';
 import MemoryCache from 'document-drive/cache/memory';
 import { RedisQueueManager } from 'document-drive/queue/redis';
@@ -238,30 +238,30 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         },
 
         closeScopeOfWorkIssue: async (githubId: number) => {
-            const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
-                where: {
-                    githubId: githubId
-                }
-            })
+            // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
+            //     where: {
+            //         githubId: githubId
+            //     }
+            // })
 
-            if (!dbEntry) {
-                throw new Error("Deliverable not found");
-            }
+            // if (!dbEntry) {
+            //     throw new Error("Deliverable not found");
+            // }
 
-            const { driveId, documentId, id } = dbEntry;
+            // const { driveId, documentId, id } = dbEntry;
 
-            const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
-            if (!sowDocument) {
-                throw new Error("Document not found");
-            }
+            // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
+            // if (!sowDocument) {
+            //     throw new Error("Document not found");
+            // }
 
-            const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
-                id,
-                status: "DELIVERED"
-            }))
+            // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
+            //     id,
+            //     status: "DELIVERED"
+            // }))
 
 
-            return result;
+            // return result;
         }
     }
 }
