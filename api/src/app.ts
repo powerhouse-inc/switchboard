@@ -8,6 +8,7 @@ import {
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import bodyParser from 'body-parser';
+import prisma from './database';
 
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
@@ -77,6 +78,27 @@ export const createApp = (): { app: Express, router: express.Router } => {
       }))
     }
   );
+
+  // Hooks
+  router.post('/h/github', async (req, res) => {
+    const issueId = req.body?.issue?.number;
+    const action = req.body?.action;
+
+    if (action !== "closed") {
+      return res.sendStatus(200);
+    }
+
+    if (!issueId) {
+      throw new Error('Issue number not found in request body')
+    }
+
+    const result = await prisma.document.closeScopeOfWorkIssue(req.body.issue.number)
+    if (!result) {
+      throw new Error('Failed to close issue')
+    }
+
+    return res.sendStatus(200).send(result);
+  });
 
   const basePath = process.env.BASE_PATH || '/';
   app.use(basePath, router);
