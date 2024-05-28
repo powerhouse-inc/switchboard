@@ -1,7 +1,8 @@
-import { enumType, interfaceType, list, objectType, queryField, unionType } from 'nexus';
+import { arg, enumType, interfaceType, list, objectType, queryField, stringArg, unionType } from 'nexus';
 import { GQLDateBase } from '../system';
 import { documentModelInterface } from '../document';
 import { getChildLogger } from '../../logger';
+import { string } from 'zod';
 
 const logger = getChildLogger({ msgPrefix: 'REAL WORLD ASSETS RESOLVER' });
 
@@ -31,7 +32,8 @@ export const Cash = objectType({
   name: "Cash",
   definition(t) {
     t.nonNull.id("id")
-    t.nonNull.id("spvId")
+    t.id("spvId")
+    t.field("spv", { type: Spv })
     t.nonNull.string("currency")
     t.nonNull.float("balance")
   }
@@ -41,8 +43,10 @@ export const FixedIncome = objectType({
   definition(t) {
     t.nonNull.id("id")
     t.nonNull.id("fixedIncomeTypeId")
+    t.nonNull.field("fixedIncomeType", { type: FixedIncomeType })
     t.nonNull.string("name")
-    t.nonNull.id("spvId")
+    t.id("spvId")
+    t.field("spv", { type: Spv })
     t.nonNull.field("maturity", { type: GQLDateBase })
     t.nonNull.field("purchaseDate", { type: GQLDateBase })
     t.nonNull.float("notional")
@@ -160,17 +164,17 @@ export const RealWorldAssetsDocument = objectType({
 
 export const rwaQuery = queryField('rwaPortfolios', {
   type: list(RealWorldAssetsPortfolio),
-  // args: {
-  //   filter: arg(
-  //     {
-  //       type: filterInput,
-  //     }
-  //   ),
-  // },
-  resolve: async (_root, args, ctx) => {
+  args: {
+    id: stringArg(),
+  },
+  resolve: async (_root, { id }, ctx) => {
     try {
-      const doc = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
-      return doc;
+      const docs = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
+      if (id) {
+        return docs.filter(e => e.id === id);
+      }
+
+      return docs;
     } catch (e: any) {
       logger.error({ msg: e.message });
     }
