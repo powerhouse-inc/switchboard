@@ -25,7 +25,7 @@
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "document-drive": "1.0.0-alpha.58",
+    "document-drive": "1.0.0-alpha.59",
     "document-model": "1.2.0",
     "document-model-libs": "^1.54.0",
     "dotenv": "^16.4.5",
