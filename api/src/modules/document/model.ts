@@ -29,7 +29,7 @@ import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import { redisClient } from '../../redis';
-import { ScopeOfWorkAction, ScopeOfWorkDocument } from '../../../../../document-model-libs/dist/document-models/scope-of-work';
+// import { ScopeOfWorkAction, ScopeOfWorkDocument } from '../../../../../document-model-libs/dist/document-models/scope-of-work';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
