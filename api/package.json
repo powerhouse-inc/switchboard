@@ -27,7 +27,7 @@
     "cors": "^2.8.5",
     "document-drive": "1.0.0-alpha.59",
     "document-model": "1.2.0",
-    "document-model-libs": "^1.39.0-arbitrum.5",
+    "document-model-libs": "1.55.0-arbitrum.1",
     "dotenv": "^16.4.5",
     "esbuild": "^0.21.2",
     "ethers": "^5.7.2",

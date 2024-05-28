@@ -34,13 +34,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.59
-    version: 1.0.0-alpha.59(document-model-libs@1.54.0-experimental.3)(document-model@1.2.0)(prisma@5.14.0)
+    version: 1.0.0-alpha.59(document-model-libs@1.55.0-arbitrum.1)(document-model@1.2.0)(prisma@5.14.0)
   document-model:
     specifier: 1.2.0
     version: 1.2.0
   document-model-libs:
-    specifier: ^1.39.0-arbitrum.1
-    version: 1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: 1.55.0-arbitrum.1
+    version: 1.55.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -5435,14 +5435,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.52(document-model-libs@1.39.0-arbitrum.1)(document-model@1.0.55)(prisma@5.11.0):
-    resolution: {integrity: sha512-HNG5lvXSR14pJOZs7tprZnISx6QAT7eXnWes41fBqX0GA4bNx5aUNPr3MzsS5xwgSo2haphze4IxceRENIVezg==}
+  /document-drive@1.0.0-alpha.59(document-model-libs@1.55.0-arbitrum.1)(document-model@1.2.0)(prisma@5.14.0):
+    resolution: {integrity: sha512-5nLZufstxsFHTUI6XaOnci7UBEMCNnsRJSVcpm+ZwdDIOsCZpp7PzN/jCaIm/R4il5LCbPxnwmExz+Yz/qZglg==}
     peerDependencies:
-      document-model: ^1.0.55
-      document-model-libs: ^1.37.0
+      document-model: 1.2.0
+      document-model-libs: ^1.53.1
     dependencies:
-      document-model: 1.0.55
-      document-model-libs: 1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model: 1.2.0
+      document-model-libs: 1.55.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -5471,8 +5471,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.39.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-ta1xsAok9S+yZgdPOhSAgqYjp8DXpJV2+j/Hh14DcIo0XnWfZbzZBAGJWM+71slzcs3BvRnHDcMPGceI+8np1A==}
+  /document-model-libs@1.55.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-HX37B9S6Occ2S6+O1pINctzwwaiyUispYwN7G1T6zAtd7CvEDi4OcYWSvftrfHYFnv4A8Hmf2krICtaqKWgsVw==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -5481,7 +5481,7 @@ packages:
       '@graphql-codegen/core': 4.0.2(graphql@16.8.1)
       '@graphql-codegen/typescript': 4.0.6(graphql@16.8.1)
       '@headlessui/react': 1.7.19(react-dom@18.2.0)(react@18.2.0)
-      '@internationalized/date': 3.5.2
+      '@internationalized/date': 3.5.3
       '@storybook/test': 8.0.8(vitest@0.32.4)
       copy-anything: 3.0.5
       date-fns: 3.6.0
@@ -5489,7 +5489,7 @@ packages:
       jsonc-parser: 3.2.1
       jszip: 3.10.1
       react: 18.2.0
-      react-aria-components: 1.1.1(react-dom@18.2.0)(react@18.2.0)
+      react-aria-components: 1.2.0(react-dom@18.2.0)(react@18.2.0)
       react-datepicker: 6.9.0(react-dom@18.2.0)(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
       tailwind-merge: 2.2.2
