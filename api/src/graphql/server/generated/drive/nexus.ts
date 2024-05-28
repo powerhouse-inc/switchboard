@@ -297,22 +297,22 @@ export interface NexusGenObjects {
   FixedIncome: { // root type
     CUSIP?: string | null; // String
     ISIN?: string | null; // String
-    annualizedYield: number; // Float!
+    annualizedYield?: number | null; // Float
     coupon?: number | null; // Float
-    fixedIncomeType: NexusGenRootTypes['FixedIncomeType']; // FixedIncomeType!
-    fixedIncomeTypeId: string; // ID!
-    id: string; // ID!
-    maturity: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    notional: number; // Float!
-    purchaseDate: NexusGenScalars['Date']; // Date!
-    purchasePrice: number; // Float!
-    purchaseProceeds: number; // Float!
-    realizedSurplus: number; // Float!
+    fixedIncomeType?: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
+    fixedIncomeTypeId?: string | null; // ID
+    id?: string | null; // ID
+    maturity?: NexusGenScalars['Date'] | null; // Date
+    name?: string | null; // String
+    notional?: number | null; // Float
+    purchaseDate?: NexusGenScalars['Date'] | null; // Date
+    purchasePrice?: number | null; // Float
+    purchaseProceeds?: number | null; // Float
+    realizedSurplus?: number | null; // Float
     salesProceeds?: number | null; // Float
     spv?: NexusGenRootTypes['Spv'] | null; // Spv
     spvId?: string | null; // ID
-    totalDiscount: number; // Float!
+    totalDiscount?: number | null; // Float
   }
   FixedIncomeType: { // root type
     id: string; // ID!
@@ -784,22 +784,22 @@ export interface NexusGenFieldTypes {
   FixedIncome: { // field return type
     CUSIP: string | null; // String
     ISIN: string | null; // String
-    annualizedYield: number; // Float!
+    annualizedYield: number | null; // Float
     coupon: number | null; // Float
-    fixedIncomeType: NexusGenRootTypes['FixedIncomeType']; // FixedIncomeType!
-    fixedIncomeTypeId: string; // ID!
-    id: string; // ID!
-    maturity: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    notional: number; // Float!
-    purchaseDate: NexusGenScalars['Date']; // Date!
-    purchasePrice: number; // Float!
-    purchaseProceeds: number; // Float!
-    realizedSurplus: number; // Float!
+    fixedIncomeType: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
+    fixedIncomeTypeId: string | null; // ID
+    id: string | null; // ID
+    maturity: NexusGenScalars['Date'] | null; // Date
+    name: string | null; // String
+    notional: number | null; // Float
+    purchaseDate: NexusGenScalars['Date'] | null; // Date
+    purchasePrice: number | null; // Float
+    purchaseProceeds: number | null; // Float
+    realizedSurplus: number | null; // Float
     salesProceeds: number | null; // Float
     spv: NexusGenRootTypes['Spv'] | null; // Spv
     spvId: string | null; // ID
-    totalDiscount: number; // Float!
+    totalDiscount: number | null; // Float
   }
   FixedIncomeType: { // field return type
     id: string; // ID!
