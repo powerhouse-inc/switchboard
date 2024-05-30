@@ -33,8 +33,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.59
-    version: 1.0.0-alpha.59(document-model-libs@1.54.0)(document-model@1.3.0)(prisma@5.14.0)
+    specifier: 1.0.0-alpha.64
+    version: 1.0.0-alpha.64(document-model-libs@1.54.0)(document-model@1.3.0)(prisma@5.14.0)
   document-model:
     specifier: 1.3.0
     version: 1.3.0
@@ -5366,10 +5366,10 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.59(document-model-libs@1.54.0)(document-model@1.3.0)(prisma@5.14.0):
-    resolution: {integrity: sha512-5nLZufstxsFHTUI6XaOnci7UBEMCNnsRJSVcpm+ZwdDIOsCZpp7PzN/jCaIm/R4il5LCbPxnwmExz+Yz/qZglg==}
+  /document-drive@1.0.0-alpha.64(document-model-libs@1.54.0)(document-model@1.3.0)(prisma@5.14.0):
+    resolution: {integrity: sha512-HhJyh/LIVmVGRWIXXwDMcxzwz2j6zKrQOX7vIk+nBa9VuB7DH1LHJUlry6fUSOAmW9M+y9psCqdTpD0KVQEJpg==}
     peerDependencies:
-      document-model: 1.2.0
+      document-model: 1.3.0
       document-model-libs: ^1.53.1
     dependencies:
       document-model: 1.3.0
