@@ -237,7 +237,8 @@ export interface NexusGenObjects {
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
-    spvId: string; // ID!
+    spv?: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId?: string | null; // ID
   }
   Challenge: { // root type
     hex: string; // String!
@@ -296,20 +297,22 @@ export interface NexusGenObjects {
   FixedIncome: { // root type
     CUSIP?: string | null; // String
     ISIN?: string | null; // String
-    annualizedYield: number; // Float!
+    annualizedYield?: number | null; // Float
     coupon?: number | null; // Float
-    fixedIncomeTypeId: string; // ID!
-    id: string; // ID!
-    maturity: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    notional: number; // Float!
-    purchaseDate: NexusGenScalars['Date']; // Date!
-    purchasePrice: number; // Float!
-    purchaseProceeds: number; // Float!
-    realizedSurplus: number; // Float!
+    fixedIncomeType?: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
+    fixedIncomeTypeId?: string | null; // ID
+    id?: string | null; // ID
+    maturity?: NexusGenScalars['Date'] | null; // Date
+    name?: string | null; // String
+    notional?: number | null; // Float
+    purchaseDate?: NexusGenScalars['Date'] | null; // Date
+    purchasePrice?: number | null; // Float
+    purchaseProceeds?: number | null; // Float
+    realizedSurplus?: number | null; // Float
     salesProceeds?: number | null; // Float
-    spvId: string; // ID!
-    totalDiscount: number; // Float!
+    spv?: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId?: string | null; // ID
+    totalDiscount?: number | null; // Float
   }
   FixedIncomeType: { // root type
     id: string; // ID!
@@ -721,7 +724,8 @@ export interface NexusGenFieldTypes {
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
-    spvId: string; // ID!
+    spv: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId: string | null; // ID
   }
   Challenge: { // field return type
     hex: string; // String!
@@ -780,20 +784,22 @@ export interface NexusGenFieldTypes {
   FixedIncome: { // field return type
     CUSIP: string | null; // String
     ISIN: string | null; // String
-    annualizedYield: number; // Float!
+    annualizedYield: number | null; // Float
     coupon: number | null; // Float
-    fixedIncomeTypeId: string; // ID!
-    id: string; // ID!
-    maturity: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    notional: number; // Float!
-    purchaseDate: NexusGenScalars['Date']; // Date!
-    purchasePrice: number; // Float!
-    purchaseProceeds: number; // Float!
-    realizedSurplus: number; // Float!
+    fixedIncomeType: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
+    fixedIncomeTypeId: string | null; // ID
+    id: string | null; // ID
+    maturity: NexusGenScalars['Date'] | null; // Date
+    name: string | null; // String
+    notional: number | null; // Float
+    purchaseDate: NexusGenScalars['Date'] | null; // Date
+    purchasePrice: number | null; // Float
+    purchaseProceeds: number | null; // Float
+    realizedSurplus: number | null; // Float
     salesProceeds: number | null; // Float
-    spvId: string; // ID!
-    totalDiscount: number; // Float!
+    spv: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId: string | null; // ID
+    totalDiscount: number | null; // Float
   }
   FixedIncomeType: { // field return type
     id: string; // ID!
@@ -1241,6 +1247,7 @@ export interface NexusGenFieldTypeNames {
     balance: 'Float'
     currency: 'String'
     id: 'ID'
+    spv: 'Spv'
     spvId: 'ID'
   }
   Challenge: { // field return type name
@@ -1302,6 +1309,7 @@ export interface NexusGenFieldTypeNames {
     ISIN: 'String'
     annualizedYield: 'Float'
     coupon: 'Float'
+    fixedIncomeType: 'FixedIncomeType'
     fixedIncomeTypeId: 'ID'
     id: 'ID'
     maturity: 'Date'
@@ -1312,6 +1320,7 @@ export interface NexusGenFieldTypeNames {
     purchaseProceeds: 'Float'
     realizedSurplus: 'Float'
     salesProceeds: 'Float'
+    spv: 'Spv'
     spvId: 'ID'
     totalDiscount: 'Float'
   }
@@ -1697,6 +1706,9 @@ export interface NexusGenArgTypes {
     }
     document: { // args
       id: string; // String!
+    }
+    rwaPortfolios: { // args
+      id?: string | null; // String
     }
   }
   Sync: {

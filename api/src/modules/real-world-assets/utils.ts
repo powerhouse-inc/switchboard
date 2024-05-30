@@ -50,7 +50,6 @@ export function transformPortfolioToState(portfolios: Prisma.RWAPortfolioGetPayl
     return portfolios.map(portfolio => ({
         id: portfolio.documentId,
         principalLenderAccountId: portfolio.principalLenderAccountId,
-        // spvs: [],
         spvs: portfolio.spvs.map(spv => ({
             id: spv.spv.id,
             name: spv.spv.name
@@ -59,18 +58,30 @@ export function transformPortfolioToState(portfolios: Prisma.RWAPortfolioGetPayl
             id: feeType.spv.id,
             name: feeType.spv.name
         })),
-        portfolio: portfolio.portfolio.map(asset => ({
-            ...asset,
-            id: asset.id,
-            purchasePrice: asset.purchasePrice,
-            purchaseDate: asset.purchaseDate,
-            name: asset.name,
-            salesProceeds: asset.salesProceeds,
-            fixedIncomeType: {
-                id: asset.fixedIncomeType?.id,
-                name: asset.fixedIncomeType?.name
+        portfolio: portfolio.portfolio.map(asset => {
+            const spv = portfolio.spvs.map(spv => ({
+                id: spv.spv.id,
+                name: spv.spv.name
+            })).find(e => e.id === asset.spvId)
+
+            const fixedIncomeType = portfolio.fixedIncomeTypes.map(fixedIncomeType => ({
+                id: fixedIncomeType.fixedIncome.id,
+                name: fixedIncomeType.fixedIncome.name
+            })).find(e => e.id == asset.fixedIncomeTypeId);
+
+            return {
+                ...asset,
+                id: asset.id,
+                purchasePrice: asset.purchasePrice,
+                purchaseDate: asset.purchaseDate,
+                name: asset.name,
+                salesProceeds: asset.salesProceeds,
+                fixedIncomeType: fixedIncomeType,
+                spv: spv,
+                spvId: asset.spvId,
+                fixedIncomeTypeId: asset.fixedIncomeTypeId
             }
-        })),
+        }),
         serviceProviderFeeTypes: portfolio.RWAPortfolioServiceProviderFeeType.map(serviceProviderFeeType => ({
             ...serviceProviderFeeType
         })),

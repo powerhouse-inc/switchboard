@@ -422,15 +422,15 @@ declare global {
      * resolver from executing.
      */
     authorize?: FieldAuthorizeResolver<TypeName, FieldName>
-
+    
     /**
      * Async validation function. Reject when validation fails. Resolve otherwise.
      */
-    validate?:
+    validate?: 
         NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
         ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
         : never
-
+        
   }
   interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
   }
