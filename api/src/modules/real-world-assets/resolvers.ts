@@ -1,7 +1,8 @@
-import { enumType, interfaceType, list, objectType, queryField, unionType } from 'nexus';
+import { arg, enumType, interfaceType, list, objectType, queryField, stringArg, unionType } from 'nexus';
 import { GQLDateBase } from '../system';
 import { documentModelInterface } from '../document';
 import { getChildLogger } from '../../logger';
+import { string } from 'zod';
 
 const logger = getChildLogger({ msgPrefix: 'REAL WORLD ASSETS RESOLVER' });
 
@@ -31,7 +32,8 @@ export const Cash = objectType({
   name: "Cash",
   definition(t) {
     t.nonNull.id("id")
-    t.nonNull.id("spvId")
+    t.id("spvId")
+    t.field("spv", { type: Spv })
     t.nonNull.string("currency")
     t.nonNull.float("balance")
   }
@@ -39,18 +41,20 @@ export const Cash = objectType({
 export const FixedIncome = objectType({
   name: "FixedIncome",
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.id("fixedIncomeTypeId")
-    t.nonNull.string("name")
-    t.nonNull.id("spvId")
-    t.nonNull.field("maturity", { type: GQLDateBase })
-    t.nonNull.field("purchaseDate", { type: GQLDateBase })
-    t.nonNull.float("notional")
-    t.nonNull.float("purchasePrice")
-    t.nonNull.float("purchaseProceeds")
-    t.nonNull.float("totalDiscount")
-    t.nonNull.float("annualizedYield")
-    t.nonNull.float("realizedSurplus")
+    t.id("id")
+    t.id("fixedIncomeTypeId")
+    t.field("fixedIncomeType", { type: FixedIncomeType })
+    t.string("name")
+    t.id("spvId")
+    t.field("spv", { type: Spv })
+    t.field("maturity", { type: GQLDateBase })
+    t.field("purchaseDate", { type: GQLDateBase })
+    t.float("notional")
+    t.float("purchasePrice")
+    t.float("purchaseProceeds")
+    t.float("totalDiscount")
+    t.float("annualizedYield")
+    t.float("realizedSurplus")
     t.string("ISIN")
     t.string("CUSIP")
     t.float("coupon")
@@ -160,17 +164,17 @@ export const RealWorldAssetsDocument = objectType({
 
 export const rwaQuery = queryField('rwaPortfolios', {
   type: list(RealWorldAssetsPortfolio),
-  // args: {
-  //   filter: arg(
-  //     {
-  //       type: filterInput,
-  //     }
-  //   ),
-  // },
-  resolve: async (_root, args, ctx) => {
+  args: {
+    id: stringArg(),
+  },
+  resolve: async (_root, { id }, ctx) => {
     try {
-      const doc = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
-      return doc;
+      const docs = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
+      if (id) {
+        return docs.filter(e => e.id === id);
+      }
+
+      return docs;
     } catch (e: any) {
       logger.error({ msg: e.message });
     }

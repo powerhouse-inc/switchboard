@@ -59,39 +59,39 @@ model Document {
     driveId             String
     created             DateTime             @default(now())
     lastModified        DateTime             @default(now())
-    revision            Json
+    revision            String
     name                String?
     operations          Operation[]
     initialState        String // json object with the scope as keys of the root object
     documentType        String
     syncronizationUnits SyncronizationUnit[]
-    state               String?
 
     @@id([id, driveId])
 }
 
 model Operation {
-    id                 String              @id @default(uuid())
-    opId               String?
-    driveId            String
-    Document           Document?           @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
-    documentId         String
-    scope              String
-    branch             String
-    index              Int
-    skip               Int
-    hash               String
-    timestamp          DateTime
-    input              String
-    type               String
-    attachments        Attachment[]
-    syncId             String?
-    clipboard          Boolean?            @default(false)
-    context            Json?
-    resultingState     String?
+    id             String       @id @default(uuid())
+    opId           String?
+    driveId        String
+    Document       Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
+    documentId     String
+    scope          String
+    branch         String
+    index          Int
+    skip           Int
+    hash           String
+    timestamp      DateTime
+    input          String
+    type           String
+    attachments    Attachment[]
+    syncId         String?
+    clipboard      Boolean?     @default(false)
+    context        Json?
+    resultingState Bytes?
+
     SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId], onDelete: Cascade)
 
-    @@unique([driveId, documentId, scope, branch, index], name: "unique_operation")
+    @@unique([driveId, documentId, scope, branch, index(sort: Asc)], name: "unique_operation")
 }
 
 model SyncronizationUnit {
@@ -114,8 +114,8 @@ model Attachment {
 
     mimeType  String
     data      String
-    filename  String
-    extension String
+    filename  String?
+    extension String?
     hash      String
 }
 
