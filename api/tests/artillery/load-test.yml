@@ -1,8 +1,8 @@
 config:
   # This is a test server run by team Artillery
   # It's designed to be highly scalable
-  target: https://apps.powerhouse.io/alpha/powerhouse/switchboard/d/powerhouse
-  # target: http://localhost:3000/d/arbitrum
+  # target: https://apps.powerhouse.io/alpha/powerhouse/switchboard/d/powerhouse
+  target: http://localhost:3000/d/test-arbitrum
   phases:
     - duration: 60
       arrivalRate: 1
@@ -31,7 +31,7 @@ config:
 scenarios:
   - flow:
       - post:
-          url: "/"
+          url: '/'
           json:
             query: |
               query drive {
@@ -45,9 +45,9 @@ scenarios:
                 }
               }
       - post:
-          url: "/"
+          url: '/'
           capture:
-            - json: "$.data.registerPullResponderListener.listenerId"
+            - json: '$.data.registerPullResponderListener.listenerId'
               as: listenerId
           json:
             query: |
@@ -59,14 +59,14 @@ scenarios:
             variables:
               filter:
                 {
-                  "documentId": ["*"],
-                  "documentType": ["*"],
-                  "branch": ["*"],
-                  "scope": ["*"],
+                  'documentId': ['*'],
+                  'documentType': ['*'],
+                  'branch': ['*'],
+                  'scope': ['*'],
                 }
-            operationName: "registerPullResponderListener"
+            operationName: 'registerPullResponderListener'
       - post:
-          url: "/"
+          url: '/'
           json:
             query: |
               query drive {
@@ -80,7 +80,7 @@ scenarios:
                 }
               }
       - post:
-          url: "/"
+          url: '/'
           json:
             query: |
               query drive {
@@ -94,7 +94,7 @@ scenarios:
                 }
               }
       - post:
-          url: "/"
+          url: '/'
           json:
             query: |
               query drive {
@@ -108,7 +108,7 @@ scenarios:
                 }
               }
       - post:
-          url: "/"
+          url: '/'
           json:
             query: |
               query drive {
