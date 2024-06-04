@@ -33,14 +33,14 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.65
-    version: 1.0.0-alpha.65(document-model-libs@1.55.0-arbitrum.1)(document-model@1.3.0)(prisma@5.14.0)
+    specifier: 1.0.0-alpha.68
+    version: 1.0.0-alpha.68(document-model-libs@1.59.0-arbitrum.2)(document-model@1.5.0)(prisma@5.14.0)
   document-model:
-    specifier: 1.3.0
-    version: 1.3.0
+    specifier: 1.5.0
+    version: 1.5.0
   document-model-libs:
-    specifier: ^1.55.0-arbitrum.1
-    version: 1.55.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: 1.59.0-arbitrum.2
+    version: 1.59.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -5422,14 +5422,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.65(document-model-libs@1.55.0-arbitrum.1)(document-model@1.3.0)(prisma@5.14.0):
-    resolution: {integrity: sha512-sRKWblAW0WQ6rTFLm2djcLfmZunYNDk7XEoTzzgBRPXLKLhg+kFTTqf1XqnrrAtg8NS1Lxehq+g/RJn/I69tkQ==}
+  /document-drive@1.0.0-alpha.68(document-model-libs@1.59.0-arbitrum.2)(document-model@1.5.0)(prisma@5.14.0):
+    resolution: {integrity: sha512-QRMy/mSMjD1GrtLWMNp8hvcDRrcfGPEliA0L7QuoHaPGI5UoGPcdLjQlQuJBItJkZ+8kTNy67ZwL2Vcf53AX9g==}
     peerDependencies:
-      document-model: 1.3.0
-      document-model-libs: ^1.53.1
+      document-model: ^1.4.0
+      document-model-libs: ^1.57.0
     dependencies:
-      document-model: 1.3.0
-      document-model-libs: 1.55.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model: 1.5.0
+      document-model-libs: 1.59.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -5458,8 +5458,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.55.0-arbitrum.1(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-HX37B9S6Occ2S6+O1pINctzwwaiyUispYwN7G1T6zAtd7CvEDi4OcYWSvftrfHYFnv4A8Hmf2krICtaqKWgsVw==}
+  /document-model-libs@1.59.0-arbitrum.2(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-83Lxz57oR+2mMHqeR9OwYnee5qTL/WYN/rfW2qlVTy989TLRyUZOnSyVCFOkW+QU2hY2LN2mMaVSRBlV35fa/A==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -5491,13 +5491,13 @@ packages:
       - vitest
     dev: false
 
-  /document-model@1.3.0:
-    resolution: {integrity: sha512-od/UF1Ovt65/ZdpBaxeQFs1CnPeyblJXa3caUVQJX/wSl8P1OVpHtSb1p4i6tpNOuZcNr5Y5cnz7KyHj9Ajwxg==}
+  /document-model@1.5.0:
+    resolution: {integrity: sha512-HdVsoX6RBYP1GDFTtgycWpyXFcjVz/kX06Dnikqwj65Mn9hU2puJtEKb90gCtTFAnoaBWVWZlpgjCpolKJH0Ow==}
     dependencies:
       change-case: 5.4.4
-      immer: 10.0.4
       jszip: 3.10.1
       mime: 4.0.1
+      mutative: 1.0.5
       safe-stable-stringify: 2.4.3
       uuid: 9.0.1
       zod: 3.23.8
@@ -6702,10 +6702,6 @@ packages:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
     dev: false
 
-  /immer@10.0.4:
-    resolution: {integrity: sha512-cuBuGK40P/sk5IzWa9QPUaAdvPHjkk1c+xYsd9oZw+YQQEV+10G0P5uMpGctZZKnyQ+ibRO08bD25nWLmYi2pw==}
-    dev: false
-
   /immutable@3.7.6:
     resolution: {integrity: sha512-AizQPcaofEtO11RZhPPHBOJRdo/20MKQF9mBLnVkBoyHi1/zXK8fzVdnEpSV9gxqtnh6Qomfp3F0xT5qP/vThw==}
     engines: {node: '>=0.8.0'}
@@ -7592,6 +7588,11 @@ packages:
 
   /ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+
+  /mutative@1.0.5:
+    resolution: {integrity: sha512-uN4rD54sN8NRG2wuIO3K8nI0sB4Kk/wmjG5UbZa3amFU3bdF1k80OojBGQMomCeEIphq2hzIvK5T7f4hoZdkWA==}
+    engines: {node: '>=14.0'}
+    dev: false
 
   /nanoevents@9.0.0:
     resolution: {integrity: sha512-X8pU7IOpgKXVLPxYUI55ymXc8XuBE+uypfEyEFBtHkD1EX9KavYTVc+vXZHFyHKzA1TaZoVDqklLdQBBrxIuAw==}
@@ -8925,6 +8926,9 @@ packages:
   /sqlite3@5.1.7:
     resolution: {integrity: sha512-GGIyOiFaG+TUra3JIfkI/zGP8yZYLPQ0pl1bH+ODjiX57sPhrLU5sQJn1y9bDKZUFYkX1crlrPfSYt0BKKdkog==}
     requiresBuild: true
+    peerDependenciesMeta:
+      node-gyp:
+        optional: true
     dependencies:
       bindings: 1.5.0
       node-addon-api: 7.1.0
