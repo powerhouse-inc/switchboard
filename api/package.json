@@ -13,7 +13,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run && vitest run --config ./vitest.modules.config.ts",
     "watch": "vitest watch",
-    "build": "node --no-warnings=ExperimentalWarning ./esbuild.config.js"
+    "build": "node --no-warnings=ExperimentalWarning ./esbuild.config.js",
+    "inspect": "NODE_ENV=production node --max-old-space-size=512 --inspect dist/index.js",
+    "test:load": "autocannon http://localhost:3000/d/test-load -m POST --header 'Content-Type: application/json' -i tests/autocannon/registerListener.json --renderStatusCodes"
   },
   "dependencies": {
     "@apollo/server": "^4.10.3",
@@ -25,9 +27,9 @@
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "document-drive": "1.0.0-alpha.65",
-    "document-model": "1.3.0",
-    "document-model-libs": "^1.55.0-arbitrum.1",
+    "document-drive": "1.0.0-alpha.68",
+    "document-model": "1.5.0",
+    "document-model-libs": "1.59.0-arbitrum.3",
     "dotenv": "^16.4.5",
     "esbuild": "^0.21.2",
     "ethers": "^5.7.2",
@@ -66,6 +68,7 @@
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vitest/coverage-istanbul": "^0.29.8",
+    "autocannon": "^7.15.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
@@ -73,5 +76,6 @@
     "node-fetch": "^3.3.2",
     "typescript": "^5.4.5",
     "vitest-mock-extended": "^1.3.1"
-  }
+  },
+  "packageManager": "pnpm@9.1.4+sha256.30a1801ac4e723779efed13a21f4c39f9eb6c9fbb4ced101bce06b422593d7c9"
 }
