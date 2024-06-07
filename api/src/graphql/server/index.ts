@@ -8,6 +8,8 @@ import { schemaWithMiddleware as indexSchema } from './index/schema';
 import { schemaWithMiddleware as driveSchema } from './drive/schema';
 import { Context, Context as IndexContext, createContext as createIndexContext } from './index/context';
 import { Context as DriveContext, createContext as createDriveContext } from './drive/context';
+import { getExtendedPrisma } from '../../importedModules';
+import NotFoundError from '../../errors/NotFoundError';
 
 function loggerPlugin(): ApolloServerPlugin<Context> {
   return {
@@ -57,9 +59,25 @@ export const addGraphqlRoutes = async (
     '/d/:driveId',
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
+    async (req, res, next) => {
+      const prisma = getExtendedPrisma();
+      const { driveId } = req.params;
+
+      if (!driveId) {
+        throw new Error("driveId required")
+      }
+
+      try {
+        await prisma.document.getDrive(driveId);
+      } catch (e) {
+        throw new NotFoundError({ message: (e as Error).message })
+      }
+      next();
+    },
     expressMiddleware(apolloDrive, {
       context: async (params) => createDriveContext(params),
     }),
+
   );
 };
 

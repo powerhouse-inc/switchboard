@@ -80,6 +80,7 @@ type Node {
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
+  driveIdBySlug(slug: String): String
   drives: [String]
   system: SwitchboardHost
 }

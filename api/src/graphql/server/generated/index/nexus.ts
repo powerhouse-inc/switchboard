@@ -44,7 +44,7 @@ declare global {
 
 
 declare global {
-  interface NexusGen extends NexusGenTypes {}
+  interface NexusGen extends NexusGenTypes { }
 }
 
 export interface NexusGenInputs {
@@ -205,6 +205,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
+    driveIdBySlug: string | null; // String
     drives: Array<string | null> | null; // [String]
     system: NexusGenRootTypes['SwitchboardHost'] | null; // SwitchboardHost
   }
@@ -288,6 +289,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
+    driveIdBySlug: 'String'
     drives: 'String'
     system: 'SwitchboardHost'
   }
@@ -344,6 +346,9 @@ export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
       id?: string | null; // String
+    }
+    driveIdBySlug: { // args
+      slug?: string | null; // String
     }
   }
 }
@@ -422,15 +427,15 @@ declare global {
      * resolver from executing.
      */
     authorize?: FieldAuthorizeResolver<TypeName, FieldName>
-    
+
     /**
      * Async validation function. Reject when validation fails. Resolve otherwise.
      */
-    validate?: 
-        NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
-        ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
-        : never
-        
+    validate?:
+    NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
+    ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
+    : never
+
   }
   interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
   }
