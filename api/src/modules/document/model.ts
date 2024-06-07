@@ -108,7 +108,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
                 return state.global;
             } catch (e) {
                 logger.error(e);
-                throw new Error("Couldn't get drive");
+                throw new Error("Drive not found");
             }
         },
         getDriveBySlug: async (slug: string) => {
@@ -117,7 +117,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
                 return state.global;
             } catch (e) {
                 logger.error(e);
-                throw new Error("Couldn't get drive");
+                throw new Error("Drive not found");
             }
         },
         getDrives: async () => {
