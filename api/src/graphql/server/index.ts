@@ -77,7 +77,6 @@ export const addGraphqlRoutes = async (
     expressMiddleware(apolloDrive, {
       context: async (params) => createDriveContext(params),
     }),
-
   );
 };
 
