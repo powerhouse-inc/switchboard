@@ -111,6 +111,15 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
                 throw new Error("Couldn't get drive");
             }
         },
+        getDriveBySlug: async (slug: string) => {
+            try {
+                const { state } = await driveServer.getDriveBySlug(slug);
+                return state.global;
+            } catch (e) {
+                logger.error(e);
+                throw new Error("Couldn't get drive");
+            }
+        },
         getDrives: async () => {
             try {
                 const driveIds = await driveServer.getDrives()

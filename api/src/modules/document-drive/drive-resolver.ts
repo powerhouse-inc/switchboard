@@ -32,7 +32,7 @@ export const Node = objectType({
   },
 });
 
-export const DocumentDriveState = objectType({
+export const DocumentDriveStateObject = objectType({
   name: 'DocumentDriveState',
   definition(t) {
     t.nonNull.id('id');
@@ -307,7 +307,7 @@ export const driveSystemQueryField = queryField('system', {
 });
 
 export const getDrive = queryField('drive', {
-  type: DocumentDriveState,
+  type: DocumentDriveStateObject,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;
