@@ -10,6 +10,8 @@ import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import bodyParser from 'body-parser';
 import prisma from './database';
 
+import { dependencies } from "../package.json"
+
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
@@ -22,7 +24,6 @@ export const createApp = (): { app: Express, router: express.Router } => {
   // fixes request entity too large
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-
 
   if (process.env.SENTRY_DSN) {
     Sentry.init({
@@ -63,6 +64,11 @@ export const createApp = (): { app: Express, router: express.Router } => {
       startupTime,
     });
   });
+
+  app.get('/versions', async (req, res) => {
+    const { "document-drive": docDrive, "document-model": docModel, "document-model-libs": docModelLibs } = dependencies
+    res.send({ "document-drive": docDrive, "document-model": docModel, "document-model-libs": docModelLibs })
+  })
 
   router.get(
     '/explorer/:driveId?',

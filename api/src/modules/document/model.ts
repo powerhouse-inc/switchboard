@@ -28,7 +28,7 @@ import { BaseQueueManager } from 'document-drive/queue/base';
 import { init } from './listenerManager';
 import { getChildLogger } from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
-import { redisClient } from '../../redis';
+import { initRedis } from '../../redis';
 // import { ScopeOfWorkAction, ScopeOfWorkDocument } from '../../../../../document-model-libs/dist/document-models/scope-of-work';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
@@ -45,6 +45,8 @@ const loggerAdapter = new Proxy<ILogger>(documentDriveLogger as unknown as ILogg
 });
 setLogger(loggerAdapter);
 
+const redisClient = process.env.REDIS_TLS_URL ? await initRedis() : undefined;
+
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     const documentModels = [
         DocumentModelLib,
@@ -58,7 +60,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         documentModels,
         new PrismaStorage(prisma as PrismaClient),
         redisClient ? new RedisCache(redisClient) : new MemoryCache(),
-        redisClient ? new RedisQueueManager(3, 10, redisClient) : new BaseQueueManager(3, 10),
+        redisClient ? new RedisQueueManager(1, 10, redisClient) : new BaseQueueManager(3, 10),
     );
 
     initialize();
