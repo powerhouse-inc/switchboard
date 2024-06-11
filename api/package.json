@@ -22,6 +22,7 @@
     "@apollo/server": "^4.10.3",
     "@octokit/rest": "^20.1.1",
     "@prisma/client": "5.11.0",
+    "@semantic-release/changelog": "^6.0.3",
     "@sentry/node": "^7.110.1",
     "@sentry/profiling-node": "^7.110.1",
     "@types/cookie-parser": "^1.4.7",
