@@ -1,5 +1,5 @@
 {
-  "name": "powerhouse-switchboard",
+  "name": "@powerhousedao/switchboard-api",
   "version": "0.0.1",
   "description": "Open-source API over database models made to be developer- and analyst-friendly.",
   "author": "makerdao",
@@ -15,7 +15,8 @@
     "watch": "vitest watch",
     "build": "node --no-warnings=ExperimentalWarning ./esbuild.config.js",
     "inspect": "NODE_ENV=production node --max-old-space-size=512 --inspect dist/index.js",
-    "test:load": "autocannon http://localhost:3000/d/test-load -m POST --header 'Content-Type: application/json' -i tests/autocannon/registerListener.json --renderStatusCodes"
+    "test:load": "autocannon http://localhost:3000/d/test-load -m POST --header 'Content-Type: application/json' -i tests/autocannon/registerListener.json --renderStatusCodes",
+    "release": "semantic-release"
   },
   "dependencies": {
     "@apollo/server": "^4.10.3",
@@ -74,6 +75,7 @@
     "eslint-config-airbnb-typescript": "^17.1.0",
     "gql-query-builder": "^3.8.0",
     "node-fetch": "^3.3.2",
+    "semantic-release": "^24.0.0",
     "typescript": "^5.4.5",
     "vitest-mock-extended": "^1.3.1"
   },
