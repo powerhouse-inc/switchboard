@@ -1,3 +1,10 @@
+# [1.0.0-dev.2](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2024-06-12)
+
+
+### Features
+
+* queue add and remove listener operations ([3cf277f](https://github.com/powerhouse-inc/switchboard/commit/3cf277fb497cc5bfe8715bddfaf7b5c86b6defb5))
+
 # 1.0.0-dev.1 (2024-06-11)
 
 
