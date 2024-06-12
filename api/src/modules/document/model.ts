@@ -206,7 +206,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
                 system: false,
             };
 
-            const result = await driveServer.addDriveAction(driveId, actions.addListener({ listener }));
+            const result = await driveServer.queueDriveAction(driveId, actions.addListener({ listener }));
             if (result.status !== "SUCCESS") {
                 result.error && logger.error(result.error);
                 throw new Error(`Listener couldn't be registered: ${result.error || result.status}`);
@@ -219,7 +219,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
             driveId: string,
             listenerId: string,
         ) => {
-            const result = await driveServer.addDriveAction(driveId, actions.removeListener({ listenerId }));
+            const result = await driveServer.queueDriveAction(driveId, actions.removeListener({ listenerId }));
             if (result.status !== "SUCCESS") {
                 result.error && logger.error(result.error);
                 throw new Error(`Listener couldn't be deleted: ${result.error || result.status}`);
