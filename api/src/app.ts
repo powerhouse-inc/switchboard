@@ -41,6 +41,7 @@ export const createApp = (): { app: Express, router: express.Router } => {
         /^Failed to fetch strands$/,
         /Drive with id .+ not found/,
         /Document with id .+ not found/,
+        /Drive not found/,
       ],
     });
 
