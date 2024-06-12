@@ -1,3 +1,10 @@
+# [1.0.0-dev.3](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2024-06-12)
+
+
+### Features
+
+* updated document-drive ([319152e](https://github.com/powerhouse-inc/switchboard/commit/319152e4e6e8890741b93ebbecc6d2afa3da8050))
+
 # [1.0.0-dev.2](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2024-06-12)
 
 
