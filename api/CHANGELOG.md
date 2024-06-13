@@ -1,3 +1,10 @@
+# [1.0.0-dev.4](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2024-06-13)
+
+
+### Features
+
+* added redis to docker-compose ([4915574](https://github.com/powerhouse-inc/switchboard/commit/49155746b7bb8c895763452742dab89f1f14a03a))
+
 # [1.0.0-dev.3](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2024-06-12)
 
 
