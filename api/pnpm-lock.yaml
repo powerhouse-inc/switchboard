@@ -77,6 +77,9 @@ importers:
       graphql-ws:
         specifier: ^5.16.0
         version: 5.16.0(graphql@16.8.1)
+      isomorphic-ws:
+        specifier: ^5.0.0
+        version: 5.0.0(ws@8.17.1)
       json-stringify-deterministic:
         specifier: ^1.0.12
         version: 1.0.12
@@ -10697,7 +10700,6 @@ snapshots:
   isomorphic-ws@5.0.0(ws@8.17.1):
     dependencies:
       ws: 8.17.1
-    optional: true
 
   issue-parser@7.0.1:
     dependencies:

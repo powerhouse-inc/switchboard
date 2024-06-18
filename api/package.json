@@ -42,6 +42,7 @@
     "graphql-playground-middleware-express": "^1.7.23",
     "graphql-request": "^7.0.1",
     "graphql-ws": "^5.16.0",
+    "isomorphic-ws": "^5.0.0",
     "json-stringify-deterministic": "^1.0.12",
     "jsonwebtoken": "^9.0.2",
     "ms": "^2.1.3",
