@@ -126,7 +126,7 @@ export interface NexusGenEnums {
   BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
   GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestPayment" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
-  TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
+  TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "Subscription" | "SwitchboardPush"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
   UpdateStatus: "CONFLICT" | "ERROR" | "MISSING" | "SUCCESS"
 }
@@ -286,6 +286,10 @@ export interface NexusGenObjects {
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
+  }
+  DeleteListener: { // root type
+    deleted: boolean; // Boolean!
+    listenerId: string; // ID!
   }
   DocumentDriveState: { // root type
     icon?: string | null; // String
@@ -566,6 +570,7 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
   }
+  Subscription: {};
   SwitchboardDrive: {};
   SwitchboardHost: {};
   Sync: {};
@@ -774,6 +779,10 @@ export interface NexusGenFieldTypes {
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
+  DeleteListener: { // field return type
+    deleted: boolean; // Boolean!
+    listenerId: string; // ID!
+  }
   DocumentDriveState: { // field return type
     icon: string | null; // String
     id: string; // ID!
@@ -886,8 +895,10 @@ export interface NexusGenFieldTypes {
     acknowledge: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
-    deletePullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
+    deleteListener: NexusGenRootTypes['DeleteListener'] | null; // DeleteListener
+    deletePullResponderListener: NexusGenRootTypes['DeleteListener'] | null; // DeleteListener
     pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
+    registerListener: NexusGenRootTypes['Listener'] | null; // Listener
     registerPullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
@@ -1069,6 +1080,9 @@ export interface NexusGenFieldTypes {
     driveId: string; // String!
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
+  }
+  Subscription: { // field return type
+    subscribeStrands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
   }
   SwitchboardDrive: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -1297,6 +1311,10 @@ export interface NexusGenFieldTypeNames {
     timestamp: 'Date'
     type: 'String'
   }
+  DeleteListener: { // field return type name
+    deleted: 'Boolean'
+    listenerId: 'ID'
+  }
   DocumentDriveState: { // field return type name
     icon: 'String'
     id: 'ID'
@@ -1409,8 +1427,10 @@ export interface NexusGenFieldTypeNames {
     acknowledge: 'Boolean'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
-    deletePullResponderListener: 'Listener'
+    deleteListener: 'DeleteListener'
+    deletePullResponderListener: 'DeleteListener'
     pushUpdates: 'ListenerRevision'
+    registerListener: 'Listener'
     registerPullResponderListener: 'Listener'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
@@ -1593,6 +1613,9 @@ export interface NexusGenFieldTypeNames {
     operations: 'OperationUpdate'
     scope: 'String'
   }
+  Subscription: { // field return type name
+    subscribeStrands: 'StrandUpdate'
+  }
   SwitchboardDrive: { // field return type name
     auth: 'Auth'
     sync: 'Sync'
@@ -1683,11 +1706,18 @@ export interface NexusGenArgTypes {
     createSession: { // args
       session: NexusGenInputs['SessionInput']; // SessionInput!
     }
+    deleteListener: { // args
+      listenerId?: string | null; // ID
+    }
     deletePullResponderListener: { // args
-      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
+      listenerId?: string | null; // ID
     }
     pushUpdates: { // args
       strands?: NexusGenInputs['InputStrandUpdate'][] | null; // [InputStrandUpdate!]
+    }
+    registerListener: { // args
+      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
+      type: NexusGenEnums['TransmitterType']; // TransmitterType!
     }
     registerPullResponderListener: { // args
       filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
@@ -1709,6 +1739,12 @@ export interface NexusGenArgTypes {
     }
     rwaPortfolios: { // args
       id?: string | null; // String
+    }
+  }
+  Subscription: {
+    subscribeStrands: { // args
+      listenerId?: string | null; // ID
+      since?: NexusGenScalars['Date'] | null; // Date
     }
   }
   Sync: {

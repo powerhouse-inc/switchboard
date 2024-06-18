@@ -1,13 +1,24 @@
-
 import type express from 'express';
 import { ApolloServerPlugin, ApolloServer } from '@apollo/server';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { expressMiddleware } from '@apollo/server/express4';
 import cookierParser from 'cookie-parser';
 import cors from 'cors';
+import type { WebSocketServer } from 'ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import type { Server } from 'http';
 import { schemaWithMiddleware as indexSchema } from './index/schema';
 import { schemaWithMiddleware as driveSchema } from './drive/schema';
-import { Context, Context as IndexContext, createContext as createIndexContext } from './index/context';
-import { Context as DriveContext, createContext as createDriveContext } from './drive/context';
+import {
+  Context,
+  Context as IndexContext,
+  createContext as createIndexContext,
+} from './index/context';
+import {
+  Context as DriveContext,
+  createContextWebsocket,
+  createContext as createDriveContext,
+} from './drive/context';
 import { getExtendedPrisma } from '../../importedModules';
 import NotFoundError from '../../errors/NotFoundError';
 
@@ -25,23 +36,54 @@ function loggerPlugin(): ApolloServerPlugin<Context> {
   };
 }
 
-const createApolloIndexServer = (): ApolloServer<IndexContext> => new ApolloServer<IndexContext>({
+const createApolloIndexServer = (
+  httpServer: Server,
+  plugins: ApolloServerPlugin<IndexContext>[] = [],
+): ApolloServer<IndexContext> => new ApolloServer<IndexContext>({
   schema: indexSchema,
   introspection: true,
-  plugins: [loggerPlugin()],
+  plugins: [
+    loggerPlugin(),
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+    ...plugins,
+  ],
 });
 
-const createApolloDriveServer = (): ApolloServer<DriveContext> => new ApolloServer<DriveContext>({
+const createApolloDriveServer = (
+  wsServer: WebSocketServer,
+  plugins: ApolloServerPlugin<DriveContext>[] = [],
+): ApolloServer<DriveContext> => new ApolloServer<DriveContext>({
   schema: driveSchema,
   introspection: true,
-  plugins: [loggerPlugin()],
+  plugins: [loggerPlugin(), ...plugins],
 });
 
 export const addGraphqlRoutes = async (
   router: express.Router,
+  httpServer: Server,
+  wsServer: WebSocketServer,
 ) => {
-  const apolloIndex = createApolloIndexServer();
-  const apolloDrive = createApolloDriveServer();
+  // add ws handlers for drive schema
+  const driveWsServer = useServer(
+    {
+      schema: driveSchema,
+      context: (ctx) => createContextWebsocket(ctx.extra.request),
+    },
+    wsServer,
+  );
+
+  const apolloIndex = createApolloIndexServer(httpServer);
+  const apolloDrive = createApolloDriveServer(wsServer, [
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await driveWsServer.dispose();
+          },
+        };
+      },
+    },
+  ]);
 
   await apolloIndex.start();
   await apolloDrive.start();
@@ -64,13 +106,13 @@ export const addGraphqlRoutes = async (
       const { driveId } = req.params;
 
       if (!driveId) {
-        throw new Error("driveId required")
+        throw new Error('driveId required');
       }
 
       try {
         await prisma.document.getDrive(driveId);
       } catch (e) {
-        throw new NotFoundError({ message: (e as Error).message })
+        throw new NotFoundError({ message: (e as Error).message });
       }
       next();
     },

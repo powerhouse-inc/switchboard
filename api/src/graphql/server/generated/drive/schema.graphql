@@ -194,6 +194,11 @@ type DefaultOperation implements IOperation {
   type: String!
 }
 
+type DeleteListener {
+  deleted: Boolean!
+  listenerId: ID!
+}
+
 type DocumentDriveState {
   icon: String
   id: ID!
@@ -418,8 +423,10 @@ type Mutation {
   acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
-  deletePullResponderListener(filter: InputListenerFilter!): Listener
+  deleteListener(listenerId: ID): DeleteListener
+  deletePullResponderListener(listenerId: ID): DeleteListener
   pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
+  registerListener(filter: InputListenerFilter!, type: TransmitterType!): Listener
   registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
@@ -668,6 +675,10 @@ type StrandUpdate {
   scope: String!
 }
 
+type Subscription {
+  subscribeStrands(listenerId: ID, since: Date): [StrandUpdate]
+}
+
 type SwitchboardDrive implements System {
   auth: Auth
   sync: Sync
@@ -697,6 +708,7 @@ enum TransmitterType {
   PullResponder
   RESTWebhook
   SecureConnect
+  Subscription
   SwitchboardPush
 }
 
