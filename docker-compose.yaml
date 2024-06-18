@@ -1,6 +1,14 @@
-version: "3"
+version: "3.8"
 
 services:
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - ./data:/data
+
   database:
     restart: unless-stopped
     image: postgres:15
@@ -30,15 +38,13 @@ services:
       JWT_SECRET: replace_in_production_with_actual_secret
       JWT_EXPIRATION_PERIOD_SECONDS: 3600
       API_GQL_ENDPOINT: "http://localhost:3000"
+      REDIS_TLS_URL: "redis://redis:6379"
       PORT: 3000
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://api:3000/healthz || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     depends_on:
       database:
         condition: service_healthy
+      redis:
+        condition: service_started
 
   frontend:
     restart: unless-stopped
@@ -51,8 +57,7 @@ services:
     expose:
       - 3000
     depends_on:
-      api:
-        condition: service_healthy
+      - api
 
   wundergraph:
     platform: linux/amd64
