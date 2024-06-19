@@ -68,6 +68,9 @@ export const addGraphqlRoutes = async (
       }
 
       try {
+        if (["arbitrum2", "arbitrum3"].includes(driveId)) {
+          throw Error("Old Drive");
+        }
         await prisma.document.getDrive(driveId);
       } catch (e) {
         throw new NotFoundError({ message: (e as Error).message })
