@@ -1,3 +1,10 @@
+# [1.0.0-dev.5](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2024-06-19)
+
+
+### Bug Fixes
+
+* ignore drive not found error ([b7dcf31](https://github.com/powerhouse-inc/switchboard/commit/b7dcf3174c83a51e89392b64bb85b652deb92a18))
+
 # [1.0.0-dev.4](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2024-06-13)
 
 
