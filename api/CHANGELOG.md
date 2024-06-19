@@ -1,3 +1,17 @@
+# [1.0.0-next.4](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.3...v1.0.0-next.4) (2024-06-19)
+
+
+### Bug Fixes
+
+* ignore drive not found error ([5131a1e](https://github.com/powerhouse-inc/switchboard/commit/5131a1e7e96188b0560740163ce43bc83230e869))
+
+# [1.0.0-next.3](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.2...v1.0.0-next.3) (2024-06-18)
+
+
+### Features
+
+* added redis to docker-compose ([4915574](https://github.com/powerhouse-inc/switchboard/commit/49155746b7bb8c895763452742dab89f1f14a03a))
+
 # [1.0.0-next.2](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.1...v1.0.0-next.2) (2024-06-18)
 
 
