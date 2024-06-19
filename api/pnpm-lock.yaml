@@ -34,13 +34,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.77
-    version: 1.0.0-alpha.77(document-model-libs@1.59.0-arbitrum.7)(document-model@1.5.0)(prisma@5.14.0)
+    version: 1.0.0-alpha.77(document-model-libs@1.59.0-arbitrum.8)(document-model@1.5.0)(prisma@5.14.0)
   document-model:
     specifier: 1.5.0
     version: 1.5.0
   document-model-libs:
-    specifier: 1.59.0-arbitrum.7
-    version: 1.59.0-arbitrum.7(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+    specifier: 1.59.0-arbitrum.8
+    version: 1.59.0-arbitrum.8(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -5893,14 +5893,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.77(document-model-libs@1.59.0-arbitrum.7)(document-model@1.5.0)(prisma@5.14.0):
+  /document-drive@1.0.0-alpha.77(document-model-libs@1.59.0-arbitrum.8)(document-model@1.5.0)(prisma@5.14.0):
     resolution: {integrity: sha512-vLvYPY8jLxd0YmUaKoD5lOl8iQ0XdZ7gw6fs5iWX7Vtu/6Lp6tYU/DnzMuwxf9KseFFE8Rtgmn84isIj7NXEtQ==}
     peerDependencies:
       document-model: ^1.4.0
       document-model-libs: ^1.57.0
     dependencies:
       document-model: 1.5.0
-      document-model-libs: 1.59.0-arbitrum.7(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
+      document-model-libs: 1.59.0-arbitrum.8(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.8.1
       graphql-request: 6.1.0(graphql@16.8.1)
@@ -5929,8 +5929,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.59.0-arbitrum.7(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
-    resolution: {integrity: sha512-zDdp9no4UBHCSkrUahBjQAejUPGF9pTkLzq34adxYGEFJKKLqvYVDd09tMX/n4+z9YnhVdTxHVYEGUiovLMx/w==}
+  /document-model-libs@1.59.0-arbitrum.8(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)(vitest@0.32.4):
+    resolution: {integrity: sha512-iIBkG9X0jkVheAyGEkZdXGouFTowuUCTdcMId4fHR3Vgq4XpJqSBwQdRcfPuR9xJphnz8tBg1OHs2BD9Ihk2dg==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
