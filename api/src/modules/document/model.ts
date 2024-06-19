@@ -60,7 +60,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         documentModels,
         new PrismaStorage(prisma as PrismaClient),
         redisClient ? new RedisCache(redisClient) : new MemoryCache(),
-        redisClient ? new RedisQueueManager(3, 10, redisClient) : new BaseQueueManager(3, 10),
+        redisClient ? new RedisQueueManager(1, 10, redisClient) : new BaseQueueManager(3, 10),
     );
 
     initialize();
