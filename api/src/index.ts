@@ -9,6 +9,7 @@ import { PORT } from './env';
 import { errorHandler } from './middleware/errors';
 import { initRedis } from './redis';
 import "express-async-errors";
+import throng from "throng";
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
@@ -42,27 +43,34 @@ async function startServer(
 }
 
 
-/* istanbul ignore next @preserve */
-startServer(app, router)
-  .then((e) => {
-    // Hot Module Replacement
-    const { hot } = (import.meta as any);
-    if (hot) {
-      hot.on('vite:beforeFullReload', () => {
-        e.close();
-      });
-    }
-  })
-  .catch((err) => {
-    logger.warn('Shutting down...');
-    closeRedis();
-    if (err instanceof Error) {
-      logger.error(err);
-    } else {
-      logger.error(`An unknown error has occurred.
+if (process.env.NODE_ENV !== "production") {
+  /* istanbul ignore next @preserve */
+  startServer(app, router)
+    .then((e) => {
+      // Hot Module Replacement
+      const { hot } = (import.meta as any);
+      if (hot) {
+        hot.on('vite:beforeFullReload', () => {
+          e.close();
+        });
+      }
+    })
+    .catch((err) => {
+      logger.warn('Shutting down...');
+      closeRedis();
+      if (err instanceof Error) {
+        logger.error(err);
+      } else {
+        logger.error(`An unknown error has occurred.
 Please open an issue on github (https://github.com/makerdao-ses/switchboard-boilerplate/issues/new)
 with the below context:`);
-      logger.info(err);
-    }
-    process.exit(1);
-  });
+        logger.info(err);
+      }
+      process.exit(1);
+    });
+} else {
+  throng({
+    worker: () => startServer(app, router),
+    count: 4,
+  })
+}

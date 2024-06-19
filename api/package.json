@@ -53,6 +53,7 @@
     "prisma": "^5.14.0",
     "redis": "^4.6.13",
     "siwe": "^2.3.2",
+    "throng": "^5.0.0",
     "vite-node": "^0.29.8",
     "vitest": "^0.32.4",
     "wildcard-match": "^5.1.3",
