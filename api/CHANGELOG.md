@@ -1,3 +1,10 @@
+# [1.0.0-next.6](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.5...v1.0.0-next.6) (2024-06-24)
+
+
+### Bug Fixes
+
+* 404 status code when transmitter not found ([3fce2b8](https://github.com/powerhouse-inc/switchboard/commit/3fce2b8221a5d8091b4cf9d55e7b5f4c5764e1a5))
+
 # [1.0.0-next.5](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.4...v1.0.0-next.5) (2024-06-20)
 
 
