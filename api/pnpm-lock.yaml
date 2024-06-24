@@ -33,8 +33,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   document-drive:
-    specifier: 1.0.0-alpha.78
-    version: 1.0.0-alpha.78(document-model-libs@1.59.0-arbitrum.11)(document-model@1.5.0)(prisma@5.14.0)
+    specifier: 1.0.0-alpha.79
+    version: 1.0.0-alpha.79(document-model-libs@1.59.0-arbitrum.11)(document-model@1.5.0)(prisma@5.14.0)
   document-model:
     specifier: 1.5.0
     version: 1.5.0
@@ -2117,7 +2117,7 @@ packages:
       react: ^16 || ^17 || ^18
       react-dom: ^16 || ^17 || ^18
     dependencies:
-      '@tanstack/react-virtual': 3.5.1(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/react-virtual': 3.7.0(react-dom@18.2.0)(react@18.2.0)
       client-only: 0.0.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -4283,19 +4283,19 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/react-virtual@3.5.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-jIsuhfgy8GqA67PdWqg73ZB2LFE+HD9hjWL1L6ifEIZVyZVAKpYmgUG4WsKQ005aEyImJmbuimPiEvc57IY0Aw==}
+  /@tanstack/react-virtual@3.7.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3RtOwEU1HKS4iFBoTcCrV3Szqt4KoERMhZr8v57dvnh5o70sR9GAdF+0aE/qhiOmePrKujGwAayFNJSr/8Dbqw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@tanstack/virtual-core': 3.5.1
+      '@tanstack/virtual-core': 3.7.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/virtual-core@3.5.1:
-    resolution: {integrity: sha512-046+AUSiDru/V9pajE1du8WayvBKeCvJ2NmKPy/mR8/SbKKrqmSbj7LJBfXE+nSq4f5TBXvnCzu0kcYebI9WdQ==}
+  /@tanstack/virtual-core@3.7.0:
+    resolution: {integrity: sha512-p0CWuqn+n8iZmsL7/l0Xg7kbyIKnHNqkEJkMDOkg4x3Ni3LohszmnJY8FPhTgG7Ad9ZFGcdKmn1R1mKUGEh9Xg==}
     dev: false
 
   /@testing-library/dom@9.3.4:
@@ -5893,8 +5893,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.78(document-model-libs@1.59.0-arbitrum.11)(document-model@1.5.0)(prisma@5.14.0):
-    resolution: {integrity: sha512-gXut9DFcO/YVEN1IYreKdf46irt69q5u34gdf51SAblhrxm7V6aJftILOdEBSQZz9ek+QOYf9MBoruJqbqpreg==}
+  /document-drive@1.0.0-alpha.79(document-model-libs@1.59.0-arbitrum.11)(document-model@1.5.0)(prisma@5.14.0):
+    resolution: {integrity: sha512-2ejlDGkKpzUjxK4d+q9L0OYH9uzubS00J25KFSNFqUww41hjApm62vnWmf4B2ctqtOCE8CUaRTIo+jYFfsGfcg==}
     peerDependencies:
       document-model: ^1.4.0
       document-model-libs: ^1.57.0
