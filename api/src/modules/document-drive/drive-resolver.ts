@@ -18,6 +18,7 @@ import { getChildLogger } from '../../logger';
 import { Context } from '../../graphql/server/drive/context';
 import { DocumentDriveAction, DocumentDriveState } from 'document-model-libs/document-drive';
 import DocumentDriveError from '../../errors/DocumentDriveError';
+import NotFoundError from '../../errors/NotFoundError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -32,7 +33,7 @@ export const Node = objectType({
   },
 });
 
-export const DocumentDriveState = objectType({
+export const DocumentDriveStateObject = objectType({
   name: 'DocumentDriveState',
   definition(t) {
     t.nonNull.id('id');
@@ -279,7 +280,7 @@ export const syncType = objectType({
           }));
         } catch (e) {
           if ((e as Error).message?.match(/Transmitter .+ not found/)) {
-            throw e;
+            throw new NotFoundError({ message: "Transmitter not found" });
           } else {
             logger.error(e);
             throw new Error('Failed to fetch strands');
@@ -307,7 +308,7 @@ export const driveSystemQueryField = queryField('system', {
 });
 
 export const getDrive = queryField('drive', {
-  type: DocumentDriveState,
+  type: DocumentDriveStateObject,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;

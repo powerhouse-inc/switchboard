@@ -205,6 +205,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
+    driveIdBySlug: string | null; // String
     drives: Array<string | null> | null; // [String]
     system: NexusGenRootTypes['SwitchboardHost'] | null; // SwitchboardHost
   }
@@ -288,6 +289,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     coreUnit: 'CoreUnit'
     coreUnits: 'CoreUnit'
+    driveIdBySlug: 'String'
     drives: 'String'
     system: 'SwitchboardHost'
   }
@@ -344,6 +346,9 @@ export interface NexusGenArgTypes {
   Query: {
     coreUnit: { // args
       id?: string | null; // String
+    }
+    driveIdBySlug: { // args
+      slug?: string | null; // String
     }
   }
 }
