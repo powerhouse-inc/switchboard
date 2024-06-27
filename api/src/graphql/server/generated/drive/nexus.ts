@@ -298,7 +298,7 @@ export interface NexusGenObjects {
   FixedIncome: { // root type
     CUSIP?: string | null; // String
     ISIN?: string | null; // String
-    annualizedYield?: number | null; // Float
+    assetProceeds?: number | null; // Float
     coupon?: number | null; // Float
     fixedIncomeType?: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
     fixedIncomeTypeId?: string | null; // ID
@@ -310,9 +310,11 @@ export interface NexusGenObjects {
     purchasePrice?: number | null; // Float
     purchaseProceeds?: number | null; // Float
     realizedSurplus?: number | null; // Float
+    salesProceeds?: number | null; // Float
     spv?: NexusGenRootTypes['Spv'] | null; // Spv
     spvId?: string | null; // ID
     totalDiscount?: number | null; // Float
+    type: NexusGenEnums['AssetType']; // AssetType!
   }
   FixedIncomeType: { // root type
     id: string; // ID!
@@ -785,7 +787,7 @@ export interface NexusGenFieldTypes {
   FixedIncome: { // field return type
     CUSIP: string | null; // String
     ISIN: string | null; // String
-    annualizedYield: number | null; // Float
+    assetProceeds: number | null; // Float
     coupon: number | null; // Float
     fixedIncomeType: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
     fixedIncomeTypeId: string | null; // ID
@@ -797,9 +799,11 @@ export interface NexusGenFieldTypes {
     purchasePrice: number | null; // Float
     purchaseProceeds: number | null; // Float
     realizedSurplus: number | null; // Float
+    salesProceeds: number | null; // Float
     spv: NexusGenRootTypes['Spv'] | null; // Spv
     spvId: string | null; // ID
     totalDiscount: number | null; // Float
+    type: NexusGenEnums['AssetType']; // AssetType!
   }
   FixedIncomeType: { // field return type
     id: string; // ID!
@@ -1308,7 +1312,7 @@ export interface NexusGenFieldTypeNames {
   FixedIncome: { // field return type name
     CUSIP: 'String'
     ISIN: 'String'
-    annualizedYield: 'Float'
+    assetProceeds: 'Float'
     coupon: 'Float'
     fixedIncomeType: 'FixedIncomeType'
     fixedIncomeTypeId: 'ID'
@@ -1320,9 +1324,11 @@ export interface NexusGenFieldTypeNames {
     purchasePrice: 'Float'
     purchaseProceeds: 'Float'
     realizedSurplus: 'Float'
+    salesProceeds: 'Float'
     spv: 'Spv'
     spvId: 'ID'
     totalDiscount: 'Float'
+    type: 'AssetType'
   }
   FixedIncomeType: { // field return type name
     id: 'ID'
