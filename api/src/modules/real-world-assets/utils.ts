@@ -98,10 +98,6 @@ export function transformPortfolioToState(portfolios: Prisma.RWAPortfolioGetPayl
             cashTransaction: transaction.cashTransaction,
             entryTime: transaction.entryTime,
             cashBalanceChange: transaction.cashBalanceChange,
-            feeTransactions: transaction.feeTransactions.map(feeTransaction => ({
-                id: feeTransaction.baseTransaction.id,
-                amount: feeTransaction.baseTransaction.amount,
-            })),
             fixedIncomeTransaction: transaction.fixedIncomeTransaction,
             fees: transaction.fees.map(fee => ({
                 id: fee.id,
