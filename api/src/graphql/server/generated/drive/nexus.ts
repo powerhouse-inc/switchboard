@@ -122,9 +122,10 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  AssetType: "Cash" | "FixedIncome"
   AuditReportStatus: "Approved" | "ApprovedWithComments" | "Escalated" | "NeedsAction"
   BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
-  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestPayment" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
+  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesIncome" | "FeesPayment" | "InterestIncome" | "InterestPayment" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
   TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
@@ -201,12 +202,12 @@ export interface NexusGenObjects {
     accountId?: string | null; // ID
     amount: number; // Float!
     assetId: string; // ID!
+    assetType: NexusGenEnums['AssetType']; // AssetType!
     counterPartyAccountId?: string | null; // ID
     entryTime: NexusGenScalars['Date']; // Date!
     id: string; // ID!
     settlementTime?: NexusGenScalars['Date'] | null; // Date
     tradeTime?: NexusGenScalars['Date'] | null; // Date
-    txRef?: string | null; // String
   }
   BudgetStatement: { // root type
     created: NexusGenScalars['Date']; // Date!
@@ -309,7 +310,6 @@ export interface NexusGenObjects {
     purchasePrice?: number | null; // Float
     purchaseProceeds?: number | null; // Float
     realizedSurplus?: number | null; // Float
-    salesProceeds?: number | null; // Float
     spv?: NexusGenRootTypes['Spv'] | null; // Spv
     spvId?: string | null; // ID
     totalDiscount?: number | null; // Float
@@ -328,14 +328,15 @@ export interface NexusGenObjects {
   }
   GroupTransaction: { // root type
     cashBalanceChange: number; // Float!
-    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    cashTransaction: NexusGenRootTypes['BaseTransaction']; // BaseTransaction!
     entryTime: NexusGenScalars['Date']; // Date!
-    feeTransactions?: NexusGenRootTypes['BaseTransaction'][] | null; // [BaseTransaction!]
     fees?: NexusGenRootTypes['TransactionFee'][] | null; // [TransactionFee!]
     fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    interestTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    serviceProviderFeeTypeId?: string | null; // ID
+    txRef?: string | null; // String
     type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
+    unitPrice?: number | null; // Float
   }
   LineItem: { // root type
     actual?: number | null; // Float
@@ -688,12 +689,12 @@ export interface NexusGenFieldTypes {
     accountId: string | null; // ID
     amount: number; // Float!
     assetId: string; // ID!
+    assetType: NexusGenEnums['AssetType']; // AssetType!
     counterPartyAccountId: string | null; // ID
     entryTime: NexusGenScalars['Date']; // Date!
     id: string; // ID!
     settlementTime: NexusGenScalars['Date'] | null; // Date
     tradeTime: NexusGenScalars['Date'] | null; // Date
-    txRef: string | null; // String
   }
   BudgetStatement: { // field return type
     created: NexusGenScalars['Date']; // Date!
@@ -796,7 +797,6 @@ export interface NexusGenFieldTypes {
     purchasePrice: number | null; // Float
     purchaseProceeds: number | null; // Float
     realizedSurplus: number | null; // Float
-    salesProceeds: number | null; // Float
     spv: NexusGenRootTypes['Spv'] | null; // Spv
     spvId: string | null; // ID
     totalDiscount: number | null; // Float
@@ -815,14 +815,15 @@ export interface NexusGenFieldTypes {
   }
   GroupTransaction: { // field return type
     cashBalanceChange: number; // Float!
-    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    cashTransaction: NexusGenRootTypes['BaseTransaction']; // BaseTransaction!
     entryTime: NexusGenScalars['Date']; // Date!
-    feeTransactions: NexusGenRootTypes['BaseTransaction'][] | null; // [BaseTransaction!]
     fees: NexusGenRootTypes['TransactionFee'][] | null; // [TransactionFee!]
     fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    interestTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    serviceProviderFeeTypeId: string | null; // ID
+    txRef: string | null; // String
     type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
+    unitPrice: number | null; // Float
   }
   LineItem: { // field return type
     actual: number | null; // Float
@@ -1211,12 +1212,12 @@ export interface NexusGenFieldTypeNames {
     accountId: 'ID'
     amount: 'Float'
     assetId: 'ID'
+    assetType: 'AssetType'
     counterPartyAccountId: 'ID'
     entryTime: 'Date'
     id: 'ID'
     settlementTime: 'Date'
     tradeTime: 'Date'
-    txRef: 'String'
   }
   BudgetStatement: { // field return type name
     created: 'Date'
@@ -1319,7 +1320,6 @@ export interface NexusGenFieldTypeNames {
     purchasePrice: 'Float'
     purchaseProceeds: 'Float'
     realizedSurplus: 'Float'
-    salesProceeds: 'Float'
     spv: 'Spv'
     spvId: 'ID'
     totalDiscount: 'Float'
@@ -1340,12 +1340,13 @@ export interface NexusGenFieldTypeNames {
     cashBalanceChange: 'Float'
     cashTransaction: 'BaseTransaction'
     entryTime: 'Date'
-    feeTransactions: 'BaseTransaction'
     fees: 'TransactionFee'
     fixedIncomeTransaction: 'BaseTransaction'
     id: 'ID'
-    interestTransaction: 'BaseTransaction'
+    serviceProviderFeeTypeId: 'ID'
+    txRef: 'String'
     type: 'GroupTransactionType'
+    unitPrice: 'Float'
   }
   LineItem: { // field return type name
     actual: 'Float'

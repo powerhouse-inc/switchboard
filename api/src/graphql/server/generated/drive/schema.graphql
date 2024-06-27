@@ -61,6 +61,11 @@ type ArticleComponent {
 
 union Asset = Cash | FixedIncome
 
+enum AssetType {
+  Cash
+  FixedIncome
+}
+
 """Attachment custom scalar type"""
 scalar Attachment
 
@@ -86,12 +91,12 @@ type BaseTransaction {
   accountId: ID
   amount: Float!
   assetId: ID!
+  assetType: AssetType!
   counterPartyAccountId: ID
   entryTime: Date!
   id: ID!
   settlementTime: Date
   tradeTime: Date
-  txRef: String
 }
 
 type BudgetStatement implements IDocument {
@@ -219,7 +224,6 @@ type FixedIncome {
   purchasePrice: Float
   purchaseProceeds: Float
   realizedSurplus: Float
-  salesProceeds: Float
   spv: Spv
   spvId: ID
   totalDiscount: Float
@@ -242,23 +246,24 @@ type FtesForecast {
 
 type GroupTransaction {
   cashBalanceChange: Float!
-  cashTransaction: BaseTransaction
+  cashTransaction: BaseTransaction!
   entryTime: Date!
-  feeTransactions: [BaseTransaction!]
   fees: [TransactionFee!]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
-  interestTransaction: BaseTransaction
+  serviceProviderFeeTypeId: ID
+  txRef: String
   type: GroupTransactionType!
+  unitPrice: Float
 }
 
 enum GroupTransactionType {
   AssetPurchase
   AssetSale
+  FeesIncome
   FeesPayment
-  InterestDraw
+  InterestIncome
   InterestPayment
-  InterestReturn
   PrincipalDraw
   PrincipalReturn
 }
