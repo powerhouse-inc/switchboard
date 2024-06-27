@@ -7,10 +7,10 @@ export const initRedis = async () => {
   if (!redisClient) {
     redisClient = await createClient({
       url: process.env.REDIS_TLS_URL,
-      socket: {
+      socket: process.env.REDIS_TLS_URL && process.env.REDIS_TLS_URL.indexOf("rediss") !== -1 ? {
         tls: true,
         rejectUnauthorized: false,
-      }
+      } : undefined
     }).on('error', (err: string) => console.log('Redis Client Error', err))
       .connect() as RedisClientType;
   }

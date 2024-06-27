@@ -59,10 +59,10 @@ model Document {
     driveId             String
     created             DateTime             @default(now())
     lastModified        DateTime             @default(now())
-    revision            Json
+    revision            String
     name                String?
     operations          Operation[]
-    initialState        Json // json object with the scope as keys of the root object
+    initialState        String // json object with the scope as keys of the root object
     documentType        String
     syncronizationUnits SyncronizationUnit[]
 
@@ -70,26 +70,28 @@ model Document {
 }
 
 model Operation {
-    id          String       @id @default(uuid())
-    driveId     String
-    Document    Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
-    documentId  String
-    scope       String
-    branch      String
-    index       Int
-    skip        Int
-    hash        String
-    timestamp   DateTime
-    input       Json
-    type        String
-    attachments Attachment[]
-    syncId      String?
-    clipboard   Boolean?     @default(false)
-    context     Json?
+    id             String       @id @default(uuid())
+    opId           String?
+    driveId        String
+    Document       Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
+    documentId     String
+    scope          String
+    branch         String
+    index          Int
+    skip           Int
+    hash           String
+    timestamp      DateTime
+    input          String
+    type           String
+    attachments    Attachment[]
+    syncId         String?
+    clipboard      Boolean?     @default(false)
+    context        Json?
+    resultingState Bytes?
 
     SyncronizationUnit SyncronizationUnit? @relation(fields: [syncId, driveId], references: [id, driveId], onDelete: Cascade)
 
-    @@unique([driveId, documentId, scope, branch, index], name: "unique_operation")
+    @@unique([driveId, documentId, scope, branch, index(sort: Asc)], name: "unique_operation")
 }
 
 model SyncronizationUnit {
@@ -112,8 +114,8 @@ model Attachment {
 
     mimeType  String
     data      String
-    filename  String
-    extension String
+    filename  String?
+    extension String?
     hash      String
 }
 
@@ -187,6 +189,7 @@ model RWAPortfolioAsset {
     currency          String?
     assetType         String
     assetProceeds     Float?
+    type              String?
     portfolio         RWAPortfolio                 @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
     fixedIncomeType   RWAPortfolioFixedIncomeType? @relation(fields: [fixedIncomeTypeId, portfolioId], references: [id, portfolioId])
     spv               RWAPortfolioSpv?             @relation(fields: [spvId, portfolioId], references: [id, portfolioId])
@@ -327,4 +330,17 @@ model RWABaseTransactionOnGroupTransaction {
     baseTransaction    RWABaseTransaction  @relation(fields: [baseTransactionId, portfolioId], references: [id, portfolioId], onDelete: Cascade)
 
     @@id([id, portfolioId])
+}
+
+model ScopeOfWorkDeliverable {
+    driveId       String
+    documentId    String
+    id            String
+    title         String
+    description   String
+    status        String
+    githubCreated Boolean
+    githubId      Int?
+
+    @@id([id, driveId, documentId])
 }

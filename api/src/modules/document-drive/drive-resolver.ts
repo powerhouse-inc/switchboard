@@ -18,6 +18,7 @@ import { getChildLogger } from '../../logger';
 import { Context } from '../../graphql/server/drive/context';
 import { DocumentDriveAction, DocumentDriveState } from 'document-model-libs/document-drive';
 import DocumentDriveError from '../../errors/DocumentDriveError';
+import NotFoundError from '../../errors/NotFoundError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -32,7 +33,7 @@ export const Node = objectType({
   },
 });
 
-export const DocumentDriveState = objectType({
+export const DocumentDriveStateObject = objectType({
   name: 'DocumentDriveState',
   definition(t) {
     t.nonNull.id('id');
@@ -120,6 +121,7 @@ export const OperationContext = objectType({
 export const OperationUpdate = objectType({
   name: 'OperationUpdate',
   definition(t) {
+    t.string('id');
     t.nonNull.int('index');
     t.nonNull.int('skip');
     t.nonNull.string('type');
@@ -172,6 +174,7 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
+    t.string('id');
     t.field('context', { type: InputOperationContext });
   },
 });
@@ -272,11 +275,12 @@ export const syncType = objectType({
               timestamp: o.timestamp,
               type: o.type,
               context: o.context,
+              id: o.id,
             })),
           }));
         } catch (e) {
           if ((e as Error).message?.match(/Transmitter .+ not found/)) {
-            throw e;
+            throw new NotFoundError({ message: "Transmitter not found" });
           } else {
             logger.error(e);
             throw new Error('Failed to fetch strands');
@@ -304,7 +308,7 @@ export const driveSystemQueryField = queryField('system', {
 });
 
 export const getDrive = queryField('drive', {
-  type: DocumentDriveState,
+  type: DocumentDriveStateObject,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;
@@ -367,42 +371,32 @@ export const pushUpdates = mutationField('pushUpdates', {
     strands: list(nonNull(InputStrandUpdate)),
   },
   resolve: async (_parent, { strands }, ctx: Context) => {
-    logger.info('pushUpdates')
+    logger.info('pushUpdates');
     if (!strands || strands?.length === 0) return [];
 
     try {
-      const listenerRevisions: IListenerRevision[] = [];
-
-      const sortedStrands = strands.reduce(
-        (acc, curr) =>
-          curr.documentId ? [...acc, curr] : [curr, ...acc],
-        [] as typeof strands
-      );
-
-      for (const s of sortedStrands) {
-        const operations =
-          s.operations?.map((o) => ({
-            ...o,
-            input: JSON.parse(o.input),
-            skip: o.skip ?? 0,
-            scope: s.scope as OperationScope,
-            branch: "main",
-          })) ?? [];
+      const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
+        const operations = s.operations?.map((o) => ({
+          ...o,
+          input: JSON.parse(o.input),
+          skip: o.skip ?? 0,
+          scope: s.scope as OperationScope,
+          branch: "main",
+        })) ?? [];
 
         const result = await ctx.prisma.document.pushUpdates(
           s.driveId,
           operations as Operation<DocumentDriveAction>[],
-          s.documentId ?? undefined
+          s.documentId ?? undefined,
         );
 
         if (result.status !== "SUCCESS") logger.error(result.error);
 
-        const revision =
-          result.document?.operations[s.scope as OperationScope]
-            .slice()
-            .pop()?.index ?? -1;
+        const revision = result.document?.operations[s.scope as OperationScope]
+          .slice()
+          .pop()?.index ?? -1;
 
-        listenerRevisions.push({
+        return {
           revision,
           branch: s.branch,
           documentId: s.documentId ?? "",
@@ -410,12 +404,17 @@ export const pushUpdates = mutationField('pushUpdates', {
           scope: s.scope as OperationScope,
           status: result.status,
           error: result.error?.message,
-        });
-      }
+        };
+      }));
 
       return listenerRevisions;
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to push updates", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? "Failed to push updates",
+        logging: true,
+        context: e
+      });
     }
   },
 });

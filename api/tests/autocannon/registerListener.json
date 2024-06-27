@@ -1,0 +1,12 @@
+{
+  "query": "                mutation registerPullResponderListener(                    $filter: InputListenerFilter!                ) {                    registerPullResponderListener(filter: $filter) {                        listenerId                    }                }            ",
+  "variables": {
+    "filter": {
+      "documentId": ["*"],
+      "documentType": ["*"],
+      "branch": ["*"],
+      "scope": ["*"]
+    }
+  },
+  "operationName": "registerPullResponderListener"
+}
