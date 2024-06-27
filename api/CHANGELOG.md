@@ -1,3 +1,17 @@
+# [1.0.0-dev.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2024-06-27)
+
+
+### Bug Fixes
+
+* staging environment ([0847819](https://github.com/powerhouse-inc/switchboard/commit/08478198d9d621018a626f9b75354a2bfe1a1165))
+
+
+### Features
+
+* added support for operation context on graphql api ([86a2f31](https://github.com/powerhouse-inc/switchboard/commit/86a2f316cf61a2012410d498bbe5e6127c660b32))
+* update document-drive dep ([1da4f74](https://github.com/powerhouse-inc/switchboard/commit/1da4f7423be163654c029908c3f29c823f23869d))
+* update document-drive dep ([40f98cd](https://github.com/powerhouse-inc/switchboard/commit/40f98cd79b0b96ce8b9cb18a2b7fab6d8d9ac824))
+
 # [1.0.0-dev.6](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2024-06-24)
 
 
