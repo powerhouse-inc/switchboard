@@ -1,3 +1,15 @@
+# [1.0.0-dev.9](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2024-07-01)
+
+
+### Bug Fixes
+
+* rwa document query ([ecc56fa](https://github.com/powerhouse-inc/switchboard/commit/ecc56fa112b8aa4658cd08c0f75ad6b6a223f057))
+
+
+### Features
+
+* added new fields to rwa document ([088125c](https://github.com/powerhouse-inc/switchboard/commit/088125c709f7a6616069b92b4e033feee5df5c18))
+
 # [1.0.0-dev.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2024-07-01)
 
 
