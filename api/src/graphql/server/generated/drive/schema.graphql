@@ -212,7 +212,7 @@ union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | Se
 type FixedIncome {
   CUSIP: String
   ISIN: String
-  annualizedYield: Float
+  assetProceeds: Float
   coupon: Float
   fixedIncomeType: FixedIncomeType
   fixedIncomeTypeId: ID
@@ -224,9 +224,11 @@ type FixedIncome {
   purchasePrice: Float
   purchaseProceeds: Float
   realizedSurplus: Float
+  salesProceeds: Float
   spv: Spv
   spvId: ID
   totalDiscount: Float
+  type: AssetType!
 }
 
 type FixedIncomeType {
