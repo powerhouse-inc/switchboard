@@ -1,3 +1,11 @@
+# [1.0.0-dev.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2024-07-01)
+
+
+### Features
+
+* added operation signatures support ([f3c5159](https://github.com/powerhouse-inc/switchboard/commit/f3c515934c474abb327da67d81e1a58d912b7251))
+* updated document-drive ([98868e6](https://github.com/powerhouse-inc/switchboard/commit/98868e606dc4e30ee639ea10f8cd342b322a5e08))
+
 # [1.0.0-dev.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2024-06-27)
 
 
