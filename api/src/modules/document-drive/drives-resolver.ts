@@ -5,8 +5,9 @@ import {
   nonNull,
   objectType,
   queryField,
+  stringArg,
 } from 'nexus';
-import { DocumentDriveState } from './drive-resolver';
+import { DocumentDriveStateObject } from './drive-resolver';
 import { Context } from '../../graphql/server/drive/context';
 import logger from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
@@ -49,11 +50,27 @@ export const getDrives = queryField('drives', {
   },
 });
 
+export const getDriveBySlug = queryField('driveIdBySlug', {
+  type: 'String',
+  args: {
+    slug: stringArg()
+  },
+  resolve: async (_parent, args, ctx: Context) => {
+    try {
+      const drive = await ctx.prisma.document.getDriveBySlug(args.slug);
+      return drive.id;
+    } catch (e) {
+      logger.error(e);
+      throw new Error('Drive not found.');
+    }
+  },
+});
+
 const addDriveResponseDefinition = objectType({
   name: 'AddDriveResponse',
   definition(t) {
     t.nonNull.field('global', {
-      type: DocumentDriveState
+      type: DocumentDriveStateObject
     });
     t.nonNull.field('local', {
       type: DocumentDriveLocalState,

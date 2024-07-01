@@ -13,6 +13,7 @@ export const operationModelInterface = interfaceType({
     t.nonNull.int('index');
     t.nonNull.field('timestamp', { type: GQLDateBase });
     t.nonNull.string('hash');
+    t.string('id');
   },
   resolveType: (e) => {
     return "DefaultOperation"

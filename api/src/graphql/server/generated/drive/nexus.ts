@@ -59,7 +59,7 @@ export interface NexusGenInputs {
   }
   InputOperationSigner: { // input type
     app: NexusGenInputs['InputOperationSignerApp']; // InputOperationSignerApp!
-    signature: string; // String!
+    signatures: string[][]; // [[String!]!]!
     user: NexusGenInputs['InputOperationSignerUser']; // InputOperationSignerUser!
   }
   InputOperationSignerApp: { // input type
@@ -74,6 +74,7 @@ export interface NexusGenInputs {
   InputOperationUpdate: { // input type
     context?: NexusGenInputs['InputOperationContext'] | null; // InputOperationContext
     hash: string; // String!
+    id?: string | null; // String
     index: number; // Int!
     input: string; // String!
     skip?: number | null; // Int
@@ -121,9 +122,10 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  AssetType: "Cash" | "FixedIncome"
   AuditReportStatus: "Approved" | "ApprovedWithComments" | "Escalated" | "NeedsAction"
   BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
-  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesPayment" | "InterestDraw" | "InterestPayment" | "InterestReturn" | "PrincipalDraw" | "PrincipalReturn"
+  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesIncome" | "FeesPayment" | "InterestIncome" | "InterestPayment" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
   TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
@@ -200,12 +202,12 @@ export interface NexusGenObjects {
     accountId?: string | null; // ID
     amount: number; // Float!
     assetId: string; // ID!
+    assetType: NexusGenEnums['AssetType']; // AssetType!
     counterPartyAccountId?: string | null; // ID
     entryTime: NexusGenScalars['Date']; // Date!
     id: string; // ID!
     settlementTime?: NexusGenScalars['Date'] | null; // Date
     tradeTime?: NexusGenScalars['Date'] | null; // Date
-    txRef?: string | null; // String
   }
   BudgetStatement: { // root type
     created: NexusGenScalars['Date']; // Date!
@@ -236,7 +238,8 @@ export interface NexusGenObjects {
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
-    spvId: string; // ID!
+    spv?: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId?: string | null; // ID
   }
   Challenge: { // root type
     hex: string; // String!
@@ -280,6 +283,7 @@ export interface NexusGenObjects {
   }
   DefaultOperation: { // root type
     hash: string; // String!
+    id?: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
@@ -294,20 +298,21 @@ export interface NexusGenObjects {
   FixedIncome: { // root type
     CUSIP?: string | null; // String
     ISIN?: string | null; // String
-    annualizedYield: number; // Float!
+    annualizedYield?: number | null; // Float
     coupon?: number | null; // Float
-    fixedIncomeTypeId: string; // ID!
-    id: string; // ID!
-    maturity: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    notional: number; // Float!
-    purchaseDate: NexusGenScalars['Date']; // Date!
-    purchasePrice: number; // Float!
-    purchaseProceeds: number; // Float!
-    realizedSurplus: number; // Float!
-    salesProceeds?: number | null; // Float
-    spvId: string; // ID!
-    totalDiscount: number; // Float!
+    fixedIncomeType?: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
+    fixedIncomeTypeId?: string | null; // ID
+    id?: string | null; // ID
+    maturity?: NexusGenScalars['Date'] | null; // Date
+    name?: string | null; // String
+    notional?: number | null; // Float
+    purchaseDate?: NexusGenScalars['Date'] | null; // Date
+    purchasePrice?: number | null; // Float
+    purchaseProceeds?: number | null; // Float
+    realizedSurplus?: number | null; // Float
+    spv?: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId?: string | null; // ID
+    totalDiscount?: number | null; // Float
   }
   FixedIncomeType: { // root type
     id: string; // ID!
@@ -323,14 +328,15 @@ export interface NexusGenObjects {
   }
   GroupTransaction: { // root type
     cashBalanceChange: number; // Float!
-    cashTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    cashTransaction: NexusGenRootTypes['BaseTransaction']; // BaseTransaction!
     entryTime: NexusGenScalars['Date']; // Date!
-    feeTransactions?: NexusGenRootTypes['BaseTransaction'][] | null; // [BaseTransaction!]
     fees?: NexusGenRootTypes['TransactionFee'][] | null; // [TransactionFee!]
     fixedIncomeTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    interestTransaction?: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    serviceProviderFeeTypeId?: string | null; // ID
+    txRef?: string | null; // String
     type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
+    unitPrice?: number | null; // Float
   }
   LineItem: { // root type
     actual?: number | null; // Float
@@ -403,7 +409,7 @@ export interface NexusGenObjects {
   }
   OperationSigner: { // root type
     app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
-    signature: string; // String!
+    signatures: string[][]; // [[String!]!]!
     user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
   }
   OperationSignerApp: { // root type
@@ -418,6 +424,7 @@ export interface NexusGenObjects {
   OperationUpdate: { // root type
     context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
+    id?: string | null; // String
     index: number; // Int!
     input: string; // String!
     skip: number; // Int!
@@ -682,12 +689,12 @@ export interface NexusGenFieldTypes {
     accountId: string | null; // ID
     amount: number; // Float!
     assetId: string; // ID!
+    assetType: NexusGenEnums['AssetType']; // AssetType!
     counterPartyAccountId: string | null; // ID
     entryTime: NexusGenScalars['Date']; // Date!
     id: string; // ID!
     settlementTime: NexusGenScalars['Date'] | null; // Date
     tradeTime: NexusGenScalars['Date'] | null; // Date
-    txRef: string | null; // String
   }
   BudgetStatement: { // field return type
     created: NexusGenScalars['Date']; // Date!
@@ -718,7 +725,8 @@ export interface NexusGenFieldTypes {
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
-    spvId: string; // ID!
+    spv: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId: string | null; // ID
   }
   Challenge: { // field return type
     hex: string; // String!
@@ -762,6 +770,7 @@ export interface NexusGenFieldTypes {
   }
   DefaultOperation: { // field return type
     hash: string; // String!
+    id: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
@@ -776,20 +785,21 @@ export interface NexusGenFieldTypes {
   FixedIncome: { // field return type
     CUSIP: string | null; // String
     ISIN: string | null; // String
-    annualizedYield: number; // Float!
+    annualizedYield: number | null; // Float
     coupon: number | null; // Float
-    fixedIncomeTypeId: string; // ID!
-    id: string; // ID!
-    maturity: NexusGenScalars['Date']; // Date!
-    name: string; // String!
-    notional: number; // Float!
-    purchaseDate: NexusGenScalars['Date']; // Date!
-    purchasePrice: number; // Float!
-    purchaseProceeds: number; // Float!
-    realizedSurplus: number; // Float!
-    salesProceeds: number | null; // Float
-    spvId: string; // ID!
-    totalDiscount: number; // Float!
+    fixedIncomeType: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
+    fixedIncomeTypeId: string | null; // ID
+    id: string | null; // ID
+    maturity: NexusGenScalars['Date'] | null; // Date
+    name: string | null; // String
+    notional: number | null; // Float
+    purchaseDate: NexusGenScalars['Date'] | null; // Date
+    purchasePrice: number | null; // Float
+    purchaseProceeds: number | null; // Float
+    realizedSurplus: number | null; // Float
+    spv: NexusGenRootTypes['Spv'] | null; // Spv
+    spvId: string | null; // ID
+    totalDiscount: number | null; // Float
   }
   FixedIncomeType: { // field return type
     id: string; // ID!
@@ -805,14 +815,15 @@ export interface NexusGenFieldTypes {
   }
   GroupTransaction: { // field return type
     cashBalanceChange: number; // Float!
-    cashTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    cashTransaction: NexusGenRootTypes['BaseTransaction']; // BaseTransaction!
     entryTime: NexusGenScalars['Date']; // Date!
-    feeTransactions: NexusGenRootTypes['BaseTransaction'][] | null; // [BaseTransaction!]
     fees: NexusGenRootTypes['TransactionFee'][] | null; // [TransactionFee!]
     fixedIncomeTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
     id: string; // ID!
-    interestTransaction: NexusGenRootTypes['BaseTransaction'] | null; // BaseTransaction
+    serviceProviderFeeTypeId: string | null; // ID
+    txRef: string | null; // String
     type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
+    unitPrice: number | null; // Float
   }
   LineItem: { // field return type
     actual: number | null; // Float
@@ -894,7 +905,7 @@ export interface NexusGenFieldTypes {
   }
   OperationSigner: { // field return type
     app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
-    signature: string; // String!
+    signatures: string[][]; // [[String!]!]!
     user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
   }
   OperationSignerApp: { // field return type
@@ -909,6 +920,7 @@ export interface NexusGenFieldTypes {
   OperationUpdate: { // field return type
     context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
+    id: string | null; // String
     index: number; // Int!
     input: string; // String!
     skip: number; // Int!
@@ -1118,6 +1130,7 @@ export interface NexusGenFieldTypes {
   }
   IOperation: { // field return type
     hash: string; // String!
+    id: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
@@ -1199,12 +1212,12 @@ export interface NexusGenFieldTypeNames {
     accountId: 'ID'
     amount: 'Float'
     assetId: 'ID'
+    assetType: 'AssetType'
     counterPartyAccountId: 'ID'
     entryTime: 'Date'
     id: 'ID'
     settlementTime: 'Date'
     tradeTime: 'Date'
-    txRef: 'String'
   }
   BudgetStatement: { // field return type name
     created: 'Date'
@@ -1235,6 +1248,7 @@ export interface NexusGenFieldTypeNames {
     balance: 'Float'
     currency: 'String'
     id: 'ID'
+    spv: 'Spv'
     spvId: 'ID'
   }
   Challenge: { // field return type name
@@ -1279,6 +1293,7 @@ export interface NexusGenFieldTypeNames {
   }
   DefaultOperation: { // field return type name
     hash: 'String'
+    id: 'String'
     index: 'Int'
     timestamp: 'Date'
     type: 'String'
@@ -1295,6 +1310,7 @@ export interface NexusGenFieldTypeNames {
     ISIN: 'String'
     annualizedYield: 'Float'
     coupon: 'Float'
+    fixedIncomeType: 'FixedIncomeType'
     fixedIncomeTypeId: 'ID'
     id: 'ID'
     maturity: 'Date'
@@ -1304,7 +1320,7 @@ export interface NexusGenFieldTypeNames {
     purchasePrice: 'Float'
     purchaseProceeds: 'Float'
     realizedSurplus: 'Float'
-    salesProceeds: 'Float'
+    spv: 'Spv'
     spvId: 'ID'
     totalDiscount: 'Float'
   }
@@ -1324,12 +1340,13 @@ export interface NexusGenFieldTypeNames {
     cashBalanceChange: 'Float'
     cashTransaction: 'BaseTransaction'
     entryTime: 'Date'
-    feeTransactions: 'BaseTransaction'
     fees: 'TransactionFee'
     fixedIncomeTransaction: 'BaseTransaction'
     id: 'ID'
-    interestTransaction: 'BaseTransaction'
+    serviceProviderFeeTypeId: 'ID'
+    txRef: 'String'
     type: 'GroupTransactionType'
+    unitPrice: 'Float'
   }
   LineItem: { // field return type name
     actual: 'Float'
@@ -1411,7 +1428,7 @@ export interface NexusGenFieldTypeNames {
   }
   OperationSigner: { // field return type name
     app: 'OperationSignerApp'
-    signature: 'String'
+    signatures: 'String'
     user: 'OperationSignerUser'
   }
   OperationSignerApp: { // field return type name
@@ -1426,6 +1443,7 @@ export interface NexusGenFieldTypeNames {
   OperationUpdate: { // field return type name
     context: 'OperationContext'
     hash: 'String'
+    id: 'String'
     index: 'Int'
     input: 'String'
     skip: 'Int'
@@ -1635,6 +1653,7 @@ export interface NexusGenFieldTypeNames {
   }
   IOperation: { // field return type name
     hash: 'String'
+    id: 'String'
     index: 'Int'
     timestamp: 'Date'
     type: 'String'
@@ -1688,6 +1707,9 @@ export interface NexusGenArgTypes {
     }
     document: { // args
       id: string; // String!
+    }
+    rwaPortfolios: { // args
+      id?: string | null; // String
     }
   }
   Sync: {

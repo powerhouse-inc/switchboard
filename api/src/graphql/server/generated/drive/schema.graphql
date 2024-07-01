@@ -61,6 +61,11 @@ type ArticleComponent {
 
 union Asset = Cash | FixedIncome
 
+enum AssetType {
+  Cash
+  FixedIncome
+}
+
 """Attachment custom scalar type"""
 scalar Attachment
 
@@ -86,12 +91,12 @@ type BaseTransaction {
   accountId: ID
   amount: Float!
   assetId: ID!
+  assetType: AssetType!
   counterPartyAccountId: ID
   entryTime: Date!
   id: ID!
   settlementTime: Date
   tradeTime: Date
-  txRef: String
 }
 
 type BudgetStatement implements IDocument {
@@ -133,7 +138,8 @@ type Cash {
   balance: Float!
   currency: String!
   id: ID!
-  spvId: ID!
+  spv: Spv
+  spvId: ID
 }
 
 type Challenge {
@@ -187,6 +193,7 @@ type DefaultDocument implements IDocument {
 
 type DefaultOperation implements IOperation {
   hash: String!
+  id: String
   index: Int!
   timestamp: Date!
   type: String!
@@ -205,20 +212,21 @@ union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | Se
 type FixedIncome {
   CUSIP: String
   ISIN: String
-  annualizedYield: Float!
+  annualizedYield: Float
   coupon: Float
-  fixedIncomeTypeId: ID!
-  id: ID!
-  maturity: Date!
-  name: String!
-  notional: Float!
-  purchaseDate: Date!
-  purchasePrice: Float!
-  purchaseProceeds: Float!
-  realizedSurplus: Float!
-  salesProceeds: Float
-  spvId: ID!
-  totalDiscount: Float!
+  fixedIncomeType: FixedIncomeType
+  fixedIncomeTypeId: ID
+  id: ID
+  maturity: Date
+  name: String
+  notional: Float
+  purchaseDate: Date
+  purchasePrice: Float
+  purchaseProceeds: Float
+  realizedSurplus: Float
+  spv: Spv
+  spvId: ID
+  totalDiscount: Float
 }
 
 type FixedIncomeType {
@@ -238,23 +246,24 @@ type FtesForecast {
 
 type GroupTransaction {
   cashBalanceChange: Float!
-  cashTransaction: BaseTransaction
+  cashTransaction: BaseTransaction!
   entryTime: Date!
-  feeTransactions: [BaseTransaction!]
   fees: [TransactionFee!]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
-  interestTransaction: BaseTransaction
+  serviceProviderFeeTypeId: ID
+  txRef: String
   type: GroupTransactionType!
+  unitPrice: Float
 }
 
 enum GroupTransactionType {
   AssetPurchase
   AssetSale
+  FeesIncome
   FeesPayment
-  InterestDraw
+  InterestIncome
   InterestPayment
-  InterestReturn
   PrincipalDraw
   PrincipalReturn
 }
@@ -271,6 +280,7 @@ interface IDocument {
 
 interface IOperation {
   hash: String!
+  id: String
   index: Int!
   timestamp: Date!
   type: String!
@@ -299,7 +309,7 @@ input InputOperationContext {
 
 input InputOperationSigner {
   app: InputOperationSignerApp!
-  signature: String!
+  signatures: [[String!]!]!
   user: InputOperationSignerUser!
 }
 
@@ -317,6 +327,7 @@ input InputOperationSignerUser {
 input InputOperationUpdate {
   context: InputOperationContext
   hash: String!
+  id: String
   index: Int!
   input: String!
   skip: Int
@@ -433,7 +444,7 @@ type OperationContext {
 
 type OperationSigner {
   app: OperationSignerApp!
-  signature: String!
+  signatures: [[String!]!]!
   user: OperationSignerUser!
 }
 
@@ -451,6 +462,7 @@ type OperationSignerUser {
 type OperationUpdate {
   context: OperationContext
   hash: String!
+  id: String
   index: Int!
   input: String!
   skip: Int!
@@ -470,7 +482,7 @@ type Query {
   document(id: String!): IDocument
   documents: [IDocument]
   drive: DocumentDriveState
-  rwaPortfolios: [RealWorldAssetsPortfolio]
+  rwaPortfolios(id: String): [RealWorldAssetsPortfolio]
   system: SwitchboardDrive
 }
 
