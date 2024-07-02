@@ -1,3 +1,10 @@
+# [1.0.0-dev.10](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2024-07-02)
+
+
+### Bug Fixes
+
+* url decode ([c98e783](https://github.com/powerhouse-inc/switchboard/commit/c98e783f7eeb1db89cb582e25ecf9313a3c3a151))
+
 # [1.0.0-dev.9](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2024-07-01)
 
 
