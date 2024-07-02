@@ -20,13 +20,6 @@ export const createApp = (): { app: Express; router: express.Router } => {
 
   // fixes request entity too large
   app.use(bodyParser.json({ limit: '50mb' }));
-  app.use(
-    bodyParser.urlencoded({
-      limit: '50mb',
-      extended: true,
-      parameterLimit: 50000,
-    })
-  );
 
   if (process.env.SENTRY_DSN) {
     Sentry.init({
@@ -86,9 +79,8 @@ export const createApp = (): { app: Express; router: express.Router } => {
     res.setHeader('Content-Type', 'text/html');
     const basePath =
       process.env.BASE_PATH === '/' ? '' : process.env.BASE_PATH || '';
-    const endpoint = `${basePath}${
-      req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
-    }`;
+    const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
+      }`;
     res.send(
       renderPlaygroundPage({
         endpoint: endpoint,
