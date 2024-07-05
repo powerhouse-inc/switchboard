@@ -61,6 +61,11 @@ type ArticleComponent {
 
 union Asset = Cash | FixedIncome
 
+enum AssetType {
+  Cash
+  FixedIncome
+}
+
 """Attachment custom scalar type"""
 scalar Attachment
 
@@ -86,12 +91,12 @@ type BaseTransaction {
   accountId: ID
   amount: Float!
   assetId: ID!
+  assetType: AssetType!
   counterPartyAccountId: ID
   entryTime: Date!
   id: ID!
   settlementTime: Date
   tradeTime: Date
-  txRef: String
 }
 
 type BudgetStatement implements IDocument {
@@ -207,7 +212,7 @@ union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | Se
 type FixedIncome {
   CUSIP: String
   ISIN: String
-  annualizedYield: Float
+  assetProceeds: Float
   coupon: Float
   fixedIncomeType: FixedIncomeType
   fixedIncomeTypeId: ID
@@ -223,6 +228,7 @@ type FixedIncome {
   spv: Spv
   spvId: ID
   totalDiscount: Float
+  type: AssetType!
 }
 
 type FixedIncomeType {
@@ -242,23 +248,24 @@ type FtesForecast {
 
 type GroupTransaction {
   cashBalanceChange: Float!
-  cashTransaction: BaseTransaction
+  cashTransaction: BaseTransaction!
   entryTime: Date!
-  feeTransactions: [BaseTransaction!]
   fees: [TransactionFee!]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
-  interestTransaction: BaseTransaction
+  serviceProviderFeeTypeId: ID
+  txRef: String
   type: GroupTransactionType!
+  unitPrice: Float
 }
 
 enum GroupTransactionType {
   AssetPurchase
   AssetSale
+  FeesIncome
   FeesPayment
-  InterestDraw
+  InterestIncome
   InterestPayment
-  InterestReturn
   PrincipalDraw
   PrincipalReturn
 }
@@ -304,7 +311,7 @@ input InputOperationContext {
 
 input InputOperationSigner {
   app: InputOperationSignerApp!
-  signature: String!
+  signatures: [[String!]!]!
   user: InputOperationSignerUser!
 }
 
@@ -439,7 +446,7 @@ type OperationContext {
 
 type OperationSigner {
   app: OperationSignerApp!
-  signature: String!
+  signatures: [[String!]!]!
   user: OperationSignerUser!
 }
 
