@@ -11,6 +11,7 @@ import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
 import { module as DocumentModelLib } from 'document-model/document-model';
+import { module as DocArbStip } from 'doc-arb-stip/arbitrum-stip-grantee';
 import { DocumentModel, Operation } from 'document-model/document';
 import {
     Listener,
@@ -50,6 +51,7 @@ const redisClient = process.env.REDIS_TLS_URL ? await initRedis() : undefined;
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     const documentModels = [
         DocumentModelLib,
+        DocArbStip,
         ...Object.values(DocumentModelsLibs),
     ] as DocumentModel[];
 

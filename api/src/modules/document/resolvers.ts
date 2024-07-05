@@ -16,14 +16,14 @@ export const operationModelInterface = interfaceType({
     t.string('id');
   },
   resolveType: (e) => {
-    return "DefaultOperation"
+    return 'DefaultOperation';
   },
 });
 
 export const operationModel = objectType({
   name: 'DefaultOperation',
   definition(t) {
-    t.implements(operationModelInterface)
+    t.implements(operationModelInterface);
   },
 });
 
@@ -49,6 +49,8 @@ export const documentModelInterface = interfaceType({
         return 'RealWorldAssets';
       case 'ArbLtipGrantee':
         return 'ArbLtipGrantee';
+      case 'ArbStipGrantee':
+        return 'ArbStipGrantee';
       default:
         return 'DefaultDocument';
     }
@@ -69,7 +71,7 @@ export const documentQuery = queryField('document', {
   },
   resolve: async (_root, { id }, ctx: Context) => {
     if (!ctx.driveId) {
-      throw new Error("DriveId is not defined")
+      throw new Error('DriveId is not defined');
     }
     try {
       const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
@@ -84,13 +86,15 @@ export const documentsQuery = queryField('documents', {
   type: list(documentModelInterface),
   resolve: async (_root, { id }, ctx: Context) => {
     if (!ctx.driveId) {
-      throw new Error("DriveId is not defined")
+      throw new Error('DriveId is not defined');
     }
     try {
       const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
-      const docs = await Promise.all(docIds.map(doc => {
-        return ctx.prisma.document.getDocument(ctx.driveId!, doc);
-      }));
+      const docs = await Promise.all(
+        docIds.map((doc) => {
+          return ctx.prisma.document.getDocument(ctx.driveId!, doc);
+        })
+      );
       return docs;
     } catch (e: any) {
       logger.error({ msg: e.message });

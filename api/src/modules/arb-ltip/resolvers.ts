@@ -17,6 +17,23 @@ export const ArbLtipGranteeState = objectType({
     t.list.field("phases", { type: Phase })
   }
 })
+
+export const ArbStipGranteeState = objectType({
+  name: "ArbStipGranteeState",
+  definition(t) {
+    t.nonNull.id("id")
+    t.string("granteeName")
+    t.float("grantSize")
+    t.float("matchingGrantSize")
+    t.string("grantSummary")
+    t.string("fundingAddress")
+    t.list.field("fundingType", { type: FundingType })
+    t.string("disbursementContractAddress")
+    t.string("metricsDashboardLink")
+    t.list.field("phases", { type: Phase })
+  }
+})
+
 export const Contract = objectType({
   name: "Contract",
   definition(t) {
