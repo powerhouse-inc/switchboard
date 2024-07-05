@@ -59,7 +59,7 @@ export interface NexusGenInputs {
   }
   InputOperationSigner: { // input type
     app: NexusGenInputs['InputOperationSignerApp']; // InputOperationSignerApp!
-    signatures: string[][]; // [[String!]!]!
+    signature: string; // String!
     user: NexusGenInputs['InputOperationSignerUser']; // InputOperationSignerUser!
   }
   InputOperationSignerApp: { // input type
@@ -411,7 +411,7 @@ export interface NexusGenObjects {
   }
   OperationSigner: { // root type
     app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
-    signatures: string[][]; // [[String!]!]!
+    signature: string; // String!
     user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
   }
   OperationSignerApp: { // root type
@@ -909,7 +909,7 @@ export interface NexusGenFieldTypes {
   }
   OperationSigner: { // field return type
     app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
-    signatures: string[][]; // [[String!]!]!
+    signature: string; // String!
     user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
   }
   OperationSignerApp: { // field return type
@@ -1434,7 +1434,7 @@ export interface NexusGenFieldTypeNames {
   }
   OperationSigner: { // field return type name
     app: 'OperationSignerApp'
-    signatures: 'String'
+    signature: 'String'
     user: 'OperationSignerUser'
   }
   OperationSignerApp: { // field return type name
