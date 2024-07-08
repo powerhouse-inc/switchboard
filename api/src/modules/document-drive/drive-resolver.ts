@@ -23,6 +23,7 @@ import {
 } from 'document-model-libs/document-drive';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import NotFoundError from '../../errors/NotFoundError';
+import { GraphQLError } from 'graphql';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -285,7 +286,13 @@ export const syncType = objectType({
           }));
         } catch (e) {
           if ((e as Error).message?.match(/Transmitter .+ not found/)) {
-            throw new NotFoundError({ message: 'Transmitter not found' });
+            throw new GraphQLError((e as Error).message ?? 'Transmitter not found', {
+              extensions: {
+                http: {
+                  status: 400,
+                },
+              },
+            });
           } else {
             logger.error(e);
             throw new Error('Failed to fetch strands');
