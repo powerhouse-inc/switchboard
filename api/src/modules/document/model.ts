@@ -158,7 +158,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
             listenerId: string,
             since?: string,
         ): Promise<StrandUpdate[]> => {
-
             const transmitter = await getTransmitter(driveId, listenerId);
             if (transmitter.getStrands) {
                 const result = await transmitter.getStrands(since || undefined);

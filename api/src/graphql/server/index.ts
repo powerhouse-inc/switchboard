@@ -28,12 +28,14 @@ function loggerPlugin(): ApolloServerPlugin<Context> {
 const createApolloIndexServer = (): ApolloServer<IndexContext> => new ApolloServer<IndexContext>({
   schema: indexSchema,
   introspection: true,
+  status400ForVariableCoercionErrors: true,
   plugins: [loggerPlugin()],
 });
 
 const createApolloDriveServer = (): ApolloServer<DriveContext> => new ApolloServer<DriveContext>({
   schema: driveSchema,
   introspection: true,
+  status400ForVariableCoercionErrors: true,
   plugins: [loggerPlugin()],
 });
 
