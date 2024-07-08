@@ -1,3 +1,10 @@
+# [1.0.0-dev.13](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.12...v1.0.0-dev.13) (2024-07-08)
+
+
+### Features
+
+* set drive icon mutation ([40e7476](https://github.com/powerhouse-inc/switchboard/commit/40e747624d674e383089d603cc7b4f788b74193f))
+
 # [1.0.0-dev.12](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2024-07-08)
 
 
