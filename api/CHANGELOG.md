@@ -1,3 +1,10 @@
+# [1.0.0-dev.12](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.11...v1.0.0-dev.12) (2024-07-08)
+
+
+### Bug Fixes
+
+* send 400 if transmitter not found ([30d9ddc](https://github.com/powerhouse-inc/switchboard/commit/30d9ddc7621b943b669548db4557dfcda986ddd1))
+
 # [1.0.0-dev.11](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2024-07-02)
 
 
