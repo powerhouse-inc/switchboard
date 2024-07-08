@@ -248,6 +248,9 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
             return documents;
         },
 
+        setDriveIcon: async (driveId: string, icon: string) => {
+            return await driveServer.queueDriveAction(driveId, actions.setDriveIcon({ icon }));
+        },
         closeScopeOfWorkIssue: async (githubId: number) => {
             // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
             //     where: {

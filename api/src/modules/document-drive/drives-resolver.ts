@@ -37,6 +37,13 @@ export const DocumentDriveStateInput = inputObjectType({
   },
 });
 
+export const SetDriveIconInput = inputObjectType({
+  name: "SetDriveIconInput",
+  definition(t) {
+    t.nonNull.string("icon")
+  }
+});
+
 export const getDrives = queryField('drives', {
   type: list('String'),
   resolve: async (_parent, args, ctx: Context) => {
@@ -112,4 +119,21 @@ export const deleteDrive = mutationField('deleteDrive', {
 
     return true;
   },
+});
+
+export const setDriveIcon = mutationField('setDriveIcon', {
+  type: 'Boolean',
+  args: {
+    id: nonNull('String'),
+    icon: nonNull('String'),
+  },
+  resolve: async (_parent, { id, icon }, ctx: Context) => {
+    try {
+      await ctx.prisma.document.setDriveIcon(id, icon);
+    } catch (e: any) {
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to set drive icon", logging: true, context: e })
+    }
+
+    return true;
+  }
 });
