@@ -3,6 +3,8 @@ import pino from 'pino';
 import { Session } from '@prisma/client';
 import { getChildLogger } from '../../../logger';
 import { getExtendedPrisma } from '../../../importedModules';
+import NotFoundError from '../../../errors/NotFoundError';
+import { DocumentDriveState } from 'document-model-libs/document-drive';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
@@ -25,7 +27,7 @@ type CreateContextParams = {
   connection?: unknown;
 };
 
-export function createContext(params: CreateContextParams): Context {
+export async function createContext(params: CreateContextParams): Promise<Context> {
   logger.trace('Creating context with params: %o', params);
   const { req } = params;
   const authorizationHeader = req.get('Authorization');
@@ -34,7 +36,18 @@ export function createContext(params: CreateContextParams): Context {
   const origin = req.get('Origin');
   const prisma = getExtendedPrisma();
 
-  const { driveId } = req.params;
+  const { driveIdOrSlug } = req.params;
+  if (!driveIdOrSlug) {
+    throw new NotFoundError({ message: "Drive Id or Slug required" })
+  }
+  let drive: DocumentDriveState
+  const drives = await prisma.document.getDrives();
+
+  if (drives.find(d => d === driveIdOrSlug)) {
+    drive = await prisma.document.getDrive(driveIdOrSlug);
+  } else {
+    drive = await prisma.document.getDriveBySlug(driveIdOrSlug);
+  }
 
   return {
     request: params,
@@ -42,6 +55,6 @@ export function createContext(params: CreateContextParams): Context {
     apolloLogger,
     getSession: async () => prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
     origin,
-    driveId,
+    driveId: drive.id,
   };
 }

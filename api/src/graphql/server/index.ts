@@ -58,22 +58,25 @@ export const addGraphqlRoutes = async (
   );
 
   router.use(
-    '/d/:driveId',
+    '/d/:driveIdOrSlug',
     cors<cors.CorsRequest>(),
     cookierParser(undefined, { decode: (value: string) => value }),
     async (req, res, next) => {
+      const { driveIdOrSlug } = req.params;
+      if (!driveIdOrSlug) {
+        throw new NotFoundError({ message: 'Drive Id or Slug required' });
+      }
+
       const prisma = getExtendedPrisma();
-      const { driveId } = req.params;
-
-      if (!driveId) {
-        throw new Error("driveId required")
+      const drives = await prisma.document.getDrives();
+      if (!drives.find(e => e === driveIdOrSlug)) {
+        try {
+          const drive = prisma.document.getDriveBySlug(driveIdOrSlug);
+        } catch (e) {
+          throw new NotFoundError({ message: 'Drive not found' });
+        }
       }
 
-      try {
-        await prisma.document.getDrive(driveId);
-      } catch (e) {
-        throw new NotFoundError({ message: (e as Error).message })
-      }
       next();
     },
     expressMiddleware(apolloDrive, {
