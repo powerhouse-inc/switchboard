@@ -1,3 +1,19 @@
+# [1.0.0-dev.14](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2024-07-09)
+
+
+### Bug Fixes
+
+* ignore drive not found error ([5131a1e](https://github.com/powerhouse-inc/switchboard/commit/5131a1e7e96188b0560740163ce43bc83230e869))
+
+
+### Features
+
+* added develop environment ([f5e30b9](https://github.com/powerhouse-inc/switchboard/commit/f5e30b9c773d7298d7b810973f9cdcd3e2002794))
+* added redis to docker-compose ([14ebaad](https://github.com/powerhouse-inc/switchboard/commit/14ebaadcdb18aa98975a06a0df23c014a45ab8a9))
+* added semantic release ([95bd92d](https://github.com/powerhouse-inc/switchboard/commit/95bd92d85294f0243e4c25dd08a1451711c78aac))
+* merge branch 'develop' into staging ([c42b2be](https://github.com/powerhouse-inc/switchboard/commit/c42b2bede0d74631833381fe572bc00599c4e0d2))
+* queue add and remove listener operations ([5702eb8](https://github.com/powerhouse-inc/switchboard/commit/5702eb894f6cc1326a6d01d31205b5179be0dd11))
+
 # [1.0.0-next.6](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.5...v1.0.0-next.6) (2024-06-24)
 
 
