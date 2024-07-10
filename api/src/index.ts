@@ -1,14 +1,13 @@
+import * as Sentry from '@sentry/node';
 import type express from 'express';
-import * as Sentry from "@sentry/node";
+import 'express-async-errors';
+import { type Server, createServer as createHttpServer } from 'http';
 import { createApp } from './app';
+import { PORT } from './env';
 import { addGraphqlRoutes } from './graphql/server';
 import { getChildLogger } from './logger';
-import { closeRedis } from './redis';
-import { type Server, createServer as createHttpServer } from 'http';
-import { PORT } from './env';
 import { errorHandler } from './middleware/errors';
-import { initRedis } from './redis';
-import "express-async-errors";
+import { closeRedis, initRedis } from './redis';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
@@ -16,7 +15,7 @@ const { app, router } = createApp();
 
 async function startServer(
   app: express.Application,
-  router: express.Router,
+  router: express.Router
 ): Promise<Server> {
   await addGraphqlRoutes(router);
 
@@ -41,19 +40,18 @@ async function startServer(
   });
 }
 
-
 /* istanbul ignore next @preserve */
 startServer(app, router)
-  .then((e) => {
+  .then(e => {
     // Hot Module Replacement
-    const { hot } = (import.meta as any);
+    const { hot } = import.meta as any;
     if (hot) {
       hot.on('vite:beforeFullReload', () => {
         e.close();
       });
     }
   })
-  .catch((err) => {
+  .catch(err => {
     logger.warn('Shutting down...');
     closeRedis();
     if (err instanceof Error) {

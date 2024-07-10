@@ -1,12 +1,5 @@
-import {
-  extendType,
-  interfaceType,
-  list, mutationField, nonNull, objectType, queryField, scalarType, stringArg,
-} from 'nexus';
-import logger from '../../logger';
+import { interfaceType, list, objectType, queryField, scalarType } from 'nexus';
 import { Context } from '../../graphql/server/index/context';
-
-
 
 export const authType = objectType({
   name: 'Auth',
@@ -17,19 +10,19 @@ export const authType = objectType({
         const { createdBy } = await ctx.getSession();
         return ctx.prisma.user.findUnique({
           where: {
-            address: createdBy,
-          },
+            address: createdBy
+          }
         });
-      },
+      }
     });
     t.field('sessions', {
       resolve: async (_, __, ctx: Context) => {
         const { createdBy } = await ctx.getSession();
         return ctx.prisma.session.listSessions(createdBy);
       },
-      type: list('Session'),
+      type: list('Session')
     });
-  },
+  }
 });
 
 export const systemType = interfaceType({
@@ -37,22 +30,22 @@ export const systemType = interfaceType({
   definition(t) {
     t.field('auth', {
       type: authType,
-      resolve: async () => true,
+      resolve: async () => true
     });
   },
-  resolveType: () => true,
+  resolveType: () => true
 });
 
 export const system = objectType({
   name: 'SwitchboardHost',
   definition(t) {
     t.implements(systemType);
-  },
+  }
 });
 
 export const systemQueryField = queryField('system', {
   type: system,
-  resolve: async () => true,
+  resolve: async () => true
 });
 
 export const GQLDateBase = scalarType({
@@ -71,9 +64,8 @@ export const GQLDateBase = scalarType({
       return new Date(value);
     }
     return null;
-  },
+  }
 });
-
 
 export const GQLAttachmentBase = scalarType({
   name: 'Attachment',
@@ -84,5 +76,5 @@ export const GQLAttachmentBase = scalarType({
   },
   parseValue(value: unknown) {
     return JSON.parse(value as string);
-  },
+  }
 });
