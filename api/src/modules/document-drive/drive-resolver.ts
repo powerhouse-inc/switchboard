@@ -171,6 +171,7 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.int('index');
     t.int('skip');
     t.nonNull.string('type');
+    t.nonNull.string('id');
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
