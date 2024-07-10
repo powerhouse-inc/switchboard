@@ -71,13 +71,14 @@ export const addGraphqlRoutes = async (
       const drives = await prisma.document.getDrives();
       if (!drives.find(e => e === driveIdOrSlug)) {
         try {
-          const drive = prisma.document.getDriveBySlug(driveIdOrSlug);
+          const drive = await prisma.document.getDriveBySlug(driveIdOrSlug);
+          next();
         } catch (e) {
           throw new NotFoundError({ message: 'Drive not found' });
         }
       }
 
-      next();
+
     },
     expressMiddleware(apolloDrive, {
       context: async (params) => createDriveContext(params),
