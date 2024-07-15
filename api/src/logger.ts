@@ -60,12 +60,9 @@ const doesPassFilters = (config: {
 }): boolean => FILTERS.every((f) => f(config));
 
 const transportTargets: pino.TransportTargetOptions[] = [];
-
-if (isDevelopment) {
-  transportTargets.push({
-    target: 'pino-pretty',
-  });
-}
+transportTargets.push({
+  target: 'pino-pretty',
+});
 
 if (process.env.SENTRY_DSN) {
   transportTargets.push({
