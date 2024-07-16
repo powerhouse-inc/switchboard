@@ -29,7 +29,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "doc-arb-stip": "npm:document-model-libs@1.59.0-arbitrum-stip.14",
-    "document-drive": "1.0.0-alpha-arb.87",
+    "document-drive": "1.0.0-alpha-arb.88",
     "document-model": "1.7.0",
     "document-model-libs": "1.59.0-arbitrum.14",
     "dotenv": "^16.4.5",
