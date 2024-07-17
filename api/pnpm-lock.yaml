@@ -39,8 +39,8 @@ importers:
         specifier: npm:document-model-libs@1.59.0-arbitrum-stip.14
         version: document-model-libs@1.59.0-arbitrum-stip.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       document-drive:
-        specifier: 1.0.0-alpha-arb.81
-        version: 1.0.0-alpha-arb.81(document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
+        specifier: 1.0.0-alpha-arb.88
+        version: 1.0.0-alpha-arb.88(document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
       document-model:
         specifier: 1.7.0
         version: 1.7.0
@@ -2887,8 +2887,8 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  document-drive@1.0.0-alpha-arb.81:
-    resolution: {integrity: sha512-dEorE7M0NbIL66BqFxdlUQGXGv+zlFzO3crPtd7rNVwbQKl6tIJYAeB+Hf7H/eMXqmBM1JD8I+tYMXwBOXLRuQ==}
+  document-drive@1.0.0-alpha-arb.88:
+    resolution: {integrity: sha512-mbS22zp/FW1riQ+bYkZ8bAOP+gpcL7ICcPWFVC9fFV/pUVFXClLdO/vyt43kTTsX9j8c9ydQrp6J+xQtrW621A==}
     peerDependencies:
       document-model: ^1.7.0
       document-model-libs: ^1.57.0
@@ -4305,9 +4305,8 @@ packages:
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
 
-  node-addon-api@7.1.0:
-    resolution: {integrity: sha512-mNcltoe1R8o7STTegSOHdnJNN7s5EUvhoS7ShnTHDyOSd+8H+UdWODq6qSv67PjC8Zc5JRT8+oLAMCr0SIXw7g==}
-    engines: {node: ^16 || ^18 || >= 20}
+  node-addon-api@7.1.1:
+    resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
 
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
@@ -9504,7 +9503,7 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  document-drive@1.0.0-alpha-arb.81(document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
+  document-drive@1.0.0-alpha-arb.88(document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
     dependencies:
       document-model: 1.7.0
       document-model-libs: 1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
@@ -11222,7 +11221,7 @@ snapshots:
 
   node-abort-controller@3.1.1: {}
 
-  node-addon-api@7.1.0:
+  node-addon-api@7.1.1:
     optional: true
 
   node-domexception@1.0.0: {}
@@ -12228,7 +12227,7 @@ snapshots:
   sqlite3@5.1.7:
     dependencies:
       bindings: 1.5.0
-      node-addon-api: 7.1.0
+      node-addon-api: 7.1.1
       prebuild-install: 7.1.2
       tar: 6.2.1
     optionalDependencies:
