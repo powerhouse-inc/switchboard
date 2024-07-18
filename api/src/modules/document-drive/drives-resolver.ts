@@ -11,6 +11,7 @@ import { DocumentDriveStateObject } from './drive-resolver';
 import { Context } from '../../graphql/server/drive/context';
 import logger from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
+import { UpdateStatus } from "document-drive";
 
 export const DocumentDriveLocalState = objectType({
   name: 'DocumentDriveLocalState',
@@ -35,6 +36,13 @@ export const DocumentDriveStateInput = inputObjectType({
     t.string('icon');
     t.string('slug');
   },
+});
+
+export const SetDriveIconInput = inputObjectType({
+  name: "SetDriveIconInput",
+  definition(t) {
+    t.nonNull.string("icon")
+  }
 });
 
 export const getDrives = queryField('drives', {
@@ -112,4 +120,24 @@ export const deleteDrive = mutationField('deleteDrive', {
 
     return true;
   },
+});
+
+export const setDriveIcon = mutationField('setDriveIcon', {
+  type: 'Boolean',
+  args: {
+    id: nonNull('String'),
+    icon: nonNull('String'),
+  },
+  resolve: async (_parent, { id, icon }, ctx: Context) => {
+    const result = await ctx.prisma.document.setDriveIcon(id, icon);
+    if (result.status !== "SUCCESS") {
+      if (result.error) {
+        const { message } = result.error;
+        throw new DocumentDriveError({ code: 500, message, logging: true })
+      }
+
+      throw new DocumentDriveError({ code: 500, message: "Failed to set drive icon", logging: true })
+    }
+    return true;
+  }
 });

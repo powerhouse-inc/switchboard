@@ -9,7 +9,7 @@ export default class NotFoundError extends CustomError {
   constructor(params?: { code?: number, message?: string, logging?: boolean, context?: { [key: string]: any } }) {
     const { code, message, logging } = params || {};
 
-    super(message || "Not Found");
+    super(message || "Not Found", 404);
     this._code = code || NotFoundError._statusCode;
     this._logging = logging || false;
     this._context = params?.context || {};
