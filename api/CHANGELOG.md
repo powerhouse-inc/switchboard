@@ -1,3 +1,10 @@
+# [1.0.0-dev.15](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2024-07-19)
+
+
+### Features
+
+* added set drive name mutation ([96304b1](https://github.com/powerhouse-inc/switchboard/commit/96304b1053b19a2d0f54d0678418429e900e2b9f))
+
 # [1.0.0-dev.14](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2024-07-09)
 
 
