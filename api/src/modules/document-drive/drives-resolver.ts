@@ -148,8 +148,8 @@ export const setDriveName = mutationField('setDriveName', {
     id: nonNull('String'),
     name: nonNull('String'),
   },
-  resolve: async (_parent, { id, icon }, ctx: Context) => {
-    const result = await ctx.prisma.document.setDriveIcon(id, icon);
+  resolve: async (_parent, { id, name }, ctx: Context) => {
+    const result = await ctx.prisma.document.setDriveName(id, name);
     if (result.status !== "SUCCESS") {
       if (result.error) {
         const { message } = result.error;
