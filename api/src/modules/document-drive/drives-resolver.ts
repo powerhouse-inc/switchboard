@@ -141,3 +141,23 @@ export const setDriveIcon = mutationField('setDriveIcon', {
     return true;
   }
 });
+
+export const setDriveName = mutationField('setDriveName', {
+  type: 'Boolean',
+  args: {
+    id: nonNull('String'),
+    name: nonNull('String'),
+  },
+  resolve: async (_parent, { id, icon }, ctx: Context) => {
+    const result = await ctx.prisma.document.setDriveIcon(id, icon);
+    if (result.status !== "SUCCESS") {
+      if (result.error) {
+        const { message } = result.error;
+        throw new DocumentDriveError({ code: 500, message, logging: true })
+      }
+
+      throw new DocumentDriveError({ code: 500, message: "Failed to set drive icon", logging: true })
+    }
+    return true;
+  }
+});
