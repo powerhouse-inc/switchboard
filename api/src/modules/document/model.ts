@@ -1,11 +1,11 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
 import {
-    DocumentDriveServer,
-    DriveInput,
-    ListenerRevision,
-    StrandUpdate,
-    generateUUID,
-    PullResponderTransmitter,
+  DocumentDriveServer,
+  DriveInput,
+  ListenerRevision,
+  StrandUpdate,
+  generateUUID,
+  PullResponderTransmitter,
 } from 'document-drive';
 import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
@@ -14,10 +14,10 @@ import { module as DocumentModelLib } from 'document-model/document-model';
 import { module as DocArbStip } from 'doc-arb-stip/arbitrum-stip-grantee';
 import { DocumentModel, Operation } from 'document-model/document';
 import {
-    Listener,
-    ListenerFilter,
-    actions,
-    DocumentDriveAction
+  Listener,
+  ListenerFilter,
+  actions,
+  DocumentDriveAction,
 } from 'document-model-libs/document-drive';
 
 // import * as sow from 'document-model-libs/scope-of-work';
@@ -35,246 +35,266 @@ import { initRedis } from '../../redis';
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
 // creates a child logger and provides it to the document drive lib
-const documentDriveLogger = getChildLogger({ msgPrefix: "Document Drive" });
+const documentDriveLogger = getChildLogger({ msgPrefix: 'Document Drive' });
 
 // patches the log method into the info method from pino
-const loggerAdapter = new Proxy<ILogger>(documentDriveLogger as unknown as ILogger, {
+const loggerAdapter = new Proxy<ILogger>(
+  documentDriveLogger as unknown as ILogger,
+  {
     get: (target, prop) =>
-        prop === "log"
-            ? documentDriveLogger.info
-            : target[prop as keyof ILogger],
-});
+      prop === 'log' ? documentDriveLogger.info : target[prop as keyof ILogger],
+  }
+);
 setLogger(loggerAdapter);
 
 const redisClient = process.env.REDIS_TLS_URL ? await initRedis() : undefined;
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
-    const documentModels = [
-        DocumentModelLib,
-        DocArbStip,
-        ...Object.values(DocumentModelsLibs),
-    ] as DocumentModel[];
+  const documentModels = [
+    DocumentModelLib,
+    DocArbStip,
+    ...Object.values(DocumentModelsLibs),
+  ] as DocumentModel[];
 
+  let driveServer: DocumentDriveServer;
 
-    let driveServer: DocumentDriveServer;
+  driveServer = new DocumentDriveServer(
+    documentModels,
+    new PrismaStorage(prisma as PrismaClient),
+    redisClient ? new RedisCache(redisClient) : new MemoryCache(),
+    redisClient
+      ? new RedisQueueManager(3, 10, redisClient)
+      : new BaseQueueManager(3, 10)
+  );
 
-    driveServer = new DocumentDriveServer(
-        documentModels,
-        new PrismaStorage(prisma as PrismaClient),
-        redisClient ? new RedisCache(redisClient) : new MemoryCache(),
-        redisClient ? new RedisQueueManager(1, 10, redisClient) : new BaseQueueManager(3, 10),
-    );
-
-    initialize();
-    async function initialize() {
-        try {
-            await driveServer.initialize();
-            await init(driveServer, prisma);
-        } catch (e: any) {
-            throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to initialize drive server", logging: true, context: e })
-        }
+  async function initialize() {
+    try {
+      await driveServer.initialize();
+      await init(driveServer, prisma);
+    } catch (e: any) {
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to initialize drive server',
+        logging: true,
+        context: e,
+      });
     }
+  }
 
-    async function getTransmitter(driveId: string, transmitterId: string) {
-        const transmitter = await driveServer.getTransmitter(driveId, transmitterId) as PullResponderTransmitter;
-        if (!transmitter) {
-            throw new Error(`Transmitter ${transmitterId} not found`)
-        }
-        return transmitter
+  initialize();
+
+  async function getTransmitter(driveId: string, transmitterId: string) {
+    const transmitter = (await driveServer.getTransmitter(
+      driveId,
+      transmitterId
+    )) as PullResponderTransmitter;
+    if (!transmitter) {
+      throw new Error(`Transmitter ${transmitterId} not found`);
     }
+    return transmitter;
+  }
 
-    return {
-        addDrive: async (args: DriveInput) => {
-            try {
-                const drive = await driveServer!.addDrive(args);
-                await initialize();
-                return drive;
-            } catch (e) {
-                logger.error(e);
-                throw new Error("Couldn't add drive");
-            }
+  return {
+    addDrive: async (args: DriveInput) => {
+      try {
+        const drive = await driveServer!.addDrive(args);
+        await initialize();
+        return drive;
+      } catch (e) {
+        logger.error(e);
+        throw new Error("Couldn't add drive");
+      }
+    },
+    deleteDrive: async (id: string) => {
+      try {
+        await driveServer.deleteDrive(id);
+      } catch (e) {
+        logger.error(e);
+        throw new Error("Couldn't delete drive");
+      }
+
+      return { id };
+    },
+    getDrive: async (id: string) => {
+      try {
+        const { state } = await driveServer.getDrive(id);
+        return state.global;
+      } catch (e) {
+        logger.error(e);
+        throw new Error('Drive not found');
+      }
+    },
+    getDriveBySlug: async (slug: string) => {
+      try {
+        const { state } = await driveServer.getDriveBySlug(slug);
+        return state.global;
+      } catch (e) {
+        logger.error(e);
+        throw new Error('Drive not found');
+      }
+    },
+    getDrives: async () => {
+      try {
+        const driveIds = await driveServer.getDrives();
+        return driveIds;
+      } catch (e) {
+        logger.error(e);
+        throw new Error("Couldn't get drives");
+      }
+    },
+
+    pushUpdates: async (
+      driveId: string,
+      operations: Operation<DocumentDriveAction>[],
+      documentId?: string
+    ) => {
+      if (!documentId) {
+        logger.info('adding drive operations');
+        const result = await driveServer.queueDriveOperations(
+          driveId,
+          operations
+        );
+
+        return result;
+      }
+      logger.info('adding operations to document');
+      const result = await driveServer.queueOperations(
+        driveId,
+        documentId,
+        operations
+      );
+      return result;
+    },
+
+    pullStrands: async (
+      driveId: string,
+      listenerId: string,
+      since?: string
+    ): Promise<StrandUpdate[]> => {
+      const transmitter = await getTransmitter(driveId, listenerId);
+      if (transmitter.getStrands) {
+        const result = await transmitter.getStrands(since || undefined);
+        return result;
+      }
+
+      return [];
+    },
+
+    processAcknowledge: async (
+      driveId: string,
+      listenerId: string,
+      revisions: ListenerRevision[]
+    ) => {
+      const transmitter = await getTransmitter(driveId, listenerId);
+      const result = await transmitter.processAcknowledge(
+        driveId,
+        listenerId,
+        revisions
+      );
+
+      return result;
+    },
+
+    registerPullResponderListener: async (
+      driveId: string,
+      filter: ListenerFilter
+    ): Promise<Listener> => {
+      const uuid = generateUUID();
+      const listener: Listener = {
+        block: false,
+        callInfo: {
+          data: '',
+          name: 'PullResponder',
+          transmitterType: 'PullResponder',
         },
-        deleteDrive: async (id: string) => {
-            try {
-                await driveServer.deleteDrive(id);
-            } catch (e) {
-                logger.error(e);
-                throw new Error("Couldn't delete drive");
-            }
-
-            return { id };
+        filter: {
+          branch: filter.branch ?? [],
+          documentId: filter.documentId ?? [],
+          documentType: filter.documentType ?? [],
+          scope: filter.scope ?? [],
         },
-        getDrive: async (id: string) => {
-            try {
-                const { state } = await driveServer.getDrive(id);
-                return state.global;
-            } catch (e) {
-                logger.error(e);
-                throw new Error("Drive not found");
-            }
-        },
-        getDriveBySlug: async (slug: string) => {
-            try {
-                const { state } = await driveServer.getDriveBySlug(slug);
-                return state.global;
-            } catch (e) {
-                logger.error(e);
-                throw new Error("Drive not found");
-            }
-        },
-        getDrives: async () => {
-            try {
-                const driveIds = await driveServer.getDrives()
-                return driveIds;
-            } catch (e) {
-                logger.error(e);
-                throw new Error("Couldn't get drives");
-            }
-        },
+        label: `Pullresponder #${uuid}`,
+        listenerId: uuid,
+        system: false,
+      };
 
-        pushUpdates: async (
-            driveId: string,
-            operations: Operation<DocumentDriveAction>[],
-            documentId?: string,
-        ) => {
-            if (!documentId) {
-                logger.info('adding drive operations')
-                const result = await driveServer.queueDriveOperations(
-                    driveId,
-                    operations,
-                );
+      const result = await driveServer.queueDriveAction(
+        driveId,
+        actions.addListener({ listener })
+      );
+      if (result.status !== 'SUCCESS') {
+        result.error && logger.error(result.error);
+        throw new Error(
+          `Listener couldn't be registered: ${result.error || result.status}`
+        );
+      }
 
-                return result;
-            }
-            logger.info('adding operations to document')
-            const result = await driveServer.queueOperations(
-                driveId,
-                documentId,
-                operations,
-            );
-            return result;
-        },
+      return listener;
+    },
 
-        pullStrands: async (
-            driveId: string,
-            listenerId: string,
-            since?: string,
-        ): Promise<StrandUpdate[]> => {
+    deletePullResponderListener: async (
+      driveId: string,
+      listenerId: string
+    ) => {
+      const result = await driveServer.queueDriveAction(
+        driveId,
+        actions.removeListener({ listenerId })
+      );
+      if (result.status !== 'SUCCESS') {
+        result.error && logger.error(result.error);
+        throw new Error(
+          `Listener couldn't be deleted: ${result.error || result.status}`
+        );
+      }
 
-            const transmitter = await getTransmitter(driveId, listenerId);
-            if (transmitter.getStrands) {
-                const result = await transmitter.getStrands(since || undefined);
-                return result;
-            }
+      return listenerId;
+    },
 
-            return []
-        },
+    getDocument: async (driveId: string, documentId: string) => {
+      const document = await driveServer.getDocument(driveId, documentId);
+      const response = {
+        ...document,
+        id: documentId,
+        revision: document.revision.global,
+        state: document.state.global,
+        operations: document.operations.global,
+      };
+      return response;
+    },
 
-        processAcknowledge: async (
-            driveId: string,
-            listenerId: string,
-            revisions: ListenerRevision[],
-        ) => {
-            const transmitter = await getTransmitter(driveId, listenerId);
-            const result = await transmitter.processAcknowledge(
-                driveId,
-                listenerId,
-                revisions,
-            );
+    getDocuments: async (driveId: string) => {
+      const documents = await driveServer.getDocuments(driveId);
+      return documents;
+    },
 
-            return result;
-        },
-
-        registerPullResponderListener: async (
-            driveId: string,
-            filter: ListenerFilter,
-        ): Promise<Listener> => {
-            const uuid = generateUUID();
-            const listener: Listener = {
-                block: false,
-                callInfo: {
-                    data: '',
-                    name: 'PullResponder',
-                    transmitterType: 'PullResponder',
-                },
-                filter: {
-                    branch: filter.branch ?? [],
-                    documentId: filter.documentId ?? [],
-                    documentType: filter.documentType ?? [],
-                    scope: filter.scope ?? [],
-                },
-                label: `Pullresponder #${uuid}`,
-                listenerId: uuid,
-                system: false,
-            };
-
-            const result = await driveServer.queueDriveAction(driveId, actions.addListener({ listener }));
-            if (result.status !== "SUCCESS") {
-                result.error && logger.error(result.error);
-                throw new Error(`Listener couldn't be registered: ${result.error || result.status}`);
-            }
-
-            return listener;
-        },
-
-        deletePullResponderListener: async (
-            driveId: string,
-            listenerId: string,
-        ) => {
-            const result = await driveServer.queueDriveAction(driveId, actions.removeListener({ listenerId }));
-            if (result.status !== "SUCCESS") {
-                result.error && logger.error(result.error);
-                throw new Error(`Listener couldn't be deleted: ${result.error || result.status}`);
-            }
-
-            return listenerId;
-        },
-
-        getDocument: async (
-            driveId: string,
-            documentId: string,
-        ) => {
-            const document = await driveServer.getDocument(driveId, documentId);
-            const response = {
-                ...document,
-                id: documentId,
-                revision: document.revision.global,
-                state: document.state.global,
-                operations: document.operations.global,
-            };
-            return response;
-        },
-
-        getDocuments: async (driveId: string) => {
-            const documents = await driveServer.getDocuments(driveId);
-            return documents;
-        },
-
-        closeScopeOfWorkIssue: async (githubId: number) => {
-            // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
-            //     where: {
-            //         githubId: githubId
-            //     }
-            // })
-
-            // if (!dbEntry) {
-            //     throw new Error("Deliverable not found");
-            // }
-
-            // const { driveId, documentId, id } = dbEntry;
-
-            // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
-            // if (!sowDocument) {
-            //     throw new Error("Document not found");
-            // }
-
-            // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
-            //     id,
-            //     status: "DELIVERED"
-            // }))
-
-
-            // return result;
-        }
-    }
+    // setDriveIcon: async (driveId: string, icon: string) => {
+    //   return await driveServer.queueDriveAction(driveId, actions.setDriveIcon({ icon }));
+    // },
+    setDriveName: async (driveId: string, name: string) => {
+      return await driveServer.queueDriveAction(
+        driveId,
+        actions.setDriveName({ name })
+      );
+    },
+    closeScopeOfWorkIssue: async (githubId: number) => {
+      // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
+      //     where: {
+      //         githubId: githubId
+      //     }
+      // })
+      // if (!dbEntry) {
+      //     throw new Error("Deliverable not found");
+      // }
+      // const { driveId, documentId, id } = dbEntry;
+      // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
+      // if (!sowDocument) {
+      //     throw new Error("Document not found");
+      // }
+      // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
+      //     id,
+      //     status: "DELIVERED"
+      // }))
+      // return result;
+    },
+  };
 }

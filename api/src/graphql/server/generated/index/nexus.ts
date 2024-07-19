@@ -63,6 +63,9 @@ export interface NexusGenInputs {
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
   }
+  SetDriveIconInput: { // input type
+    icon: string; // String!
+  }
 }
 
 export interface NexusGenEnums {
@@ -193,6 +196,8 @@ export interface NexusGenFieldTypes {
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
     deleteDrive: boolean | null; // Boolean
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
+    setDriveIcon: boolean | null; // Boolean
+    setDriveName: boolean | null; // Boolean
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
   Node: { // field return type
@@ -277,6 +282,8 @@ export interface NexusGenFieldTypeNames {
     createSession: 'SessionOutput'
     deleteDrive: 'Boolean'
     revokeSession: 'Session'
+    setDriveIcon: 'Boolean'
+    setDriveName: 'Boolean'
     solveChallenge: 'SessionOutput'
   }
   Node: { // field return type name
@@ -337,6 +344,14 @@ export interface NexusGenArgTypes {
     }
     revokeSession: { // args
       sessionId: string; // String!
+    }
+    setDriveIcon: { // args
+      icon: string; // String!
+      id: string; // String!
+    }
+    setDriveName: { // args
+      id: string; // String!
+      name: string; // String!
     }
     solveChallenge: { // args
       nonce: string; // String!

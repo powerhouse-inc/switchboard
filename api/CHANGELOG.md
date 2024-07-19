@@ -22,31 +22,26 @@
 
 ### Features
 
-* added new fields to rwa document ([088125c](https://github.com/powerhouse-inc/switchboard/commit/088125c709f7a6616069b92b4e033feee5df5c18))
+* added set drive name mutation ([96304b1](https://github.com/powerhouse-inc/switchboard/commit/96304b1053b19a2d0f54d0678418429e900e2b9f))
 
-# [1.0.0-dev.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2024-07-01)
-
-
-### Features
-
-* added operation signatures support ([f3c5159](https://github.com/powerhouse-inc/switchboard/commit/f3c515934c474abb327da67d81e1a58d912b7251))
-* updated document-drive ([98868e6](https://github.com/powerhouse-inc/switchboard/commit/98868e606dc4e30ee639ea10f8cd342b322a5e08))
-
-# [1.0.0-dev.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2024-06-27)
+# [1.0.0-dev.14](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2024-07-09)
 
 
 ### Bug Fixes
 
-* staging environment ([0847819](https://github.com/powerhouse-inc/switchboard/commit/08478198d9d621018a626f9b75354a2bfe1a1165))
+* ignore drive not found error ([5131a1e](https://github.com/powerhouse-inc/switchboard/commit/5131a1e7e96188b0560740163ce43bc83230e869))
 
 
 ### Features
 
-* added support for operation context on graphql api ([86a2f31](https://github.com/powerhouse-inc/switchboard/commit/86a2f316cf61a2012410d498bbe5e6127c660b32))
-* update document-drive dep ([1da4f74](https://github.com/powerhouse-inc/switchboard/commit/1da4f7423be163654c029908c3f29c823f23869d))
-* update document-drive dep ([40f98cd](https://github.com/powerhouse-inc/switchboard/commit/40f98cd79b0b96ce8b9cb18a2b7fab6d8d9ac824))
+* added develop environment ([f5e30b9](https://github.com/powerhouse-inc/switchboard/commit/f5e30b9c773d7298d7b810973f9cdcd3e2002794))
+* added redis to docker-compose ([14ebaad](https://github.com/powerhouse-inc/switchboard/commit/14ebaadcdb18aa98975a06a0df23c014a45ab8a9))
+* added semantic release ([95bd92d](https://github.com/powerhouse-inc/switchboard/commit/95bd92d85294f0243e4c25dd08a1451711c78aac))
+* merge branch 'develop' into staging ([c42b2be](https://github.com/powerhouse-inc/switchboard/commit/c42b2bede0d74631833381fe572bc00599c4e0d2))
+* queue add and remove listener operations ([5702eb8](https://github.com/powerhouse-inc/switchboard/commit/5702eb894f6cc1326a6d01d31205b5179be0dd11))
 
-# [1.0.0-dev.6](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2024-06-24)
+# [1.0.0-next.6](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.5...v1.0.0-next.6) (2024-06-24)
+
 
 
 ### Bug Fixes
