@@ -71,12 +71,6 @@ if (process.env.SENTRY_DSN) {
     target: 'pino-sentry-transport',
     options: {
       sentry: {
-        integrations: [
-          Sentry.extraErrorDataIntegration({
-            depth: 15,
-            captureErrorCause: true,
-          }),
-        ],
         dsn: process.env.SENTRY_DSN,
         environment: process.env.SENTRY_ENV ?? 'dev',
         ignoreErrors: [
