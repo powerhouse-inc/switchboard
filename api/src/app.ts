@@ -26,6 +26,10 @@ export const createApp = (): { app: Express; router: express.Router } => {
       dsn: process.env.SENTRY_DSN,
       environment: process.env.SENTRY_ENV ?? 'dev',
       integrations: [
+        Sentry.extraErrorDataIntegration({
+          depth: 15,
+          captureErrorCause: true,
+        }),
         nodeProfilingIntegration(),
         new Sentry.Integrations.Express({
           app,
