@@ -1,12 +1,11 @@
 import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
+import * as Sentry from '@sentry/node';
 import { loggerConfig } from '../logger.config';
 import { isDevelopment } from './env';
 
-const {
-  moduleFilter, prefixFilter, logLevel, httpLogLevel,
-} = loggerConfig;
+const { moduleFilter, prefixFilter, logLevel, httpLogLevel } = loggerConfig;
 
 export const dirname = (() => {
   if (typeof __dirname !== 'undefined') {
@@ -72,13 +71,20 @@ if (process.env.SENTRY_DSN) {
     target: 'pino-sentry-transport',
     options: {
       sentry: {
+        integrations: [
+          Sentry.extraErrorDataIntegration({
+            depth: 15,
+            captureErrorCause: true,
+          }),
+        ],
         dsn: process.env.SENTRY_DSN,
         environment: process.env.SENTRY_ENV ?? 'dev',
         ignoreErrors: [
-          /Transmitter .+ not found/,
+          /Transmitter(?: .+)? not found/,
           /^Failed to fetch strands$/,
           /Drive with id .+ not found/,
           /Document with id .+ not found/,
+          'Drive not found',
         ],
         // additional options for sentry
       },
@@ -106,7 +112,7 @@ const logger = pino({
 
 export const getChildLogger = (
   options?: pino.ChildLoggerOptions,
-  bindings?: pino.Bindings,
+  bindings?: pino.Bindings
 ) => {
   // get caller module of this function
   const caller = Error().stack?.split('at ').at(2)?.trim().split(':')[0] || '';
