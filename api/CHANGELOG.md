@@ -1,3 +1,10 @@
+# [1.0.0-dev.17](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2024-07-22)
+
+
+### Features
+
+* default redis ttl to 1 year ([781255f](https://github.com/powerhouse-inc/switchboard/commit/781255f21a0a4faa29830c257f32ea13a7de6fac))
+
 # [1.0.0-dev.16](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2024-07-22)
 
 
