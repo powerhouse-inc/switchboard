@@ -17,7 +17,7 @@ function loggerPlugin(): ApolloServerPlugin<Context> {
       return {
         async didEncounterErrors(c) {
           c.errors?.forEach((e) => {
-            c.contextValue.apolloLogger.error({ error: e }, e.message);
+            c.contextValue.apolloLogger.error({ err: e }, e.message);
           });
         },
       };
