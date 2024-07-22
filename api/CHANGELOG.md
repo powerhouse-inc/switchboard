@@ -1,3 +1,10 @@
+# [1.0.0-dev.18](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2024-07-22)
+
+
+### Features
+
+* added extra error data to main sentry config ([f08e296](https://github.com/powerhouse-inc/switchboard/commit/f08e296923897a024a017e36e9b3b8e823bc1b94))
+
 # [1.0.0-dev.17](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2024-07-22)
 
 
