@@ -1,3 +1,10 @@
+# [1.0.0-dev.16](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2024-07-22)
+
+
+### Features
+
+* better sentry error reporting ([a97591a](https://github.com/powerhouse-inc/switchboard/commit/a97591ad6f16add15ba32694460d84478d4423fa))
+
 # [1.0.0-dev.15](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2024-07-19)
 
 
