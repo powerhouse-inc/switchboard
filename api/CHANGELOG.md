@@ -1,3 +1,10 @@
+# [1.0.0-dev.19](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2024-07-22)
+
+
+### Bug Fixes
+
+* remove extraErrorDataIntegration from sentry in pino config ([d94cdec](https://github.com/powerhouse-inc/switchboard/commit/d94cdec670e81e27d0b99f0edbd4e7e7eaf357a9))
+
 # [1.0.0-dev.18](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2024-07-22)
 
 
