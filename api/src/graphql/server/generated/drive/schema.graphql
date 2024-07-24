@@ -311,7 +311,8 @@ input InputOperationContext {
 
 input InputOperationSigner {
   app: InputOperationSignerApp!
-  signature: String!
+  signature: String
+  signatures: [[String!]!]
   user: InputOperationSignerUser!
 }
 
@@ -446,7 +447,8 @@ type OperationContext {
 
 type OperationSigner {
   app: OperationSignerApp!
-  signature: String!
+  signature: String @deprecated(reason: "Use `signatures` instead")
+  signatures: [[String!]!]
   user: OperationSignerUser!
 }
 

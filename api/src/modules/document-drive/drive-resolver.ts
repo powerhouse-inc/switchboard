@@ -12,6 +12,7 @@ import { systemType } from '../system';
 import {
   ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
 } from 'document-drive';
+import { migrateLegacyOperationSignature } from 'document-drive/utils/migrations';
 import { Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import { getChildLogger } from '../../logger';
@@ -109,16 +110,17 @@ export const OperationSigner = objectType({
   definition(t) {
     t.nonNull.field('user', { type: OperationSignerUser });
     t.nonNull.field('app', { type: OperationSignerApp });
-    t.nonNull.string('signature');
-  }
+    t.string('signature', { deprecation: 'Use `signatures` instead' }); // TODO remove when no longer needed
+    t.list.nonNull.list.nonNull.field('signatures', { type: 'String' }); // TODO make list nonNull when legacy signatures support is removed
+  },
 });
 
 export const OperationContext = objectType({
   name: 'OperationContext',
   definition(t) {
     t.field('signer', { type: OperationSigner });
-  }
-})
+  },
+});
 
 export const OperationUpdate = objectType({
   name: 'OperationUpdate',
@@ -156,16 +158,17 @@ export const InputOperationSigner = inputObjectType({
   definition(t) {
     t.nonNull.field('user', { type: InputOperationSignerUser });
     t.nonNull.field('app', { type: InputOperationSignerApp });
-    t.nonNull.string('signature');
-  }
+    t.string('signature', { deprecation: 'Use `signatures` instead' }); // TODO remove when no longer needed
+    t.list.nonNull.list.nonNull.field('signatures', { type: 'String' }); // TODO make list nonNull when legacy signatures support is removed
+  },
 });
 
 export const InputOperationContext = inputObjectType({
   name: 'InputOperationContext',
   definition(t) {
     t.field('signer', { type: InputOperationSigner });
-  }
-})
+  },
+});
 
 export const InputOperationUpdate = inputObjectType({
   name: 'InputOperationUpdate',
@@ -385,7 +388,8 @@ export const pushUpdates = mutationField('pushUpdates', {
           skip: o.skip ?? 0,
           scope: s.scope as OperationScope,
           branch: "main",
-        })) ?? [];
+        })).map((o) => migrateLegacyOperationSignature(o as Operation))  // TODO remove when no longer needed 
+        ?? [];
 
         const result = await ctx.prisma.document.pushUpdates(
           s.driveId,
