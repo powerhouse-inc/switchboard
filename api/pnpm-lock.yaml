@@ -36,8 +36,8 @@ importers:
         specifier: ^2.8.5
         version: 2.8.5
       document-drive:
-        specifier: 1.0.0-alpha-arb.88
-        version: 1.0.0-alpha-arb.88(document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
+        specifier: 1.0.0-alpha.88
+        version: 1.0.0-alpha.88(document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
       document-model:
         specifier: 1.7.0
         version: 1.7.0
@@ -1309,8 +1309,8 @@ packages:
       prisma:
         optional: true
 
-  '@prisma/client@5.14.0':
-    resolution: {integrity: sha512-akMSuyvLKeoU4LeyBAUdThP/uhVP3GuLygFE3MlYzaCb3/J8SfsYBE5PkaFuLuVpLyA6sFoW+16z/aPhNAESqg==}
+  '@prisma/client@5.17.0':
+    resolution: {integrity: sha512-N2tnyKayT0Zf7mHjwEyE8iG7FwTmXDHFZ1GnNhQp0pJUObsuel4ZZ1XwfuAYkq5mRIiC/Kot0kt0tGCfLJ70Jw==}
     engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
@@ -1876,6 +1876,10 @@ packages:
 
   '@redis/client@1.5.16':
     resolution: {integrity: sha512-X1a3xQ5kEMvTib5fBrHKh6Y+pXbeKXqziYuxOUo1ojQNECg4M5Etd1qqyhMap+lFUOAh8S7UYevgJHOm4A+NOg==}
+    engines: {node: '>=14'}
+
+  '@redis/client@1.5.17':
+    resolution: {integrity: sha512-IPvU9A31qRCZ7lds/x+ksuK/UMndd0EASveAvCvEtFFKIZjZ+m/a4a0L7S28KEWoR5ka8526hlSghDo4Hrc2Hg==}
     engines: {node: '>=14'}
 
   '@redis/graph@1.1.1':
@@ -2893,8 +2897,8 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  document-drive@1.0.0-alpha-arb.88:
-    resolution: {integrity: sha512-mbS22zp/FW1riQ+bYkZ8bAOP+gpcL7ICcPWFVC9fFV/pUVFXClLdO/vyt43kTTsX9j8c9ydQrp6J+xQtrW621A==}
+  document-drive@1.0.0-alpha.88:
+    resolution: {integrity: sha512-HwLtyr9wo5Q4c6aMKOK8rFqXO0NZwB07gVljCeCqrromcDekHeQREvYUQaqXlo4RKhQP3dyyzcI6itzS0g5qjQ==}
     peerDependencies:
       document-model: ^1.7.0
       document-model-libs: ^1.57.0
@@ -4925,6 +4929,9 @@ packages:
 
   redis@4.6.14:
     resolution: {integrity: sha512-GrNg/e33HtsQwNXL7kJT+iNFPSwE1IPmd7wzV3j4f2z0EYxZfZE7FVTmUysgAtqQQtg5NXF5SNLR9OdO/UHOfw==}
+
+  redis@4.6.15:
+    resolution: {integrity: sha512-2NtuOpMW3tnYzBw6S8mbXSX7RPzvVFCA2wFJq9oErushO2UeBkxObk+uvo7gv7n0rhWeOj/IzrHO8TjcFlRSOg==}
 
   regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
@@ -7269,7 +7276,7 @@ snapshots:
     optionalDependencies:
       prisma: 5.16.0
 
-  '@prisma/client@5.14.0(prisma@5.16.0)':
+  '@prisma/client@5.17.0(prisma@5.16.0)':
     optionalDependencies:
       prisma: 5.16.0
     optional: true
@@ -8236,27 +8243,59 @@ snapshots:
     dependencies:
       '@redis/client': 1.5.16
 
+  '@redis/bloom@1.2.0(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
+
   '@redis/client@1.5.16':
     dependencies:
       cluster-key-slot: 1.1.2
       generic-pool: 3.9.0
       yallist: 4.0.0
 
+  '@redis/client@1.5.17':
+    dependencies:
+      cluster-key-slot: 1.1.2
+      generic-pool: 3.9.0
+      yallist: 4.0.0
+    optional: true
+
   '@redis/graph@1.1.1(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
+
+  '@redis/graph@1.1.1(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
 
   '@redis/json@1.0.6(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
 
+  '@redis/json@1.0.6(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
+
   '@redis/search@1.1.6(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
 
+  '@redis/search@1.1.6(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
+
   '@redis/time-series@1.0.5(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
+
+  '@redis/time-series@1.0.5(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -9539,7 +9578,7 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  document-drive@1.0.0-alpha-arb.88(document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
+  document-drive@1.0.0-alpha.88(document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
     dependencies:
       document-model: 1.7.0
       document-model-libs: 1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
@@ -9551,9 +9590,9 @@ snapshots:
       sanitize-filename: 1.6.3
       uuid: 9.0.1
     optionalDependencies:
-      '@prisma/client': 5.14.0(prisma@5.16.0)
+      '@prisma/client': 5.17.0(prisma@5.16.0)
       localforage: 1.10.0
-      redis: 4.6.14
+      redis: 4.6.15
       sequelize: 6.37.3(sqlite3@5.1.7)
       sqlite3: 5.1.7
     transitivePeerDependencies:
@@ -11917,6 +11956,16 @@ snapshots:
       '@redis/json': 1.0.6(@redis/client@1.5.16)
       '@redis/search': 1.1.6(@redis/client@1.5.16)
       '@redis/time-series': 1.0.5(@redis/client@1.5.16)
+
+  redis@4.6.15:
+    dependencies:
+      '@redis/bloom': 1.2.0(@redis/client@1.5.17)
+      '@redis/client': 1.5.17
+      '@redis/graph': 1.1.1(@redis/client@1.5.17)
+      '@redis/json': 1.0.6(@redis/client@1.5.17)
+      '@redis/search': 1.1.6(@redis/client@1.5.17)
+      '@redis/time-series': 1.0.5(@redis/client@1.5.17)
+    optional: true
 
   regenerator-runtime@0.14.1: {}
 
