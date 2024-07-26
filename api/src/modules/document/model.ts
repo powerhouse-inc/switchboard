@@ -48,6 +48,7 @@ const loggerAdapter = new Proxy<ILogger>(
 setLogger(loggerAdapter);
 
 const redisClient = process.env.REDIS_TLS_URL ? await initRedis() : undefined;
+const redisTTL = process.env.REDIS_TTL ? parseInt(process.env.REDIS_TTL, 10) : 31556952; // defaults to 1 year
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
@@ -61,10 +62,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   driveServer = new DocumentDriveServer(
     documentModels,
     new PrismaStorage(prisma as PrismaClient),
-    redisClient ? new RedisCache(redisClient) : new MemoryCache(),
-    redisClient
-      ? new RedisQueueManager(3, 10, redisClient)
-      : new BaseQueueManager(3, 10)
+    redisClient ? new RedisCache(redisClient, redisTTL) : new MemoryCache(),
+    redisClient ? new RedisQueueManager(3, 10, redisClient) : new BaseQueueManager(3, 10),
   );
 
   async function initialize() {
