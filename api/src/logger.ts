@@ -3,9 +3,10 @@ import pino from 'pino';
 import pinoHttp from 'pino-http';
 import * as Sentry from '@sentry/node';
 import { loggerConfig } from '../logger.config';
-import { isDevelopment } from './env';
 
-const { moduleFilter, prefixFilter, logLevel, httpLogLevel } = loggerConfig;
+const {
+  moduleFilter, prefixFilter, logLevel, httpLogLevel,
+} = loggerConfig;
 
 export const dirname = (() => {
   if (typeof __dirname !== 'undefined') {
@@ -60,11 +61,11 @@ const doesPassFilters = (config: {
 
 const transportTargets: pino.TransportTargetOptions[] = [];
 
-if (isDevelopment) {
-  transportTargets.push({
-    target: 'pino-pretty',
-  });
-}
+
+
+transportTargets.push({
+  target: 'pino-pretty',
+});
 
 if (process.env.SENTRY_DSN) {
   transportTargets.push({
@@ -89,6 +90,32 @@ if (process.env.SENTRY_DSN) {
     },
   });
 }
+
+const { LOKI_URL, LOKI_USERNAME, LOKI_PASSWORD } = process.env;
+if (LOKI_URL && LOKI_USERNAME && LOKI_PASSWORD) {
+  const basePath = process.env.BASE_PATH || '/';
+  const baseElements = basePath.split('/');
+
+  const labels = { team: 'powerhouse', application: 'switchboard', env: 'develop' };
+  labels.env = baseElements[1] ?? 'develop';
+  labels.team = baseElements[2] ?? 'powerhouse';
+  labels.application = baseElements[3] ?? 'switchboard';
+
+  transportTargets.push({
+    target: 'pino-loki',
+    options: {
+      batching: true,
+      interval: 5,
+      labels,
+      host: LOKI_URL,
+      basicAuth: {
+        username: LOKI_USERNAME,
+        password: LOKI_PASSWORD,
+      },
+    },
+  });
+}
+
 export const expressLogger = pinoHttp({
   level: httpLogLevel,
   msgPrefix: formatPrefix('express'),
@@ -106,7 +133,7 @@ const logger = pino({
 
 export const getChildLogger = (
   options?: pino.ChildLoggerOptions,
-  bindings?: pino.Bindings
+  bindings?: pino.Bindings,
 ) => {
   // get caller module of this function
   const caller = Error().stack?.split('at ').at(2)?.trim().split(':')[0] || '';
