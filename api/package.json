@@ -48,6 +48,7 @@
     "nexus-validation-plugin": "^0.2.0",
     "pino": "^8.20.0",
     "pino-http": "^8.6.1",
+    "pino-loki": "^2.3.0",
     "pino-pretty": "^10.3.1",
     "pino-sentry-transport": "^1.1.0",
     "prisma": "^5.14.0",
