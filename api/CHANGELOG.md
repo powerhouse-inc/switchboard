@@ -1,3 +1,10 @@
+# [1.0.0-dev.23](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2024-07-29)
+
+
+### Bug Fixes
+
+* release ([0f21557](https://github.com/powerhouse-inc/switchboard/commit/0f21557247926da98f0616c7bcaf0004f087cb0e))
+
 # [1.0.0-dev.22](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2024-07-29)
 
 
