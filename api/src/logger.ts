@@ -61,11 +61,11 @@ const doesPassFilters = (config: {
 
 const transportTargets: pino.TransportTargetOptions[] = [];
 
-
-
-transportTargets.push({
-  target: 'pino-pretty',
-});
+if (process.env.NOD_ENV !== 'production') {
+  transportTargets.push({
+    target: 'pino-pretty',
+  });
+}
 
 if (process.env.SENTRY_DSN) {
   transportTargets.push({
@@ -91,12 +91,16 @@ if (process.env.SENTRY_DSN) {
   });
 }
 
-const { LOKI_URL, LOKI_USERNAME, LOKI_PASSWORD } = process.env;
+const { LOKI_URL, LOKI_USERNAME, LOKI_PASSWORD, LOKI_ENV } = process.env;
 if (LOKI_URL && LOKI_USERNAME && LOKI_PASSWORD) {
   const basePath = process.env.BASE_PATH || '/';
   const baseElements = basePath.split('/');
 
-  const labels = { team: 'powerhouse', application: 'switchboard', env: 'develop' };
+  const labels = {
+    team: 'powerhouse',
+    application: 'switchboard',
+    env: LOKI_ENV ?? 'develop',
+  };
   labels.env = baseElements[1] ?? 'develop';
   labels.team = baseElements[2] ?? 'powerhouse';
   labels.application = baseElements[3] ?? 'switchboard';
