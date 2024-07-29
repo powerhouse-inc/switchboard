@@ -98,13 +98,10 @@ if (LOKI_URL && LOKI_USERNAME && LOKI_PASSWORD) {
   const baseElements = basePath.split('/');
 
   const labels = {
-    team: 'powerhouse',
-    application: 'switchboard',
-    env: LOKI_ENV ?? 'develop',
+    team: baseElements[2] ?? 'powerhouse',
+    application: baseElements[3] ?? 'switchboard',
+    env: LOKI_ENV ?? baseElements[1] ?? 'develop',
   };
-  labels.env = baseElements[1] ?? 'develop';
-  labels.team = baseElements[2] ?? 'powerhouse';
-  labels.application = baseElements[3] ?? 'switchboard';
 
   transportTargets.push({
     target: 'pino-loki',
