@@ -3,6 +3,7 @@ import pino from 'pino';
 import pinoHttp from 'pino-http';
 import * as Sentry from '@sentry/node';
 import { loggerConfig } from '../logger.config';
+import { isDevelopment } from './env';
 
 const {
   moduleFilter, prefixFilter, logLevel, httpLogLevel,
@@ -61,7 +62,7 @@ const doesPassFilters = (config: {
 
 const transportTargets: pino.TransportTargetOptions[] = [];
 
-if (process.env.NOD_ENV !== 'production') {
+if (isDevelopment) {
   transportTargets.push({
     target: 'pino-pretty',
   });
