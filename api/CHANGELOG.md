@@ -1,3 +1,10 @@
+# [1.0.0-dev.20](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2024-07-29)
+
+
+### Features
+
+* added loki transport for pino ([51dfcf8](https://github.com/powerhouse-inc/switchboard/commit/51dfcf88cfeb785841553f7c72d80b518eadd62f))
+
 # [1.0.0-dev.19](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2024-07-22)
 
 
