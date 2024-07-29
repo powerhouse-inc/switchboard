@@ -1,3 +1,16 @@
+# [1.0.0-dev.21](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2024-07-29)
+
+
+### Bug Fixes
+
+* labels ([a0a79ad](https://github.com/powerhouse-inc/switchboard/commit/a0a79ad8f7f7127dd0a0337435959fd2b3309b52))
+* loki labels ([#261](https://github.com/powerhouse-inc/switchboard/issues/261)) ([4356fef](https://github.com/powerhouse-inc/switchboard/commit/4356fef08ae77b9b336a8fc595f83206f16cb2a1))
+
+
+### Features
+
+* added loki transport for pino ([db009a1](https://github.com/powerhouse-inc/switchboard/commit/db009a169f64d41c5dc94de3f6b86b32985ae823))
+
 # [1.0.0-dev.20](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2024-07-29)
 
 
