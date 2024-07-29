@@ -1,3 +1,10 @@
+# [1.0.0-dev.24](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2024-07-29)
+
+
+### Bug Fixes
+
+* set proper route ([73b18eb](https://github.com/powerhouse-inc/switchboard/commit/73b18ebbb32aadceceb659835b1caff7e179b009))
+
 # [1.0.0-dev.23](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2024-07-29)
 
 
