@@ -1,3 +1,10 @@
+# [1.0.0-dev.22](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2024-07-29)
+
+
+### Features
+
+* activated metrics ([aae6e4a](https://github.com/powerhouse-inc/switchboard/commit/aae6e4a9e335fcc87f141024351ea912f37504d0))
+
 # [1.0.0-dev.21](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2024-07-29)
 
 
