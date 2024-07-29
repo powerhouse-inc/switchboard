@@ -36,7 +36,7 @@ async function startServer(
   }
 
   app.use(errorHandler);
-  app.get('/metrics', async (req: express.Request, res: express.Response) => {
+  router.get('/metrics', async (req: express.Request, res: express.Response) => {
     const prismaMetrics = await prisma.$metrics.prometheus();
     const appMetrics = await register.metrics();
     return res.send(prismaMetrics + appMetrics);

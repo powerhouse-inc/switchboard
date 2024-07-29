@@ -74,7 +74,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
     });
   });
 
-  app.get('/versions', async (req, res) => {
+  router.get('/versions', async (req, res) => {
     const {
       'document-drive': docDrive,
       'document-model': docModel,
