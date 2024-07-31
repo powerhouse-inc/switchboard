@@ -26,6 +26,10 @@ export const createApp = (): { app: Express; router: express.Router } => {
       dsn: process.env.SENTRY_DSN,
       environment: process.env.SENTRY_ENV ?? 'dev',
       integrations: [
+        Sentry.extraErrorDataIntegration({
+          depth: 15,
+          captureErrorCause: true,
+        }),
         nodeProfilingIntegration(),
         new Sentry.Integrations.Express({
           app,
@@ -33,7 +37,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
       ],
       tracesSampleRate: 1.0,
       ignoreErrors: [
-        /Transmitter .+ not found/,
+        /Transmitter(?: .+)? not found/,
         /^Failed to fetch strands$/,
         /Drive with id .+ not found/,
         /Document with id .+ not found/,
@@ -79,8 +83,9 @@ export const createApp = (): { app: Express; router: express.Router } => {
     res.setHeader('Content-Type', 'text/html');
     const basePath =
       process.env.BASE_PATH === '/' ? '' : process.env.BASE_PATH || '';
-    const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
-      }`;
+    const endpoint = `${basePath}${
+      req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
+    }`;
     res.send(
       renderPlaygroundPage({
         endpoint: endpoint,

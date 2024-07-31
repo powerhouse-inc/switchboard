@@ -1,23 +1,18 @@
-# [1.0.0-dev.11](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.10...v1.0.0-dev.11) (2024-07-02)
+# [1.0.0-dev.17](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2024-07-22)
 
 
-### Bug Fixes
+### Features
 
-* url encode ([b942520](https://github.com/powerhouse-inc/switchboard/commit/b942520c22b95722dc0e66b46c58d65547313104))
+* default redis ttl to 1 year ([781255f](https://github.com/powerhouse-inc/switchboard/commit/781255f21a0a4faa29830c257f32ea13a7de6fac))
 
-# [1.0.0-dev.10](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.9...v1.0.0-dev.10) (2024-07-02)
-
-
-### Bug Fixes
-
-* url decode ([c98e783](https://github.com/powerhouse-inc/switchboard/commit/c98e783f7eeb1db89cb582e25ecf9313a3c3a151))
-
-# [1.0.0-dev.9](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.8...v1.0.0-dev.9) (2024-07-01)
+# [1.0.0-dev.16](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2024-07-22)
 
 
-### Bug Fixes
+### Features
 
-* rwa document query ([ecc56fa](https://github.com/powerhouse-inc/switchboard/commit/ecc56fa112b8aa4658cd08c0f75ad6b6a223f057))
+* better sentry error reporting ([a97591a](https://github.com/powerhouse-inc/switchboard/commit/a97591ad6f16add15ba32694460d84478d4423fa))
+
+# [1.0.0-dev.15](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2024-07-19)
 
 
 ### Features

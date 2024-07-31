@@ -196,7 +196,6 @@ export interface NexusGenFieldTypes {
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
     deleteDrive: boolean | null; // Boolean
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
-    setDriveIcon: boolean | null; // Boolean
     setDriveName: boolean | null; // Boolean
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
@@ -282,7 +281,6 @@ export interface NexusGenFieldTypeNames {
     createSession: 'SessionOutput'
     deleteDrive: 'Boolean'
     revokeSession: 'Session'
-    setDriveIcon: 'Boolean'
     setDriveName: 'Boolean'
     solveChallenge: 'SessionOutput'
   }
@@ -344,10 +342,6 @@ export interface NexusGenArgTypes {
     }
     revokeSession: { // args
       sessionId: string; // String!
-    }
-    setDriveIcon: { // args
-      icon: string; // String!
-      id: string; // String!
     }
     setDriveName: { // args
       id: string; // String!

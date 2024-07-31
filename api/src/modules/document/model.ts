@@ -11,7 +11,6 @@ import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
 import { module as DocumentModelLib } from 'document-model/document-model';
-import { module as DocArbStip } from 'doc-arb-stip/arbitrum-stip-grantee';
 import { DocumentModel, Operation } from 'document-model/document';
 import {
   Listener,
@@ -48,26 +47,31 @@ const loggerAdapter = new Proxy<ILogger>(
 setLogger(loggerAdapter);
 
 const redisClient = process.env.REDIS_TLS_URL ? await initRedis() : undefined;
-const redisTTL = process.env.REDIS_TTL ? parseInt(process.env.REDIS_TTL, 10) : 31556952; // defaults to 1 year
+const redisTTL = process.env.REDIS_TTL
+  ? parseInt(process.env.REDIS_TTL, 10)
+  : 31556952; // defaults to 1 year
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
-    DocArbStip,
     ...Object.values(DocumentModelsLibs),
   ] as DocumentModel[];
 
   let driveServer: DocumentDriveServer;
+  const storage = new PrismaStorage(prisma as PrismaClient);
 
   driveServer = new DocumentDriveServer(
     documentModels,
-    new PrismaStorage(prisma as PrismaClient),
+    storage,
     redisClient ? new RedisCache(redisClient, redisTTL) : new MemoryCache(),
-    redisClient ? new RedisQueueManager(3, 10, redisClient) : new BaseQueueManager(3, 10),
+    redisClient
+      ? new RedisQueueManager(3, 10, redisClient)
+      : new BaseQueueManager(3, 10)
   );
 
   async function initialize() {
     try {
+      await storage.migrateOperationSignatures(); // TODO remove when migration is done
       await driveServer.initialize();
       await init(driveServer, prisma);
     } catch (e: any) {

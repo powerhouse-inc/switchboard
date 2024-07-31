@@ -35,18 +35,15 @@ importers:
       cors:
         specifier: ^2.8.5
         version: 2.8.5
-      doc-arb-stip:
-        specifier: npm:document-model-libs@1.59.0-arbitrum-stip.14
-        version: document-model-libs@1.59.0-arbitrum-stip.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       document-drive:
-        specifier: 1.0.0-alpha-arb.88
-        version: 1.0.0-alpha-arb.88(document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
+        specifier: 1.0.0-alpha.88
+        version: 1.0.0-alpha.88(document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
       document-model:
         specifier: 1.7.0
         version: 1.7.0
       document-model-libs:
-        specifier: 1.59.0-arbitrum.14
-        version: 1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
+        specifier: 1.59.0-arbitrum-stip.16
+        version: 1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -559,8 +556,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/runtime@7.24.7':
-    resolution: {integrity: sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==}
+  '@babel/runtime@7.24.8':
+    resolution: {integrity: sha512-5F7SDGs1T72ZczbRwbGO9lQi0NLjQxzl6i4lJxLxfW9U5UluCSyEJeniWvnhl3/euNiqQVbo8zruhsDfid0esA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.24.7':
@@ -1312,8 +1309,8 @@ packages:
       prisma:
         optional: true
 
-  '@prisma/client@5.14.0':
-    resolution: {integrity: sha512-akMSuyvLKeoU4LeyBAUdThP/uhVP3GuLygFE3MlYzaCb3/J8SfsYBE5PkaFuLuVpLyA6sFoW+16z/aPhNAESqg==}
+  '@prisma/client@5.17.0':
+    resolution: {integrity: sha512-N2tnyKayT0Zf7mHjwEyE8iG7FwTmXDHFZ1GnNhQp0pJUObsuel4ZZ1XwfuAYkq5mRIiC/Kot0kt0tGCfLJ70Jw==}
     engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
@@ -1879,6 +1876,10 @@ packages:
 
   '@redis/client@1.5.16':
     resolution: {integrity: sha512-X1a3xQ5kEMvTib5fBrHKh6Y+pXbeKXqziYuxOUo1ojQNECg4M5Etd1qqyhMap+lFUOAh8S7UYevgJHOm4A+NOg==}
+    engines: {node: '>=14'}
+
+  '@redis/client@1.5.17':
+    resolution: {integrity: sha512-IPvU9A31qRCZ7lds/x+ksuK/UMndd0EASveAvCvEtFFKIZjZ+m/a4a0L7S28KEWoR5ka8526hlSghDo4Hrc2Hg==}
     engines: {node: '>=14'}
 
   '@redis/graph@1.1.1':
@@ -2575,6 +2576,9 @@ packages:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
     engines: {node: '>=10'}
 
+  classnames@2.5.1:
+    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
+
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
     engines: {node: '>=6'}
@@ -2646,6 +2650,9 @@ packages:
 
   compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
+
+  complex.js@2.1.1:
+    resolution: {integrity: sha512-8njCHOTtFFLtegk6zQo0kkVX1rngygb/KQI6z1qZxlFI3scluC+LVTCFbrkWjBv4vvLlbQ9t88IPMC6k95VTTg==}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -2811,6 +2818,9 @@ packages:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
     engines: {node: '>=0.10.0'}
 
+  decimal.js@10.4.3:
+    resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
+
   decompress-response@6.0.0:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
     engines: {node: '>=10'}
@@ -2887,20 +2897,14 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  document-drive@1.0.0-alpha-arb.88:
-    resolution: {integrity: sha512-mbS22zp/FW1riQ+bYkZ8bAOP+gpcL7ICcPWFVC9fFV/pUVFXClLdO/vyt43kTTsX9j8c9ydQrp6J+xQtrW621A==}
+  document-drive@1.0.0-alpha.88:
+    resolution: {integrity: sha512-HwLtyr9wo5Q4c6aMKOK8rFqXO0NZwB07gVljCeCqrromcDekHeQREvYUQaqXlo4RKhQP3dyyzcI6itzS0g5qjQ==}
     peerDependencies:
       document-model: ^1.7.0
       document-model-libs: ^1.57.0
 
-  document-model-libs@1.59.0-arbitrum-stip.14:
-    resolution: {integrity: sha512-2YK/Y1SVl3l5YIK2tlAgvP6zP4HSgPLZjY8a93/jAI9n+HEzZ3id4axZwhEHGHJGAdgO9qtG6tukN/102WMSlw==}
-    peerDependencies:
-      react: ^18.2.0
-      react-dom: ^18.2.0
-
-  document-model-libs@1.59.0-arbitrum.14:
-    resolution: {integrity: sha512-MJl6DFaTDlKOUwUEpgqsahrer27bP1H6Hgrh0YcmF/3yl9sxJXsyfV4C1NmAAS8Pl9RAelMA8WJxRzB8MOWaAg==}
+  document-model-libs@1.59.0-arbitrum-stip.16:
+    resolution: {integrity: sha512-Pt02kp4fNL7jlIg2MheGrDkSpDJfi6wI6+NKNPf6u0+ClNL6tc3o9IBNux8akyC1wtMGLSBteVL95Xg4hSVj0Q==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -3027,6 +3031,9 @@ packages:
 
   escape-html@1.0.3:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
+
+  escape-latex@1.2.0:
+    resolution: {integrity: sha512-nV5aVWW1K0wEiUIEdZ4erkGGH8mDxGyxSeqPzRNtWP7ataw+/olFObw7hujFWlVjNsaDFw5VZ5NzVSIqRgfTiw==}
 
   escape-string-regexp@1.0.5:
     resolution: {integrity: sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==}
@@ -3282,6 +3289,9 @@ packages:
   forwarded@0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
+
+  fraction.js@4.3.7:
+    resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
   fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
@@ -3875,6 +3885,9 @@ packages:
     resolution: {integrity: sha512-qjdpeo2yKlYTH7nFdK0vbZWuTCesk4o63v5iVOlhMQPfuIZQfW/HI35SjfhA+4qpg36rnFSvUK5b1m+ckIblQQ==}
     engines: {node: '>= 0.6.0'}
 
+  javascript-natural-sort@0.7.1:
+    resolution: {integrity: sha512-nO6jcEfZWQXDhOiBtG2KvKyEptz7RVbpGP4vTD2hLBdmNQSsCiicO2Ioinv6UI4y9ukqnBpy+XZ9H6uLNgJTlw==}
+
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -4114,6 +4127,11 @@ packages:
 
   marked@12.0.2:
     resolution: {integrity: sha512-qXUm7e/YKFoqFPYPa3Ukg9xlI5cyAtGmyEIzMfW//m6kXwCy2Ps9DYf5ioijFKQ8qyuscrHoY04iJGctu2Kg0Q==}
+    engines: {node: '>= 18'}
+    hasBin: true
+
+  mathjs@13.0.3:
+    resolution: {integrity: sha512-GpP9OW6swA5POZXvgpc/1FYkAr8lKgV04QHS1tIU60klFfplVCYaNzn6qy0vSp0hAQQN7shcx9CeB507dlLujA==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -4868,6 +4886,12 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
 
+  react-tooltip@5.27.1:
+    resolution: {integrity: sha512-a+micPXcMOMt11CYlwJD4XShcqGziasHco4NPe1OFw298WBTILMyzUgNC1LAFViAe791JdHNVSJIpzhZm2MvDA==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
+
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
@@ -4905,6 +4929,9 @@ packages:
 
   redis@4.6.14:
     resolution: {integrity: sha512-GrNg/e33HtsQwNXL7kJT+iNFPSwE1IPmd7wzV3j4f2z0EYxZfZE7FVTmUysgAtqQQtg5NXF5SNLR9OdO/UHOfw==}
+
+  redis@4.6.15:
+    resolution: {integrity: sha512-2NtuOpMW3tnYzBw6S8mbXSX7RPzvVFCA2wFJq9oErushO2UeBkxObk+uvo7gv7n0rhWeOj/IzrHO8TjcFlRSOg==}
 
   regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
@@ -5008,6 +5035,9 @@ packages:
 
   secure-json-parse@2.7.0:
     resolution: {integrity: sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw==}
+
+  seedrandom@3.0.5:
+    resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
 
   semantic-release@24.0.0:
     resolution: {integrity: sha512-v46CRPw+9eI3ZuYGF2oAjqPqsfbnfFTwLBgQsv/lch4goD09ytwOTESMN4QIrx/wPLxUGey60/NMx+ANQtWRsA==}
@@ -5376,6 +5406,9 @@ packages:
     resolution: {integrity: sha512-wMctrWD2HZZLuIlchlkE2dfXJh7J2KDI9Dwl+2abPYg0mswQHfOAyQW3jJg1pY5VfttSINZuKcXoB3FGypVklA==}
     engines: {node: '>=8'}
 
+  tiny-emitter@2.1.0:
+    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
+
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
@@ -5500,6 +5533,10 @@ packages:
   typed-array-length@1.0.6:
     resolution: {integrity: sha512-/OxDN6OtAk5KBpGb28T+HZc2M+ADtvRxXrKKbUwtsLgdoxgX13hyy7ek6bFRl5+aBs2yZzB0c4CnQfAtVypW/g==}
     engines: {node: '>= 0.4'}
+
+  typed-function@4.2.1:
+    resolution: {integrity: sha512-EGjWssW7Tsk4DGfE+5yluuljS1OGYWiI1J6e8puZz9nTMM51Oug8CD5Zo4gWMsOhq5BI+1bF+rWTm4Vbj3ivRA==}
+    engines: {node: '>= 18'}
 
   typedarray.prototype.slice@1.0.3:
     resolution: {integrity: sha512-8WbVAQAUlENo1q3c3zZYuy5k9VzBQvp8AX9WOtbvyWlLM1v5JaSRmjubLjzHF4JFtptjH/5c/i95yaElvcjC0A==}
@@ -5984,7 +6021,7 @@ snapshots:
       '@babel/core': 7.24.7
       '@babel/generator': 7.24.7
       '@babel/parser': 7.24.7
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.24.8
       '@babel/traverse': 7.24.7
       '@babel/types': 7.24.7
       babel-preset-fbjs: 3.4.0(@babel/core@7.24.7)
@@ -6328,7 +6365,7 @@ snapshots:
       '@babel/core': 7.24.7
       '@babel/helper-plugin-utils': 7.24.7
 
-  '@babel/runtime@7.24.7':
+  '@babel/runtime@7.24.8':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -7239,7 +7276,7 @@ snapshots:
     optionalDependencies:
       prisma: 5.16.0
 
-  '@prisma/client@5.14.0(prisma@5.16.0)':
+  '@prisma/client@5.17.0(prisma@5.16.0)':
     optionalDependencies:
       prisma: 5.16.0
     optional: true
@@ -8206,27 +8243,59 @@ snapshots:
     dependencies:
       '@redis/client': 1.5.16
 
+  '@redis/bloom@1.2.0(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
+
   '@redis/client@1.5.16':
     dependencies:
       cluster-key-slot: 1.1.2
       generic-pool: 3.9.0
       yallist: 4.0.0
 
+  '@redis/client@1.5.17':
+    dependencies:
+      cluster-key-slot: 1.1.2
+      generic-pool: 3.9.0
+      yallist: 4.0.0
+    optional: true
+
   '@redis/graph@1.1.1(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
+
+  '@redis/graph@1.1.1(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
 
   '@redis/json@1.0.6(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
 
+  '@redis/json@1.0.6(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
+
   '@redis/search@1.1.6(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
 
+  '@redis/search@1.1.6(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
+
   '@redis/time-series@1.0.5(@redis/client@1.5.16)':
     dependencies:
       '@redis/client': 1.5.16
+
+  '@redis/time-series@1.0.5(@redis/client@1.5.17)':
+    dependencies:
+      '@redis/client': 1.5.17
+    optional: true
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -8480,7 +8549,7 @@ snapshots:
   '@testing-library/dom@9.3.4':
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.24.8
       '@types/aria-query': 5.0.4
       aria-query: 5.1.3
       chalk: 4.1.2
@@ -8491,7 +8560,7 @@ snapshots:
   '@testing-library/jest-dom@6.4.6(vitest@0.32.4)':
     dependencies:
       '@adobe/css-tools': 4.4.0
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.24.8
       aria-query: 5.3.0
       chalk: 3.0.0
       css.escape: 1.5.1
@@ -9205,6 +9274,8 @@ snapshots:
   chownr@2.0.0:
     optional: true
 
+  classnames@2.5.1: {}
+
   clean-stack@2.2.0: {}
 
   clean-stack@5.2.0:
@@ -9278,6 +9349,8 @@ snapshots:
     dependencies:
       array-ify: 1.0.0
       dot-prop: 5.3.0
+
+  complex.js@2.1.1: {}
 
   concat-map@0.0.1: {}
 
@@ -9424,6 +9497,8 @@ snapshots:
 
   decamelize@1.2.0: {}
 
+  decimal.js@10.4.3: {}
+
   decompress-response@6.0.0:
     dependencies:
       mimic-response: 3.1.0
@@ -9503,10 +9578,10 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  document-drive@1.0.0-alpha-arb.88(document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
+  document-drive@1.0.0-alpha.88(document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
     dependencies:
       document-model: 1.7.0
-      document-model-libs: 1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
+      document-model-libs: 1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.9.0
       graphql-request: 6.1.0(encoding@0.1.13)(graphql@16.9.0)
@@ -9515,9 +9590,9 @@ snapshots:
       sanitize-filename: 1.6.3
       uuid: 9.0.1
     optionalDependencies:
-      '@prisma/client': 5.14.0(prisma@5.16.0)
+      '@prisma/client': 5.17.0(prisma@5.16.0)
       localforage: 1.10.0
-      redis: 4.6.14
+      redis: 4.6.15
       sequelize: 6.37.3(sqlite3@5.1.7)
       sqlite3: 5.1.7
     transitivePeerDependencies:
@@ -9534,7 +9609,7 @@ snapshots:
       - supports-color
       - tedious
 
-  document-model-libs@1.59.0-arbitrum-stip.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
+  document-model-libs@1.59.0-arbitrum-stip.16(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
     dependencies:
       '@acaldas/graphql-codegen-typescript-validation-schema': 0.12.3(encoding@0.1.13)(graphql@16.9.0)
       '@graphql-codegen/core': 4.0.2(graphql@16.9.0)
@@ -9547,38 +9622,12 @@ snapshots:
       deep-object-diff: 1.1.9
       jsonc-parser: 3.3.1
       jszip: 3.10.1
+      mathjs: 13.0.3
       react: 18.3.1
       react-aria-components: 1.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-datepicker: 6.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-dom: 18.3.1(react@18.3.1)
-      tailwind-merge: 2.3.0
-    transitivePeerDependencies:
-      - '@jest/globals'
-      - '@types/bun'
-      - '@types/jest'
-      - encoding
-      - graphql
-      - jest
-      - supports-color
-      - vitest
-
-  document-model-libs@1.59.0-arbitrum.14(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
-    dependencies:
-      '@acaldas/graphql-codegen-typescript-validation-schema': 0.12.3(encoding@0.1.13)(graphql@16.9.0)
-      '@graphql-codegen/core': 4.0.2(graphql@16.9.0)
-      '@graphql-codegen/typescript': 4.0.7(encoding@0.1.13)(graphql@16.9.0)
-      '@headlessui/react': 1.7.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@internationalized/date': 3.5.4
-      '@storybook/test': 8.1.10(vitest@0.32.4)
-      copy-anything: 3.0.5
-      date-fns: 3.6.0
-      deep-object-diff: 1.1.9
-      jsonc-parser: 3.3.1
-      jszip: 3.10.1
-      react: 18.3.1
-      react-aria-components: 1.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-datepicker: 6.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-dom: 18.3.1(react@18.3.1)
+      react-tooltip: 5.27.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwind-merge: 2.3.0
     transitivePeerDependencies:
       - '@jest/globals'
@@ -9814,6 +9863,8 @@ snapshots:
   escalade@3.1.2: {}
 
   escape-html@1.0.3: {}
+
+  escape-latex@1.2.0: {}
 
   escape-string-regexp@1.0.5: {}
 
@@ -10215,6 +10266,8 @@ snapshots:
       fetch-blob: 3.2.0
 
   forwarded@0.2.0: {}
+
+  fraction.js@4.3.7: {}
 
   fresh@0.5.2: {}
 
@@ -10812,6 +10865,8 @@ snapshots:
 
   java-properties@1.0.2: {}
 
+  javascript-natural-sort@0.7.1: {}
+
   joycon@3.1.1: {}
 
   js-sha3@0.8.0: {}
@@ -11054,6 +11109,18 @@ snapshots:
       supports-hyperlinks: 3.0.0
 
   marked@12.0.2: {}
+
+  mathjs@13.0.3:
+    dependencies:
+      '@babel/runtime': 7.24.8
+      complex.js: 2.1.1
+      decimal.js: 10.4.3
+      escape-latex: 1.2.0
+      fraction.js: 4.3.7
+      javascript-natural-sort: 0.7.1
+      seedrandom: 3.0.5
+      tiny-emitter: 2.1.0
+      typed-function: 4.2.1
 
   media-typer@0.3.0: {}
 
@@ -11822,6 +11889,13 @@ snapshots:
       '@react-types/shared': 3.23.1(react@18.3.1)
       react: 18.3.1
 
+  react-tooltip@5.27.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@floating-ui/dom': 1.6.7
+      classnames: 2.5.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
@@ -11883,6 +11957,16 @@ snapshots:
       '@redis/search': 1.1.6(@redis/client@1.5.16)
       '@redis/time-series': 1.0.5(@redis/client@1.5.16)
 
+  redis@4.6.15:
+    dependencies:
+      '@redis/bloom': 1.2.0(@redis/client@1.5.17)
+      '@redis/client': 1.5.17
+      '@redis/graph': 1.1.1(@redis/client@1.5.17)
+      '@redis/json': 1.0.6(@redis/client@1.5.17)
+      '@redis/search': 1.1.6(@redis/client@1.5.17)
+      '@redis/time-series': 1.0.5(@redis/client@1.5.17)
+    optional: true
+
   regenerator-runtime@0.14.1: {}
 
   regexp.prototype.flags@1.5.2:
@@ -11900,7 +11984,7 @@ snapshots:
 
   relay-runtime@12.0.0(encoding@0.1.13):
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.24.8
       fbjs: 3.0.5(encoding@0.1.13)
       invariant: 2.2.4
     transitivePeerDependencies:
@@ -11978,6 +12062,8 @@ snapshots:
   scrypt-js@3.0.1: {}
 
   secure-json-parse@2.7.0: {}
+
+  seedrandom@3.0.5: {}
 
   semantic-release@24.0.0(typescript@5.5.2):
     dependencies:
@@ -12354,7 +12440,7 @@ snapshots:
 
   tailwind-merge@2.3.0:
     dependencies:
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.24.8
 
   tar-fs@2.1.1:
     dependencies:
@@ -12426,6 +12512,8 @@ snapshots:
       convert-hrtime: 5.0.0
 
   timestring@6.0.0: {}
+
+  tiny-emitter@2.1.0: {}
 
   tiny-invariant@1.3.3: {}
 
@@ -12545,6 +12633,8 @@ snapshots:
       has-proto: 1.0.3
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
+
+  typed-function@4.2.1: {}
 
   typedarray.prototype.slice@1.0.3:
     dependencies:
