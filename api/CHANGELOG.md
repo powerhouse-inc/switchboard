@@ -1,3 +1,10 @@
+# [1.0.0-dev.25](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2024-08-02)
+
+
+### Features
+
+* updated document model deps ([a48e83d](https://github.com/powerhouse-inc/switchboard/commit/a48e83dc4f9b744471e2c3a7e29d4c86605bb69b))
+
 # [1.0.0-dev.24](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2024-07-29)
 
 
