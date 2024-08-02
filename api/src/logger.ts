@@ -1,6 +1,7 @@
 import path from 'path';
 import pino from 'pino';
 import pinoHttp from 'pino-http';
+import * as Sentry from '@sentry/node';
 import { loggerConfig } from '../logger.config';
 import { isDevelopment } from './env';
 
@@ -75,10 +76,11 @@ if (process.env.SENTRY_DSN) {
         dsn: process.env.SENTRY_DSN,
         environment: process.env.SENTRY_ENV ?? 'dev',
         ignoreErrors: [
-          /Transmitter .+ not found/,
+          /Transmitter(?: .+)? not found/,
           /^Failed to fetch strands$/,
           /Drive with id .+ not found/,
           /Document with id .+ not found/,
+          'Drive not found',
         ],
         // additional options for sentry
       },
@@ -89,6 +91,33 @@ if (process.env.SENTRY_DSN) {
     },
   });
 }
+
+const { LOKI_URL, LOKI_USERNAME, LOKI_PASSWORD, LOKI_ENV } = process.env;
+if (LOKI_URL && LOKI_USERNAME && LOKI_PASSWORD) {
+  const basePath = process.env.BASE_PATH || '/';
+  const baseElements = basePath.split('/');
+
+  const labels = {
+    team: baseElements[2] ?? 'powerhouse',
+    application: baseElements[3] ?? 'switchboard',
+    env: LOKI_ENV ?? baseElements[1] ?? 'develop',
+  };
+
+  transportTargets.push({
+    target: 'pino-loki',
+    options: {
+      batching: true,
+      interval: 5,
+      labels,
+      host: LOKI_URL,
+      basicAuth: {
+        username: LOKI_USERNAME,
+        password: LOKI_PASSWORD,
+      },
+    },
+  });
+}
+
 export const expressLogger = pinoHttp({
   level: httpLogLevel,
   msgPrefix: formatPrefix('express'),

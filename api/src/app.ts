@@ -1,14 +1,15 @@
 import type { Express } from 'express';
 import express from 'express';
-import { getChildLogger } from './logger';
-import basePrisma from './database';
 import { renderPlaygroundPage } from 'graphql-playground-html';
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import bodyParser from 'body-parser';
-import prisma from './database';
+import promBundle from 'express-prom-bundle';
 
 import { dependencies } from '../package.json';
+import { getChildLogger } from './logger';
+import prisma from './database';
+import register from './metrics';
 
 const logger = getChildLogger({ msgPrefix: 'APP' });
 const startupTime = new Date();
@@ -18,6 +19,13 @@ export const createApp = (): { app: Express; router: express.Router } => {
   const app = express();
   const router = express.Router();
 
+  const metricsMiddleware = promBundle({
+    includeMethod: true,
+    autoregister: false,
+    promRegistry: register,
+  });
+  app.use(metricsMiddleware);
+
   // fixes request entity too large
   app.use(bodyParser.json({ limit: '50mb' }));
 
@@ -26,6 +34,10 @@ export const createApp = (): { app: Express; router: express.Router } => {
       dsn: process.env.SENTRY_DSN,
       environment: process.env.SENTRY_ENV ?? 'dev',
       integrations: [
+        Sentry.extraErrorDataIntegration({
+          depth: 15,
+          captureErrorCause: true,
+        }),
         nodeProfilingIntegration(),
         new Sentry.Integrations.Express({
           app,
@@ -33,7 +45,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
       ],
       tracesSampleRate: 1.0,
       ignoreErrors: [
-        /Transmitter .+ not found/,
+        /Transmitter(?: .+)? not found/,
         /^Failed to fetch strands$/,
         /Drive with id .+ not found/,
         /Document with id .+ not found/,
@@ -47,7 +59,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
 
   app.get('/healthz', async (_req, res) => {
     try {
-      await basePrisma.user.findFirst();
+      await prisma.user.findFirst();
     } catch (error: any) {
       return res.status(500).json({
         status: `Failed database initialization check with error: ${error?.message}`,
@@ -62,7 +74,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
     });
   });
 
-  app.get('/versions', async (req, res) => {
+  router.get('/versions', async (req, res) => {
     const {
       'document-drive': docDrive,
       'document-model': docModel,
@@ -77,17 +89,15 @@ export const createApp = (): { app: Express; router: express.Router } => {
 
   router.get('/explorer/:driveId?', (req, res) => {
     res.setHeader('Content-Type', 'text/html');
-    const basePath =
-      process.env.BASE_PATH === '/' ? '' : process.env.BASE_PATH || '';
-    const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'
-      }`;
+    const basePath = process.env.BASE_PATH === '/' ? '' : process.env.BASE_PATH || '';
+    const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'}`;
     res.send(
       renderPlaygroundPage({
-        endpoint: endpoint,
+        endpoint,
         settings: {
           'request.credentials': 'include',
         },
-      })
+      }),
     );
   });
 
@@ -105,7 +115,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
     }
 
     const result = await prisma.document.closeScopeOfWorkIssue(
-      req.body.issue.number
+      req.body.issue.number,
     );
     if (!result) {
       throw new Error('Failed to close issue');

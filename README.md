@@ -10,9 +10,10 @@ Open-source API over the [document model](https://github.com/makerdao-ses/docume
 ![app](./.github/app.png)
 
 ## Project structure
-- [`/api`](./api) directory contains the core logic that creates the API over the database
-- [`/frontend`](./frontend) directory contains the frontend-related code
-- [`./wundergraph`](./wundergraph) directory contains service to compose multiple graphql endpoints together (e.g.: only created by `api` service and one by [ecosystem-api](https://github.com/makerdao-ses/ecosystem-api))
+
+-   [`/api`](./api) directory contains the core logic that creates the API over the database
+-   [`/frontend`](./frontend) directory contains the frontend-related code
+-   [`./wundergraph`](./wundergraph) directory contains service to compose multiple graphql endpoints together (e.g.: only created by `api` service and one by [ecosystem-api](https://github.com/makerdao-ses/ecosystem-api))
 
 ## Quick start
 
@@ -33,8 +34,9 @@ In order to develop the project further, please navigate to the [`/api`](./api#d
 ## Project requirements
 
 To understand what is planned you can read and ask questions here:
-- Initial Requirements: https://github.com/makerdao-ses/switchboard-boilerplate/issues/3
-- Document Model explanation: https://github.com/makerdao-ses/switchboard-boilerplate/issues/1
+
+-   Initial Requirements: https://github.com/makerdao-ses/switchboard-boilerplate/issues/3
+-   Document Model explanation: https://github.com/makerdao-ses/switchboard-boilerplate/issues/1
 
 ## Coding Setup
 

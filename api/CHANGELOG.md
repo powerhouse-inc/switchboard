@@ -1,3 +1,79 @@
+# [1.0.0-dev.24](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2024-07-29)
+
+
+### Bug Fixes
+
+* set proper route ([73b18eb](https://github.com/powerhouse-inc/switchboard/commit/73b18ebbb32aadceceb659835b1caff7e179b009))
+
+# [1.0.0-dev.23](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.22...v1.0.0-dev.23) (2024-07-29)
+
+
+### Bug Fixes
+
+* release ([0f21557](https://github.com/powerhouse-inc/switchboard/commit/0f21557247926da98f0616c7bcaf0004f087cb0e))
+
+# [1.0.0-dev.22](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.21...v1.0.0-dev.22) (2024-07-29)
+
+
+### Features
+
+* activated metrics ([aae6e4a](https://github.com/powerhouse-inc/switchboard/commit/aae6e4a9e335fcc87f141024351ea912f37504d0))
+
+# [1.0.0-dev.21](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.20...v1.0.0-dev.21) (2024-07-29)
+
+
+### Bug Fixes
+
+* labels ([a0a79ad](https://github.com/powerhouse-inc/switchboard/commit/a0a79ad8f7f7127dd0a0337435959fd2b3309b52))
+* loki labels ([#261](https://github.com/powerhouse-inc/switchboard/issues/261)) ([4356fef](https://github.com/powerhouse-inc/switchboard/commit/4356fef08ae77b9b336a8fc595f83206f16cb2a1))
+
+
+### Features
+
+* added loki transport for pino ([db009a1](https://github.com/powerhouse-inc/switchboard/commit/db009a169f64d41c5dc94de3f6b86b32985ae823))
+
+# [1.0.0-dev.20](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.19...v1.0.0-dev.20) (2024-07-29)
+
+
+### Features
+
+* added loki transport for pino ([51dfcf8](https://github.com/powerhouse-inc/switchboard/commit/51dfcf88cfeb785841553f7c72d80b518eadd62f))
+
+# [1.0.0-dev.19](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.18...v1.0.0-dev.19) (2024-07-22)
+
+
+### Bug Fixes
+
+* remove extraErrorDataIntegration from sentry in pino config ([d94cdec](https://github.com/powerhouse-inc/switchboard/commit/d94cdec670e81e27d0b99f0edbd4e7e7eaf357a9))
+
+# [1.0.0-dev.18](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.17...v1.0.0-dev.18) (2024-07-22)
+
+
+### Features
+
+* added extra error data to main sentry config ([f08e296](https://github.com/powerhouse-inc/switchboard/commit/f08e296923897a024a017e36e9b3b8e823bc1b94))
+
+# [1.0.0-dev.17](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.16...v1.0.0-dev.17) (2024-07-22)
+
+
+### Features
+
+* default redis ttl to 1 year ([781255f](https://github.com/powerhouse-inc/switchboard/commit/781255f21a0a4faa29830c257f32ea13a7de6fac))
+
+# [1.0.0-dev.16](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.15...v1.0.0-dev.16) (2024-07-22)
+
+
+### Features
+
+* better sentry error reporting ([a97591a](https://github.com/powerhouse-inc/switchboard/commit/a97591ad6f16add15ba32694460d84478d4423fa))
+
+# [1.0.0-dev.15](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.14...v1.0.0-dev.15) (2024-07-19)
+
+
+### Features
+
+* added set drive name mutation ([96304b1](https://github.com/powerhouse-inc/switchboard/commit/96304b1053b19a2d0f54d0678418429e900e2b9f))
+
 # [1.0.0-dev.14](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.13...v1.0.0-dev.14) (2024-07-09)
 
 
