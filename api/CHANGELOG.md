@@ -1,3 +1,38 @@
+# [1.0.0-next.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.6...v1.0.0-next.7) (2024-08-02)
+
+
+### Bug Fixes
+
+* labels ([a0a79ad](https://github.com/powerhouse-inc/switchboard/commit/a0a79ad8f7f7127dd0a0337435959fd2b3309b52))
+* loki labels ([#261](https://github.com/powerhouse-inc/switchboard/issues/261)) ([4356fef](https://github.com/powerhouse-inc/switchboard/commit/4356fef08ae77b9b336a8fc595f83206f16cb2a1))
+* release ([0f21557](https://github.com/powerhouse-inc/switchboard/commit/0f21557247926da98f0616c7bcaf0004f087cb0e))
+* remove extraErrorDataIntegration from sentry in pino config ([d94cdec](https://github.com/powerhouse-inc/switchboard/commit/d94cdec670e81e27d0b99f0edbd4e7e7eaf357a9))
+* rwa document query ([ecc56fa](https://github.com/powerhouse-inc/switchboard/commit/ecc56fa112b8aa4658cd08c0f75ad6b6a223f057))
+* send 400 if transmitter not found ([30d9ddc](https://github.com/powerhouse-inc/switchboard/commit/30d9ddc7621b943b669548db4557dfcda986ddd1))
+* set proper route ([73b18eb](https://github.com/powerhouse-inc/switchboard/commit/73b18ebbb32aadceceb659835b1caff7e179b009))
+* staging environment ([0847819](https://github.com/powerhouse-inc/switchboard/commit/08478198d9d621018a626f9b75354a2bfe1a1165))
+* url decode ([c98e783](https://github.com/powerhouse-inc/switchboard/commit/c98e783f7eeb1db89cb582e25ecf9313a3c3a151))
+* url encode ([b942520](https://github.com/powerhouse-inc/switchboard/commit/b942520c22b95722dc0e66b46c58d65547313104))
+
+
+### Features
+
+* activated metrics ([aae6e4a](https://github.com/powerhouse-inc/switchboard/commit/aae6e4a9e335fcc87f141024351ea912f37504d0))
+* added extra error data to main sentry config ([f08e296](https://github.com/powerhouse-inc/switchboard/commit/f08e296923897a024a017e36e9b3b8e823bc1b94))
+* added loki transport for pino ([51dfcf8](https://github.com/powerhouse-inc/switchboard/commit/51dfcf88cfeb785841553f7c72d80b518eadd62f))
+* added loki transport for pino ([db009a1](https://github.com/powerhouse-inc/switchboard/commit/db009a169f64d41c5dc94de3f6b86b32985ae823))
+* added new fields to rwa document ([088125c](https://github.com/powerhouse-inc/switchboard/commit/088125c709f7a6616069b92b4e033feee5df5c18))
+* added operation signatures support ([f3c5159](https://github.com/powerhouse-inc/switchboard/commit/f3c515934c474abb327da67d81e1a58d912b7251))
+* added set drive name mutation ([96304b1](https://github.com/powerhouse-inc/switchboard/commit/96304b1053b19a2d0f54d0678418429e900e2b9f))
+* added support for operation context on graphql api ([86a2f31](https://github.com/powerhouse-inc/switchboard/commit/86a2f316cf61a2012410d498bbe5e6127c660b32))
+* better sentry error reporting ([a97591a](https://github.com/powerhouse-inc/switchboard/commit/a97591ad6f16add15ba32694460d84478d4423fa))
+* default redis ttl to 1 year ([781255f](https://github.com/powerhouse-inc/switchboard/commit/781255f21a0a4faa29830c257f32ea13a7de6fac))
+* set drive icon mutation ([40e7476](https://github.com/powerhouse-inc/switchboard/commit/40e747624d674e383089d603cc7b4f788b74193f))
+* update document-drive dep ([1da4f74](https://github.com/powerhouse-inc/switchboard/commit/1da4f7423be163654c029908c3f29c823f23869d))
+* update document-drive dep ([40f98cd](https://github.com/powerhouse-inc/switchboard/commit/40f98cd79b0b96ce8b9cb18a2b7fab6d8d9ac824))
+* updated document model deps ([a48e83d](https://github.com/powerhouse-inc/switchboard/commit/a48e83dc4f9b744471e2c3a7e29d4c86605bb69b))
+* updated document-drive ([98868e6](https://github.com/powerhouse-inc/switchboard/commit/98868e606dc4e30ee639ea10f8cd342b322a5e08))
+
 # [1.0.0-dev.24](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.23...v1.0.0-dev.24) (2024-07-29)
 
 
