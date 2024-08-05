@@ -1,3 +1,11 @@
+# [1.0.0-dev.26](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.25...v1.0.0-dev.26) (2024-08-05)
+
+
+### Features
+
+* added protected mutations ([37562c0](https://github.com/powerhouse-inc/switchboard/commit/37562c0dcd7ad2b8544e5d513d13764d4407745a))
+* updated prettier config ([59011d5](https://github.com/powerhouse-inc/switchboard/commit/59011d5497fc300f005e742c1e100a499170a8a3))
+
 # [1.0.0-dev.25](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.24...v1.0.0-dev.25) (2024-08-02)
 
 
