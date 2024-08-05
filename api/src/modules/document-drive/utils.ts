@@ -3,7 +3,7 @@ import { Context } from '../../graphql/server';
 
 export function isAdmin(user: string) {
   const { ADMIN_USERS } = process.env;
-  return ADMIN_USERS?.split(',').includes(user);
+  return ADMIN_USERS?.split(',').map(e => e.toLocaleLowerCase()).includes(user.toLocaleLowerCase());
 }
 
 export async function checkUserIsAdmin(ctx: Context) {
