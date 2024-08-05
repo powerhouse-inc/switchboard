@@ -11,7 +11,7 @@ import { DocumentDriveStateObject } from './drive-resolver';
 import { Context } from '../../graphql/server/drive/context';
 import logger from '../../logger';
 import DocumentDriveError from '../../errors/DocumentDriveError';
-import { UpdateStatus } from "document-drive";
+import { checkUserIsAdmin } from './utils';
 
 export const DocumentDriveLocalState = objectType({
   name: 'DocumentDriveLocalState',
@@ -39,10 +39,10 @@ export const DocumentDriveStateInput = inputObjectType({
 });
 
 export const SetDriveIconInput = inputObjectType({
-  name: "SetDriveIconInput",
+  name: 'SetDriveIconInput',
   definition(t) {
-    t.nonNull.string("icon")
-  }
+    t.nonNull.string('icon');
+  },
 });
 
 export const getDrives = queryField('drives', {
@@ -61,7 +61,7 @@ export const getDrives = queryField('drives', {
 export const getDriveBySlug = queryField('driveIdBySlug', {
   type: 'String',
   args: {
-    slug: stringArg()
+    slug: stringArg(),
   },
   resolve: async (_parent, args, ctx: Context) => {
     try {
@@ -78,7 +78,7 @@ const addDriveResponseDefinition = objectType({
   name: 'AddDriveResponse',
   definition(t) {
     t.nonNull.field('global', {
-      type: DocumentDriveStateObject
+      type: DocumentDriveStateObject,
     });
     t.nonNull.field('local', {
       type: DocumentDriveLocalState,
@@ -86,7 +86,7 @@ const addDriveResponseDefinition = objectType({
   },
 });
 
-
+// protected routes
 export const addDrive = mutationField('addDrive', {
   type: addDriveResponseDefinition,
   args: {
@@ -94,14 +94,21 @@ export const addDrive = mutationField('addDrive', {
     local: nonNull(DocumentDriveLocalStateInput),
   },
   resolve: async (_parent, { global, local }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     try {
       const drive = await ctx.prisma.document.addDrive({
-        global: { id: global.id, name: global.name, icon: global.icon ?? null, slug: global.slug ?? null },
-        local: { availableOffline: local.availableOffline, sharingType: local.sharingType ?? null, listeners: [], triggers: [] },
+        global: {
+          id: global.id, name: global.name, icon: global.icon ?? null, slug: global.slug ?? null,
+        },
+        local: {
+          availableOffline: local.availableOffline, sharingType: local.sharingType ?? null, listeners: [], triggers: [],
+        },
       });
       return drive.state;
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to add drive", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500, message: e.message ?? 'Failed to add drive', logging: true, context: e,
+      });
     }
   },
 });
@@ -112,10 +119,13 @@ export const deleteDrive = mutationField('deleteDrive', {
     id: nonNull('String'),
   },
   resolve: async (_parent, { id }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     try {
       await ctx.prisma.document.deleteDrive(id);
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete drive", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500, message: e.message ?? 'Failed to delete drive', logging: true, context: e,
+      });
     }
 
     return true;
@@ -129,17 +139,18 @@ export const setDriveIcon = mutationField('setDriveIcon', {
     icon: nonNull('String'),
   },
   resolve: async (_parent, { id, icon }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     const result = await ctx.prisma.document.setDriveIcon(id, icon);
-    if (result.status !== "SUCCESS") {
+    if (result.status !== 'SUCCESS') {
       if (result.error) {
         const { message } = result.error;
-        throw new DocumentDriveError({ code: 500, message, logging: true })
+        throw new DocumentDriveError({ code: 500, message, logging: true });
       }
 
-      throw new DocumentDriveError({ code: 500, message: "Failed to set drive icon", logging: true })
+      throw new DocumentDriveError({ code: 500, message: 'Failed to set drive icon', logging: true });
     }
     return true;
-  }
+  },
 });
 
 export const setDriveName = mutationField('setDriveName', {
@@ -149,15 +160,16 @@ export const setDriveName = mutationField('setDriveName', {
     name: nonNull('String'),
   },
   resolve: async (_parent, { id, name }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     const result = await ctx.prisma.document.setDriveName(id, name);
-    if (result.status !== "SUCCESS") {
+    if (result.status !== 'SUCCESS') {
       if (result.error) {
         const { message } = result.error;
-        throw new DocumentDriveError({ code: 500, message, logging: true })
+        throw new DocumentDriveError({ code: 500, message, logging: true });
       }
 
-      throw new DocumentDriveError({ code: 500, message: "Failed to set drive icon", logging: true })
+      throw new DocumentDriveError({ code: 500, message: 'Failed to set drive icon', logging: true });
     }
     return true;
-  }
+  },
 });
