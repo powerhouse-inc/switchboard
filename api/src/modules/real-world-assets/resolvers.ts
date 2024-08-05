@@ -1,10 +1,15 @@
 import {
-  arg, enumType, interfaceType, list, objectType, queryField, stringArg, unionType,
+  enumType,
+  interfaceType,
+  list,
+  objectType,
+  queryField,
+  stringArg,
+  unionType
 } from 'nexus';
-import { string } from 'zod';
-import { GQLDateBase } from '../system';
-import { documentModelInterface } from '../document';
 import { getChildLogger } from '../../logger';
+import { documentModelInterface } from '../document';
+import { GQLDateBase } from '../system';
 
 const logger = getChildLogger({ msgPrefix: 'REAL WORLD ASSETS RESOLVER' });
 
@@ -14,7 +19,7 @@ export const Account = objectType({
     t.nonNull.id('id');
     t.nonNull.string('reference');
     t.string('label');
-  },
+  }
 });
 export const BaseTransaction = objectType({
   name: 'BaseTransaction',
@@ -28,7 +33,7 @@ export const BaseTransaction = objectType({
     t.field('settlementTime', { type: GQLDateBase });
     t.id('accountId');
     t.id('counterPartyAccountId');
-  },
+  }
 });
 export const Cash = objectType({
   name: 'Cash',
@@ -38,7 +43,7 @@ export const Cash = objectType({
     t.field('spv', { type: Spv });
     t.nonNull.string('currency');
     t.nonNull.float('balance');
-  },
+  }
 });
 
 export const FixedIncomeType = objectType({
@@ -46,12 +51,12 @@ export const FixedIncomeType = objectType({
   definition(t) {
     t.nonNull.id('id');
     t.nonNull.string('name');
-  },
+  }
 });
 
 export const AssetType = enumType({
   name: 'AssetType',
-  members: ['Cash', 'FixedIncome'],
+  members: ['Cash', 'FixedIncome']
 });
 
 export const Spv = objectType({
@@ -59,7 +64,7 @@ export const Spv = objectType({
   definition(t) {
     t.nonNull.id('id');
     t.nonNull.string('name');
-  },
+  }
 });
 
 export const FixedIncome = objectType({
@@ -84,7 +89,7 @@ export const FixedIncome = objectType({
     t.string('ISIN');
     t.string('CUSIP');
     t.float('coupon');
-  },
+  }
 });
 
 export const GroupTransaction = objectType({
@@ -100,7 +105,7 @@ export const GroupTransaction = objectType({
     t.field('fixedIncomeTransaction', { type: BaseTransaction });
     t.id('serviceProviderFeeTypeId');
     t.string('txRef');
-  },
+  }
 });
 
 export const RealWorldAssetsStateInterface = interfaceType({
@@ -109,19 +114,21 @@ export const RealWorldAssetsStateInterface = interfaceType({
     t.nonNull.list.nonNull.field('accounts', { type: Account });
     t.nonNull.id('principalLenderAccountId');
     t.nonNull.list.nonNull.field('spvs', { type: Spv });
-    t.nonNull.list.nonNull.field('serviceProviderFeeTypes', { type: ServiceProviderFeeType });
+    t.nonNull.list.nonNull.field('serviceProviderFeeTypes', {
+      type: ServiceProviderFeeType
+    });
     t.nonNull.list.nonNull.field('fixedIncomeTypes', { type: FixedIncomeType });
     t.nonNull.list.nonNull.field('portfolio', { type: Asset });
     t.nonNull.list.nonNull.field('transactions', { type: GroupTransaction });
   },
-  resolveType: () => 'RealWorldAssetsState',
+  resolveType: () => 'RealWorldAssetsState'
 });
 
 export const RealWorldAssetsState = objectType({
   name: 'RealWorldAssetsState',
   definition(t) {
     t.implements(RealWorldAssetsStateInterface);
-  },
+  }
 });
 
 export const ServiceProviderFeeType = objectType({
@@ -131,7 +138,7 @@ export const ServiceProviderFeeType = objectType({
     t.nonNull.string('name');
     t.nonNull.string('feeType');
     t.nonNull.id('accountId');
-  },
+  }
 });
 
 export const TransactionFee = objectType({
@@ -140,7 +147,7 @@ export const TransactionFee = objectType({
     t.nonNull.id('id');
     t.nonNull.id('serviceProviderFeeTypeId');
     t.nonNull.float('amount');
-  },
+  }
 });
 
 export const Asset = unionType({
@@ -154,7 +161,7 @@ export const Asset = unionType({
     }
 
     return 'Cash';
-  },
+  }
 });
 
 export const GroupTransactionType = enumType({
@@ -167,8 +174,8 @@ export const GroupTransactionType = enumType({
     'InterestIncome',
     'InterestPayment',
     'FeesIncome',
-    'FeesPayment',
-  ],
+    'FeesPayment'
+  ]
 });
 
 export const RealWorldAssetsPortfolio = objectType({
@@ -176,7 +183,7 @@ export const RealWorldAssetsPortfolio = objectType({
   definition(t) {
     t.nonNull.id('id');
     t.implements(RealWorldAssetsStateInterface);
-  },
+  }
 });
 
 export const RealWorldAssetsDocument = objectType({
@@ -184,21 +191,23 @@ export const RealWorldAssetsDocument = objectType({
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: RealWorldAssetsState });
-  },
+  }
 });
 
 export const rwaQuery = queryField('rwaPortfolios', {
   type: list(RealWorldAssetsPortfolio),
   args: {
-    id: stringArg(),
+    id: stringArg()
   },
   resolve: async (_root, { id }, ctx) => {
     logger.info('Fetching RWA portfolios');
-    const docs = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
+    const docs = await ctx.prisma.rWAPortfolio.findRWAPortfolios({
+      driveId: ctx.driveId
+    });
     if (id) {
-      return docs.filter((e) => e.id === id);
+      return docs.filter(e => e.id === id);
     }
 
     return docs as any[];
-  },
+  }
 });

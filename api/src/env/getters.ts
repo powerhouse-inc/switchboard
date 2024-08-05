@@ -22,7 +22,9 @@ export const getJwtExpirationPeriod = (): string => {
   // check if a valid time string is provided
   const expirationMs = ms(process.env.JWT_EXPIRATION_PERIOD);
   if (!expirationMs) {
-    throw new Error('JWT_EXPIRATION_PERIOD must be a number of seconds or ms string');
+    throw new Error(
+      'JWT_EXPIRATION_PERIOD must be a number of seconds or ms string'
+    );
   }
   return process.env.JWT_EXPIRATION_PERIOD;
 };

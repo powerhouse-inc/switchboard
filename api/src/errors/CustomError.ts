@@ -1,8 +1,8 @@
-import { GraphQLError } from "graphql";
+import { GraphQLError } from 'graphql';
 
 export type CustomErrorContent = {
-  message: string,
-  context?: { [key: string]: any }
+  message: string;
+  context?: { [key: string]: any };
 };
 
 export abstract class CustomError extends GraphQLError {

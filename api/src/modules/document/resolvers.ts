@@ -1,7 +1,7 @@
 import { interfaceType, list, nonNull, objectType, queryField } from 'nexus';
-import { GQLDateBase } from '../system';
 import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
+import { GQLDateBase } from '../system';
 
 const logger = getChildLogger({ msgPrefix: 'DOCUMENT RESOLVER' });
 
@@ -15,16 +15,16 @@ export const operationModelInterface = interfaceType({
     t.nonNull.string('hash');
     t.string('id');
   },
-  resolveType: (e) => {
-    return "DefaultOperation"
-  },
+  resolveType: e => {
+    return 'DefaultOperation';
+  }
 });
 
 export const operationModel = objectType({
   name: 'DefaultOperation',
   definition(t) {
-    t.implements(operationModelInterface)
-  },
+    t.implements(operationModelInterface);
+  }
 });
 
 // todo: resolveType should be moved to somewhere else
@@ -39,7 +39,7 @@ export const documentModelInterface = interfaceType({
     t.nonNull.field('lastModified', { type: GQLDateBase });
     t.nonNull.list.nonNull.field('operations', { type: operationModel });
   },
-  resolveType: (e) => {
+  resolveType: e => {
     switch (e.documentType) {
       case 'powerhouse/budget-statement':
         return 'BudgetStatement';
@@ -50,24 +50,24 @@ export const documentModelInterface = interfaceType({
       default:
         return 'DefaultDocument';
     }
-  },
+  }
 });
 
 export const defaultDocument = objectType({
   name: 'DefaultDocument',
   definition(t) {
     t.implements(documentModelInterface);
-  },
+  }
 });
 
 export const documentQuery = queryField('document', {
   type: documentModelInterface,
   args: {
-    id: nonNull('String'),
+    id: nonNull('String')
   },
   resolve: async (_root, { id }, ctx: Context) => {
     if (!ctx.driveId) {
-      throw new Error("DriveId is not defined")
+      throw new Error('DriveId is not defined');
     }
     try {
       const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
@@ -75,23 +75,25 @@ export const documentQuery = queryField('document', {
     } catch (e: any) {
       logger.error({ msg: e.message });
     }
-  },
+  }
 });
 
 export const documentsQuery = queryField('documents', {
   type: list(documentModelInterface),
   resolve: async (_root, { id }, ctx: Context) => {
     if (!ctx.driveId) {
-      throw new Error("DriveId is not defined")
+      throw new Error('DriveId is not defined');
     }
     try {
       const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
-      const docs = await Promise.all(docIds.map(doc => {
-        return ctx.prisma.document.getDocument(ctx.driveId!, doc);
-      }));
+      const docs = await Promise.all(
+        docIds.map(doc => {
+          return ctx.prisma.document.getDocument(ctx.driveId!, doc);
+        })
+      );
       return docs;
     } catch (e: any) {
       logger.error({ msg: e.message });
     }
-  },
+  }
 });

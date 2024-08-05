@@ -1,10 +1,10 @@
-import builder from "gql-query-builder";
-import { fetchOrThrow } from "./server";
+import { Listener, ListenerRevision, StrandUpdate } from 'document-drive';
 import {
   DocumentDriveLocalState,
-  DocumentDriveState,
-} from "document-model-libs/dist/document-models/document-drive";
-import { Listener, ListenerRevision, StrandUpdate } from "document-drive";
+  DocumentDriveState
+} from 'document-model-libs/dist/document-models/document-drive';
+import builder from 'gql-query-builder';
+import { fetchOrThrow } from './server';
 
 interface Session {
   id: string;
@@ -18,56 +18,56 @@ interface Session {
 }
 
 const sessionFields = [
-  "id",
-  "name",
-  "referenceExpiryDate",
-  "referenceTokenId",
-  "isUserCreated",
-  "allowedOrigins",
-  "revokedAt",
-  "createdAt",
+  'id',
+  'name',
+  'referenceExpiryDate',
+  'referenceTokenId',
+  'isUserCreated',
+  'allowedOrigins',
+  'revokedAt',
+  'createdAt'
 ];
 
 export const createChallenge = (address: string) =>
   fetchOrThrow<{ nonce: string; message: string }>(
     builder.mutation({
-      operation: "createChallenge",
+      operation: 'createChallenge',
       variables: {
         address: {
           value: address,
-          type: "String",
-          required: true,
-        },
+          type: 'String',
+          required: true
+        }
       },
-      fields: ["nonce", "message"],
+      fields: ['nonce', 'message']
     })
   );
 
 export const solveChallenge = (nonce: string, signature: string) =>
   fetchOrThrow<{ token: string; session: Session }>(
     builder.mutation({
-      operation: "solveChallenge",
+      operation: 'solveChallenge',
       variables: {
         nonce: {
           value: nonce,
-          type: "String",
-          required: true,
+          type: 'String',
+          required: true
         },
         signature: {
           value: signature,
-          type: "String",
-          required: true,
-        },
+          type: 'String',
+          required: true
+        }
       },
-      fields: ["token", { session: sessionFields }],
+      fields: ['token', { session: sessionFields }]
     })
   );
 
 export const system = () =>
-  fetchOrThrow<{ auth: { me: { address: string }, sessions: Session[] } }>(
+  fetchOrThrow<{ auth: { me: { address: string }; sessions: Session[] } }>(
     builder.query({
-      operation: "system",
-      fields: [{ auth: [{ me: ["address"] }, { sessions: sessionFields }] }],
+      operation: 'system',
+      fields: [{ auth: [{ me: ['address'] }, { sessions: sessionFields }] }]
     })
   );
 
@@ -78,33 +78,33 @@ export const createSession = (
 ) =>
   fetchOrThrow<{ token: string; session: Session }>(
     builder.mutation({
-      operation: "createSession",
+      operation: 'createSession',
       variables: {
         session: {
           value: {
             name,
             expiryDurationSeconds,
-            allowedOrigins,
+            allowedOrigins
           },
-          type: "SessionInput",
-          required: true,
-        },
+          type: 'SessionInput',
+          required: true
+        }
       },
-      fields: ["token", { session: sessionFields }],
+      fields: ['token', { session: sessionFields }]
     })
   );
 
 export const revokeSession = (sessionId: string) =>
   fetchOrThrow<Session>(
     builder.mutation({
-      operation: "revokeSession",
+      operation: 'revokeSession',
       variables: {
         sessionId: {
           value: sessionId,
-          type: "String!",
-        },
+          type: 'String!'
+        }
       },
-      fields: sessionFields,
+      fields: sessionFields
     })
   );
 
@@ -114,27 +114,27 @@ export const addDrive = () => {
     local: DocumentDriveLocalState;
   }>(
     builder.mutation({
-      operation: "addDrive",
+      operation: 'addDrive',
       variables: {
         global: {
-          type: "DocumentDriveStateInput!",
+          type: 'DocumentDriveStateInput!',
           value: {
-            id: "1",
-            name: "Monetalis",
-            icon: "arranger.png",
-          },
+            id: '1',
+            name: 'Monetalis',
+            icon: 'arranger.png'
+          }
         },
         local: {
-          type: "DocumentDriveLocalStateInput!",
-          value: { sharingType: "public", availableOffline: false },
-        },
+          type: 'DocumentDriveLocalStateInput!',
+          value: { sharingType: 'public', availableOffline: false }
+        }
       },
       fields: [
         {
-          global: ["id", "name"],
-          local: ["sharingType", "availableOffline"],
-        },
-      ],
+          global: ['id', 'name'],
+          local: ['sharingType', 'availableOffline']
+        }
+      ]
     })
   );
 };
@@ -142,37 +142,30 @@ export const addDrive = () => {
 export const addBudgetStatement = () => {
   return fetchOrThrow<ListenerRevision[]>(
     builder.mutation({
-      operation: "pushUpdates",
+      operation: 'pushUpdates',
       variables: {
         strands: {
-          type: "[InputStrandUpdate!]",
+          type: '[InputStrandUpdate!]',
           value: [
             {
-              driveId: "1",
-              scope: "global",
-              branch: "main",
+              driveId: '1',
+              scope: 'global',
+              branch: 'main',
               operations: [
                 {
-                  type: "ADD_FILE",
+                  type: 'ADD_FILE',
                   input:
                     '{"id":"1","name":"new file", "documentType": "powerhouse/budget-statement", "scopes": ["global", "local"]}',
                   index: 1,
-                  timestamp: "2024-01-15T18:13:54.823Z",
-                  hash: "0eho6S5/g2eQnswPvq8R7p/6jpA=",
-                },
-              ],
-            },
-          ],
-        },
+                  timestamp: '2024-01-15T18:13:54.823Z',
+                  hash: '0eho6S5/g2eQnswPvq8R7p/6jpA='
+                }
+              ]
+            }
+          ]
+        }
       },
-      fields: [
-        "driveId",
-        "documentId",
-        "scope",
-        "branch",
-        "status",
-        "revision",
-      ],
+      fields: ['driveId', 'documentId', 'scope', 'branch', 'status', 'revision']
     }),
     true
   );
@@ -181,19 +174,19 @@ export const addBudgetStatement = () => {
 export const addPullResponderListener = () => {
   return fetchOrThrow<Listener>(
     builder.mutation({
-      operation: "registerPullResponderListener",
+      operation: 'registerPullResponderListener',
       variables: {
         filter: {
-          type: "InputListenerFilter!",
+          type: 'InputListenerFilter!',
           value: {
-            documentType: ["*"],
-            documentId: ["*"],
-            scope: ["global"],
-            branch: ["main"],
-          },
-        },
+            documentType: ['*'],
+            documentId: ['*'],
+            scope: ['global'],
+            branch: ['main']
+          }
+        }
       },
-      fields: ["listenerId", "label", "block", "system"],
+      fields: ['listenerId', 'label', 'block', 'system']
     }),
     true
   );
@@ -202,23 +195,29 @@ export const addPullResponderListener = () => {
 export const pullStrands = (listenerId: string) => {
   return fetchOrThrow<{ sync: { strands: StrandUpdate[] } }>(
     builder.query({
-      operation: "system",
-      fields: [{
-        sync: [{
-          operation: "strands",
-          fields: ["driveId",
-            "documentId",
-            "scope",
-            "branch",
-            { operations: ["index", "skip", "type", "input", "hash"] }],
-          variables: {
-            listenerId: {
-              type: "ID!",
-              value: listenerId,
-            },
-          }
-        }]
-      }]
+      operation: 'system',
+      fields: [
+        {
+          sync: [
+            {
+              operation: 'strands',
+              fields: [
+                'driveId',
+                'documentId',
+                'scope',
+                'branch',
+                { operations: ['index', 'skip', 'type', 'input', 'hash'] }
+              ],
+              variables: {
+                listenerId: {
+                  type: 'ID!',
+                  value: listenerId
+                }
+              }
+            }
+          ]
+        }
+      ]
     }),
     true
   );
@@ -230,17 +229,17 @@ export const acknowledge = (
 ) => {
   return fetchOrThrow<boolean>(
     builder.mutation({
-      operation: "acknowledge",
+      operation: 'acknowledge',
       variables: {
         listenerId: {
-          type: "String!",
-          value: listenerId,
+          type: 'String!',
+          value: listenerId
         },
         revisions: {
-          type: "[ListenerRevisionInput!]!",
-          value: revisions,
-        },
-      },
+          type: '[ListenerRevisionInput!]!',
+          value: revisions
+        }
+      }
     }),
     true
   );
@@ -249,37 +248,30 @@ export const acknowledge = (
 export const addLineItem = (address: string, index: number) => {
   return fetchOrThrow<ListenerRevision[]>(
     builder.mutation({
-      operation: "pushUpdates",
+      operation: 'pushUpdates',
       variables: {
         strands: {
-          type: "[InputStrandUpdate!]",
+          type: '[InputStrandUpdate!]',
           value: [
             {
-              driveId: "1",
-              documentId: "1",
-              scope: "global",
-              branch: "main",
+              driveId: '1',
+              documentId: '1',
+              scope: 'global',
+              branch: 'main',
               operations: [
                 {
                   index,
-                  type: "AddAccountInput",
+                  type: 'AddAccountInput',
                   input: `{"address": "${address}"}`,
-                  timestamp: "2024-01-16T18:13:54.823Z",
-                  hash: "0eho6S5/g2eQnswPvq8R7p/6jpA=",
-                },
-              ],
-            },
-          ],
-        },
+                  timestamp: '2024-01-16T18:13:54.823Z',
+                  hash: '0eho6S5/g2eQnswPvq8R7p/6jpA='
+                }
+              ]
+            }
+          ]
+        }
       },
-      fields: [
-        "driveId",
-        "documentId",
-        "scope",
-        "branch",
-        "status",
-        "revision",
-      ],
+      fields: ['driveId', 'documentId', 'scope', 'branch', 'status', 'revision']
     }),
     true
   );
