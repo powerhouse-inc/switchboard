@@ -8,7 +8,6 @@ export function isAdmin(user: string) {
 
 export async function checkUserIsAdmin(ctx: Context) {
   const { revokedAt, createdBy } = await ctx.getSession();
-  console.log(createdBy, revokedAt)
   if (revokedAt || !createdBy || !isAdmin(createdBy)) {
     throw new GraphQLError('Access denied');
   }
