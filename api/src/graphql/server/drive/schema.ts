@@ -1,16 +1,16 @@
 import * as path from 'path';
 // eslint-disable-next-line import/extensions
-import nexus from 'nexus/dist/index.js';
-import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
-import * as driveResolver from '../../../modules/document-drive/drive-resolver';
-import * as systemResolver from '../../../modules/system';
-import * as documentResolver from '../../../modules/document';
-import * as rwaDocumentResolver from '../../../modules/real-world-assets';
+import { validationPlugin } from 'nexus-validation-plugin';
+import nexus from 'nexus/dist/index.js';
+import { getExtraResolvers } from '../../../importedModules';
 import * as accountSnapshotResolver from '../../../modules/account-snapshot';
 import * as budgetStatement from '../../../modules/budget-statement';
+import * as documentResolver from '../../../modules/document';
+import * as driveResolver from '../../../modules/document-drive/drive-resolver';
+import * as rwaDocumentResolver from '../../../modules/real-world-assets';
 import * as scopeFramework from '../../../modules/scope-framework';
-import { getExtraResolvers } from '../../../importedModules';
+import * as systemResolver from '../../../modules/system';
 
 export const dirname = (() => {
   if (typeof __dirname !== 'undefined') {
@@ -32,27 +32,27 @@ export const schema = nexus.makeSchema({
     ...accountSnapshotResolver,
     ...budgetStatement,
     ...scopeFramework,
-    ...getExtraResolvers(),
+    ...getExtraResolvers()
   },
   plugins: [
     nexus.fieldAuthorizePlugin({
-      formatError: (authConfig) => authConfig.error,
+      formatError: authConfig => authConfig.error
     }),
     nexus.connectionPlugin({
       cursorFromNode(node: any) {
         return node.id;
-      },
+      }
     }),
-    validationPlugin(),
+    validationPlugin()
   ],
   outputs: {
     schema: path.join(dirname, '../generated/drive/schema.graphql'),
-    typegen: path.join(dirname, '../generated/drive/nexus.ts'),
+    typegen: path.join(dirname, '../generated/drive/nexus.ts')
   },
   contextType: {
     module: path.join(dirname, 'context.ts'),
-    export: 'Context',
-  },
+    export: 'Context'
+  }
 });
 
 export const schemaWithMiddleware = applyMiddleware(schema);
