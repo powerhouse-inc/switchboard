@@ -72,7 +72,6 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   initialize();
   async function initialize() {
     try {
-      await storage.migrateOperationSignatures(); // TODO remove when migration is done
       await driveServer.initialize();
       await init(driveServer, prisma);
     } catch (e: any) {
