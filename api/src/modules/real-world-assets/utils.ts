@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { RealWorldAssetsDocument, utils } from 'document-model-libs/real-world-assets';
 
 export function transformPortfolioToState(
   portfolios: Prisma.RWAPortfolioGetPayload<{
@@ -114,4 +115,9 @@ export function transformPortfolioToState(
       }))
     }))
   }));
+}
+
+export function buildRWADocument(document: RealWorldAssetsDocument): RealWorldAssetsDocument {
+  const newDocument = utils.makeRwaDocumentWithAssetCurrentValues(document);
+  return newDocument
 }
