@@ -3,29 +3,21 @@
  * Do not make changes to this file directly
  */
 
-import type { connectionPluginCore, core } from 'nexus';
-import type {
-  ArgsValidationConfig,
-  HasTypeField
-} from 'nexus-validation-plugin/utils';
-import type { FieldAuthorizeResolver } from 'nexus/dist/plugins/fieldAuthorizePlugin';
-import type { Context } from './../../drive/context';
+
+import type { Context } from "./../../drive/context"
+import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
+import type { core, connectionPluginCore } from "nexus"
+import type { ArgsValidationConfig, HasTypeField } from "nexus-validation-plugin/utils"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
      * Date custom scalar type
      */
-    date<FieldName extends string>(
-      fieldName: FieldName,
-      opts?: core.CommonInputFieldConfig<TypeName, FieldName>
-    ): void; // "Date";
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
     /**
      * Attachment custom scalar type
      */
-    attachment<FieldName extends string>(
-      fieldName: FieldName,
-      opts?: core.CommonInputFieldConfig<TypeName, FieldName>
-    ): void; // "Attachment";
+    attachment<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Attachment";
   }
 }
 declare global {
@@ -33,17 +25,11 @@ declare global {
     /**
      * Date custom scalar type
      */
-    date<FieldName extends string>(
-      fieldName: FieldName,
-      ...opts: core.ScalarOutSpread<TypeName, FieldName>
-    ): void; // "Date";
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
     /**
      * Attachment custom scalar type
      */
-    attachment<FieldName extends string>(
-      fieldName: FieldName,
-      ...opts: core.ScalarOutSpread<TypeName, FieldName>
-    ): void; // "Attachment";
+    attachment<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Attachment";
     /**
      * Adds a Relay-style connection to the type, with numerous options for configuration
      *
@@ -52,45 +38,40 @@ declare global {
     connectionField<FieldName extends string>(
       fieldName: FieldName,
       config: connectionPluginCore.ConnectionFieldConfig<TypeName, FieldName>
-    ): void;
+    ): void
   }
 }
+
 
 declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
 export interface NexusGenInputs {
-  InputListenerFilter: {
-    // input type
+  InputListenerFilter: { // input type
     branch?: Array<string | null> | null; // [String]
     documentId?: Array<string | null> | null; // [String]
     documentType?: Array<string | null> | null; // [String]
     scope?: Array<string | null> | null; // [String]
-  };
-  InputOperationContext: {
-    // input type
+  }
+  InputOperationContext: { // input type
     signer?: NexusGenInputs['InputOperationSigner'] | null; // InputOperationSigner
-  };
-  InputOperationSigner: {
-    // input type
+  }
+  InputOperationSigner: { // input type
     app: NexusGenInputs['InputOperationSignerApp']; // InputOperationSignerApp!
     signatures: string[][]; // [[String!]!]!
     user: NexusGenInputs['InputOperationSignerUser']; // InputOperationSignerUser!
-  };
-  InputOperationSignerApp: {
-    // input type
+  }
+  InputOperationSignerApp: { // input type
     key: string; // String!
     name: string; // String!
-  };
-  InputOperationSignerUser: {
-    // input type
+  }
+  InputOperationSignerUser: { // input type
     address: string; // String!
     chainId: number; // Int!
     networkId: string; // String!
-  };
-  InputOperationUpdate: {
-    // input type
+  }
+  InputOperationUpdate: { // input type
     context?: NexusGenInputs['InputOperationContext'] | null; // InputOperationContext
     hash: string; // String!
     id?: string | null; // String
@@ -99,113 +80,75 @@ export interface NexusGenInputs {
     skip?: number | null; // Int
     timestamp: string; // String!
     type: string; // String!
-  };
-  InputStrandUpdate: {
-    // input type
+  }
+  InputStrandUpdate: { // input type
     branch: string; // String!
     documentId?: string | null; // String
     driveId: string; // String!
     operations: NexusGenInputs['InputOperationUpdate'][]; // [InputOperationUpdate!]!
     scope: string; // String!
-  };
-  ListenerRevisionInput: {
-    // input type
+  }
+  ListenerRevisionInput: { // input type
     branch: string; // String!
     documentId: string; // String!
     driveId: string; // String!
     revision: number; // Int!
     scope: string; // String!
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
-  };
-  SessionInput: {
-    // input type
+  }
+  SessionInput: { // input type
     allowedOrigins: string; // String!
     expiryDurationSeconds?: number | null; // Int
     name: string; // String!
-  };
-  SetEndInput: {
-    // input type
+  }
+  SetEndInput: { // input type
     end: string; // String!
-  };
-  SetIdInput: {
-    // input type
+  }
+  SetIdInput: { // input type
     id: string; // ID!
-  };
-  SetOwnerIdInput: {
-    // input type
+  }
+  SetOwnerIdInput: { // input type
     ownerId: string; // ID!
-  };
-  SetOwnerTypeInput: {
-    // input type
+  }
+  SetOwnerTypeInput: { // input type
     ownerType: string; // String!
-  };
-  SetPeriodInput: {
-    // input type
+  }
+  SetPeriodInput: { // input type
     period: string; // String!
-  };
-  SetStartInput: {
-    // input type
+  }
+  SetStartInput: { // input type
     start: string; // String!
-  };
+  }
 }
 
 export interface NexusGenEnums {
-  AssetType: 'Cash' | 'FixedIncome';
-  AuditReportStatus:
-    | 'Approved'
-    | 'ApprovedWithComments'
-    | 'Escalated'
-    | 'NeedsAction';
-  BudgetStatus: 'Draft' | 'Escalated' | 'Final' | 'Review';
-  GroupTransactionType:
-    | 'AssetPurchase'
-    | 'AssetSale'
-    | 'FeesIncome'
-    | 'FeesPayment'
-    | 'InterestIncome'
-    | 'InterestPayment'
-    | 'PrincipalDraw'
-    | 'PrincipalReturn';
-  ScopeFrameworkElementType:
-    | 'Article'
-    | 'Core'
-    | 'Scope'
-    | 'Section'
-    | 'TypeSpecification';
-  TransmitterType:
-    | 'Internal'
-    | 'MatrixConnect'
-    | 'PullResponder'
-    | 'RESTWebhook'
-    | 'SecureConnect'
-    | 'SwitchboardPush';
-  TypeSpecificationComponentCategory:
-    | 'Accessory'
-    | 'Immutable'
-    | 'Primary'
-    | 'Supporting';
-  UpdateStatus: 'CONFLICT' | 'ERROR' | 'MISSING' | 'SUCCESS';
+  AssetType: "Cash" | "FixedIncome"
+  AuditReportStatus: "Approved" | "ApprovedWithComments" | "Escalated" | "NeedsAction"
+  BudgetStatus: "Draft" | "Escalated" | "Final" | "Review"
+  GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesIncome" | "FeesPayment" | "InterestIncome" | "InterestPayment" | "PrincipalDraw" | "PrincipalReturn"
+  ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
+  TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
+  TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
+  UpdateStatus: "CONFLICT" | "ERROR" | "MISSING" | "SUCCESS"
 }
 
 export interface NexusGenScalars {
-  String: string;
-  Int: number;
-  Float: number;
-  Boolean: boolean;
-  ID: string;
-  Attachment: any;
-  Date: any;
+  String: string
+  Int: number
+  Float: number
+  Boolean: boolean
+  ID: string
+  Attachment: any
+  Date: any
 }
 
 export interface NexusGenObjects {
-  Account: {
-    // root type
+  Account: { // root type
     id: string; // ID!
     label?: string | null; // String
     reference: string; // String!
-  };
-  AccountSnapshot: {
-    // root type
+  }
+  AccountSnapshot: { // root type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -214,12 +157,9 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['AccountSnapshotState']; // AccountSnapshotState!
-  };
-  AccountSnapshotState: {
-    // root type
-    actualsComparison?: Array<
-      NexusGenRootTypes['ActualsComparison'] | null
-    > | null; // [ActualsComparison]
+  }
+  AccountSnapshotState: { // root type
+    actualsComparison?: Array<NexusGenRootTypes['ActualsComparison'] | null> | null; // [ActualsComparison]
     end?: string | null; // String
     id: string; // ID!
     ownerId?: string | null; // ID
@@ -227,47 +167,38 @@ export interface NexusGenObjects {
     period?: string | null; // String
     snapshotAccount?: Array<NexusGenRootTypes['SnapshotAccount'] | null> | null; // [SnapshotAccount]
     start?: string | null; // String
-  };
-  ActualsComparison: {
-    // root type
+  }
+  ActualsComparison: { // root type
     currency?: string | null; // String
     month?: string | null; // String
     netExpenses?: NexusGenRootTypes['ActualsComparisonNetExpenses'] | null; // ActualsComparisonNetExpenses
     reportedActuals?: number | null; // Float
-  };
-  ActualsComparisonNetExpenses: {
-    // root type
-    offChainIncluded?:
-      | NexusGenRootTypes['ActualsComparisonNetExpensesItem']
-      | null; // ActualsComparisonNetExpensesItem
+  }
+  ActualsComparisonNetExpenses: { // root type
+    offChainIncluded?: NexusGenRootTypes['ActualsComparisonNetExpensesItem'] | null; // ActualsComparisonNetExpensesItem
     onChainOnly: NexusGenRootTypes['ActualsComparisonNetExpensesItem']; // ActualsComparisonNetExpensesItem!
-  };
-  ActualsComparisonNetExpensesItem: {
-    // root type
+  }
+  ActualsComparisonNetExpensesItem: { // root type
     amount?: number | null; // Float
     difference?: number | null; // Float
-  };
-  AddElementInput: {
-    // root type
+  }
+  AddElementInput: { // root type
     components?: NexusGenRootTypes['ElementComponents'] | null; // ElementComponents
     id: string; // String!
     name?: string | null; // String
     path: string; // String!
     type: NexusGenEnums['ScopeFrameworkElementType']; // ScopeFrameworkElementType!
-  };
-  ArticleComponent: {
-    // root type
+  }
+  ArticleComponent: { // root type
     content?: string | null; // String
-  };
-  AuditReport: {
-    // root type
+  }
+  AuditReport: { // root type
     report: NexusGenScalars['Attachment']; // Attachment!
     status: NexusGenEnums['AuditReportStatus']; // AuditReportStatus!
     timestamp: NexusGenScalars['Date']; // Date!
-  };
+  }
   Auth: {};
-  BaseTransaction: {
-    // root type
+  BaseTransaction: { // root type
     accountId?: string | null; // ID
     amount: number; // Float!
     assetId: string; // ID!
@@ -277,9 +208,8 @@ export interface NexusGenObjects {
     id: string; // ID!
     settlementTime?: NexusGenScalars['Date'] | null; // Date
     tradeTime?: NexusGenScalars['Date'] | null; // Date
-  };
-  BudgetStatement: {
-    // root type
+  }
+  BudgetStatement: { // root type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -288,15 +218,13 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
-  };
-  BudgetStatementAccount: {
-    // root type
+  }
+  BudgetStatementAccount: { // root type
     address: string; // String!
     lineItems: NexusGenRootTypes['LineItem'][]; // [LineItem!]!
     name: string; // String!
-  };
-  BudgetStatementState: {
-    // root type
+  }
+  BudgetStatementState: { // root type
     accounts: NexusGenRootTypes['BudgetStatementAccount'][]; // [BudgetStatementAccount!]!
     auditReports: NexusGenRootTypes['AuditReport'][]; // [AuditReport!]!
     comments: NexusGenRootTypes['Comment'][]; // [Comment!]!
@@ -305,42 +233,36 @@ export interface NexusGenObjects {
     owner?: NexusGenRootTypes['Owner'] | null; // Owner
     quoteCurrency?: string | null; // String
     vesting: NexusGenRootTypes['Vesting'][]; // [Vesting!]!
-  };
-  Cash: {
-    // root type
+  }
+  Cash: { // root type
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
     spv?: NexusGenRootTypes['Spv'] | null; // Spv
     spvId?: string | null; // ID
-  };
-  Challenge: {
-    // root type
+  }
+  Challenge: { // root type
     hex: string; // String!
     message: string; // String!
     nonce: string; // String!
-  };
-  Comment: {
-    // root type
+  }
+  Comment: { // root type
     author: NexusGenRootTypes['CommentAuthor']; // CommentAuthor!
     comment: string; // String!
     key: string; // String!
     status: NexusGenEnums['BudgetStatus']; // BudgetStatus!
     timestamp: NexusGenScalars['Date']; // Date!
-  };
-  CommentAuthor: {
-    // root type
+  }
+  CommentAuthor: { // root type
     id?: string | null; // String
     ref?: string | null; // String
     roleLabel?: string | null; // String
     username?: string | null; // String
-  };
-  CoreComponent: {
-    // root type
+  }
+  CoreComponent: { // root type
     content?: string | null; // String
-  };
-  CoreUnit: {
-    // root type
+  }
+  CoreUnit: { // root type
     code?: string | null; // String
     descriptionParagraph?: string | null; // String
     descriptionParagraphImageSource?: string | null; // String
@@ -349,9 +271,8 @@ export interface NexusGenObjects {
     imageSource?: string | null; // String
     name?: string | null; // String
     shortCode?: string | null; // String
-  };
-  DefaultDocument: {
-    // root type
+  }
+  DefaultDocument: { // root type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -359,29 +280,27 @@ export interface NexusGenObjects {
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
-  };
-  DefaultOperation: {
-    // root type
+  }
+  DefaultOperation: { // root type
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
-  };
-  DocumentDriveState: {
-    // root type
+  }
+  DocumentDriveState: { // root type
     icon?: string | null; // String
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug?: string | null; // String
-  };
-  FixedIncome: {
-    // root type
+  }
+  FixedIncome: { // root type
     CUSIP?: string | null; // String
     ISIN?: string | null; // String
     assetProceeds?: number | null; // Float
     coupon?: number | null; // Float
+    currentValue?: number | null; // Float
     fixedIncomeType?: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
     fixedIncomeTypeId?: string | null; // ID
     id?: string | null; // ID
@@ -397,24 +316,20 @@ export interface NexusGenObjects {
     spvId?: string | null; // ID
     totalDiscount?: number | null; // Float
     type: NexusGenEnums['AssetType']; // AssetType!
-  };
-  FixedIncomeType: {
-    // root type
+  }
+  FixedIncomeType: { // root type
     id: string; // ID!
     name: string; // String!
-  };
-  Ftes: {
-    // root type
+  }
+  Ftes: { // root type
     forecast: NexusGenRootTypes['FtesForecast'][]; // [FtesForecast!]!
     value: number; // Float!
-  };
-  FtesForecast: {
-    // root type
+  }
+  FtesForecast: { // root type
     month: string; // String!
     value: number; // Float!
-  };
-  GroupTransaction: {
-    // root type
+  }
+  GroupTransaction: { // root type
     cashBalanceChange: number; // Float!
     cashTransaction: NexusGenRootTypes['BaseTransaction']; // BaseTransaction!
     entryTime: NexusGenScalars['Date']; // Date!
@@ -425,9 +340,8 @@ export interface NexusGenObjects {
     txRef?: string | null; // String
     type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
     unitPrice?: number | null; // Float
-  };
-  LineItem: {
-    // root type
+  }
+  LineItem: { // root type
     actual?: number | null; // Float
     budgetCap?: number | null; // Float
     category?: NexusGenRootTypes['LineItemCategory'] | null; // LineItemCategory
@@ -436,50 +350,43 @@ export interface NexusGenObjects {
     group?: NexusGenRootTypes['LineItemGroup'] | null; // LineItemGroup
     headcountExpense: boolean; // Boolean!
     payment?: number | null; // Float
-  };
-  LineItemCategory: {
-    // root type
+  }
+  LineItemCategory: { // root type
     id: string; // String!
     ref: string; // String!
     title: string; // String!
-  };
-  LineItemForecast: {
-    // root type
+  }
+  LineItemForecast: { // root type
     budgetCap: number; // Float!
     month: string; // String!
     value: number; // Float!
-  };
-  LineItemGroup: {
-    // root type
+  }
+  LineItemGroup: { // root type
     color: string; // String!
     id: string; // String!
     ref: string; // String!
     title: string; // String!
-  };
-  Listener: {
-    // root type
+  }
+  Listener: { // root type
     block: boolean; // Boolean!
     callInfo?: NexusGenRootTypes['ListenerCallInfo'] | null; // ListenerCallInfo
     filter: NexusGenRootTypes['ListenerFilter']; // ListenerFilter!
     label?: string | null; // String
     listenerId: string; // ID!
     system: boolean; // Boolean!
-  };
-  ListenerCallInfo: {
-    // root type
+  }
+  ListenerCallInfo: { // root type
     data?: string | null; // String
     name?: string | null; // String
     transmitterType?: NexusGenEnums['TransmitterType'] | null; // TransmitterType
-  };
-  ListenerFilter: {
-    // root type
+  }
+  ListenerFilter: { // root type
     branch?: string[] | null; // [String!]
     documentId?: string[] | null; // [ID!]
     documentType: string[]; // [String!]!
     scope?: string[] | null; // [String!]
-  };
-  ListenerRevision: {
-    // root type
+  }
+  ListenerRevision: { // root type
     branch: string; // String!
     documentId?: string | null; // String
     driveId: string; // String!
@@ -487,44 +394,37 @@ export interface NexusGenObjects {
     revision: number; // Int!
     scope: string; // String!
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
-  };
-  MoveElementInput: {
-    // root type
+  }
+  MoveElementInput: { // root type
     id: string; // ID!
     newParentId: string; // ID!
-  };
+  }
   Mutation: {};
-  Node: {
-    // root type
+  Node: { // root type
     documentType?: string | null; // String
     id: string; // String!
     kind: string; // String!
     name: string; // String!
     parentFolder?: string | null; // String
-  };
-  OperationContext: {
-    // root type
+  }
+  OperationContext: { // root type
     signer?: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
-  };
-  OperationSigner: {
-    // root type
+  }
+  OperationSigner: { // root type
     app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
     signatures: string[][]; // [[String!]!]!
     user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
-  };
-  OperationSignerApp: {
-    // root type
+  }
+  OperationSignerApp: { // root type
     key: string; // String!
     name: string; // String!
-  };
-  OperationSignerUser: {
-    // root type
+  }
+  OperationSignerUser: { // root type
     address: string; // String!
     chainId: number; // Int!
     networkId: string; // String!
-  };
-  OperationUpdate: {
-    // root type
+  }
+  OperationUpdate: { // root type
     context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
     id?: string | null; // String
@@ -533,16 +433,14 @@ export interface NexusGenObjects {
     skip: number; // Int!
     timestamp: string; // String!
     type: string; // String!
-  };
-  Owner: {
-    // root type
+  }
+  Owner: { // root type
     id?: string | null; // String
     ref?: string | null; // String
     title?: string | null; // String
-  };
+  }
   Query: {};
-  RealWorldAssets: {
-    // root type
+  RealWorldAssets: { // root type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -551,9 +449,8 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
-  };
-  RealWorldAssetsPortfolio: {
-    // root type
+  }
+  RealWorldAssetsPortfolio: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     id: string; // ID!
@@ -562,9 +459,8 @@ export interface NexusGenObjects {
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  };
-  RealWorldAssetsState: {
-    // root type
+  }
+  RealWorldAssetsState: { // root type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
@@ -572,22 +468,18 @@ export interface NexusGenObjects {
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  };
-  RemoveElementInput: {
-    // root type
+  }
+  RemoveElementInput: { // root type
     id: string; // ID!
-  };
-  ReorderElementsInput: {
-    // root type
+  }
+  ReorderElementsInput: { // root type
     order: string[]; // [ID!]!
     parentElementId: string; // ID!
-  };
-  ScopeComponent: {
-    // root type
+  }
+  ScopeComponent: { // root type
     content?: string | null; // String
-  };
-  ScopeFramework: {
-    // root type
+  }
+  ScopeFramework: { // root type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -596,34 +488,29 @@ export interface NexusGenObjects {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
-  };
-  ScopeFrameworkElement: {
-    // root type
+  }
+  ScopeFrameworkElement: { // root type
     components?: NexusGenRootTypes['ElementComponents'] | null; // ElementComponents
     id: string; // ID!
     name?: string | null; // String
     path: string; // String!
     type?: NexusGenEnums['ScopeFrameworkElementType'] | null; // ScopeFrameworkElementType
     version: number; // Int!
-  };
-  ScopeFrameworkState: {
-    // root type
+  }
+  ScopeFrameworkState: { // root type
     elements: NexusGenRootTypes['ScopeFrameworkElement'][]; // [ScopeFrameworkElement!]!
     rootPath: string; // String!
-  };
-  SectionComponent: {
-    // root type
+  }
+  SectionComponent: { // root type
     content?: string | null; // String
-  };
-  ServiceProviderFeeType: {
-    // root type
+  }
+  ServiceProviderFeeType: { // root type
     accountId: string; // ID!
     feeType: string; // String!
     id: string; // ID!
     name: string; // String!
-  };
-  Session: {
-    // root type
+  }
+  Session: { // root type
     allowedOrigins?: string | null; // String
     createdAt: NexusGenScalars['Date']; // Date!
     createdBy: string; // String!
@@ -633,34 +520,26 @@ export interface NexusGenObjects {
     referenceExpiryDate?: NexusGenScalars['Date'] | null; // Date
     referenceTokenId: string; // String!
     revokedAt?: NexusGenScalars['Date'] | null; // Date
-  };
-  SessionOutput: {
-    // root type
+  }
+  SessionOutput: { // root type
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
-  };
-  SetRootPathInput: {
-    // root type
+  }
+  SetRootPathInput: { // root type
     newRootPath: string; // String!
-  };
-  SnapshotAccount: {
-    // root type
+  }
+  SnapshotAccount: { // root type
     accountAddress?: string | null; // String
     accountLabel?: string | null; // String
     accountType?: string | null; // String
     groupAccountId?: string | null; // ID
     id: string; // ID!
     offChain?: boolean | null; // Boolean
-    snapshotAccountBalance?: Array<
-      NexusGenRootTypes['SnapshotAccountBalance'] | null
-    > | null; // [SnapshotAccountBalance]
-    snapshotAccountTransaction?: Array<
-      NexusGenRootTypes['SnapshotAccountTransaction'] | null
-    > | null; // [SnapshotAccountTransaction]
+    snapshotAccountBalance?: Array<NexusGenRootTypes['SnapshotAccountBalance'] | null> | null; // [SnapshotAccountBalance]
+    snapshotAccountTransaction?: Array<NexusGenRootTypes['SnapshotAccountTransaction'] | null> | null; // [SnapshotAccountTransaction]
     upstreamAccountId?: string | null; // ID
-  };
-  SnapshotAccountBalance: {
-    // root type
+  }
+  SnapshotAccountBalance: { // root type
     id?: string | null; // ID
     includesOffChain?: boolean | null; // Boolean
     inflow?: number | null; // Float
@@ -668,9 +547,8 @@ export interface NexusGenObjects {
     newBalance?: number | null; // Float
     outflow?: number | null; // Float
     token?: string | null; // String
-  };
-  SnapshotAccountTransaction: {
-    // root type
+  }
+  SnapshotAccountTransaction: { // root type
     amount?: number | null; // Float
     block?: number | null; // Int
     counterParty?: string | null; // String
@@ -680,60 +558,51 @@ export interface NexusGenObjects {
     token?: string | null; // String
     txHash?: string | null; // String
     txLabel?: string | null; // String
-  };
-  Spv: {
-    // root type
+  }
+  Spv: { // root type
     id: string; // ID!
     name: string; // String!
-  };
-  StrandUpdate: {
-    // root type
+  }
+  StrandUpdate: { // root type
     branch: string; // String!
     documentId: string; // String!
     driveId: string; // String!
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
-  };
+  }
   SwitchboardDrive: {};
   SwitchboardHost: {};
   Sync: {};
-  TransactionFee: {
-    // root type
+  TransactionFee: { // root type
     amount: number; // Float!
     id: string; // ID!
     serviceProviderFeeTypeId: string; // ID!
-  };
-  TypeSpecificationComponent: {
-    // root type
+  }
+  TypeSpecificationComponent: { // root type
     additionalLogic?: string | null; // String
     category?: NexusGenEnums['TypeSpecificationComponentCategory'] | null; // TypeSpecificationComponentCategory
     documentIdentifierRules?: string | null; // String
     name?: string | null; // String
     overview?: string | null; // String
     typeAuthority?: string | null; // String
-  };
-  UpdateElementComponentsInput: {
-    // root type
+  }
+  UpdateElementComponentsInput: { // root type
     components?: NexusGenRootTypes['ElementComponents'] | null; // ElementComponents
     id: string; // ID!
-  };
-  UpdateElementNameInput: {
-    // root type
+  }
+  UpdateElementNameInput: { // root type
     id: string; // ID!
     name?: string | null; // String
-  };
-  UpdateElementTypeInput: {
-    // root type
+  }
+  UpdateElementTypeInput: { // root type
     id: string; // ID!
     type: NexusGenEnums['ScopeFrameworkElementType']; // ScopeFrameworkElementType!
-  };
-  User: {
-    // root type
+  }
+  User: { // root type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
-  };
-  Vesting: {
-    // root type
+  }
+  Vesting: { // root type
     amount: string; // String!
     amountOld: string; // String!
     comment: string; // String!
@@ -741,52 +610,32 @@ export interface NexusGenObjects {
     date: string; // String!
     key: string; // String!
     vested: boolean; // Boolean!
-  };
+  }
 }
 
 export interface NexusGenInterfaces {
-  IDocument:
-    | NexusGenRootTypes['AccountSnapshot']
-    | NexusGenRootTypes['BudgetStatement']
-    | NexusGenRootTypes['DefaultDocument']
-    | NexusGenRootTypes['RealWorldAssets']
-    | NexusGenRootTypes['ScopeFramework'];
+  IDocument: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
   IOperation: NexusGenRootTypes['DefaultOperation'];
-  IRealWorldAssetsState:
-    | NexusGenRootTypes['RealWorldAssetsPortfolio']
-    | NexusGenRootTypes['RealWorldAssetsState'];
-  System:
-    | NexusGenRootTypes['SwitchboardDrive']
-    | NexusGenRootTypes['SwitchboardHost'];
+  IRealWorldAssetsState: NexusGenRootTypes['RealWorldAssetsPortfolio'] | NexusGenRootTypes['RealWorldAssetsState'];
+  System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
 
 export interface NexusGenUnions {
   Asset: NexusGenRootTypes['Cash'] | NexusGenRootTypes['FixedIncome'];
-  ElementComponents:
-    | NexusGenRootTypes['ArticleComponent']
-    | NexusGenRootTypes['CoreComponent']
-    | NexusGenRootTypes['ScopeComponent']
-    | NexusGenRootTypes['SectionComponent']
-    | NexusGenRootTypes['TypeSpecificationComponent'];
+  ElementComponents: NexusGenRootTypes['ArticleComponent'] | NexusGenRootTypes['CoreComponent'] | NexusGenRootTypes['ScopeComponent'] | NexusGenRootTypes['SectionComponent'] | NexusGenRootTypes['TypeSpecificationComponent'];
 }
 
-export type NexusGenRootTypes = NexusGenInterfaces &
-  NexusGenObjects &
-  NexusGenUnions;
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
 
-export type NexusGenAllTypes = NexusGenRootTypes &
-  NexusGenScalars &
-  NexusGenEnums;
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
-  Account: {
-    // field return type
+  Account: { // field return type
     id: string; // ID!
     label: string | null; // String
     reference: string; // String!
-  };
-  AccountSnapshot: {
-    // field return type
+  }
+  AccountSnapshot: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -795,12 +644,9 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['AccountSnapshotState']; // AccountSnapshotState!
-  };
-  AccountSnapshotState: {
-    // field return type
-    actualsComparison: Array<
-      NexusGenRootTypes['ActualsComparison'] | null
-    > | null; // [ActualsComparison]
+  }
+  AccountSnapshotState: { // field return type
+    actualsComparison: Array<NexusGenRootTypes['ActualsComparison'] | null> | null; // [ActualsComparison]
     end: string | null; // String
     id: string; // ID!
     ownerId: string | null; // ID
@@ -808,51 +654,41 @@ export interface NexusGenFieldTypes {
     period: string | null; // String
     snapshotAccount: Array<NexusGenRootTypes['SnapshotAccount'] | null> | null; // [SnapshotAccount]
     start: string | null; // String
-  };
-  ActualsComparison: {
-    // field return type
+  }
+  ActualsComparison: { // field return type
     currency: string | null; // String
     month: string | null; // String
     netExpenses: NexusGenRootTypes['ActualsComparisonNetExpenses'] | null; // ActualsComparisonNetExpenses
     reportedActuals: number | null; // Float
-  };
-  ActualsComparisonNetExpenses: {
-    // field return type
-    offChainIncluded:
-      | NexusGenRootTypes['ActualsComparisonNetExpensesItem']
-      | null; // ActualsComparisonNetExpensesItem
+  }
+  ActualsComparisonNetExpenses: { // field return type
+    offChainIncluded: NexusGenRootTypes['ActualsComparisonNetExpensesItem'] | null; // ActualsComparisonNetExpensesItem
     onChainOnly: NexusGenRootTypes['ActualsComparisonNetExpensesItem']; // ActualsComparisonNetExpensesItem!
-  };
-  ActualsComparisonNetExpensesItem: {
-    // field return type
+  }
+  ActualsComparisonNetExpensesItem: { // field return type
     amount: number | null; // Float
     difference: number | null; // Float
-  };
-  AddElementInput: {
-    // field return type
+  }
+  AddElementInput: { // field return type
     components: NexusGenRootTypes['ElementComponents'] | null; // ElementComponents
     id: string; // String!
     name: string | null; // String
     path: string; // String!
     type: NexusGenEnums['ScopeFrameworkElementType']; // ScopeFrameworkElementType!
-  };
-  ArticleComponent: {
-    // field return type
+  }
+  ArticleComponent: { // field return type
     content: string | null; // String
-  };
-  AuditReport: {
-    // field return type
+  }
+  AuditReport: { // field return type
     report: NexusGenScalars['Attachment']; // Attachment!
     status: NexusGenEnums['AuditReportStatus']; // AuditReportStatus!
     timestamp: NexusGenScalars['Date']; // Date!
-  };
-  Auth: {
-    // field return type
+  }
+  Auth: { // field return type
     me: NexusGenRootTypes['User'] | null; // User
     sessions: Array<NexusGenRootTypes['Session'] | null> | null; // [Session]
-  };
-  BaseTransaction: {
-    // field return type
+  }
+  BaseTransaction: { // field return type
     accountId: string | null; // ID
     amount: number; // Float!
     assetId: string; // ID!
@@ -862,9 +698,8 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     settlementTime: NexusGenScalars['Date'] | null; // Date
     tradeTime: NexusGenScalars['Date'] | null; // Date
-  };
-  BudgetStatement: {
-    // field return type
+  }
+  BudgetStatement: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -873,15 +708,13 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
-  };
-  BudgetStatementAccount: {
-    // field return type
+  }
+  BudgetStatementAccount: { // field return type
     address: string; // String!
     lineItems: NexusGenRootTypes['LineItem'][]; // [LineItem!]!
     name: string; // String!
-  };
-  BudgetStatementState: {
-    // field return type
+  }
+  BudgetStatementState: { // field return type
     accounts: NexusGenRootTypes['BudgetStatementAccount'][]; // [BudgetStatementAccount!]!
     auditReports: NexusGenRootTypes['AuditReport'][]; // [AuditReport!]!
     comments: NexusGenRootTypes['Comment'][]; // [Comment!]!
@@ -890,42 +723,36 @@ export interface NexusGenFieldTypes {
     owner: NexusGenRootTypes['Owner'] | null; // Owner
     quoteCurrency: string | null; // String
     vesting: NexusGenRootTypes['Vesting'][]; // [Vesting!]!
-  };
-  Cash: {
-    // field return type
+  }
+  Cash: { // field return type
     balance: number; // Float!
     currency: string; // String!
     id: string; // ID!
     spv: NexusGenRootTypes['Spv'] | null; // Spv
     spvId: string | null; // ID
-  };
-  Challenge: {
-    // field return type
+  }
+  Challenge: { // field return type
     hex: string; // String!
     message: string; // String!
     nonce: string; // String!
-  };
-  Comment: {
-    // field return type
+  }
+  Comment: { // field return type
     author: NexusGenRootTypes['CommentAuthor']; // CommentAuthor!
     comment: string; // String!
     key: string; // String!
     status: NexusGenEnums['BudgetStatus']; // BudgetStatus!
     timestamp: NexusGenScalars['Date']; // Date!
-  };
-  CommentAuthor: {
-    // field return type
+  }
+  CommentAuthor: { // field return type
     id: string | null; // String
     ref: string | null; // String
     roleLabel: string | null; // String
     username: string | null; // String
-  };
-  CoreComponent: {
-    // field return type
+  }
+  CoreComponent: { // field return type
     content: string | null; // String
-  };
-  CoreUnit: {
-    // field return type
+  }
+  CoreUnit: { // field return type
     code: string | null; // String
     descriptionParagraph: string | null; // String
     descriptionParagraphImageSource: string | null; // String
@@ -934,9 +761,8 @@ export interface NexusGenFieldTypes {
     imageSource: string | null; // String
     name: string | null; // String
     shortCode: string | null; // String
-  };
-  DefaultDocument: {
-    // field return type
+  }
+  DefaultDocument: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -944,29 +770,27 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
-  };
-  DefaultOperation: {
-    // field return type
+  }
+  DefaultOperation: { // field return type
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
-  };
-  DocumentDriveState: {
-    // field return type
+  }
+  DocumentDriveState: { // field return type
     icon: string | null; // String
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
     slug: string | null; // String
-  };
-  FixedIncome: {
-    // field return type
+  }
+  FixedIncome: { // field return type
     CUSIP: string | null; // String
     ISIN: string | null; // String
     assetProceeds: number | null; // Float
     coupon: number | null; // Float
+    currentValue: number | null; // Float
     fixedIncomeType: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
     fixedIncomeTypeId: string | null; // ID
     id: string | null; // ID
@@ -982,24 +806,20 @@ export interface NexusGenFieldTypes {
     spvId: string | null; // ID
     totalDiscount: number | null; // Float
     type: NexusGenEnums['AssetType']; // AssetType!
-  };
-  FixedIncomeType: {
-    // field return type
+  }
+  FixedIncomeType: { // field return type
     id: string; // ID!
     name: string; // String!
-  };
-  Ftes: {
-    // field return type
+  }
+  Ftes: { // field return type
     forecast: NexusGenRootTypes['FtesForecast'][]; // [FtesForecast!]!
     value: number; // Float!
-  };
-  FtesForecast: {
-    // field return type
+  }
+  FtesForecast: { // field return type
     month: string; // String!
     value: number; // Float!
-  };
-  GroupTransaction: {
-    // field return type
+  }
+  GroupTransaction: { // field return type
     cashBalanceChange: number; // Float!
     cashTransaction: NexusGenRootTypes['BaseTransaction']; // BaseTransaction!
     entryTime: NexusGenScalars['Date']; // Date!
@@ -1010,9 +830,8 @@ export interface NexusGenFieldTypes {
     txRef: string | null; // String
     type: NexusGenEnums['GroupTransactionType']; // GroupTransactionType!
     unitPrice: number | null; // Float
-  };
-  LineItem: {
-    // field return type
+  }
+  LineItem: { // field return type
     actual: number | null; // Float
     budgetCap: number | null; // Float
     category: NexusGenRootTypes['LineItemCategory'] | null; // LineItemCategory
@@ -1021,50 +840,43 @@ export interface NexusGenFieldTypes {
     group: NexusGenRootTypes['LineItemGroup'] | null; // LineItemGroup
     headcountExpense: boolean; // Boolean!
     payment: number | null; // Float
-  };
-  LineItemCategory: {
-    // field return type
+  }
+  LineItemCategory: { // field return type
     id: string; // String!
     ref: string; // String!
     title: string; // String!
-  };
-  LineItemForecast: {
-    // field return type
+  }
+  LineItemForecast: { // field return type
     budgetCap: number; // Float!
     month: string; // String!
     value: number; // Float!
-  };
-  LineItemGroup: {
-    // field return type
+  }
+  LineItemGroup: { // field return type
     color: string; // String!
     id: string; // String!
     ref: string; // String!
     title: string; // String!
-  };
-  Listener: {
-    // field return type
+  }
+  Listener: { // field return type
     block: boolean; // Boolean!
     callInfo: NexusGenRootTypes['ListenerCallInfo'] | null; // ListenerCallInfo
     filter: NexusGenRootTypes['ListenerFilter']; // ListenerFilter!
     label: string | null; // String
     listenerId: string; // ID!
     system: boolean; // Boolean!
-  };
-  ListenerCallInfo: {
-    // field return type
+  }
+  ListenerCallInfo: { // field return type
     data: string | null; // String
     name: string | null; // String
     transmitterType: NexusGenEnums['TransmitterType'] | null; // TransmitterType
-  };
-  ListenerFilter: {
-    // field return type
+  }
+  ListenerFilter: { // field return type
     branch: string[] | null; // [String!]
     documentId: string[] | null; // [ID!]
     documentType: string[]; // [String!]!
     scope: string[] | null; // [String!]
-  };
-  ListenerRevision: {
-    // field return type
+  }
+  ListenerRevision: { // field return type
     branch: string; // String!
     documentId: string | null; // String
     driveId: string; // String!
@@ -1072,14 +884,12 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
     scope: string; // String!
     status: NexusGenEnums['UpdateStatus']; // UpdateStatus!
-  };
-  MoveElementInput: {
-    // field return type
+  }
+  MoveElementInput: { // field return type
     id: string; // ID!
     newParentId: string; // ID!
-  };
-  Mutation: {
-    // field return type
+  }
+  Mutation: { // field return type
     acknowledge: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
@@ -1088,38 +898,32 @@ export interface NexusGenFieldTypes {
     registerPullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
-  };
-  Node: {
-    // field return type
+  }
+  Node: { // field return type
     documentType: string | null; // String
     id: string; // String!
     kind: string; // String!
     name: string; // String!
     parentFolder: string | null; // String
-  };
-  OperationContext: {
-    // field return type
+  }
+  OperationContext: { // field return type
     signer: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
-  };
-  OperationSigner: {
-    // field return type
+  }
+  OperationSigner: { // field return type
     app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
     signatures: string[][]; // [[String!]!]!
     user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
-  };
-  OperationSignerApp: {
-    // field return type
+  }
+  OperationSignerApp: { // field return type
     key: string; // String!
     name: string; // String!
-  };
-  OperationSignerUser: {
-    // field return type
+  }
+  OperationSignerUser: { // field return type
     address: string; // String!
     chainId: number; // Int!
     networkId: string; // String!
-  };
-  OperationUpdate: {
-    // field return type
+  }
+  OperationUpdate: { // field return type
     context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     hash: string; // String!
     id: string | null; // String
@@ -1128,27 +932,22 @@ export interface NexusGenFieldTypes {
     skip: number; // Int!
     timestamp: string; // String!
     type: string; // String!
-  };
-  Owner: {
-    // field return type
+  }
+  Owner: { // field return type
     id: string | null; // String
     ref: string | null; // String
     title: string | null; // String
-  };
-  Query: {
-    // field return type
+  }
+  Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
     coreUnits: Array<NexusGenRootTypes['CoreUnit'] | null> | null; // [CoreUnit]
     document: NexusGenRootTypes['IDocument'] | null; // IDocument
     documents: Array<NexusGenRootTypes['IDocument'] | null> | null; // [IDocument]
     drive: NexusGenRootTypes['DocumentDriveState'] | null; // DocumentDriveState
-    rwaPortfolios: Array<
-      NexusGenRootTypes['RealWorldAssetsPortfolio'] | null
-    > | null; // [RealWorldAssetsPortfolio]
+    rwaPortfolios: Array<NexusGenRootTypes['RealWorldAssetsPortfolio'] | null> | null; // [RealWorldAssetsPortfolio]
     system: NexusGenRootTypes['SwitchboardDrive'] | null; // SwitchboardDrive
-  };
-  RealWorldAssets: {
-    // field return type
+  }
+  RealWorldAssets: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -1157,9 +956,8 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
-  };
-  RealWorldAssetsPortfolio: {
-    // field return type
+  }
+  RealWorldAssetsPortfolio: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     id: string; // ID!
@@ -1168,9 +966,8 @@ export interface NexusGenFieldTypes {
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  };
-  RealWorldAssetsState: {
-    // field return type
+  }
+  RealWorldAssetsState: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
@@ -1178,22 +975,18 @@ export interface NexusGenFieldTypes {
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  };
-  RemoveElementInput: {
-    // field return type
+  }
+  RemoveElementInput: { // field return type
     id: string; // ID!
-  };
-  ReorderElementsInput: {
-    // field return type
+  }
+  ReorderElementsInput: { // field return type
     order: string[]; // [ID!]!
     parentElementId: string; // ID!
-  };
-  ScopeComponent: {
-    // field return type
+  }
+  ScopeComponent: { // field return type
     content: string | null; // String
-  };
-  ScopeFramework: {
-    // field return type
+  }
+  ScopeFramework: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -1202,34 +995,29 @@ export interface NexusGenFieldTypes {
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
-  };
-  ScopeFrameworkElement: {
-    // field return type
+  }
+  ScopeFrameworkElement: { // field return type
     components: NexusGenRootTypes['ElementComponents'] | null; // ElementComponents
     id: string; // ID!
     name: string | null; // String
     path: string; // String!
     type: NexusGenEnums['ScopeFrameworkElementType'] | null; // ScopeFrameworkElementType
     version: number; // Int!
-  };
-  ScopeFrameworkState: {
-    // field return type
+  }
+  ScopeFrameworkState: { // field return type
     elements: NexusGenRootTypes['ScopeFrameworkElement'][]; // [ScopeFrameworkElement!]!
     rootPath: string; // String!
-  };
-  SectionComponent: {
-    // field return type
+  }
+  SectionComponent: { // field return type
     content: string | null; // String
-  };
-  ServiceProviderFeeType: {
-    // field return type
+  }
+  ServiceProviderFeeType: { // field return type
     accountId: string; // ID!
     feeType: string; // String!
     id: string; // ID!
     name: string; // String!
-  };
-  Session: {
-    // field return type
+  }
+  Session: { // field return type
     allowedOrigins: string | null; // String
     createdAt: NexusGenScalars['Date']; // Date!
     createdBy: string; // String!
@@ -1239,34 +1027,26 @@ export interface NexusGenFieldTypes {
     referenceExpiryDate: NexusGenScalars['Date'] | null; // Date
     referenceTokenId: string; // String!
     revokedAt: NexusGenScalars['Date'] | null; // Date
-  };
-  SessionOutput: {
-    // field return type
+  }
+  SessionOutput: { // field return type
     session: NexusGenRootTypes['Session']; // Session!
     token: string; // String!
-  };
-  SetRootPathInput: {
-    // field return type
+  }
+  SetRootPathInput: { // field return type
     newRootPath: string; // String!
-  };
-  SnapshotAccount: {
-    // field return type
+  }
+  SnapshotAccount: { // field return type
     accountAddress: string | null; // String
     accountLabel: string | null; // String
     accountType: string | null; // String
     groupAccountId: string | null; // ID
     id: string; // ID!
     offChain: boolean | null; // Boolean
-    snapshotAccountBalance: Array<
-      NexusGenRootTypes['SnapshotAccountBalance'] | null
-    > | null; // [SnapshotAccountBalance]
-    snapshotAccountTransaction: Array<
-      NexusGenRootTypes['SnapshotAccountTransaction'] | null
-    > | null; // [SnapshotAccountTransaction]
+    snapshotAccountBalance: Array<NexusGenRootTypes['SnapshotAccountBalance'] | null> | null; // [SnapshotAccountBalance]
+    snapshotAccountTransaction: Array<NexusGenRootTypes['SnapshotAccountTransaction'] | null> | null; // [SnapshotAccountTransaction]
     upstreamAccountId: string | null; // ID
-  };
-  SnapshotAccountBalance: {
-    // field return type
+  }
+  SnapshotAccountBalance: { // field return type
     id: string | null; // ID
     includesOffChain: boolean | null; // Boolean
     inflow: number | null; // Float
@@ -1274,9 +1054,8 @@ export interface NexusGenFieldTypes {
     newBalance: number | null; // Float
     outflow: number | null; // Float
     token: string | null; // String
-  };
-  SnapshotAccountTransaction: {
-    // field return type
+  }
+  SnapshotAccountTransaction: { // field return type
     amount: number | null; // Float
     block: number | null; // Int
     counterParty: string | null; // String
@@ -1286,70 +1065,58 @@ export interface NexusGenFieldTypes {
     token: string | null; // String
     txHash: string | null; // String
     txLabel: string | null; // String
-  };
-  Spv: {
-    // field return type
+  }
+  Spv: { // field return type
     id: string; // ID!
     name: string; // String!
-  };
-  StrandUpdate: {
-    // field return type
+  }
+  StrandUpdate: { // field return type
     branch: string; // String!
     documentId: string; // String!
     driveId: string; // String!
     operations: NexusGenRootTypes['OperationUpdate'][]; // [OperationUpdate!]!
     scope: string; // String!
-  };
-  SwitchboardDrive: {
-    // field return type
+  }
+  SwitchboardDrive: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
     sync: NexusGenRootTypes['Sync'] | null; // Sync
-  };
-  SwitchboardHost: {
-    // field return type
+  }
+  SwitchboardHost: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
-  };
-  Sync: {
-    // field return type
+  }
+  Sync: { // field return type
     strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
-  };
-  TransactionFee: {
-    // field return type
+  }
+  TransactionFee: { // field return type
     amount: number; // Float!
     id: string; // ID!
     serviceProviderFeeTypeId: string; // ID!
-  };
-  TypeSpecificationComponent: {
-    // field return type
+  }
+  TypeSpecificationComponent: { // field return type
     additionalLogic: string | null; // String
     category: NexusGenEnums['TypeSpecificationComponentCategory'] | null; // TypeSpecificationComponentCategory
     documentIdentifierRules: string | null; // String
     name: string | null; // String
     overview: string | null; // String
     typeAuthority: string | null; // String
-  };
-  UpdateElementComponentsInput: {
-    // field return type
+  }
+  UpdateElementComponentsInput: { // field return type
     components: NexusGenRootTypes['ElementComponents'] | null; // ElementComponents
     id: string; // ID!
-  };
-  UpdateElementNameInput: {
-    // field return type
+  }
+  UpdateElementNameInput: { // field return type
     id: string; // ID!
     name: string | null; // String
-  };
-  UpdateElementTypeInput: {
-    // field return type
+  }
+  UpdateElementTypeInput: { // field return type
     id: string; // ID!
     type: NexusGenEnums['ScopeFrameworkElementType']; // ScopeFrameworkElementType!
-  };
-  User: {
-    // field return type
+  }
+  User: { // field return type
     address: string; // String!
     createdAt: NexusGenScalars['Date']; // Date!
-  };
-  Vesting: {
-    // field return type
+  }
+  Vesting: { // field return type
     amount: string; // String!
     amountOld: string; // String!
     comment: string; // String!
@@ -1357,9 +1124,8 @@ export interface NexusGenFieldTypes {
     date: string; // String!
     key: string; // String!
     vested: boolean; // Boolean!
-  };
-  IDocument: {
-    // field return type
+  }
+  IDocument: { // field return type
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
@@ -1367,17 +1133,15 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
-  };
-  IOperation: {
-    // field return type
+  }
+  IOperation: { // field return type
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
-  };
-  IRealWorldAssetsState: {
-    // field return type
+  }
+  IRealWorldAssetsState: { // field return type
     accounts: NexusGenRootTypes['Account'][]; // [Account!]!
     fixedIncomeTypes: NexusGenRootTypes['FixedIncomeType'][]; // [FixedIncomeType!]!
     portfolio: NexusGenRootTypes['Asset'][]; // [Asset!]!
@@ -1385,707 +1149,611 @@ export interface NexusGenFieldTypes {
     serviceProviderFeeTypes: NexusGenRootTypes['ServiceProviderFeeType'][]; // [ServiceProviderFeeType!]!
     spvs: NexusGenRootTypes['Spv'][]; // [Spv!]!
     transactions: NexusGenRootTypes['GroupTransaction'][]; // [GroupTransaction!]!
-  };
-  System: {
-    // field return type
+  }
+  System: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
-  };
+  }
 }
 
 export interface NexusGenFieldTypeNames {
-  Account: {
-    // field return type name
-    id: 'ID';
-    label: 'String';
-    reference: 'String';
-  };
-  AccountSnapshot: {
-    // field return type name
-    created: 'Date';
-    documentType: 'String';
-    id: 'String';
-    lastModified: 'Date';
-    name: 'String';
-    operations: 'DefaultOperation';
-    revision: 'Int';
-    state: 'AccountSnapshotState';
-  };
-  AccountSnapshotState: {
-    // field return type name
-    actualsComparison: 'ActualsComparison';
-    end: 'String';
-    id: 'ID';
-    ownerId: 'ID';
-    ownerType: 'String';
-    period: 'String';
-    snapshotAccount: 'SnapshotAccount';
-    start: 'String';
-  };
-  ActualsComparison: {
-    // field return type name
-    currency: 'String';
-    month: 'String';
-    netExpenses: 'ActualsComparisonNetExpenses';
-    reportedActuals: 'Float';
-  };
-  ActualsComparisonNetExpenses: {
-    // field return type name
-    offChainIncluded: 'ActualsComparisonNetExpensesItem';
-    onChainOnly: 'ActualsComparisonNetExpensesItem';
-  };
-  ActualsComparisonNetExpensesItem: {
-    // field return type name
-    amount: 'Float';
-    difference: 'Float';
-  };
-  AddElementInput: {
-    // field return type name
-    components: 'ElementComponents';
-    id: 'String';
-    name: 'String';
-    path: 'String';
-    type: 'ScopeFrameworkElementType';
-  };
-  ArticleComponent: {
-    // field return type name
-    content: 'String';
-  };
-  AuditReport: {
-    // field return type name
-    report: 'Attachment';
-    status: 'AuditReportStatus';
-    timestamp: 'Date';
-  };
-  Auth: {
-    // field return type name
-    me: 'User';
-    sessions: 'Session';
-  };
-  BaseTransaction: {
-    // field return type name
-    accountId: 'ID';
-    amount: 'Float';
-    assetId: 'ID';
-    assetType: 'AssetType';
-    counterPartyAccountId: 'ID';
-    entryTime: 'Date';
-    id: 'ID';
-    settlementTime: 'Date';
-    tradeTime: 'Date';
-  };
-  BudgetStatement: {
-    // field return type name
-    created: 'Date';
-    documentType: 'String';
-    id: 'String';
-    lastModified: 'Date';
-    name: 'String';
-    operations: 'DefaultOperation';
-    revision: 'Int';
-    state: 'BudgetStatementState';
-  };
-  BudgetStatementAccount: {
-    // field return type name
-    address: 'String';
-    lineItems: 'LineItem';
-    name: 'String';
-  };
-  BudgetStatementState: {
-    // field return type name
-    accounts: 'BudgetStatementAccount';
-    auditReports: 'AuditReport';
-    comments: 'Comment';
-    ftes: 'Ftes';
-    month: 'String';
-    owner: 'Owner';
-    quoteCurrency: 'String';
-    vesting: 'Vesting';
-  };
-  Cash: {
-    // field return type name
-    balance: 'Float';
-    currency: 'String';
-    id: 'ID';
-    spv: 'Spv';
-    spvId: 'ID';
-  };
-  Challenge: {
-    // field return type name
-    hex: 'String';
-    message: 'String';
-    nonce: 'String';
-  };
-  Comment: {
-    // field return type name
-    author: 'CommentAuthor';
-    comment: 'String';
-    key: 'String';
-    status: 'BudgetStatus';
-    timestamp: 'Date';
-  };
-  CommentAuthor: {
-    // field return type name
-    id: 'String';
-    ref: 'String';
-    roleLabel: 'String';
-    username: 'String';
-  };
-  CoreComponent: {
-    // field return type name
-    content: 'String';
-  };
-  CoreUnit: {
-    // field return type name
-    code: 'String';
-    descriptionParagraph: 'String';
-    descriptionParagraphImageSource: 'String';
-    descriptionSentence: 'String';
-    id: 'String';
-    imageSource: 'String';
-    name: 'String';
-    shortCode: 'String';
-  };
-  DefaultDocument: {
-    // field return type name
-    created: 'Date';
-    documentType: 'String';
-    id: 'String';
-    lastModified: 'Date';
-    name: 'String';
-    operations: 'DefaultOperation';
-    revision: 'Int';
-  };
-  DefaultOperation: {
-    // field return type name
-    hash: 'String';
-    id: 'String';
-    index: 'Int';
-    timestamp: 'Date';
-    type: 'String';
-  };
-  DocumentDriveState: {
-    // field return type name
-    icon: 'String';
-    id: 'ID';
-    name: 'String';
-    nodes: 'Node';
-    slug: 'String';
-  };
-  FixedIncome: {
-    // field return type name
-    CUSIP: 'String';
-    ISIN: 'String';
-    assetProceeds: 'Float';
-    coupon: 'Float';
-    fixedIncomeType: 'FixedIncomeType';
-    fixedIncomeTypeId: 'ID';
-    id: 'ID';
-    maturity: 'Date';
-    name: 'String';
-    notional: 'Float';
-    purchaseDate: 'Date';
-    purchasePrice: 'Float';
-    purchaseProceeds: 'Float';
-    realizedSurplus: 'Float';
-    salesProceeds: 'Float';
-    spv: 'Spv';
-    spvId: 'ID';
-    totalDiscount: 'Float';
-    type: 'AssetType';
-  };
-  FixedIncomeType: {
-    // field return type name
-    id: 'ID';
-    name: 'String';
-  };
-  Ftes: {
-    // field return type name
-    forecast: 'FtesForecast';
-    value: 'Float';
-  };
-  FtesForecast: {
-    // field return type name
-    month: 'String';
-    value: 'Float';
-  };
-  GroupTransaction: {
-    // field return type name
-    cashBalanceChange: 'Float';
-    cashTransaction: 'BaseTransaction';
-    entryTime: 'Date';
-    fees: 'TransactionFee';
-    fixedIncomeTransaction: 'BaseTransaction';
-    id: 'ID';
-    serviceProviderFeeTypeId: 'ID';
-    txRef: 'String';
-    type: 'GroupTransactionType';
-    unitPrice: 'Float';
-  };
-  LineItem: {
-    // field return type name
-    actual: 'Float';
-    budgetCap: 'Float';
-    category: 'LineItemCategory';
-    comment: 'String';
-    forecast: 'LineItemForecast';
-    group: 'LineItemGroup';
-    headcountExpense: 'Boolean';
-    payment: 'Float';
-  };
-  LineItemCategory: {
-    // field return type name
-    id: 'String';
-    ref: 'String';
-    title: 'String';
-  };
-  LineItemForecast: {
-    // field return type name
-    budgetCap: 'Float';
-    month: 'String';
-    value: 'Float';
-  };
-  LineItemGroup: {
-    // field return type name
-    color: 'String';
-    id: 'String';
-    ref: 'String';
-    title: 'String';
-  };
-  Listener: {
-    // field return type name
-    block: 'Boolean';
-    callInfo: 'ListenerCallInfo';
-    filter: 'ListenerFilter';
-    label: 'String';
-    listenerId: 'ID';
-    system: 'Boolean';
-  };
-  ListenerCallInfo: {
-    // field return type name
-    data: 'String';
-    name: 'String';
-    transmitterType: 'TransmitterType';
-  };
-  ListenerFilter: {
-    // field return type name
-    branch: 'String';
-    documentId: 'ID';
-    documentType: 'String';
-    scope: 'String';
-  };
-  ListenerRevision: {
-    // field return type name
-    branch: 'String';
-    documentId: 'String';
-    driveId: 'String';
-    error: 'String';
-    revision: 'Int';
-    scope: 'String';
-    status: 'UpdateStatus';
-  };
-  MoveElementInput: {
-    // field return type name
-    id: 'ID';
-    newParentId: 'ID';
-  };
-  Mutation: {
-    // field return type name
-    acknowledge: 'Boolean';
-    createChallenge: 'Challenge';
-    createSession: 'SessionOutput';
-    deletePullResponderListener: 'Listener';
-    pushUpdates: 'ListenerRevision';
-    registerPullResponderListener: 'Listener';
-    revokeSession: 'Session';
-    solveChallenge: 'SessionOutput';
-  };
-  Node: {
-    // field return type name
-    documentType: 'String';
-    id: 'String';
-    kind: 'String';
-    name: 'String';
-    parentFolder: 'String';
-  };
-  OperationContext: {
-    // field return type name
-    signer: 'OperationSigner';
-  };
-  OperationSigner: {
-    // field return type name
-    app: 'OperationSignerApp';
-    signatures: 'String';
-    user: 'OperationSignerUser';
-  };
-  OperationSignerApp: {
-    // field return type name
-    key: 'String';
-    name: 'String';
-  };
-  OperationSignerUser: {
-    // field return type name
-    address: 'String';
-    chainId: 'Int';
-    networkId: 'String';
-  };
-  OperationUpdate: {
-    // field return type name
-    context: 'OperationContext';
-    hash: 'String';
-    id: 'String';
-    index: 'Int';
-    input: 'String';
-    skip: 'Int';
-    timestamp: 'String';
-    type: 'String';
-  };
-  Owner: {
-    // field return type name
-    id: 'String';
-    ref: 'String';
-    title: 'String';
-  };
-  Query: {
-    // field return type name
-    coreUnit: 'CoreUnit';
-    coreUnits: 'CoreUnit';
-    document: 'IDocument';
-    documents: 'IDocument';
-    drive: 'DocumentDriveState';
-    rwaPortfolios: 'RealWorldAssetsPortfolio';
-    system: 'SwitchboardDrive';
-  };
-  RealWorldAssets: {
-    // field return type name
-    created: 'Date';
-    documentType: 'String';
-    id: 'String';
-    lastModified: 'Date';
-    name: 'String';
-    operations: 'DefaultOperation';
-    revision: 'Int';
-    state: 'RealWorldAssetsState';
-  };
-  RealWorldAssetsPortfolio: {
-    // field return type name
-    accounts: 'Account';
-    fixedIncomeTypes: 'FixedIncomeType';
-    id: 'ID';
-    portfolio: 'Asset';
-    principalLenderAccountId: 'ID';
-    serviceProviderFeeTypes: 'ServiceProviderFeeType';
-    spvs: 'Spv';
-    transactions: 'GroupTransaction';
-  };
-  RealWorldAssetsState: {
-    // field return type name
-    accounts: 'Account';
-    fixedIncomeTypes: 'FixedIncomeType';
-    portfolio: 'Asset';
-    principalLenderAccountId: 'ID';
-    serviceProviderFeeTypes: 'ServiceProviderFeeType';
-    spvs: 'Spv';
-    transactions: 'GroupTransaction';
-  };
-  RemoveElementInput: {
-    // field return type name
-    id: 'ID';
-  };
-  ReorderElementsInput: {
-    // field return type name
-    order: 'ID';
-    parentElementId: 'ID';
-  };
-  ScopeComponent: {
-    // field return type name
-    content: 'String';
-  };
-  ScopeFramework: {
-    // field return type name
-    created: 'Date';
-    documentType: 'String';
-    id: 'String';
-    lastModified: 'Date';
-    name: 'String';
-    operations: 'DefaultOperation';
-    revision: 'Int';
-    state: 'ScopeFrameworkState';
-  };
-  ScopeFrameworkElement: {
-    // field return type name
-    components: 'ElementComponents';
-    id: 'ID';
-    name: 'String';
-    path: 'String';
-    type: 'ScopeFrameworkElementType';
-    version: 'Int';
-  };
-  ScopeFrameworkState: {
-    // field return type name
-    elements: 'ScopeFrameworkElement';
-    rootPath: 'String';
-  };
-  SectionComponent: {
-    // field return type name
-    content: 'String';
-  };
-  ServiceProviderFeeType: {
-    // field return type name
-    accountId: 'ID';
-    feeType: 'String';
-    id: 'ID';
-    name: 'String';
-  };
-  Session: {
-    // field return type name
-    allowedOrigins: 'String';
-    createdAt: 'Date';
-    createdBy: 'String';
-    id: 'String';
-    isUserCreated: 'Boolean';
-    name: 'String';
-    referenceExpiryDate: 'Date';
-    referenceTokenId: 'String';
-    revokedAt: 'Date';
-  };
-  SessionOutput: {
-    // field return type name
-    session: 'Session';
-    token: 'String';
-  };
-  SetRootPathInput: {
-    // field return type name
-    newRootPath: 'String';
-  };
-  SnapshotAccount: {
-    // field return type name
-    accountAddress: 'String';
-    accountLabel: 'String';
-    accountType: 'String';
-    groupAccountId: 'ID';
-    id: 'ID';
-    offChain: 'Boolean';
-    snapshotAccountBalance: 'SnapshotAccountBalance';
-    snapshotAccountTransaction: 'SnapshotAccountTransaction';
-    upstreamAccountId: 'ID';
-  };
-  SnapshotAccountBalance: {
-    // field return type name
-    id: 'ID';
-    includesOffChain: 'Boolean';
-    inflow: 'Float';
-    initialBalance: 'Float';
-    newBalance: 'Float';
-    outflow: 'Float';
-    token: 'String';
-  };
-  SnapshotAccountTransaction: {
-    // field return type name
-    amount: 'Float';
-    block: 'Int';
-    counterParty: 'String';
-    counterPartyName: 'String';
-    id: 'ID';
-    timestamp: 'String';
-    token: 'String';
-    txHash: 'String';
-    txLabel: 'String';
-  };
-  Spv: {
-    // field return type name
-    id: 'ID';
-    name: 'String';
-  };
-  StrandUpdate: {
-    // field return type name
-    branch: 'String';
-    documentId: 'String';
-    driveId: 'String';
-    operations: 'OperationUpdate';
-    scope: 'String';
-  };
-  SwitchboardDrive: {
-    // field return type name
-    auth: 'Auth';
-    sync: 'Sync';
-  };
-  SwitchboardHost: {
-    // field return type name
-    auth: 'Auth';
-  };
-  Sync: {
-    // field return type name
-    strands: 'StrandUpdate';
-  };
-  TransactionFee: {
-    // field return type name
-    amount: 'Float';
-    id: 'ID';
-    serviceProviderFeeTypeId: 'ID';
-  };
-  TypeSpecificationComponent: {
-    // field return type name
-    additionalLogic: 'String';
-    category: 'TypeSpecificationComponentCategory';
-    documentIdentifierRules: 'String';
-    name: 'String';
-    overview: 'String';
-    typeAuthority: 'String';
-  };
-  UpdateElementComponentsInput: {
-    // field return type name
-    components: 'ElementComponents';
-    id: 'ID';
-  };
-  UpdateElementNameInput: {
-    // field return type name
-    id: 'ID';
-    name: 'String';
-  };
-  UpdateElementTypeInput: {
-    // field return type name
-    id: 'ID';
-    type: 'ScopeFrameworkElementType';
-  };
-  User: {
-    // field return type name
-    address: 'String';
-    createdAt: 'Date';
-  };
-  Vesting: {
-    // field return type name
-    amount: 'String';
-    amountOld: 'String';
-    comment: 'String';
-    currency: 'String';
-    date: 'String';
-    key: 'String';
-    vested: 'Boolean';
-  };
-  IDocument: {
-    // field return type name
-    created: 'Date';
-    documentType: 'String';
-    id: 'String';
-    lastModified: 'Date';
-    name: 'String';
-    operations: 'DefaultOperation';
-    revision: 'Int';
-  };
-  IOperation: {
-    // field return type name
-    hash: 'String';
-    id: 'String';
-    index: 'Int';
-    timestamp: 'Date';
-    type: 'String';
-  };
-  IRealWorldAssetsState: {
-    // field return type name
-    accounts: 'Account';
-    fixedIncomeTypes: 'FixedIncomeType';
-    portfolio: 'Asset';
-    principalLenderAccountId: 'ID';
-    serviceProviderFeeTypes: 'ServiceProviderFeeType';
-    spvs: 'Spv';
-    transactions: 'GroupTransaction';
-  };
-  System: {
-    // field return type name
-    auth: 'Auth';
-  };
+  Account: { // field return type name
+    id: 'ID'
+    label: 'String'
+    reference: 'String'
+  }
+  AccountSnapshot: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+    state: 'AccountSnapshotState'
+  }
+  AccountSnapshotState: { // field return type name
+    actualsComparison: 'ActualsComparison'
+    end: 'String'
+    id: 'ID'
+    ownerId: 'ID'
+    ownerType: 'String'
+    period: 'String'
+    snapshotAccount: 'SnapshotAccount'
+    start: 'String'
+  }
+  ActualsComparison: { // field return type name
+    currency: 'String'
+    month: 'String'
+    netExpenses: 'ActualsComparisonNetExpenses'
+    reportedActuals: 'Float'
+  }
+  ActualsComparisonNetExpenses: { // field return type name
+    offChainIncluded: 'ActualsComparisonNetExpensesItem'
+    onChainOnly: 'ActualsComparisonNetExpensesItem'
+  }
+  ActualsComparisonNetExpensesItem: { // field return type name
+    amount: 'Float'
+    difference: 'Float'
+  }
+  AddElementInput: { // field return type name
+    components: 'ElementComponents'
+    id: 'String'
+    name: 'String'
+    path: 'String'
+    type: 'ScopeFrameworkElementType'
+  }
+  ArticleComponent: { // field return type name
+    content: 'String'
+  }
+  AuditReport: { // field return type name
+    report: 'Attachment'
+    status: 'AuditReportStatus'
+    timestamp: 'Date'
+  }
+  Auth: { // field return type name
+    me: 'User'
+    sessions: 'Session'
+  }
+  BaseTransaction: { // field return type name
+    accountId: 'ID'
+    amount: 'Float'
+    assetId: 'ID'
+    assetType: 'AssetType'
+    counterPartyAccountId: 'ID'
+    entryTime: 'Date'
+    id: 'ID'
+    settlementTime: 'Date'
+    tradeTime: 'Date'
+  }
+  BudgetStatement: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+    state: 'BudgetStatementState'
+  }
+  BudgetStatementAccount: { // field return type name
+    address: 'String'
+    lineItems: 'LineItem'
+    name: 'String'
+  }
+  BudgetStatementState: { // field return type name
+    accounts: 'BudgetStatementAccount'
+    auditReports: 'AuditReport'
+    comments: 'Comment'
+    ftes: 'Ftes'
+    month: 'String'
+    owner: 'Owner'
+    quoteCurrency: 'String'
+    vesting: 'Vesting'
+  }
+  Cash: { // field return type name
+    balance: 'Float'
+    currency: 'String'
+    id: 'ID'
+    spv: 'Spv'
+    spvId: 'ID'
+  }
+  Challenge: { // field return type name
+    hex: 'String'
+    message: 'String'
+    nonce: 'String'
+  }
+  Comment: { // field return type name
+    author: 'CommentAuthor'
+    comment: 'String'
+    key: 'String'
+    status: 'BudgetStatus'
+    timestamp: 'Date'
+  }
+  CommentAuthor: { // field return type name
+    id: 'String'
+    ref: 'String'
+    roleLabel: 'String'
+    username: 'String'
+  }
+  CoreComponent: { // field return type name
+    content: 'String'
+  }
+  CoreUnit: { // field return type name
+    code: 'String'
+    descriptionParagraph: 'String'
+    descriptionParagraphImageSource: 'String'
+    descriptionSentence: 'String'
+    id: 'String'
+    imageSource: 'String'
+    name: 'String'
+    shortCode: 'String'
+  }
+  DefaultDocument: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+  }
+  DefaultOperation: { // field return type name
+    hash: 'String'
+    id: 'String'
+    index: 'Int'
+    timestamp: 'Date'
+    type: 'String'
+  }
+  DocumentDriveState: { // field return type name
+    icon: 'String'
+    id: 'ID'
+    name: 'String'
+    nodes: 'Node'
+    slug: 'String'
+  }
+  FixedIncome: { // field return type name
+    CUSIP: 'String'
+    ISIN: 'String'
+    assetProceeds: 'Float'
+    coupon: 'Float'
+    currentValue: 'Float'
+    fixedIncomeType: 'FixedIncomeType'
+    fixedIncomeTypeId: 'ID'
+    id: 'ID'
+    maturity: 'Date'
+    name: 'String'
+    notional: 'Float'
+    purchaseDate: 'Date'
+    purchasePrice: 'Float'
+    purchaseProceeds: 'Float'
+    realizedSurplus: 'Float'
+    salesProceeds: 'Float'
+    spv: 'Spv'
+    spvId: 'ID'
+    totalDiscount: 'Float'
+    type: 'AssetType'
+  }
+  FixedIncomeType: { // field return type name
+    id: 'ID'
+    name: 'String'
+  }
+  Ftes: { // field return type name
+    forecast: 'FtesForecast'
+    value: 'Float'
+  }
+  FtesForecast: { // field return type name
+    month: 'String'
+    value: 'Float'
+  }
+  GroupTransaction: { // field return type name
+    cashBalanceChange: 'Float'
+    cashTransaction: 'BaseTransaction'
+    entryTime: 'Date'
+    fees: 'TransactionFee'
+    fixedIncomeTransaction: 'BaseTransaction'
+    id: 'ID'
+    serviceProviderFeeTypeId: 'ID'
+    txRef: 'String'
+    type: 'GroupTransactionType'
+    unitPrice: 'Float'
+  }
+  LineItem: { // field return type name
+    actual: 'Float'
+    budgetCap: 'Float'
+    category: 'LineItemCategory'
+    comment: 'String'
+    forecast: 'LineItemForecast'
+    group: 'LineItemGroup'
+    headcountExpense: 'Boolean'
+    payment: 'Float'
+  }
+  LineItemCategory: { // field return type name
+    id: 'String'
+    ref: 'String'
+    title: 'String'
+  }
+  LineItemForecast: { // field return type name
+    budgetCap: 'Float'
+    month: 'String'
+    value: 'Float'
+  }
+  LineItemGroup: { // field return type name
+    color: 'String'
+    id: 'String'
+    ref: 'String'
+    title: 'String'
+  }
+  Listener: { // field return type name
+    block: 'Boolean'
+    callInfo: 'ListenerCallInfo'
+    filter: 'ListenerFilter'
+    label: 'String'
+    listenerId: 'ID'
+    system: 'Boolean'
+  }
+  ListenerCallInfo: { // field return type name
+    data: 'String'
+    name: 'String'
+    transmitterType: 'TransmitterType'
+  }
+  ListenerFilter: { // field return type name
+    branch: 'String'
+    documentId: 'ID'
+    documentType: 'String'
+    scope: 'String'
+  }
+  ListenerRevision: { // field return type name
+    branch: 'String'
+    documentId: 'String'
+    driveId: 'String'
+    error: 'String'
+    revision: 'Int'
+    scope: 'String'
+    status: 'UpdateStatus'
+  }
+  MoveElementInput: { // field return type name
+    id: 'ID'
+    newParentId: 'ID'
+  }
+  Mutation: { // field return type name
+    acknowledge: 'Boolean'
+    createChallenge: 'Challenge'
+    createSession: 'SessionOutput'
+    deletePullResponderListener: 'Listener'
+    pushUpdates: 'ListenerRevision'
+    registerPullResponderListener: 'Listener'
+    revokeSession: 'Session'
+    solveChallenge: 'SessionOutput'
+  }
+  Node: { // field return type name
+    documentType: 'String'
+    id: 'String'
+    kind: 'String'
+    name: 'String'
+    parentFolder: 'String'
+  }
+  OperationContext: { // field return type name
+    signer: 'OperationSigner'
+  }
+  OperationSigner: { // field return type name
+    app: 'OperationSignerApp'
+    signatures: 'String'
+    user: 'OperationSignerUser'
+  }
+  OperationSignerApp: { // field return type name
+    key: 'String'
+    name: 'String'
+  }
+  OperationSignerUser: { // field return type name
+    address: 'String'
+    chainId: 'Int'
+    networkId: 'String'
+  }
+  OperationUpdate: { // field return type name
+    context: 'OperationContext'
+    hash: 'String'
+    id: 'String'
+    index: 'Int'
+    input: 'String'
+    skip: 'Int'
+    timestamp: 'String'
+    type: 'String'
+  }
+  Owner: { // field return type name
+    id: 'String'
+    ref: 'String'
+    title: 'String'
+  }
+  Query: { // field return type name
+    coreUnit: 'CoreUnit'
+    coreUnits: 'CoreUnit'
+    document: 'IDocument'
+    documents: 'IDocument'
+    drive: 'DocumentDriveState'
+    rwaPortfolios: 'RealWorldAssetsPortfolio'
+    system: 'SwitchboardDrive'
+  }
+  RealWorldAssets: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+    state: 'RealWorldAssetsState'
+  }
+  RealWorldAssetsPortfolio: { // field return type name
+    accounts: 'Account'
+    fixedIncomeTypes: 'FixedIncomeType'
+    id: 'ID'
+    portfolio: 'Asset'
+    principalLenderAccountId: 'ID'
+    serviceProviderFeeTypes: 'ServiceProviderFeeType'
+    spvs: 'Spv'
+    transactions: 'GroupTransaction'
+  }
+  RealWorldAssetsState: { // field return type name
+    accounts: 'Account'
+    fixedIncomeTypes: 'FixedIncomeType'
+    portfolio: 'Asset'
+    principalLenderAccountId: 'ID'
+    serviceProviderFeeTypes: 'ServiceProviderFeeType'
+    spvs: 'Spv'
+    transactions: 'GroupTransaction'
+  }
+  RemoveElementInput: { // field return type name
+    id: 'ID'
+  }
+  ReorderElementsInput: { // field return type name
+    order: 'ID'
+    parentElementId: 'ID'
+  }
+  ScopeComponent: { // field return type name
+    content: 'String'
+  }
+  ScopeFramework: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+    state: 'ScopeFrameworkState'
+  }
+  ScopeFrameworkElement: { // field return type name
+    components: 'ElementComponents'
+    id: 'ID'
+    name: 'String'
+    path: 'String'
+    type: 'ScopeFrameworkElementType'
+    version: 'Int'
+  }
+  ScopeFrameworkState: { // field return type name
+    elements: 'ScopeFrameworkElement'
+    rootPath: 'String'
+  }
+  SectionComponent: { // field return type name
+    content: 'String'
+  }
+  ServiceProviderFeeType: { // field return type name
+    accountId: 'ID'
+    feeType: 'String'
+    id: 'ID'
+    name: 'String'
+  }
+  Session: { // field return type name
+    allowedOrigins: 'String'
+    createdAt: 'Date'
+    createdBy: 'String'
+    id: 'String'
+    isUserCreated: 'Boolean'
+    name: 'String'
+    referenceExpiryDate: 'Date'
+    referenceTokenId: 'String'
+    revokedAt: 'Date'
+  }
+  SessionOutput: { // field return type name
+    session: 'Session'
+    token: 'String'
+  }
+  SetRootPathInput: { // field return type name
+    newRootPath: 'String'
+  }
+  SnapshotAccount: { // field return type name
+    accountAddress: 'String'
+    accountLabel: 'String'
+    accountType: 'String'
+    groupAccountId: 'ID'
+    id: 'ID'
+    offChain: 'Boolean'
+    snapshotAccountBalance: 'SnapshotAccountBalance'
+    snapshotAccountTransaction: 'SnapshotAccountTransaction'
+    upstreamAccountId: 'ID'
+  }
+  SnapshotAccountBalance: { // field return type name
+    id: 'ID'
+    includesOffChain: 'Boolean'
+    inflow: 'Float'
+    initialBalance: 'Float'
+    newBalance: 'Float'
+    outflow: 'Float'
+    token: 'String'
+  }
+  SnapshotAccountTransaction: { // field return type name
+    amount: 'Float'
+    block: 'Int'
+    counterParty: 'String'
+    counterPartyName: 'String'
+    id: 'ID'
+    timestamp: 'String'
+    token: 'String'
+    txHash: 'String'
+    txLabel: 'String'
+  }
+  Spv: { // field return type name
+    id: 'ID'
+    name: 'String'
+  }
+  StrandUpdate: { // field return type name
+    branch: 'String'
+    documentId: 'String'
+    driveId: 'String'
+    operations: 'OperationUpdate'
+    scope: 'String'
+  }
+  SwitchboardDrive: { // field return type name
+    auth: 'Auth'
+    sync: 'Sync'
+  }
+  SwitchboardHost: { // field return type name
+    auth: 'Auth'
+  }
+  Sync: { // field return type name
+    strands: 'StrandUpdate'
+  }
+  TransactionFee: { // field return type name
+    amount: 'Float'
+    id: 'ID'
+    serviceProviderFeeTypeId: 'ID'
+  }
+  TypeSpecificationComponent: { // field return type name
+    additionalLogic: 'String'
+    category: 'TypeSpecificationComponentCategory'
+    documentIdentifierRules: 'String'
+    name: 'String'
+    overview: 'String'
+    typeAuthority: 'String'
+  }
+  UpdateElementComponentsInput: { // field return type name
+    components: 'ElementComponents'
+    id: 'ID'
+  }
+  UpdateElementNameInput: { // field return type name
+    id: 'ID'
+    name: 'String'
+  }
+  UpdateElementTypeInput: { // field return type name
+    id: 'ID'
+    type: 'ScopeFrameworkElementType'
+  }
+  User: { // field return type name
+    address: 'String'
+    createdAt: 'Date'
+  }
+  Vesting: { // field return type name
+    amount: 'String'
+    amountOld: 'String'
+    comment: 'String'
+    currency: 'String'
+    date: 'String'
+    key: 'String'
+    vested: 'Boolean'
+  }
+  IDocument: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+  }
+  IOperation: { // field return type name
+    hash: 'String'
+    id: 'String'
+    index: 'Int'
+    timestamp: 'Date'
+    type: 'String'
+  }
+  IRealWorldAssetsState: { // field return type name
+    accounts: 'Account'
+    fixedIncomeTypes: 'FixedIncomeType'
+    portfolio: 'Asset'
+    principalLenderAccountId: 'ID'
+    serviceProviderFeeTypes: 'ServiceProviderFeeType'
+    spvs: 'Spv'
+    transactions: 'GroupTransaction'
+  }
+  System: { // field return type name
+    auth: 'Auth'
+  }
 }
 
 export interface NexusGenArgTypes {
+  FixedIncome: {
+    currentValue: { // args
+      date?: NexusGenScalars['Date'] | null; // Date
+    }
+  }
   Mutation: {
-    acknowledge: {
-      // args
+    acknowledge: { // args
       listenerId: string; // String!
       revisions?: Array<NexusGenInputs['ListenerRevisionInput'] | null> | null; // [ListenerRevisionInput]
-    };
-    createChallenge: {
-      // args
+    }
+    createChallenge: { // args
       address: string; // String!
-    };
-    createSession: {
-      // args
+    }
+    createSession: { // args
       session: NexusGenInputs['SessionInput']; // SessionInput!
-    };
-    deletePullResponderListener: {
-      // args
+    }
+    deletePullResponderListener: { // args
       filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
-    };
-    pushUpdates: {
-      // args
+    }
+    pushUpdates: { // args
       strands?: NexusGenInputs['InputStrandUpdate'][] | null; // [InputStrandUpdate!]
-    };
-    registerPullResponderListener: {
-      // args
+    }
+    registerPullResponderListener: { // args
       filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
-    };
-    revokeSession: {
-      // args
+    }
+    revokeSession: { // args
       sessionId: string; // String!
-    };
-    solveChallenge: {
-      // args
+    }
+    solveChallenge: { // args
       nonce: string; // String!
       signature: string; // String!
-    };
-  };
+    }
+  }
   Query: {
-    coreUnit: {
-      // args
+    coreUnit: { // args
       id?: string | null; // String
-    };
-    document: {
-      // args
+    }
+    document: { // args
       id: string; // String!
-    };
-    rwaPortfolios: {
-      // args
+    }
+    rwaPortfolios: { // args
       id?: string | null; // String
-    };
-  };
+    }
+  }
   Sync: {
-    strands: {
-      // args
+    strands: { // args
       listenerId?: string | null; // ID
       since?: NexusGenScalars['Date'] | null; // Date
-    };
-  };
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Asset: 'Cash' | 'FixedIncome';
-  ElementComponents:
-    | 'ArticleComponent'
-    | 'CoreComponent'
-    | 'ScopeComponent'
-    | 'SectionComponent'
-    | 'TypeSpecificationComponent';
-  IDocument:
-    | 'AccountSnapshot'
-    | 'BudgetStatement'
-    | 'DefaultDocument'
-    | 'RealWorldAssets'
-    | 'ScopeFramework';
-  IOperation: 'DefaultOperation';
-  IRealWorldAssetsState: 'RealWorldAssetsPortfolio' | 'RealWorldAssetsState';
-  System: 'SwitchboardDrive' | 'SwitchboardHost';
+  Asset: "Cash" | "FixedIncome"
+  ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
+  IDocument: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
+  IOperation: "DefaultOperation"
+  IRealWorldAssetsState: "RealWorldAssetsPortfolio" | "RealWorldAssetsState"
+  System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
 export interface NexusGenTypeInterfaces {
-  AccountSnapshot: 'IDocument';
-  BudgetStatement: 'IDocument';
-  DefaultDocument: 'IDocument';
-  DefaultOperation: 'IOperation';
-  RealWorldAssets: 'IDocument';
-  RealWorldAssetsPortfolio: 'IRealWorldAssetsState';
-  RealWorldAssetsState: 'IRealWorldAssetsState';
-  ScopeFramework: 'IDocument';
-  SwitchboardDrive: 'System';
-  SwitchboardHost: 'System';
+  AccountSnapshot: "IDocument"
+  BudgetStatement: "IDocument"
+  DefaultDocument: "IDocument"
+  DefaultOperation: "IOperation"
+  RealWorldAssets: "IDocument"
+  RealWorldAssetsPortfolio: "IRealWorldAssetsState"
+  RealWorldAssetsState: "IRealWorldAssetsState"
+  ScopeFramework: "IDocument"
+  SwitchboardDrive: "System"
+  SwitchboardHost: "System"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -2102,21 +1770,15 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType =
-  | 'Asset'
-  | 'ElementComponents'
-  | 'IDocument'
-  | 'IOperation'
-  | 'IRealWorldAssetsState'
-  | 'System';
+export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IOperation" | "IRealWorldAssetsState" | "System";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
-    isTypeOf: false;
-    resolveType: true;
-    __typename: false;
-  };
-};
+    isTypeOf: false
+    resolveType: true
+    __typename: false
+  }
+}
 
 export interface NexusGenTypes {
   context: Context;
@@ -2134,19 +1796,9 @@ export interface NexusGenTypes {
   interfaceNames: NexusGenInterfaceNames;
   scalarNames: NexusGenScalarNames;
   unionNames: NexusGenUnionNames;
-  allInputTypes:
-    | NexusGenTypes['inputNames']
-    | NexusGenTypes['enumNames']
-    | NexusGenTypes['scalarNames'];
-  allOutputTypes:
-    | NexusGenTypes['objectNames']
-    | NexusGenTypes['enumNames']
-    | NexusGenTypes['unionNames']
-    | NexusGenTypes['interfaceNames']
-    | NexusGenTypes['scalarNames'];
-  allNamedTypes:
-    | NexusGenTypes['allInputTypes']
-    | NexusGenTypes['allOutputTypes'];
+  allInputTypes: NexusGenTypes['inputNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['scalarNames'];
+  allOutputTypes: NexusGenTypes['objectNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['unionNames'] | NexusGenTypes['interfaceNames'] | NexusGenTypes['scalarNames'];
+  allNamedTypes: NexusGenTypes['allInputTypes'] | NexusGenTypes['allOutputTypes']
   abstractTypes: NexusGenTypes['interfaceNames'] | NexusGenTypes['unionNames'];
   abstractTypeMembers: NexusGenAbstractTypeMembers;
   objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf;
@@ -2154,13 +1806,13 @@ export interface NexusGenTypes {
   features: NexusGenFeaturesConfig;
 }
 
+
 declare global {
-  interface NexusGenPluginTypeConfig<TypeName extends string> {}
-  interface NexusGenPluginInputTypeConfig<TypeName extends string> {}
-  interface NexusGenPluginFieldConfig<
-    TypeName extends string,
-    FieldName extends string
-  > {
+  interface NexusGenPluginTypeConfig<TypeName extends string> {
+  }
+  interface NexusGenPluginInputTypeConfig<TypeName extends string> {
+  }
+  interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
     /**
      * Authorization for an individual field. Returning "true"
      * or "Promise<true>" means the field can be accessed.
@@ -2169,19 +1821,21 @@ declare global {
      * Returning or throwing an error will also prevent the
      * resolver from executing.
      */
-    authorize?: FieldAuthorizeResolver<TypeName, FieldName>;
-
+    authorize?: FieldAuthorizeResolver<TypeName, FieldName>
+    
     /**
      * Async validation function. Reject when validation fails. Resolve otherwise.
      */
-    validate?: NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
-      ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
-      : never;
+    validate?: 
+        NexusGenArgTypes extends HasTypeField<TypeName, FieldName>
+        ? ArgsValidationConfig<NexusGenArgTypes[TypeName][FieldName]>
+        : never
+        
   }
-  interface NexusGenPluginInputFieldConfig<
-    TypeName extends string,
-    FieldName extends string
-  > {}
-  interface NexusGenPluginSchemaConfig {}
-  interface NexusGenPluginArgConfig {}
+  interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
+  }
+  interface NexusGenPluginSchemaConfig {
+  }
+  interface NexusGenPluginArgConfig {
+  }
 }
