@@ -34,13 +34,13 @@ dependencies:
     version: 2.8.5
   document-drive:
     specifier: 1.0.0-alpha.88
-    version: 1.0.0-alpha.88(document-model-libs@1.78.0)(document-model@1.7.0)(prisma@5.16.0)
+    version: 1.0.0-alpha.88(document-model-libs@1.81.0)(document-model@1.7.0)(prisma@5.16.0)
   document-model:
     specifier: 1.7.0
     version: 1.7.0
   document-model-libs:
-    specifier: ^1.78.0
-    version: 1.78.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
+    specifier: ^1.81.0
+    version: 1.81.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -4583,14 +4583,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.88(document-model-libs@1.78.0)(document-model@1.7.0)(prisma@5.16.0):
+  /document-drive@1.0.0-alpha.88(document-model-libs@1.81.0)(document-model@1.7.0)(prisma@5.16.0):
     resolution: {integrity: sha512-HwLtyr9wo5Q4c6aMKOK8rFqXO0NZwB07gVljCeCqrromcDekHeQREvYUQaqXlo4RKhQP3dyyzcI6itzS0g5qjQ==}
     peerDependencies:
       document-model: ^1.7.0
       document-model-libs: ^1.57.0
     dependencies:
       document-model: 1.7.0
-      document-model-libs: 1.78.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
+      document-model-libs: 1.81.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.9.0
       graphql-request: 6.1.0(graphql@16.9.0)
@@ -4619,8 +4619,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.78.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4):
-    resolution: {integrity: sha512-Hy4BZ1evlgcyrRS4N8bYNTbflOmLstcoM9LT8Br9ZLneATty7GAyC30lW9AEu0GYD2z/zouIzi8zaahru0qilQ==}
+  /document-model-libs@1.81.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4):
+    resolution: {integrity: sha512-czYPIrR8GqQm5EmrzpWxNMwul1M1op40ClEdamWKQnVJqNQf/IuOC55gxDvRv+Kgw19YaPH7w2Svm+vHKxb5BQ==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
