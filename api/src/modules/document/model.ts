@@ -25,11 +25,12 @@ import RedisCache from 'document-drive/cache/redis';
 import { BaseQueueManager } from 'document-drive/queue/base';
 import { RedisQueueManager } from 'document-drive/queue/redis';
 
-import { RealWorldAssetsDocument, utils } from 'document-model-libs/real-world-assets';
+import { RealWorldAssetsDocument } from 'document-model-libs/real-world-assets';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import { getChildLogger } from '../../logger';
 import { initRedis } from '../../redis';
 import { init } from './listenerManager';
+import { buildRWADocument } from '../real-world-assets/utils';
 
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
@@ -251,10 +252,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return listenerId;
     },
 
-    getDocument: async (driveId: string, documentId: string, when?: Date) => {
+    getDocument: async (driveId: string, documentId: string) => {
       let document = await driveServer.getDocument(driveId, documentId);
       if (document.documentType === 'makerdao/rwa-portfolio') {
-        document = utils.makeRwaDocumentWithAssetCurrentValues(document as RealWorldAssetsDocument, when);
+        document = buildRWADocument(document as RealWorldAssetsDocument);
       }
       const response = {
         ...document,
