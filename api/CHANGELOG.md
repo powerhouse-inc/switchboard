@@ -1,3 +1,10 @@
+# [1.0.0-dev.29](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2024-08-06)
+
+
+### Bug Fixes
+
+* Fixed error when deleting drive ([007d681](https://github.com/powerhouse-inc/switchboard/commit/007d68116cd8b8ebfc551c5cee2006b17c5ebf8b))
+
 # [1.0.0-dev.28](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2024-08-06)
 
 
