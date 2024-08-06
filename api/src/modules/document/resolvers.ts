@@ -69,12 +69,8 @@ export const documentQuery = queryField('document', {
     if (!ctx.driveId) {
       throw new Error('DriveId is not defined');
     }
-    try {
-      const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
-      return doc;
-    } catch (e: any) {
-      logger.error({ msg: e.message });
-    }
+    const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
+    return doc;
   }
 });
 

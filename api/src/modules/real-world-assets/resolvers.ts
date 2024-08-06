@@ -89,6 +89,10 @@ export const FixedIncome = objectType({
     t.string('ISIN');
     t.string('CUSIP');
     t.float('coupon');
+    t.field('currentValue', {
+      type: 'Float',
+      args: { date: GQLDateBase },
+    });
   }
 });
 
@@ -121,7 +125,7 @@ export const RealWorldAssetsStateInterface = interfaceType({
     t.nonNull.list.nonNull.field('portfolio', { type: Asset });
     t.nonNull.list.nonNull.field('transactions', { type: GroupTransaction });
   },
-  resolveType: () => 'RealWorldAssetsState'
+  resolveType: () => null
 });
 
 export const RealWorldAssetsState = objectType({

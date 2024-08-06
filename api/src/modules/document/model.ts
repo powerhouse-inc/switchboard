@@ -25,11 +25,12 @@ import RedisCache from 'document-drive/cache/redis';
 import { BaseQueueManager } from 'document-drive/queue/base';
 import { RedisQueueManager } from 'document-drive/queue/redis';
 
+import { RealWorldAssetsDocument, utils } from 'document-model-libs/real-world-assets';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import { getChildLogger } from '../../logger';
 import { initRedis } from '../../redis';
 import { init } from './listenerManager';
-// import { ScopeOfWorkAction, ScopeOfWorkDocument } from '../../../../../document-model-libs/dist/document-models/scope-of-work';
+
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -250,8 +251,11 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return listenerId;
     },
 
-    getDocument: async (driveId: string, documentId: string) => {
-      const document = await driveServer.getDocument(driveId, documentId);
+    getDocument: async (driveId: string, documentId: string, when?: Date) => {
+      let document = await driveServer.getDocument(driveId, documentId);
+      if (document.documentType === 'makerdao/rwa-portfolio') {
+        document = utils.makeRwaDocumentWithAssetCurrentValues(document as RealWorldAssetsDocument, when);
+      }
       const response = {
         ...document,
         id: documentId,
@@ -267,37 +271,33 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return documents;
     },
 
-    setDriveIcon: async (driveId: string, icon: string) => {
-      return await driveServer.queueDriveAction(
-        driveId,
-        actions.setDriveIcon({ icon })
-      );
-    },
-    setDriveName: async (driveId: string, name: string) => {
-      return await driveServer.queueDriveAction(
-        driveId,
-        actions.setDriveName({ name })
-      );
-    },
-    closeScopeOfWorkIssue: async (githubId: number) => {
-      // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
-      //     where: {
-      //         githubId: githubId
-      //     }
-      // })
-      // if (!dbEntry) {
-      //     throw new Error("Deliverable not found");
-      // }
-      // const { driveId, documentId, id } = dbEntry;
-      // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
-      // if (!sowDocument) {
-      //     throw new Error("Document not found");
-      // }
-      // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
-      //     id,
-      //     status: "DELIVERED"
-      // }))
-      // return result;
-    }
+    setDriveIcon: async (driveId: string, icon: string) => driveServer.queueDriveAction(
+      driveId,
+      actions.setDriveIcon({ icon })
+    ),
+    setDriveName: async (driveId: string, name: string) => driveServer.queueDriveAction(
+      driveId,
+      actions.setDriveName({ name })
+    ),
+    // closeScopeOfWorkIssue: async (githubId: number) => {
+    // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
+    //     where: {
+    //         githubId: githubId
+    //     }
+    // })
+    // if (!dbEntry) {
+    //     throw new Error("Deliverable not found");
+    // }
+    // const { driveId, documentId, id } = dbEntry;
+    // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
+    // if (!sowDocument) {
+    //     throw new Error("Document not found");
+    // }
+    // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
+    //     id,
+    //     status: "DELIVERED"
+    // }))
+    // return result;
+    //   }
   };
 }
