@@ -2,34 +2,36 @@ import type { Prisma, PrismaClient } from '@prisma/client';
 import {
   DocumentDriveServer,
   DriveInput,
-  ListenerRevision,
-  StrandUpdate,
   generateUUID,
+  ListenerRevision,
   PullResponderTransmitter,
+  StrandUpdate
 } from 'document-drive';
 import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
-import * as DocumentModelsLibs from 'document-model-libs/document-models';
-import { module as DocumentModelLib } from 'document-model/document-model';
-import { DocumentModel, Operation } from 'document-model/document';
 import {
-  Listener,
-  ListenerFilter,
   actions,
   DocumentDriveAction,
+  Listener,
+  ListenerFilter
 } from 'document-model-libs/document-drive';
+import * as DocumentModelsLibs from 'document-model-libs/document-models';
+import { DocumentModel, Operation } from 'document-model/document';
+import { module as DocumentModelLib } from 'document-model/document-model';
 
 // import * as sow from 'document-model-libs/scope-of-work';
-import RedisCache from 'document-drive/cache/redis';
 import MemoryCache from 'document-drive/cache/memory';
-import { RedisQueueManager } from 'document-drive/queue/redis';
+import RedisCache from 'document-drive/cache/redis';
 import { BaseQueueManager } from 'document-drive/queue/base';
+import { RedisQueueManager } from 'document-drive/queue/redis';
 
-import { init } from './listenerManager';
-import { getChildLogger } from '../../logger';
+import { RealWorldAssetsDocument } from 'document-model-libs/real-world-assets';
 import DocumentDriveError from '../../errors/DocumentDriveError';
+import { getChildLogger } from '../../logger';
 import { initRedis } from '../../redis';
-// import { ScopeOfWorkAction, ScopeOfWorkDocument } from '../../../../../document-model-libs/dist/document-models/scope-of-work';
+import { init } from './listenerManager';
+import { buildRWADocument } from '../real-world-assets/utils';
+
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -41,7 +43,7 @@ const loggerAdapter = new Proxy<ILogger>(
   documentDriveLogger as unknown as ILogger,
   {
     get: (target, prop) =>
-      prop === 'log' ? documentDriveLogger.info : target[prop as keyof ILogger],
+      prop === 'log' ? documentDriveLogger.info : target[prop as keyof ILogger]
   }
 );
 setLogger(loggerAdapter);
@@ -54,7 +56,7 @@ const redisTTL = process.env.REDIS_TTL
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   const documentModels = [
     DocumentModelLib,
-    ...Object.values(DocumentModelsLibs),
+    ...Object.values(DocumentModelsLibs)
   ] as DocumentModel[];
 
   let driveServer: DocumentDriveServer;
@@ -79,7 +81,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         code: 500,
         message: e.message ?? 'Failed to initialize drive server',
         logging: true,
-        context: e,
+        context: e
       });
     }
   }
@@ -206,17 +208,17 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         callInfo: {
           data: '',
           name: 'PullResponder',
-          transmitterType: 'PullResponder',
+          transmitterType: 'PullResponder'
         },
         filter: {
           branch: filter.branch ?? [],
           documentId: filter.documentId ?? [],
           documentType: filter.documentType ?? [],
-          scope: filter.scope ?? [],
+          scope: filter.scope ?? []
         },
         label: `Pullresponder #${uuid}`,
         listenerId: uuid,
-        system: false,
+        system: false
       };
 
       const result = await driveServer.queueDriveAction(
@@ -252,13 +254,16 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
 
     getDocument: async (driveId: string, documentId: string) => {
-      const document = await driveServer.getDocument(driveId, documentId);
+      let document = await driveServer.getDocument(driveId, documentId);
+      if (document.documentType === 'makerdao/rwa-portfolio') {
+        document = buildRWADocument(document as RealWorldAssetsDocument);
+      }
       const response = {
         ...document,
         id: documentId,
         revision: document.revision.global,
         state: document.state.global,
-        operations: document.operations.global,
+        operations: document.operations.global
       };
       return response;
     },
@@ -268,34 +273,33 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return documents;
     },
 
-    // setDriveIcon: async (driveId: string, icon: string) => {
-    //   return await driveServer.queueDriveAction(driveId, actions.setDriveIcon({ icon }));
-    // },
-    setDriveName: async (driveId: string, name: string) => {
-      return await driveServer.queueDriveAction(
-        driveId,
-        actions.setDriveName({ name })
-      );
-    },
-    closeScopeOfWorkIssue: async (githubId: number) => {
-      // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
-      //     where: {
-      //         githubId: githubId
-      //     }
-      // })
-      // if (!dbEntry) {
-      //     throw new Error("Deliverable not found");
-      // }
-      // const { driveId, documentId, id } = dbEntry;
-      // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
-      // if (!sowDocument) {
-      //     throw new Error("Document not found");
-      // }
-      // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
-      //     id,
-      //     status: "DELIVERED"
-      // }))
-      // return result;
-    },
+    setDriveIcon: async (driveId: string, icon: string) => driveServer.queueDriveAction(
+      driveId,
+      actions.setDriveIcon({ icon })
+    ),
+    setDriveName: async (driveId: string, name: string) => driveServer.queueDriveAction(
+      driveId,
+      actions.setDriveName({ name })
+    ),
+    // closeScopeOfWorkIssue: async (githubId: number) => {
+    // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
+    //     where: {
+    //         githubId: githubId
+    //     }
+    // })
+    // if (!dbEntry) {
+    //     throw new Error("Deliverable not found");
+    // }
+    // const { driveId, documentId, id } = dbEntry;
+    // const sowDocument = await driveServer.getDocument(driveId, documentId) as ScopeOfWorkDocument;
+    // if (!sowDocument) {
+    //     throw new Error("Document not found");
+    // }
+    // const result = await driveServer.addAction(driveId, documentId, sow.actions.updateDeliverableStatus({
+    //     id,
+    //     status: "DELIVERED"
+    // }))
+    // return result;
+    //   }
   };
 }
