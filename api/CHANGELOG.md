@@ -1,3 +1,11 @@
+# [1.0.0-dev.28](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.27...v1.0.0-dev.28) (2024-08-06)
+
+
+### Features
+
+* added calc for current values ([693b782](https://github.com/powerhouse-inc/switchboard/commit/693b782e88a4697e77c424dc182c014e53889f6c))
+* added current value for rwadocument ([7453848](https://github.com/powerhouse-inc/switchboard/commit/7453848bd55ceba0a74e7ab0a78404398294570f))
+
 # [1.0.0-dev.27](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.26...v1.0.0-dev.27) (2024-08-05)
 
 
