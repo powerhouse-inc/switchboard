@@ -1,3 +1,10 @@
+# [1.0.0-dev.30](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2024-08-07)
+
+
+### Features
+
+* bump libs ([cbdda22](https://github.com/powerhouse-inc/switchboard/commit/cbdda22a96416c3128f665e4cd3d3b51d7415c8a))
+
 # [1.0.0-dev.29](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.28...v1.0.0-dev.29) (2024-08-06)
 
 
