@@ -289,10 +289,12 @@ export interface NexusGenObjects {
     type: string; // String!
   }
   DocumentDriveState: { // root type
+    availableOffline: boolean; // Boolean!
     icon?: string | null; // String
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    sharingType?: string | null; // String
     slug?: string | null; // String
   }
   FixedIncome: { // root type
@@ -779,10 +781,12 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   DocumentDriveState: { // field return type
+    availableOffline: boolean; // Boolean!
     icon: string | null; // String
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    sharingType: string | null; // String
     slug: string | null; // String
   }
   FixedIncome: { // field return type
@@ -1305,10 +1309,12 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   DocumentDriveState: { // field return type name
+    availableOffline: 'Boolean'
     icon: 'String'
     id: 'ID'
     name: 'String'
     nodes: 'Node'
+    sharingType: 'String'
     slug: 'String'
   }
   FixedIncome: { // field return type name
