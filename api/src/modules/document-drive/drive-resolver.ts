@@ -23,6 +23,7 @@ import DocumentDriveError from '../../errors/DocumentDriveError';
 import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
 import { systemType } from '../system';
+import { verifyOperations } from '../document/utils';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -408,6 +409,11 @@ export const pushUpdates = mutationField('pushUpdates', {
               branch: 'main'
             })) ?? [];
 
+          if (!(await verifyOperations(s.operations))) { // todo fix this
+            throw new BadRequestError({
+              message: 'Invalid operation signature'
+            });
+          }
           const result = await ctx.prisma.document.pushUpdates(
             s.driveId,
             operations as Operation<DocumentDriveAction>[],
