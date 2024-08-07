@@ -89,6 +89,9 @@ export async function init(
           transmitter.setReceiver({
             transmit: async (strands: InternalTransmitterUpdate[]) => {
               transmit(strands, prisma);
+            },
+            disconnect: async ()  =>{
+              logger.info(`Disconnecting listener ${options.listenerId}`);
             }
           });
         }
