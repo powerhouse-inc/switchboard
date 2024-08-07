@@ -409,7 +409,7 @@ export const pushUpdates = mutationField('pushUpdates', {
               branch: 'main'
             })) ?? [];
 
-          if (!(await verifyOperations(s.operations))) { // todo fix this
+          if (!(await verifyOperations(operations as Operation<DocumentDriveAction>[]))) { // todo fix this
             throw new BadRequestError({
               message: 'Invalid operation signature'
             });
