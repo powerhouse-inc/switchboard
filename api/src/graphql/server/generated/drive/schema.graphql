@@ -204,10 +204,12 @@ type DefaultOperation implements IOperation {
 }
 
 type DocumentDriveState {
+  availableOffline: Boolean!
   icon: String
   id: ID!
   name: String!
   nodes: [Node]!
+  sharingType: String
   slug: String
 }
 

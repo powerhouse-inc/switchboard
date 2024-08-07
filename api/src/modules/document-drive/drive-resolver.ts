@@ -37,6 +37,7 @@ export const Node = objectType({
   }
 });
 
+
 export const DocumentDriveStateObject = objectType({
   name: 'DocumentDriveState',
   definition(t) {
@@ -45,6 +46,8 @@ export const DocumentDriveStateObject = objectType({
     t.nonNull.list.field('nodes', { type: Node });
     t.string('icon');
     t.string('slug');
+    t.string("sharingType");
+    t.nonNull.boolean("availableOffline");
   }
 });
 
@@ -318,10 +321,10 @@ export const getDrive = queryField('drive', {
   type: DocumentDriveStateObject,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
-      const drive = (await ctx.prisma.document.getDrive(
+      const {global, local} = (await ctx.prisma.document.getDrive(
         ctx.driveId ?? '1'
-      )) as DocumentDriveState;
-      return drive;
+      )) ;
+      return {...global, ...local, sharingType: local.sharingType?.toUpperCase() ?? null};
     } catch (e: any) {
       throw new DocumentDriveError({
         code: 500,

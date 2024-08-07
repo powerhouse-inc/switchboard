@@ -107,10 +107,12 @@ export interface NexusGenObjects {
     sharingType?: string | null; // String
   }
   DocumentDriveState: { // root type
+    availableOffline: boolean; // Boolean!
     icon?: string | null; // String
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    sharingType?: string | null; // String
     slug?: string | null; // String
   }
   Mutation: {};
@@ -184,10 +186,12 @@ export interface NexusGenFieldTypes {
     sharingType: string | null; // String
   }
   DocumentDriveState: { // field return type
+    availableOffline: boolean; // Boolean!
     icon: string | null; // String
     id: string; // ID!
     name: string; // String!
     nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    sharingType: string | null; // String
     slug: string | null; // String
   }
   Mutation: { // field return type
@@ -270,10 +274,12 @@ export interface NexusGenFieldTypeNames {
     sharingType: 'String'
   }
   DocumentDriveState: { // field return type name
+    availableOffline: 'Boolean'
     icon: 'String'
     id: 'ID'
     name: 'String'
     nodes: 'Node'
+    sharingType: 'String'
     slug: 'String'
   }
   Mutation: { // field return type name

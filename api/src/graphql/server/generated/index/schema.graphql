@@ -46,10 +46,12 @@ input DocumentDriveLocalStateInput {
 }
 
 type DocumentDriveState {
+  availableOffline: Boolean!
   icon: String
   id: ID!
   name: String!
   nodes: [Node]!
+  sharingType: String
   slug: String
 }
 
