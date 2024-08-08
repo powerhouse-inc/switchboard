@@ -1,12 +1,11 @@
 import { RuntimeCompositeDefinition } from "@composedb/types";
-import { compose } from "./ceramic/compose";
-import { User } from "./types";
 import { ComposeClient } from "@composedb/client";
-import logger from "../../logger";
 import { EventSource } from "cross-eventsource";
 import { JsonAsString, AggregationDocument } from '@ceramicnetwork/codecs';
 import { Codec, decode } from "codeco";
 import { fetchEntries } from "./queries";
+import logger from "../../logger";
+import { CeramicPowerhouseVerifiableCredential } from "./types";
 
 export interface KYCServiceOptions {
   // The URL of the Ceramic node
@@ -25,12 +24,13 @@ export class KYCService {
   protected codec: Codec<any, any, any>;
 
   constructor(options: KYCServiceOptions) {
+    const ceramic = options.ceramicUrl || "http://localhost:7007";
     this.client = new ComposeClient({
-      ceramic: options.ceramicUrl || "http://localhost:7007",
+      ceramic,
       definition: options.definition as RuntimeCompositeDefinition,
     });
 
-    this.eventSource = new EventSource('http://localhost:7007/api/v0/feed/aggregation/documents')
+    this.eventSource = new EventSource(`${ceramic}/api/v0/feed/aggregation/documents`)
     this.codec = JsonAsString.pipe(AggregationDocument)
   }
 
@@ -110,7 +110,17 @@ export class KYCService {
         ],
       },
     });
-    return result;
+
+    if (result.errors) {
+      return null;
+    }
+
+    const { data } = result;
+    if (!data || data.verifiableCredentialEIP712Index.edges.length === 0) {
+      return null;
+    }
+
+    return data.verifiableCredentialEIP712Index.edges[0]!.node;
   }
 
   #updateEntries = async () => {
@@ -134,10 +144,10 @@ export class KYCService {
     this.entries = entries;
   }
 
-  #updateEntry = async (signer: any) => {
-    const entry = await this.#fetchEntryFromCeramic(signer.id);
-    const index = this.entries.findIndex((e) => e.id === signer.id);
-    if (!entry) {
+  #updateEntry = async (issuerId: string, subjectId: string) => {
+    const entry = await this.#fetchEntryFromCeramic(issuerId, subjectId);
+    const index = this.entries.findIndex((e) => e.issuerId === issuerId && e.subjectId === subjectId);
+    if (!entry && index !== -1) {
       delete this.entries[index];
       return null;
     }
@@ -157,13 +167,13 @@ export class KYCService {
     }
 
     this.eventSource.addEventListener('message', (event) => {
-      console.log('message', event)
-      const parsedData = decode(KYCService.Codec, event.data);
-      console.log('parsed', parsedData)
+      logger.info('event', event);
+      const parsedData = decode(this.codec, event.data);
+      logger.info('parsed', parsedData)
     })
 
     this.eventSource.addEventListener('error', error => {
-      console.log('error', error)
+      logger.error('error', error)
     })
   }
 
@@ -174,15 +184,15 @@ export class KYCService {
     return Promise.resolve();
   }
 
-  async lookup(signer: any) {
-    const entry = this.entries.find((e) => e.id === signer);
+  async lookup(issuerId: string, subjectId: string) {
+    const entry = this.entries.find((e) => e.issuerId === issuerId && e.subjectId === subjectId);
     if (entry) {
       return entry
     }
 
-    const ceramicEntry = await this.#updateEntry(signer);
+    const ceramicEntry = await this.#updateEntry(issuerId, subjectId);
     if (ceramicEntry) {
-      logger.info(`Found entry for signer ${signer} on ceramic but not in cache`);
+      logger.info(`Found entry for issuer ${issuerId} and subject ${subjectId} on ceramic but not in cache`);
       return ceramicEntry;
     }
 

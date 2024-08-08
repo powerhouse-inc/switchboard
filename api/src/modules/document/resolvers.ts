@@ -15,9 +15,7 @@ export const operationModelInterface = interfaceType({
     t.nonNull.string('hash');
     t.string('id');
   },
-  resolveType: e => {
-    return 'DefaultOperation';
-  }
+  resolveType: () => null
 });
 
 export const operationModel = objectType({
@@ -80,16 +78,11 @@ export const documentsQuery = queryField('documents', {
     if (!ctx.driveId) {
       throw new Error('DriveId is not defined');
     }
-    try {
-      const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
-      const docs = await Promise.all(
-        docIds.map(doc => {
-          return ctx.prisma.document.getDocument(ctx.driveId!, doc);
-        })
-      );
-      return docs;
-    } catch (e: any) {
-      logger.error({ msg: e.message });
-    }
+
+    const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
+    const docs = await Promise.all(
+      docIds.map(doc => ctx.prisma.document.getDocument(ctx.driveId!, doc))
+    );
+    return docs;
   }
 });
