@@ -23,7 +23,7 @@ import DocumentDriveError from '../../errors/DocumentDriveError';
 import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
 import { systemType } from '../system';
-import { verifyOperations } from '../document/utils';
+import { verifyOperationsAndSignature } from '../document/utils';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -409,7 +409,7 @@ export const pushUpdates = mutationField('pushUpdates', {
               branch: 'main'
             })) ?? [];
 
-          if (!(await verifyOperations(operations as Operation<DocumentDriveAction>[]))) { // todo fix this
+          if (!(await verifyOperationsAndSignature(operations as Operation<DocumentDriveAction>[]))) { // todo fix this
             throw new BadRequestError({
               message: 'Invalid operation signature'
             });

@@ -1,6 +1,7 @@
 import { Operation, utils } from "document-model/document";
+import fetch from "node-fetch";
 
-export async function verifyOperations(operations: Operation[]) {
+export async function verifyOperationsAndSignature(operations: Operation[]) {
   const results = await Promise.all(operations.map(async (operation) => {
     const signer = operation.context?.signer;
     if (!signer) {
@@ -32,6 +33,17 @@ export async function verifyOperations(operations: Operation[]) {
         );
       },
     );
+
+    const data = await fetch(
+      // eslint-disable-next-line max-len
+      `https://renown.id/api/auth/credential?address=${signer.user.address}&chainId=${signer.user.chainId}&app=${signer.app.key}`
+    );
+
+    const credential = await data.json();
+
+    if (!credential) {
+      throw new Error('Credential not found');
+    }
 
     return verified
   }));
