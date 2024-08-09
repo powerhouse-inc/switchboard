@@ -67,8 +67,8 @@ export const fetchEntry = `query VerifiableCredentialEIP712($input: VerifiableCr
   }
 }`;
 
-export const fetchEntries = `query VerifiableCredentialEIP712($input: VerifiableCredentialEIP712FiltersInput!) {
-  verifiableCredentialEIP712Index(first: $first, skip: $skip, sorting: { issuanceDate: DESC }, filters: $input) {
+export const fetchEntries = `query VerifiableCredentialEIP712($first: Int, $input: VerifiableCredentialEIP712FiltersInput!) {
+  verifiableCredentialEIP712Index(first: $first, sorting: { issuanceDate: DESC }, filters: $input) {
     edges {
       node {
         id

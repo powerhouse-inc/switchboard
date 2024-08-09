@@ -4,7 +4,7 @@ import { EventSource } from "cross-eventsource";
 import { JsonAsString, AggregationDocument } from '@ceramicnetwork/codecs';
 import { Codec, decode } from "codeco";
 import { Logger } from "pino";
-import { fetchEntries } from "./queries";
+import { fetchEntries, fetchEntry } from "./queries";
 import logger from "../../logger";
 import { CeramicPowerhouseVerifiableCredential } from "./types";
 
@@ -32,14 +32,12 @@ export class KYCService {
       ceramic,
       definition: options.definition as RuntimeCompositeDefinition,
     });
-
     this.eventSource = new EventSource(`${ceramic}/api/v0/feed/aggregation/documents`)
     this.codec = JsonAsString.pipe(AggregationDocument)
-
     this.logger = options.logger || logger;
   }
 
-  #fetchCredentials = async (first: number, skip: number) => {
+  #fetchCredentials = async (first: number) => {
     const date = new Date().toISOString()
     const data = await this.client.executeQuery<{
       verifiableCredentialEIP712Index: {
@@ -47,7 +45,6 @@ export class KYCService {
       };
     }>(fetchEntries, {
       first,
-      skip,
       input: {
         and: [
           {
@@ -69,12 +66,24 @@ export class KYCService {
             ],
           },
           {
-            where: {
-              expirationDate: {
-                greaterThan: date,
+            or: [
+              {
+                where: {
+                  expirationDate: {
+                    greaterThan: date,
+                  }
+                }
+              },
+              {
+                where: {
+                  expirationDate: {
+                    isNull: true,
+                  }
+                }
               }
-            }
+            ]
           }
+
         ],
       },
     });
@@ -92,7 +101,7 @@ export class KYCService {
       verifiableCredentialEIP712Index: {
         edges: { node: CeramicPowerhouseVerifiableCredential }[];
       };
-    }>(fetchEntries, {
+    }>(fetchEntry, {
       input: {
         and: [
           {
@@ -124,11 +133,22 @@ export class KYCService {
             ],
           },
           {
-            where: {
-              expirationDate: {
-                greaterThan: date,
+            or: [
+              {
+                where: {
+                  expirationDate: {
+                    greaterThan: date,
+                  }
+                }
+              },
+              {
+                where: {
+                  expirationDate: {
+                    isNull: true,
+                  }
+                }
               }
-            }
+            ]
           }
         ],
       },
@@ -202,7 +222,7 @@ export class KYCService {
 
 
   async init() {
-    await this.#updateCredentials();
+    // await this.#updateCredentials();
     this.#subscribeToEvents();
     return Promise.resolve();
   }
@@ -242,7 +262,14 @@ export class KYCService {
       if (!remoteValid) {
         return false;
       }
+
+      if (remoteCredential.issuanceDate !== credential.issuanceDate) {
+        return false;
+      }
     }
+
+    // TODO: check issuer and signature
+
 
     return true;
   }
