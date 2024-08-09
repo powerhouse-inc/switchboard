@@ -3,13 +3,14 @@ import { ComposeClient } from "@composedb/client";
 import { EventSource } from "cross-eventsource";
 import { JsonAsString, AggregationDocument } from '@ceramicnetwork/codecs';
 import { Codec, decode } from "codeco";
+import { Logger } from "pino";
 import { fetchEntries } from "./queries";
 import logger from "../../logger";
 import { CeramicPowerhouseVerifiableCredential } from "./types";
 
 export interface KYCServiceOptions {
-  // The URL of the Ceramic node
   ceramicUrl?: string;
+  logger?: Logger;
   definition: RuntimeCompositeDefinition
 }
 
@@ -19,9 +20,11 @@ export class KYCService {
 
   protected eventSource: EventSource | null = null;
 
-  protected entries: any[] = [];
+  protected credentials: CeramicPowerhouseVerifiableCredential[] = [];
 
   protected codec: Codec<any, any, any>;
+
+  protected logger: Logger;
 
   constructor(options: KYCServiceOptions) {
     const ceramic = options.ceramicUrl || "http://localhost:7007";
@@ -32,11 +35,13 @@ export class KYCService {
 
     this.eventSource = new EventSource(`${ceramic}/api/v0/feed/aggregation/documents`)
     this.codec = JsonAsString.pipe(AggregationDocument)
+
+    this.logger = options.logger || logger;
   }
 
-  #fetchEntriesFromCeramic = async (first: number, skip: number) => {
+  #fetchCredentials = async (first: number, skip: number) => {
     const date = new Date().toISOString()
-    const entries = await this.client.executeQuery<{
+    const data = await this.client.executeQuery<{
       verifiableCredentialEIP712Index: {
         edges: { node: CeramicPowerhouseVerifiableCredential }[];
       };
@@ -63,14 +68,25 @@ export class KYCService {
               },
             ],
           },
+          {
+            where: {
+              expirationDate: {
+                greaterThan: date,
+              }
+            }
+          }
         ],
       },
     });
 
-    return entries as any[];
+    if (data.errors) {
+      throw new Error('Error fetching entries from Ceramic')
+    }
+
+    return data.data?.verifiableCredentialEIP712Index.edges.map((e) => e.node) || [];
   }
 
-  #fetchEntryFromCeramic = async (issuerId: string, subjectId: string) => {
+  #fetchCredential = async (issuerId: string, subjectId: string) => {
     const date = new Date().toISOString()
     const result = await this.client.executeQuery<{
       verifiableCredentialEIP712Index: {
@@ -107,12 +123,19 @@ export class KYCService {
               },
             ],
           },
+          {
+            where: {
+              expirationDate: {
+                greaterThan: date,
+              }
+            }
+          }
         ],
       },
     });
 
     if (result.errors) {
-      return null;
+      throw new Error('Error fetching entry from Ceramic')
     }
 
     const { data } = result;
@@ -123,13 +146,13 @@ export class KYCService {
     return data.verifiableCredentialEIP712Index.edges[0]!.node;
   }
 
-  #updateEntries = async () => {
+  #updateCredentials = async () => {
     const first = 100;
     let skip = 0;
     let entries: any[] = [];
     let foundEntries = 0;
     const fetchEntriesLoop = async () => {
-      const newEntries = await this.#fetchEntriesFromCeramic(first, skip);
+      const newEntries = await this.#fetchCredentials(first, skip);
       foundEntries = newEntries.length;
       if (foundEntries === first) {
         skip += first;
@@ -141,21 +164,21 @@ export class KYCService {
     };
 
     await fetchEntriesLoop();
-    this.entries = entries;
+    this.credentials = entries;
   }
 
-  #updateEntry = async (issuerId: string, subjectId: string) => {
-    const entry = await this.#fetchEntryFromCeramic(issuerId, subjectId);
-    const index = this.entries.findIndex((e) => e.issuerId === issuerId && e.subjectId === subjectId);
-    if (!entry && index !== -1) {
-      delete this.entries[index];
+  #updateCredential = async (issuerId: string, subjectId: string) => {
+    const entry = await this.#fetchCredential(issuerId, subjectId);
+    const index = this.credentials.findIndex((e) => e.issuer.id === issuerId && e.credentialSubject.id === subjectId);
+    if (!entry) {
+      delete this.credentials[index];
       return null;
     }
 
     if (index !== -1) {
-      this.entries[index] = entry;
+      this.credentials[index] = entry;
     } else {
-      this.entries.push(entry);
+      this.credentials.push(entry);
     }
 
     return entry;
@@ -167,35 +190,60 @@ export class KYCService {
     }
 
     this.eventSource.addEventListener('message', (event) => {
-      logger.info('event', event);
+      this.logger.info('event', event);
       const parsedData = decode(this.codec, event.data);
-      logger.info('parsed', parsedData)
+      this.logger.info('parsed', parsedData)
     })
 
     this.eventSource.addEventListener('error', error => {
-      logger.error('error', error)
+      this.logger.error('error', error)
     })
   }
 
 
   async init() {
+    await this.#updateCredentials();
     this.#subscribeToEvents();
-    await this.#updateEntries();
     return Promise.resolve();
   }
 
-  async lookup(issuerId: string, subjectId: string) {
-    const entry = this.entries.find((e) => e.issuerId === issuerId && e.subjectId === subjectId);
+  async getCredential(issuerId: string, subjectId: string) {
+    const entry = this.credentials.find((e) => e.issuer.id === issuerId && e.credentialSubject.id === subjectId);
     if (entry) {
       return entry
     }
 
-    const ceramicEntry = await this.#updateEntry(issuerId, subjectId);
+    const ceramicEntry = await this.#updateCredential(issuerId, subjectId);
     if (ceramicEntry) {
-      logger.info(`Found entry for issuer ${issuerId} and subject ${subjectId} on ceramic but not in cache`);
+      this.logger.info(`Found entry for issuer ${issuerId} and subject ${subjectId} on ceramic but not in cache`);
       return ceramicEntry;
     }
 
     return null;
+  }
+
+  async checkCredential(credential: CeramicPowerhouseVerifiableCredential, remote: boolean = true) {
+    if (
+      credential.revocationDate
+      || credential.issuanceDate > new Date().toISOString()
+      || (credential.expirationDate && credential.expirationDate < new Date().toISOString())
+    ) {
+      return false;
+    }
+
+    if (remote) {
+      const remoteCredential = await this.#updateCredential(credential.issuer.id, credential.credentialSubject.id);
+
+      if (!remoteCredential) {
+        return false;
+      }
+
+      const remoteValid = await this.checkCredential(remoteCredential, false);
+      if (!remoteValid) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
