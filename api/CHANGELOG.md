@@ -1,3 +1,10 @@
+# [1.0.0-dev.31](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2024-08-09)
+
+
+### Bug Fixes
+
+* base path of develop env ([6a1e6c7](https://github.com/powerhouse-inc/switchboard/commit/6a1e6c7448d4e02b9a152930c3edb167124536fb))
+
 # [1.0.0-dev.30](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.29...v1.0.0-dev.30) (2024-08-07)
 
 
