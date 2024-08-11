@@ -1,9 +1,9 @@
-import { parse } from 'graphql';
-import { GraphQLClient } from 'graphql-request';
-import type { Server } from 'http';
-import { afterEach, beforeEach } from 'vitest';
-import { createApp } from '../../src/app';
-import { startServer } from '../../src/graphql/server';
+import { beforeEach, afterEach } from "vitest";
+import type { Server } from "http";
+import { GraphQLClient } from "graphql-request";
+import { parse } from "graphql";
+import { startServer } from "../../src/graphql/server";
+import { createApp } from "../../src/app";
 
 interface TestContext {
   client: GraphQLClient;
@@ -19,25 +19,25 @@ function getGraphqlTestContext() {
       const app = createApp();
       serverInstance = await startServer(app);
       const serverAddress = serverInstance.address();
-      if (!serverAddress || typeof serverAddress === 'string') {
-        throw new Error('Unexpected server address format');
+      if (!serverAddress || typeof serverAddress === "string") {
+        throw new Error("Unexpected server address format");
       }
       const { port } = serverAddress;
       baseUrl = `http://0.0.0.0:${port}`;
       const requestConfig = {
-        headers: { Origin: baseUrl }
+        headers: { Origin: baseUrl },
       };
       return {
         client: new GraphQLClient(`${baseUrl}/drives`, requestConfig),
         driveClient: new GraphQLClient(`${baseUrl}/d/1`, requestConfig),
         baseUrl,
-        driveId: 1
+        driveId: 1,
       };
     },
     async after() {
       serverInstance?.close();
       baseUrl = null;
-    }
+    },
   };
 }
 
@@ -47,7 +47,7 @@ function createTestContext(): TestContext {
   beforeEach(async () => {
     const { client, baseUrl, driveClient } = await graphqlTestContext.before();
     context.client = client;
-    context.driveClient = driveClient;
+    context.driveClient = driveClient
     context.baseUrl = baseUrl;
   });
   afterEach(async () => {
@@ -63,7 +63,7 @@ export async function executeGraphQlQuery(data: {
   variables: any;
 }) {
   const { query, variables } = data;
-  return ctx.client.request(query, variables).catch(e => e.response);
+  return ctx.client.request(query, variables).catch((e) => e.response);
 }
 
 export async function executeDriveGraphQlQuery(data: {
@@ -71,16 +71,13 @@ export async function executeDriveGraphQlQuery(data: {
   variables: any;
 }) {
   const { query, variables } = data;
-  return ctx.driveClient.request(query, variables).catch(e => e.response);
+  return ctx.driveClient.request(query, variables).catch((e) => e.response);
 }
 
-export const fetchOrThrow = async <T>(
-  builderOutput: {
-    query: string;
-    variables: any;
-  },
-  drive = false
-) => {
+export const fetchOrThrow = async <T>(builderOutput: {
+  query: string;
+  variables: any;
+}, drive = false) => {
   const operationName = (parse(builderOutput.query).definitions[0] as any)
     .selectionSet.selections[0].name.value;
 
@@ -90,6 +87,7 @@ export const fetchOrThrow = async <T>(
       builderOutput.query,
       builderOutput.variables
     )) as any;
+
   } else {
     result = (await ctx.client.request(
       builderOutput.query,
@@ -102,3 +100,4 @@ export const fetchOrThrow = async <T>(
   }
   return result[operationName] as T;
 };
+

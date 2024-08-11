@@ -1,4 +1,4 @@
-import { CustomError } from './CustomError';
+import { CustomError } from "./CustomError";
 
 export default class NotFoundError extends CustomError {
   private static readonly _statusCode = 404;
@@ -6,15 +6,10 @@ export default class NotFoundError extends CustomError {
   private readonly _logging: boolean;
   private readonly _context: { [key: string]: any };
 
-  constructor(params?: {
-    code?: number;
-    message?: string;
-    logging?: boolean;
-    context?: { [key: string]: any };
-  }) {
+  constructor(params?: { code?: number, message?: string, logging?: boolean, context?: { [key: string]: any } }) {
     const { code, message, logging } = params || {};
 
-    super(message || 'Not Found', 404);
+    super(message || "Not Found", 404);
     this._code = code || NotFoundError._statusCode;
     this._logging = logging || false;
     this._context = params?.context || {};

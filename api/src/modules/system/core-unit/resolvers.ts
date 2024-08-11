@@ -1,4 +1,6 @@
-import { list, objectType, queryField, stringArg } from 'nexus';
+import {
+  stringArg, list, queryField, objectType,
+} from 'nexus';
 import { Context } from '../../../graphql/server/drive/context';
 
 export const CoreUnit = objectType({
@@ -12,7 +14,7 @@ export const CoreUnit = objectType({
     t.string('descriptionSentence');
     t.string('descriptionParagraph');
     t.string('descriptionParagraphImageSource');
-  }
+  },
 });
 
 export const coreUnits = queryField('coreUnits', {
@@ -20,7 +22,7 @@ export const coreUnits = queryField('coreUnits', {
   resolve: async (_parent, _args, ctx: Context) => {
     const response = await ctx.prisma.coreUnit.findMany();
     return response;
-  }
+  },
 });
 
 export const coreUnit = queryField('coreUnit', {
@@ -32,8 +34,8 @@ export const coreUnit = queryField('coreUnit', {
     }
     return ctx.prisma.coreUnit.findUnique({
       where: {
-        id
-      }
+        id,
+      },
     });
-  }
+  },
 });

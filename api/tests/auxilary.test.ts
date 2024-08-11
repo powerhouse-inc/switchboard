@@ -1,9 +1,11 @@
+import {
+  test, expect, vi, describe,
+} from 'vitest';
 import fetch from 'node-fetch';
-import { describe, expect, test, vi } from 'vitest';
-import prisma from '../src/__mocks__/database';
-import { getJwtExpirationPeriod, getJwtSecret } from '../src/env/getters';
+import { getJwtSecret, getJwtExpirationPeriod } from '../src/env/getters';
 import { restoreEnvAfterEach } from './helpers/env';
 import { ctx } from './helpers/server';
+import prisma from '../src/__mocks__/database';
 
 restoreEnvAfterEach();
 
@@ -25,9 +27,7 @@ test('Env: dev environment has jwt secret automatically set', async () => {
 
 test('Env: jwt expiration automatically throws if invalid', async () => {
   process.env.JWT_EXPIRATION_PERIOD = 'lol';
-  expect(getJwtExpirationPeriod).toThrowError(
-    'JWT_EXPIRATION_PERIOD must be a number of seconds or ms string'
-  );
+  expect(getJwtExpirationPeriod).toThrowError('JWT_EXPIRATION_PERIOD must be a number of seconds or ms string');
 });
 
 test('Env: jwt expiration automatically set if not provided', async () => {
@@ -44,11 +44,7 @@ describe('Healthz', () => {
   vi.mock('../src/database');
 
   test('healthz: returns 200', async () => {
-    prisma.user.findFirst.mockResolvedValueOnce({
-      address: '0x0',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
+    prisma.user.findFirst.mockResolvedValueOnce({ address: '0x0', createdAt: new Date(), updatedAt: new Date() });
     const url = `${ctx.baseUrl}/healthz`;
     const res = await fetch(url);
     expect(res.status).toBe(200);
@@ -62,8 +58,6 @@ describe('Healthz', () => {
     const res = await fetch(url);
     expect(res.status).toBe(500);
     const json: any = await res.json();
-    expect(json.status).toBe(
-      'Failed database initialization check with error: test'
-    );
+    expect(json.status).toBe('Failed database initialization check with error: test');
   });
 });

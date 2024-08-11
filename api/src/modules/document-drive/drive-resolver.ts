@@ -1,15 +1,4 @@
 import {
-  ListenerRevision as IListenerRevision,
-  UpdateStatus as IUpdateStatus
-} from 'document-drive';
-import {
-  DocumentDriveAction,
-  DocumentDriveState
-} from 'document-model-libs/document-drive';
-import { Operation, OperationScope } from 'document-model/document';
-import { migrateLegacyOperationSignature } from 'document-drive/utils/migrations';
-import stringify from 'json-stringify-deterministic';
-import {
   enumType,
   idArg,
   inputObjectType,
@@ -17,13 +6,22 @@ import {
   mutationField,
   nonNull,
   objectType,
-  queryField
+  queryField,
 } from 'nexus';
-import BadRequestError from '../../errors/BadRequestError';
-import DocumentDriveError from '../../errors/DocumentDriveError';
-import { Context } from '../../graphql/server/drive/context';
-import { getChildLogger } from '../../logger';
 import { systemType } from '../system';
+import {
+  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
+} from 'document-drive';
+import { migrateLegacyOperationSignature } from 'document-drive/utils/migrations';
+import { Operation, OperationScope } from 'document-model/document';
+import stringify from 'json-stringify-deterministic';
+import { getChildLogger } from '../../logger';
+import { Context } from '../../graphql/server/drive/context';
+import { DocumentDriveAction, DocumentDriveState } from 'document-model-libs/document-drive';
+import DocumentDriveError from '../../errors/DocumentDriveError';
+import NotFoundError from '../../errors/NotFoundError';
+import { GraphQLError } from 'graphql';
+import BadRequestError from '../../errors/BadRequestError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -35,7 +33,7 @@ export const Node = objectType({
     t.nonNull.string('kind');
     t.string('documentType');
     t.string('parentFolder');
-  }
+  },
 });
 
 export const DocumentDriveStateObject = objectType({
@@ -46,13 +44,13 @@ export const DocumentDriveStateObject = objectType({
     t.nonNull.list.field('nodes', { type: Node });
     t.string('icon');
     t.string('slug');
-  }
+  },
 });
 
 // v2
 export const UpdateStatus = enumType({
   name: 'UpdateStatus',
-  members: ['SUCCESS', 'MISSING', 'CONFLICT', 'ERROR']
+  members: ['SUCCESS', 'MISSING', 'CONFLICT', 'ERROR'],
 });
 
 export const InputListenerFilter = inputObjectType({
@@ -62,7 +60,7 @@ export const InputListenerFilter = inputObjectType({
     t.list.string('documentId');
     t.list.string('scope');
     t.list.string('branch');
-  }
+  },
 });
 
 export const ListenerRevisionInput = inputObjectType({
@@ -74,7 +72,7 @@ export const ListenerRevisionInput = inputObjectType({
     t.nonNull.string('branch');
     t.nonNull.field('status', { type: UpdateStatus });
     t.nonNull.int('revision');
-  }
+  },
 });
 
 export const ListenerRevision = objectType({
@@ -87,7 +85,7 @@ export const ListenerRevision = objectType({
     t.nonNull.field('status', { type: UpdateStatus });
     t.nonNull.int('revision');
     t.string('error');
-  }
+  },
 });
 
 export const OperationSignerUser = objectType({
@@ -96,7 +94,7 @@ export const OperationSignerUser = objectType({
     t.nonNull.string('address');
     t.nonNull.string('networkId');
     t.nonNull.int('chainId');
-  }
+  },
 });
 
 export const OperationSignerApp = objectType({
@@ -104,7 +102,7 @@ export const OperationSignerApp = objectType({
   definition(t) {
     t.nonNull.string('name');
     t.nonNull.string('key');
-  }
+  },
 });
 
 export const OperationSigner = objectType({
@@ -113,8 +111,7 @@ export const OperationSigner = objectType({
     t.nonNull.field('user', { type: OperationSignerUser });
     t.nonNull.field('app', { type: OperationSignerApp });
     t.string('signature', { deprecation: 'Use `signatures` instead' }); // TODO remove when no longer needed
-    t.list.nonNull.list.nonNull
-    .field('signatures', { type: 'String' }); // TODO make list nonNull when legacy signatures support is removed
+    t.list.nonNull.list.nonNull.field('signatures', { type: 'String' }); // TODO make list nonNull when legacy signatures support is removed
   },
 });
 
@@ -122,7 +119,7 @@ export const OperationContext = objectType({
   name: 'OperationContext',
   definition(t) {
     t.field('signer', { type: OperationSigner });
-  }
+  },
 });
 
 export const OperationUpdate = objectType({
@@ -136,7 +133,7 @@ export const OperationUpdate = objectType({
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
     t.field('context', { type: OperationContext });
-  }
+  },
 });
 
 export const InputOperationSignerUser = inputObjectType({
@@ -145,7 +142,7 @@ export const InputOperationSignerUser = inputObjectType({
     t.nonNull.string('address');
     t.nonNull.string('networkId');
     t.nonNull.int('chainId');
-  }
+  },
 });
 
 export const InputOperationSignerApp = inputObjectType({
@@ -153,7 +150,7 @@ export const InputOperationSignerApp = inputObjectType({
   definition(t) {
     t.nonNull.string('name');
     t.nonNull.string('key');
-  }
+  },
 });
 
 export const InputOperationSigner = inputObjectType({
@@ -162,8 +159,7 @@ export const InputOperationSigner = inputObjectType({
     t.nonNull.field('user', { type: InputOperationSignerUser });
     t.nonNull.field('app', { type: InputOperationSignerApp });
     t.string('signature', { deprecation: 'Use `signatures` instead' }); // TODO remove when no longer needed
-    t.list.nonNull.list.nonNull
-    .field('signatures', { type: 'String' }); // TODO make list nonNull when legacy signatures support is removed
+    t.list.nonNull.list.nonNull.field('signatures', { type: 'String' }); // TODO make list nonNull when legacy signatures support is removed
   },
 });
 
@@ -171,7 +167,7 @@ export const InputOperationContext = inputObjectType({
   name: 'InputOperationContext',
   definition(t) {
     t.field('signer', { type: InputOperationSigner });
-  }
+  },
 });
 
 export const InputOperationUpdate = inputObjectType({
@@ -186,7 +182,7 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.string('timestamp');
     t.string('id');
     t.field('context', { type: InputOperationContext });
-  }
+  },
 });
 
 export const IStrandUpdate = objectType({
@@ -197,7 +193,7 @@ export const IStrandUpdate = objectType({
     t.nonNull.string('scope');
     t.nonNull.string('branch');
     t.nonNull.list.nonNull.field('operations', { type: OperationUpdate });
-  }
+  },
 });
 
 export const InputStrandUpdate = inputObjectType({
@@ -208,7 +204,7 @@ export const InputStrandUpdate = inputObjectType({
     t.nonNull.string('scope');
     t.nonNull.string('branch');
     t.nonNull.list.nonNull.field('operations', { type: InputOperationUpdate });
-  }
+  },
 });
 
 export const ListenerFilter = objectType({
@@ -218,7 +214,7 @@ export const ListenerFilter = objectType({
     t.list.nonNull.id('documentId');
     t.list.nonNull.string('scope');
     t.list.nonNull.string('branch');
-  }
+  },
 });
 
 export const TransmitterType = enumType({
@@ -229,8 +225,8 @@ export const TransmitterType = enumType({
     'PullResponder',
     'SecureConnect',
     'MatrixConnect',
-    'RESTWebhook'
-  ]
+    'RESTWebhook',
+  ],
 });
 
 export const ListenerCallInfo = objectType({
@@ -239,7 +235,7 @@ export const ListenerCallInfo = objectType({
     t.field('transmitterType', { type: TransmitterType });
     t.string('name');
     t.string('data');
-  }
+  },
 });
 
 export const Listener = objectType({
@@ -251,7 +247,7 @@ export const Listener = objectType({
     t.nonNull.boolean('system');
     t.nonNull.field('filter', { type: ListenerFilter });
     t.field('callInfo', { type: ListenerCallInfo });
-  }
+  },
 });
 
 export const syncType = objectType({
@@ -261,7 +257,7 @@ export const syncType = objectType({
       type: list(IStrandUpdate),
       args: {
         listenerId: idArg(),
-        since: 'Date'
+        since: 'Date',
       },
       resolve: async (_parent, { listenerId, since }, ctx: Context) => {
         if (!listenerId) throw new Error('Listener ID is required');
@@ -271,12 +267,12 @@ export const syncType = objectType({
             listenerId,
             since,
           );
-          return result.map(e => ({
+          return result.map((e) => ({
             driveId: e.driveId,
             documentId: e.documentId,
             scope: e.scope,
             branch: e.branch,
-            operations: e.operations.map(o => ({
+            operations: e.operations.map((o) => ({
               index: o.index,
               skip: o.skip,
               name: o.type,
@@ -285,22 +281,20 @@ export const syncType = objectType({
               timestamp: o.timestamp,
               type: o.type,
               context: o.context,
-              id: o.id
-            }))
+              id: o.id,
+            })),
           }));
         } catch (e) {
           if ((e as Error).message?.match(/Transmitter .+ not found/)) {
-            throw new BadRequestError({
-              message: (e as Error).message ?? 'Transmitter not found'
-            });
+            throw new BadRequestError({ message: (e as Error).message ?? 'Transmitter not found' });
           } else {
             logger.error(e);
             throw new Error('Failed to fetch strands');
           }
         }
-      }
+      },
     });
-  }
+  },
 });
 
 export const driveSystemType = objectType({
@@ -309,14 +303,14 @@ export const driveSystemType = objectType({
     t.implements(systemType);
     t.field('sync', {
       type: syncType,
-      resolve: async () => true
+      resolve: async () => true,
     });
-  }
+  },
 });
 
 export const driveSystemQueryField = queryField('system', {
   type: driveSystemType,
-  resolve: async () => true
+  resolve: async () => true,
 });
 
 export const getDrive = queryField('drive', {
@@ -326,52 +320,42 @@ export const getDrive = queryField('drive', {
       const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;
       return drive;
     } catch (e: any) {
-      throw new DocumentDriveError({
-        code: 500,
-        message: e.message ?? 'Failed to get drive',
-        logging: true,
-        context: e
-      });
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to get drive", logging: true, context: e })
     }
-  }
+  },
 });
 
 export const registerListener = mutationField('registerPullResponderListener', {
   type: Listener,
   args: {
-    filter: nonNull(InputListenerFilter)
+    filter: nonNull(InputListenerFilter),
   },
   resolve: async (_parent, { filter }, ctx: Context) => {
     try {
       const result = await ctx.prisma.document.registerPullResponderListener(
         ctx.driveId ?? '1',
         {
-          branch: (filter.branch?.filter(b => !!b) as string[]) ?? [],
-          documentId: (filter.documentId?.filter(b => !!b) as string[]) ?? [],
-          documentType:
-            (filter.documentType?.filter(b => !!b) as string[]) ?? [],
-          scope: (filter.scope?.filter(b => !!b) as string[]) ?? []
-        }
+          branch: filter.branch?.filter(b => !!b) as string[] ?? [],
+          documentId: filter.documentId?.filter(b => !!b) as string[] ?? [],
+          documentType: filter.documentType?.filter(b => !!b) as string[] ?? [],
+          scope: filter.scope?.filter(b => !!b) as string[] ?? [],
+        },
       );
 
       return result;
 
     } catch (e: any) {
-      throw new DocumentDriveError({
-        code: 500,
-        message: e.message ?? 'Failed to register listener',
-        logging: true,
-        context: e
-      });
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to register listener", logging: true, context: e })
     }
-  }
+
+  },
 });
 
 
 export const deleteListener = mutationField('deletePullResponderListener', {
   type: Listener,
   args: {
-    filter: nonNull(InputListenerFilter)
+    filter: nonNull(InputListenerFilter),
   },
   resolve: async (_parent, { filter }, ctx: Context) => {
     try {
@@ -382,36 +366,30 @@ export const deleteListener = mutationField('deletePullResponderListener', {
 
       return result;
     } catch (e: any) {
-      throw new DocumentDriveError({
-        code: 500,
-        message: e.message ?? 'Failed to delete listener',
-        logging: true,
-        context: e
-      });
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete listener", logging: true, context: e })
     }
-  }
+  },
 });
 
 export const pushUpdates = mutationField('pushUpdates', {
   type: list(ListenerRevision),
   args: {
-    strands: list(nonNull(InputStrandUpdate))
+    strands: list(nonNull(InputStrandUpdate)),
   },
   resolve: async (_parent, { strands }, ctx: Context) => {
     logger.info('pushUpdates');
     if (!strands || strands?.length === 0) return [];
 
     try {
-      const listenerRevisions: IListenerRevision[] = await Promise.all(
-        strands.map(async s => {
-          const operations =
-            s.operations?.map(o => ({
-              ...o,
-              input: JSON.parse(o.input),
-              skip: o.skip ?? 0,
-              scope: s.scope as OperationScope,
-              branch: 'main'
-            })).map((o) => migrateLegacyOperationSignature(o as Operation))  // TODO remove when no longer needed  ?? [];
+      const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
+        const operations = s.operations?.map((o) => ({
+          ...o,
+          input: JSON.parse(o.input),
+          skip: o.skip ?? 0,
+          scope: s.scope as OperationScope,
+          branch: "main",
+        })).map((o) => migrateLegacyOperationSignature(o as Operation))  // TODO remove when no longer needed 
+        ?? [];
 
         const result = await ctx.prisma.document.pushUpdates(
           s.driveId,
@@ -425,17 +403,16 @@ export const pushUpdates = mutationField('pushUpdates', {
           .slice()
           .pop()?.index ?? -1;
 
-          return {
-            revision,
-            branch: s.branch,
-            documentId: s.documentId ?? '',
-            driveId: s.driveId,
-            scope: s.scope as OperationScope,
-            status: result.status,
-            error: result.error?.message
-          };
-        })
-      );
+        return {
+          revision,
+          branch: s.branch,
+          documentId: s.documentId ?? "",
+          driveId: s.driveId,
+          scope: s.scope as OperationScope,
+          status: result.status,
+          error: result.error?.message,
+        };
+      }));
 
       return listenerRevisions;
     } catch (e: any) {
@@ -446,27 +423,27 @@ export const pushUpdates = mutationField('pushUpdates', {
         context: e
       });
     }
-  }
+  },
 });
 
 export const acknowledge = mutationField('acknowledge', {
   type: 'Boolean',
   args: {
     listenerId: nonNull('String'),
-    revisions: list(ListenerRevisionInput)
+    revisions: list(ListenerRevisionInput),
   },
   resolve: async (_parent, { revisions, listenerId }, ctx: Context) => {
     try {
       if (!listenerId || !revisions) return false;
       const validEntries: IListenerRevision[] = revisions
-        .filter(r => r !== null)
-        .map(e => ({
+        .filter((r) => r !== null)
+        .map((e) => ({
           driveId: e!.driveId,
           documentId: e!.documentId,
           scope: e!.scope,
           branch: e!.branch,
           revision: e!.revision,
-          status: e!.status as IUpdateStatus
+          status: e!.status as IUpdateStatus,
         }));
 
       const result = await ctx.prisma.document.processAcknowledge(
@@ -477,12 +454,7 @@ export const acknowledge = mutationField('acknowledge', {
 
       return result;
     } catch (e: any) {
-      throw new DocumentDriveError({
-        code: 500,
-        message: e.message ?? 'Failed to acknowledge',
-        logging: true,
-        context: e
-      });
+      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to acknowledge", logging: true, context: e })
     }
-  }
+  },
 });

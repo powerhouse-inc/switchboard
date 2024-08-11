@@ -1,9 +1,9 @@
-import { CoreUnit } from '@prisma/client';
+import { test, expect } from 'vitest';
 import builder from 'gql-query-builder';
-import { expect, test } from 'vitest';
-import prisma from '../src/database';
+import { CoreUnit } from '@prisma/client';
 import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { executeGraphQlQuery } from './helpers/server';
+import prisma from '../src/database';
 
 cleanDatabaseBeforeAfterEachTest();
 
@@ -16,16 +16,14 @@ test('Core Unit: get all', async () => {
       imageSource: '',
       descriptionSentence: '',
       descriptionParagraph: '',
-      descriptionParagraphImageSource: ''
-    }
+      descriptionParagraphImageSource: '',
+    },
   });
   const query = builder.query({
     operation: 'coreUnits',
-    fields: ['code', 'shortCode', 'name']
+    fields: ['code', 'shortCode', 'name'],
   });
-  const response = (await executeGraphQlQuery(query)) as {
-    coreUnits: CoreUnit[];
-  };
+  const response = await executeGraphQlQuery(query) as { coreUnits: CoreUnit[] };
   expect(response.coreUnits).toHaveLength(1);
   expect(response.coreUnits[0].code).toBe('asdf');
   expect(response.coreUnits[0].shortCode).toBe('a');
@@ -41,27 +39,25 @@ test('Core Unit: get by id', async () => {
       imageSource: '',
       descriptionSentence: '',
       descriptionParagraph: '',
-      descriptionParagraphImageSource: ''
-    }
+      descriptionParagraphImageSource: '',
+    },
   });
   const query = builder.query({
     operation: 'coreUnit',
     variables: {
-      id: created.id
+      id: created.id,
     },
-    fields: ['id']
+    fields: ['id'],
   });
-  const response = (await executeGraphQlQuery(query)) as { coreUnit: CoreUnit };
+  const response = await executeGraphQlQuery(query) as { coreUnit: CoreUnit };
   expect(response.coreUnit.id).toBe(created.id);
 });
 
 test('Core Unit: get by id without id field throws', async () => {
   const query = builder.query({
     operation: 'coreUnit',
-    fields: ['id']
+    fields: ['id'],
   });
-  const response = (await executeGraphQlQuery(query)) as {
-    errors: Record<string, unknown>[];
-  };
+  const response = await executeGraphQlQuery(query) as { errors: Record<string, unknown>[] };
   expect(response.errors[0].message).toBe('please provide id');
 });

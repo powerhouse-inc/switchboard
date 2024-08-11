@@ -1,19 +1,18 @@
+import ms from 'ms';
+import z from 'zod';
 import type { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { GraphQLError } from 'graphql';
-import jwt from 'jsonwebtoken';
-import ms from 'ms';
 import wildcard from 'wildcard-match';
-import z from 'zod';
-import { JWT_EXPIRATION_PERIOD, JWT_SECRET } from '../../../env';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET, JWT_EXPIRATION_PERIOD } from '../../../env';
 
 const jwtSchema = z.object({
   sessionId: z.string(),
-  exp: z.optional(z.number())
+  exp: z.optional(z.number()),
 });
 
-export const formatToken = (token: string) =>
-  `${token.slice(0, 4)}...${token.slice(-4)}`;
+export const formatToken = (token: string) => `${token.slice(0, 4)}...${token.slice(-4)}`;
 
 /** Generate a JWT token
  * - If expiryDurationSeconds is null, the token will never expire
@@ -21,15 +20,14 @@ export const formatToken = (token: string) =>
  */
 const generateToken = (
   sessionId: string,
-  expiryDurationSeconds?: number | null
+  expiryDurationSeconds?: number | null,
 ) => {
   if (expiryDurationSeconds === null) {
     return jwt.sign({ sessionId }, JWT_SECRET);
   }
-  const expiresIn =
-    typeof expiryDurationSeconds !== 'undefined'
-      ? ms(expiryDurationSeconds * 1000)
-      : JWT_EXPIRATION_PERIOD;
+  const expiresIn = typeof expiryDurationSeconds !== 'undefined'
+    ? ms(expiryDurationSeconds * 1000)
+    : JWT_EXPIRATION_PERIOD;
   return jwt.sign({ sessionId }, JWT_SECRET, { expiresIn });
 };
 
@@ -48,7 +46,7 @@ export const verifyToken = (token: string) => {
         err.name === 'TokenExpiredError'
           ? 'Token expired'
           : 'Invalid authentication token',
-        { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } }
+        { extensions: { code: 'AUTHENTICATION_TOKEN_ERROR' } },
       );
     }
     return decoded;
@@ -62,11 +60,11 @@ function parseOriginMarkup(originParam: string): string {
     return '*';
   }
   const trimmedOriginParam = originParam.trim();
-  const origins = trimmedOriginParam.split(',').map(origin => origin.trim());
-  origins.forEach(origin => {
+  const origins = trimmedOriginParam.split(',').map((origin) => origin.trim());
+  origins.forEach((origin) => {
     if (!origin.startsWith('http://') && !origin.startsWith('https://')) {
       throw new GraphQLError("Origin must start with 'http://' or 'https://'", {
-        extensions: { code: 'INVALID_ORIGIN_PROTOCOL' }
+        extensions: { code: 'INVALID_ORIGIN_PROTOCOL' },
       });
     }
   });
@@ -75,42 +73,32 @@ function parseOriginMarkup(originParam: string): string {
 
 export function validateOriginAgainstAllowed(
   allowedOrigins: string,
-  originReceived?: string
+  originReceived?: string,
 ) {
   if (allowedOrigins === '*') {
     return;
   }
   if (!originReceived) {
     throw new GraphQLError('Origin not provided', {
-      extensions: { code: 'ORIGIN_HEADER_MISSING' }
+      extensions: { code: 'ORIGIN_HEADER_MISSING' },
     });
   }
   const allowedOriginsSplit = allowedOrigins.split(',');
   if (!wildcard(allowedOriginsSplit)(originReceived)) {
-    throw new GraphQLError(
-      `Access denied due to origin restriction: ${allowedOrigins}, ${originReceived}`,
-      {
-        extensions: { code: 'ORIGIN_FORBIDDEN' }
-      }
-    );
+    throw new GraphQLError(`Access denied due to origin restriction: ${allowedOrigins}, ${originReceived}`, {
+      extensions: { code: 'ORIGIN_FORBIDDEN' },
+    });
   }
 }
 
 export const generateTokenAndSession = async (
   prisma: Prisma.TransactionClient,
   userId: string,
-  session: {
-    expiryDurationSeconds?: number | null;
-    name: string;
-    allowedOrigins: string;
-  },
-  isUserCreated: boolean = false
+  session: { expiryDurationSeconds?: number | null; name: string; allowedOrigins: string },
+  isUserCreated: boolean = false,
 ) => {
   const sessionId = randomUUID();
-  const generatedToken = generateToken(
-    sessionId,
-    session.expiryDurationSeconds
-  );
+  const generatedToken = generateToken(sessionId, session.expiryDurationSeconds);
   const referenceExpiryDate = getExpiryDateFromToken(generatedToken);
   const referenceTokenId = formatToken(generatedToken);
   const allowedOrigins = parseOriginMarkup(session.allowedOrigins);
@@ -124,13 +112,13 @@ export const generateTokenAndSession = async (
       isUserCreated,
       creator: {
         connect: {
-          address: userId
-        }
-      }
-    }
+          address: userId,
+        },
+      },
+    },
   });
   return {
     token: generatedToken,
-    session: createdSession
+    session: createdSession,
   };
 };

@@ -11,14 +11,11 @@ export interface IReceiverOptions {
 
 export type InternalTransmit = (
   strands: InternalTransmitterUpdate[],
-  prisma?: Prisma.TransactionClient
-) => Promise<void>;
+  prisma?: Prisma.TransactionClient)
+=> Promise<void>;
 
-export type SwitchboardTransmitter = {
-  transmit: InternalTransmit;
-  options: IReceiverOptions;
-};
+export type SwitchboardTransmitter = { transmit: InternalTransmit, options: IReceiverOptions };
 
 export type SwitchboardModule = {
-  transmitter?: SwitchboardTransmitter;
+  transmitter?: SwitchboardTransmitter
 };

@@ -1,23 +1,20 @@
 import type { PrismaClient } from '@prisma/client';
-import { randomUUID } from 'crypto';
-import { GraphQLError } from 'graphql';
 import { SiweMessage } from 'siwe';
+import { GraphQLError } from 'graphql';
 import url from 'url';
-import { API_ORIGIN } from '../../../env';
-import { getChildLogger } from '../../../logger';
-import { getSessionCrud } from '../session/model';
+import { randomUUID } from 'crypto';
 import { getUserCrud } from '../user';
+import { getChildLogger } from '../../../logger';
+import { API_ORIGIN } from '../../../env';
+import { getSessionCrud } from '../session/model';
 
 const logger = getChildLogger({ msgPrefix: 'Challenge' });
 
-const verifySignature = async (
-  parsedMessage: SiweMessage,
-  signature: string
-) => {
+const verifySignature = async (parsedMessage: SiweMessage, signature: string) => {
   try {
     const response = await parsedMessage.verify({
       time: new Date().toISOString(),
-      signature
+      signature,
     });
     logger.debug('verifySignature', response);
     return response;
@@ -27,11 +24,11 @@ const verifySignature = async (
   }
 };
 
-const textToHex = (textMessage: string) =>
-  `0x${Buffer.from(textMessage, 'utf8').toString('hex')}`;
+const textToHex = (textMessage: string) => `0x${Buffer.from(textMessage, 'utf8').toString('hex')}`;
 
 export function getChallengeCrud(prisma: PrismaClient) {
   return {
+
     async createChallenge(address: string) {
       logger.debug('createChallenge: received', address);
 
@@ -45,7 +42,7 @@ export function getChallengeCrud(prisma: PrismaClient) {
         uri: origin,
         domain,
         version: '1',
-        chainId: 1
+        chainId: 1,
       }).prepareMessage();
       const hexMessage = textToHex(textMessage);
       logger.debug('createChallenge: created message', textMessage, hexMessage);
@@ -53,13 +50,13 @@ export function getChallengeCrud(prisma: PrismaClient) {
       await prisma.challenge.create({
         data: {
           nonce,
-          message: textMessage
-        }
+          message: textMessage,
+        },
       });
       return {
         nonce,
         message: textMessage,
-        hex: hexMessage
+        hex: hexMessage,
       };
     },
 
@@ -67,13 +64,13 @@ export function getChallengeCrud(prisma: PrismaClient) {
       logger.debug('solveChallenge: received', nonce, signature);
 
       // transaction is used to avoid race condition
-      return prisma.$transaction(async tx => {
+      return prisma.$transaction(async (tx) => {
         const challenge = await tx.challenge.findFirst({
           where: {
             nonce: {
-              equals: nonce
-            }
-          }
+              equals: nonce,
+            },
+          },
         });
         logger.debug('solveChallenge: found challenge', challenge);
 
@@ -98,23 +95,20 @@ export function getChallengeCrud(prisma: PrismaClient) {
         // mark challenge as used
         await tx.challenge.update({
           where: {
-            nonce
+            nonce,
           },
           data: {
-            signature
-          }
+            signature,
+          },
         });
 
         // create user and session
-        const user = await getUserCrud(tx).createUserIfNotExists({
-          address: parsedMessage.address
-        });
-        const tokenAndSession = await getSessionCrud(
-          tx
-        ).createAuthenticationSession(user.address);
+        const user = await getUserCrud(tx).createUserIfNotExists({ address: parsedMessage.address });
+        const tokenAndSession = await getSessionCrud(tx).createAuthenticationSession(user.address);
 
         return tokenAndSession;
       });
-    }
+    },
+
   };
 }

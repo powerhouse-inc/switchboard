@@ -23,6 +23,7 @@
 //     label: "scope-of-work-github",
 // }
 
+
 // export async function transmit(strands: InternalTransmitterUpdate<ScopeOfWorkDocument, "global">[], prisma: Prisma.TransactionClient) {
 //     for (const strand of strands) {
 //         try {
@@ -34,6 +35,7 @@
 //     }
 
 // }
+
 
 // async function handleScopeOfWorkDocument(strand: InternalTransmitterUpdate<ScopeOfWorkDocument, "global">, prisma: Prisma.TransactionClient) {
 //     for (let op of strand.operations) {

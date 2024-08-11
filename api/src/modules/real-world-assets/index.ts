@@ -1,12 +1,12 @@
 import { SwitchboardModule } from '../types';
 import { options, transmit } from './listener';
 
-export * from './model';
 export * from './resolvers';
+export * from './model';
 
 export const module: SwitchboardModule = {
-  transmitter: {
-    transmit,
-    options
-  }
+    transmitter: {
+        transmit,
+        options,
+    },
 };

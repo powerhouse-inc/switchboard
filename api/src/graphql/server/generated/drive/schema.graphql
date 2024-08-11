@@ -214,7 +214,6 @@ type FixedIncome {
   ISIN: String
   assetProceeds: Float
   coupon: Float
-  currentValue(date: Date): Float
   fixedIncomeType: FixedIncomeType
   fixedIncomeTypeId: ID
   id: ID

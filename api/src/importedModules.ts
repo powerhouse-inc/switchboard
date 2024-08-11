@@ -15,11 +15,11 @@ export function setupAllModules() {
   if (setupComplete) {
     return;
   }
-  importedModules.forEach(importedModule => {
+  importedModules.forEach((importedModule) => {
     const exported = importedModule(fullyExtendedPrisma);
     if (typeof exported !== 'object') {
       throw new Error(
-        'function exported from a module should always return an object'
+        'function exported from a module should always return an object',
       );
     }
     if ('extendedPrisma' in exported) {

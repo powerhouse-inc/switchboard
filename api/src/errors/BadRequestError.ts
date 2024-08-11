@@ -1,4 +1,4 @@
-import { CustomError } from './CustomError';
+import { CustomError } from "./CustomError";
 
 export default class BadRequestError extends CustomError {
   private static readonly _statusCode = 400;
@@ -6,15 +6,10 @@ export default class BadRequestError extends CustomError {
   private readonly _logging: boolean;
   private readonly _context: { [key: string]: any };
 
-  constructor(params?: {
-    code?: number;
-    message?: string;
-    logging?: boolean;
-    context?: { [key: string]: any };
-  }) {
+  constructor(params?: { code?: number, message?: string, logging?: boolean, context?: { [key: string]: any } }) {
     const { code, message, logging } = params || {};
 
-    super(message || 'Bad request', 400);
+    super(message || "Bad request", 400);
     this._code = code || BadRequestError._statusCode;
     this._logging = logging || false;
     this._context = params?.context || {};

@@ -1,5 +1,5 @@
-import { afterEach, beforeEach } from 'vitest';
-import prisma from '../../src/database';
+import { beforeEach, afterEach } from "vitest";
+import prisma from "../../src/database";
 
 export function cleanDatabase() {
   const clean = async () => {

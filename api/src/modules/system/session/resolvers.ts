@@ -1,9 +1,9 @@
 import {
-  inputObjectType,
   mutationField,
   nonNull,
+  stringArg,
+  inputObjectType,
   objectType,
-  stringArg
 } from 'nexus';
 import { Context } from '../../../graphql/server/index/context';
 
@@ -19,7 +19,7 @@ export const Session = objectType({
     t.string('name');
     t.date('revokedAt');
     t.string('allowedOrigins');
-  }
+  },
 });
 
 export const SessionInput = inputObjectType({
@@ -28,7 +28,7 @@ export const SessionInput = inputObjectType({
     t.int('expiryDurationSeconds');
     t.nonNull.string('name');
     t.nonNull.string('allowedOrigins');
-  }
+  },
 });
 
 export const SessionOutput = objectType({
@@ -36,27 +36,31 @@ export const SessionOutput = objectType({
   definition(t) {
     t.nonNull.field('session', { type: 'Session' });
     t.nonNull.string('token');
-  }
+  },
 });
 
 export const revoke = mutationField('revokeSession', {
   type: 'Session',
   args: {
-    sessionId: nonNull(stringArg())
+    sessionId: nonNull(stringArg()),
   },
   resolve: async (_parent, { sessionId }, ctx: Context) => {
     const userId = (await ctx.getSession()).createdBy;
     return ctx.prisma.session.revoke(sessionId, userId);
-  }
+  },
 });
 
 export const create = mutationField('createSession', {
   type: 'SessionOutput',
   args: {
-    session: nonNull('SessionInput')
+    session: nonNull('SessionInput'),
   },
-  resolve: async (_parent, { session }, ctx: Context) => {
+  resolve: async (
+    _parent,
+    { session },
+    ctx: Context,
+  ) => {
     const { createdBy } = await ctx.getSession();
     return ctx.prisma.session.createCustomSession(createdBy, session, true);
-  }
+  },
 });

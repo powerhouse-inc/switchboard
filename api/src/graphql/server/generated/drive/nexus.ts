@@ -301,7 +301,6 @@ export interface NexusGenObjects {
     ISIN?: string | null; // String
     assetProceeds?: number | null; // Float
     coupon?: number | null; // Float
-    currentValue?: number | null; // Float
     fixedIncomeType?: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
     fixedIncomeTypeId?: string | null; // ID
     id?: string | null; // ID
@@ -792,7 +791,6 @@ export interface NexusGenFieldTypes {
     ISIN: string | null; // String
     assetProceeds: number | null; // Float
     coupon: number | null; // Float
-    currentValue: number | null; // Float
     fixedIncomeType: NexusGenRootTypes['FixedIncomeType'] | null; // FixedIncomeType
     fixedIncomeTypeId: string | null; // ID
     id: string | null; // ID
@@ -1319,7 +1317,6 @@ export interface NexusGenFieldTypeNames {
     ISIN: 'String'
     assetProceeds: 'Float'
     coupon: 'Float'
-    currentValue: 'Float'
     fixedIncomeType: 'FixedIncomeType'
     fixedIncomeTypeId: 'ID'
     id: 'ID'
@@ -1686,11 +1683,6 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
-  FixedIncome: {
-    currentValue: { // args
-      date?: NexusGenScalars['Date'] | null; // Date
-    }
-  }
   Mutation: {
     acknowledge: { // args
       listenerId: string; // String!

@@ -62,7 +62,7 @@ scenarios:
                   'documentId': ['*'],
                   'documentType': ['*'],
                   'branch': ['*'],
-                  'scope': ['*']
+                  'scope': ['*'],
                 }
             operationName: 'registerPullResponderListener'
       - post:

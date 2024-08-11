@@ -10,9 +10,9 @@ const modulesConfig = {
       lines: 100,
       functions: 100,
       statements: 100,
-      include: ['src/modules/**']
-    }
-  }
+      include: ['src/modules/**'],
+    },
+  },
 };
 
 export default defineConfig(modulesConfig);

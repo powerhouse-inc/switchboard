@@ -1,11 +1,15 @@
+import {
+  vi, test, expect, describe,
+} from 'vitest';
 import { utils, Wallet } from 'ethers';
-import { describe, expect, test, vi } from 'vitest';
-import * as env from '../src/env';
-import { PRIVATE_KEY, provider, PUBLIC_KEY, signer } from './helpers/const';
-import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { restoreEnvAfterEach } from './helpers/env';
+import { cleanDatabase as cleanDatabaseBeforeAfterEachTest } from './helpers/database';
 import { createChallenge, solveChallenge, system } from './helpers/gql';
+import {
+  PRIVATE_KEY, PUBLIC_KEY, signer, provider,
+} from './helpers/const';
 import { ctx } from './helpers/server';
+import * as env from '../src/env';
 
 export const signIn = async (privateKey = PRIVATE_KEY) => {
   const publicKey = utils.computeAddress(privateKey);
@@ -28,21 +32,21 @@ describe('Authentication', () => {
   });
 
   test('Challenge creation fails if address is invalid', async () => {
-    await expect(() => createChallenge('0x123')).rejects.toThrowError(
-      'invalid address'
-    );
+    await expect(
+      () => createChallenge('0x123'),
+    ).rejects.toThrowError('invalid address');
   });
 
   test('Challenge can not use random nonce', async () => {
-    await expect(() =>
-      solveChallenge('nonce', 'signature')
+    await expect(
+      () => solveChallenge('nonce', 'signature'),
     ).rejects.toThrowError('The nonce is not known');
   });
 
   test('Challenge can be solved incorrectly', async () => {
-    const challengeResponse = await createChallenge(PUBLIC_KEY);
-    await expect(() =>
-      solveChallenge(challengeResponse.nonce, '0x12345')
+    const challengeResponse = (await createChallenge(PUBLIC_KEY));
+    await expect(
+      () => solveChallenge(challengeResponse.nonce, '0x12345'),
     ).rejects.toThrowError('Signature validation has failed');
   });
 
@@ -50,14 +54,16 @@ describe('Authentication', () => {
     const challengeResponse = await createChallenge(PUBLIC_KEY);
     const signature = await signer.signMessage(challengeResponse.message);
     await solveChallenge(challengeResponse.nonce, signature);
-    await expect(() =>
-      solveChallenge(challengeResponse.nonce, signature)
+    await expect(
+      () => solveChallenge(challengeResponse.nonce, signature),
     ).rejects.toThrowError('The signature was already used');
   });
 
   test('Sign up throws error if disabled', async () => {
     vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(false);
-    await expect(() => signIn()).rejects.toThrowError('Sign up is disabled');
+    await expect(
+      () => signIn(),
+    ).rejects.toThrowError('Sign up is disabled');
     vi.spyOn(env, 'AUTH_SIGNUP_ENABLED', 'get').mockReturnValue(true);
   });
 
@@ -69,9 +75,9 @@ describe('Authentication', () => {
 
   test('Protected endpoint fails without sign in', async () => {
     ctx.client.setHeader('Authorization', 'Bearer heavy');
-    await expect(() => system()).rejects.toThrowError(
-      'Invalid authentication token'
-    );
+    await expect(
+      () => system(),
+    ).rejects.toThrowError('Invalid authentication token');
   });
 
   test('Protected endpoint works with sign in', async () => {
@@ -84,9 +90,9 @@ describe('Authentication', () => {
     vi.spyOn(env, 'JWT_EXPIRATION_PERIOD', 'get').mockReturnValue('1s');
     const response = await signIn();
     expect(response.token).not.toBeNull();
-    await new Promise(resolve => {
-      setTimeout(resolve, 2000);
-    });
-    await expect(() => system()).rejects.toThrowError('Token expired');
+    await new Promise((resolve) => { setTimeout(resolve, 2000); });
+    await expect(
+      () => system(),
+    ).rejects.toThrowError('Token expired');
   });
 });

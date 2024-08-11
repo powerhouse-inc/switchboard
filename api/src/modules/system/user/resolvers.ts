@@ -5,5 +5,5 @@ export const User = objectType({
   definition(t) {
     t.nonNull.string('address');
     t.nonNull.date('createdAt');
-  }
+  },
 });
