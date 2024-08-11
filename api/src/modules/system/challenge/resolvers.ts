@@ -7,22 +7,24 @@ export const Challenge = objectType({
     t.nonNull.string('nonce');
     t.nonNull.string('message');
     t.nonNull.string('hex');
-  },
+  }
 });
 
 export const createChallenge = mutationField('createChallenge', {
   type: 'Challenge',
   args: {
-    address: nonNull('String'),
+    address: nonNull('String')
   },
-  resolve: async (_root, args, ctx: Context) => ctx.prisma.challenge.createChallenge(args.address),
+  resolve: async (_root, args, ctx: Context) =>
+    ctx.prisma.challenge.createChallenge(args.address)
 });
 
 export const solveChallenge = mutationField('solveChallenge', {
   type: 'SessionOutput',
   args: {
     nonce: nonNull('String'),
-    signature: nonNull('String'),
+    signature: nonNull('String')
   },
-  resolve: async (_root, args, ctx: Context) => ctx.prisma.challenge.solveChallenge(args.nonce, args.signature),
+  resolve: async (_root, args, ctx: Context) =>
+    ctx.prisma.challenge.solveChallenge(args.nonce, args.signature)
 });

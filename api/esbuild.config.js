@@ -13,15 +13,15 @@ const config = {
   sourcemap: true,
   target: 'node20',
   loader: {
-    '.node': 'copy',
+    '.node': 'copy'
   },
   external: [
     ...builtinModules, // Exclude Node.js built-in modules
     // Exclude all node_modules except specific-module
-    ...Object.keys(pkg.dependencies).filter((dep) => dep !== 'document-drive'),
-    ...Object.keys(pkg.devDependencies),
+    ...Object.keys(pkg.dependencies).filter(dep => dep !== 'document-drive'),
+    ...Object.keys(pkg.devDependencies)
   ],
-  logLevel: 'info',
+  logLevel: 'info'
 };
 
 // Build process
