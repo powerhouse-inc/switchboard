@@ -11,10 +11,12 @@ export function isAdmin(user: string) {
 export async function checkUserIsAdmin(ctx: Context) {
   const { revokedAt, createdBy, referenceExpiryDate } = await ctx.getSession();
   if (
-    (referenceExpiryDate && referenceExpiryDate < new Date()) ||
-    revokedAt ||
-    !createdBy ||
-    !isAdmin(createdBy)
+    process.env.ADMIN_USERS !== undefined && (
+      (referenceExpiryDate && referenceExpiryDate < new Date()) ||
+      revokedAt ||
+      !createdBy ||
+      !isAdmin(createdBy)
+    )
   ) {
     throw new GraphQLError('Access denied');
   }
