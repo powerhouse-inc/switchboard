@@ -4,9 +4,10 @@ import { EventSource } from "cross-eventsource";
 import { JsonAsString, AggregationDocument } from '@ceramicnetwork/codecs';
 import { Codec, decode } from "codeco";
 import { Logger } from "pino";
-import { fetchEntries, fetchEntry } from "./queries";
+import { fetchEntry } from "./queries";
 import logger from "../../logger";
 import { CeramicPowerhouseVerifiableCredential } from "./types";
+import { definition } from "./ceramic/definition";
 
 export interface KYCServiceOptions {
   ceramicUrl?: string;
@@ -35,64 +36,6 @@ export class KYCService {
     this.eventSource = new EventSource(`${ceramic}/api/v0/feed/aggregation/documents`)
     this.codec = JsonAsString.pipe(AggregationDocument)
     this.logger = options.logger || logger;
-  }
-
-  #fetchCredentials = async (first: number) => {
-    const date = new Date().toISOString()
-    const data = await this.client.executeQuery<{
-      verifiableCredentialEIP712Index: {
-        edges: { node: CeramicPowerhouseVerifiableCredential }[];
-      };
-    }>(fetchEntries, {
-      first,
-      input: {
-        and: [
-          {
-            or: [
-              {
-                where: {
-                  revocationDate: {
-                    greaterThan: date,
-                  },
-                },
-              },
-              {
-                where: {
-                  revocationDate: {
-                    isNull: true,
-                  },
-                },
-              },
-            ],
-          },
-          {
-            or: [
-              {
-                where: {
-                  expirationDate: {
-                    greaterThan: date,
-                  }
-                }
-              },
-              {
-                where: {
-                  expirationDate: {
-                    isNull: true,
-                  }
-                }
-              }
-            ]
-          }
-
-        ],
-      },
-    });
-
-    if (data.errors) {
-      throw new Error('Error fetching entries from Ceramic')
-    }
-
-    return data.data?.verifiableCredentialEIP712Index.edges.map((e) => e.node) || [];
   }
 
   #fetchCredential = async (issuerId: string, subjectId: string) => {
@@ -166,27 +109,6 @@ export class KYCService {
     return data.verifiableCredentialEIP712Index.edges[0]!.node;
   }
 
-  #updateCredentials = async () => {
-    const first = 100;
-    let skip = 0;
-    let entries: any[] = [];
-    let foundEntries = 0;
-    const fetchEntriesLoop = async () => {
-      const newEntries = await this.#fetchCredentials(first, skip);
-      foundEntries = newEntries.length;
-      if (foundEntries === first) {
-        skip += first;
-        entries = entries.concat(newEntries);
-        await fetchEntriesLoop();
-      } else {
-        entries = entries.concat(newEntries);
-      }
-    };
-
-    await fetchEntriesLoop();
-    this.credentials = entries;
-  }
-
   #updateCredential = async (issuerId: string, subjectId: string) => {
     const entry = await this.#fetchCredential(issuerId, subjectId);
     const index = this.credentials.findIndex((e) => e.issuer.id === issuerId && e.credentialSubject.id === subjectId);
@@ -233,13 +155,7 @@ export class KYCService {
       return entry
     }
 
-    const ceramicEntry = await this.#updateCredential(issuerId, subjectId);
-    if (ceramicEntry) {
-      this.logger.info(`Found entry for issuer ${issuerId} and subject ${subjectId} on ceramic but not in cache`);
-      return ceramicEntry;
-    }
-
-    return null;
+    return this.#updateCredential(issuerId, subjectId);
   }
 
   async checkCredential(credential: CeramicPowerhouseVerifiableCredential, remote: boolean = true) {
@@ -268,9 +184,15 @@ export class KYCService {
       }
     }
 
-    // TODO: check issuer and signature
-
-
     return true;
   }
+}
+
+export const service: KYCService = new KYCService({
+  definition: definition as RuntimeCompositeDefinition,
+  ceramicUrl: "https://ceramic-ksdc-mainnet.hirenodes.io",
+});
+
+export async function initKYCService() {
+  await service.init();
 }
