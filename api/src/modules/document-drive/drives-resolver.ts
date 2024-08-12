@@ -5,20 +5,20 @@ import {
   nonNull,
   objectType,
   queryField,
-  stringArg,
+  stringArg
 } from 'nexus';
-import { DocumentDriveStateObject } from './drive-resolver';
+import DocumentDriveError from '../../errors/DocumentDriveError';
 import { Context } from '../../graphql/server/drive/context';
 import logger from '../../logger';
-import DocumentDriveError from '../../errors/DocumentDriveError';
-import { UpdateStatus } from "document-drive";
+import { DocumentDriveStateObject } from './drive-resolver';
+import { checkUserIsAdmin } from './utils';
 
 export const DocumentDriveLocalState = objectType({
   name: 'DocumentDriveLocalState',
   definition(t) {
     t.string('sharingType');
     t.nonNull.boolean('availableOffline');
-  },
+  }
 });
 
 export const DocumentDriveLocalStateInput = inputObjectType({
@@ -26,7 +26,7 @@ export const DocumentDriveLocalStateInput = inputObjectType({
   definition(t) {
     t.string('sharingType');
     t.nonNull.boolean('availableOffline');
-  },
+  }
 });
 export const DocumentDriveStateInput = inputObjectType({
   name: 'DocumentDriveStateInput',
@@ -35,13 +35,13 @@ export const DocumentDriveStateInput = inputObjectType({
     t.nonNull.string('name');
     t.string('icon');
     t.string('slug');
-  },
+  }
 });
 
 export const SetDriveIconInput = inputObjectType({
-  name: "SetDriveIconInput",
+  name: 'SetDriveIconInput',
   definition(t) {
-    t.nonNull.string("icon")
+    t.nonNull.string('icon');
   }
 });
 
@@ -55,7 +55,7 @@ export const getDrives = queryField('drives', {
       logger.error(e);
       throw new Error('Failed to get drives.');
     }
-  },
+  }
 });
 
 export const getDriveBySlug = queryField('driveIdBySlug', {
@@ -71,7 +71,7 @@ export const getDriveBySlug = queryField('driveIdBySlug', {
       logger.error(e);
       throw new Error('Drive not found.');
     }
-  },
+  }
 });
 
 const addDriveResponseDefinition = objectType({
@@ -81,62 +81,89 @@ const addDriveResponseDefinition = objectType({
       type: DocumentDriveStateObject
     });
     t.nonNull.field('local', {
-      type: DocumentDriveLocalState,
+      type: DocumentDriveLocalState
     });
-  },
+  }
 });
 
-
+// protected routes
 export const addDrive = mutationField('addDrive', {
   type: addDriveResponseDefinition,
   args: {
     global: nonNull(DocumentDriveStateInput),
-    local: nonNull(DocumentDriveLocalStateInput),
+    local: nonNull(DocumentDriveLocalStateInput)
   },
   resolve: async (_parent, { global, local }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     try {
       const drive = await ctx.prisma.document.addDrive({
-        global: { id: global.id, name: global.name, icon: global.icon ?? null, slug: global.slug ?? null },
-        local: { availableOffline: local.availableOffline, sharingType: local.sharingType ?? null, listeners: [], triggers: [] },
+        global: {
+          id: global.id,
+          name: global.name,
+          icon: global.icon ?? null,
+          slug: global.slug ?? null
+        },
+        local: {
+          availableOffline: local.availableOffline,
+          sharingType: local.sharingType ?? null,
+          listeners: [],
+          triggers: []
+        }
       });
       return drive.state;
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to add drive", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to add drive',
+        logging: true,
+        context: e
+      });
     }
-  },
+  }
 });
 
 export const deleteDrive = mutationField('deleteDrive', {
   type: 'Boolean',
   args: {
-    id: nonNull('String'),
+    id: nonNull('String')
   },
   resolve: async (_parent, { id }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     try {
       await ctx.prisma.document.deleteDrive(id);
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete drive", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to delete drive',
+        logging: true,
+        context: e
+      });
     }
 
     return true;
-  },
+  }
 });
 
 export const setDriveIcon = mutationField('setDriveIcon', {
   type: 'Boolean',
   args: {
     id: nonNull('String'),
-    icon: nonNull('String'),
+    icon: nonNull('String')
   },
   resolve: async (_parent, { id, icon }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     const result = await ctx.prisma.document.setDriveIcon(id, icon);
-    if (result.status !== "SUCCESS") {
+    if (result.status !== 'SUCCESS') {
       if (result.error) {
         const { message } = result.error;
-        throw new DocumentDriveError({ code: 500, message, logging: true })
+        throw new DocumentDriveError({ code: 500, message, logging: true });
       }
 
-      throw new DocumentDriveError({ code: 500, message: "Failed to set drive icon", logging: true })
+      throw new DocumentDriveError({
+        code: 500,
+        message: 'Failed to set drive icon',
+        logging: true
+      });
     }
     return true;
   }
@@ -146,17 +173,22 @@ export const setDriveName = mutationField('setDriveName', {
   type: 'Boolean',
   args: {
     id: nonNull('String'),
-    name: nonNull('String'),
+    name: nonNull('String')
   },
   resolve: async (_parent, { id, name }, ctx: Context) => {
+    await checkUserIsAdmin(ctx);
     const result = await ctx.prisma.document.setDriveName(id, name);
-    if (result.status !== "SUCCESS") {
+    if (result.status !== 'SUCCESS') {
       if (result.error) {
         const { message } = result.error;
-        throw new DocumentDriveError({ code: 500, message, logging: true })
+        throw new DocumentDriveError({ code: 500, message, logging: true });
       }
 
-      throw new DocumentDriveError({ code: 500, message: "Failed to set drive icon", logging: true })
+      throw new DocumentDriveError({
+        code: 500,
+        message: 'Failed to set drive icon',
+        logging: true
+      });
     }
     return true;
   }
