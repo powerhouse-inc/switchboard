@@ -47,6 +47,9 @@ dependencies:
   cross-eventsource:
     specifier: ^1.0.0
     version: 1.0.0
+  did-resolver:
+    specifier: ^4.1.0
+    version: 4.1.0
   document-drive:
     specifier: 1.0.0-alpha.88
     version: 1.0.0-alpha.88(document-model-libs@1.81.0)(document-model@1.7.0)(pg@8.12.0)(prisma@5.16.0)
@@ -95,6 +98,9 @@ dependencies:
   jsonwebtoken:
     specifier: ^9.0.2
     version: 9.0.2
+  key-did-resolver:
+    specifier: ^4.0.0
+    version: 4.0.0
   ms:
     specifier: ^2.1.3
     version: 2.1.3

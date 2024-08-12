@@ -145,7 +145,7 @@ export class KYCService {
 
   async init() {
     // await this.#updateCredentials();
-    this.#subscribeToEvents();
+    // this.#subscribeToEvents();
     return Promise.resolve();
   }
 

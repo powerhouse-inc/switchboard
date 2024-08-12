@@ -408,33 +408,37 @@ export const pushUpdates = mutationField('pushUpdates', {
               scope: s.scope as OperationScope,
               branch: 'main'
             })) ?? [];
+          try {
+            const verified = await verifyOperationsAndSignature(operations as Operation<DocumentDriveAction>[])
+            if (!verified) { // todo fix this
+              throw new BadRequestError({
+                message: 'Invalid operation signature'
+              });
+            }
+            const result = await ctx.prisma.document.pushUpdates(
+              s.driveId,
+              operations as Operation<DocumentDriveAction>[],
+              s.documentId ?? undefined
+            );
 
-          if (!(await verifyOperationsAndSignature(operations as Operation<DocumentDriveAction>[]))) { // todo fix this
-            throw new BadRequestError({
-              message: 'Invalid operation signature'
-            });
+            if (result.status !== 'SUCCESS') logger.error(result.error);
+
+            const revision =
+              result.document?.operations[s.scope as OperationScope].slice().pop()
+                ?.index ?? -1;
+
+            return {
+              revision,
+              branch: s.branch,
+              documentId: s.documentId ?? '',
+              driveId: s.driveId,
+              scope: s.scope as OperationScope,
+              status: result.status,
+              error: result.error?.message
+            };
+          } catch (e) {
+            logger.error(e);
           }
-          const result = await ctx.prisma.document.pushUpdates(
-            s.driveId,
-            operations as Operation<DocumentDriveAction>[],
-            s.documentId ?? undefined
-          );
-
-          if (result.status !== 'SUCCESS') logger.error(result.error);
-
-          const revision =
-            result.document?.operations[s.scope as OperationScope].slice().pop()
-              ?.index ?? -1;
-
-          return {
-            revision,
-            branch: s.branch,
-            documentId: s.documentId ?? '',
-            driveId: s.driveId,
-            scope: s.scope as OperationScope,
-            status: result.status,
-            error: result.error?.message
-          };
         })
       );
 

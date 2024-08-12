@@ -1,6 +1,14 @@
 import { Operation, utils } from "document-model/document";
+import * as KeyDidResolver from 'key-did-resolver'
+import { Resolver } from 'did-resolver'
 import { service } from "../renown/kyc-service";
 import { getAddressDID } from "../renown/types";
+import logger from "../../logger";
+
+
+const keyDidResolver = KeyDidResolver.getResolver()
+const didResolver = new Resolver(keyDidResolver)
+
 
 export async function verifyOperationsAndSignature(operations: Operation[]) {
   const results = await Promise.all(operations.map(async (operation) => {
@@ -19,9 +27,21 @@ export async function verifyOperationsAndSignature(operations: Operation[]) {
       signer.signatures.at(0)!,
       signer,
       async (publicKey, signature, data) => {
+        let pubkey: any = publicKey;
+        if (publicKey.startsWith("did:key:")) {
+
+          const doc = await didResolver.resolve(publicKey)
+          logger.info(doc);
+          const auth = doc.didDocument?.verificationMethod;
+          if (auth && auth[0]) {
+            pubkey = auth[0].publicKeyJwk;
+          }
+        }
+
+        logger.info(pubkey);
         const importedKey = await crypto.subtle.importKey(
-          'raw',
-          utils.hex2ab(publicKey),
+          'jwk',
+          utils.hex2ab(pubkey ?? publicKey),
           algorithm,
           true,
           ['verify'],
