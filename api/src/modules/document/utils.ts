@@ -1,5 +1,6 @@
 import { Operation, utils } from "document-model/document";
-import fetch from "node-fetch";
+import { service } from "../renown/kyc-service";
+import { getAddressDID } from "../renown/types";
 
 export async function verifyOperationsAndSignature(operations: Operation[]) {
   const results = await Promise.all(operations.map(async (operation) => {
@@ -33,13 +34,8 @@ export async function verifyOperationsAndSignature(operations: Operation[]) {
         );
       },
     );
-
-    const data = await fetch(
-      // eslint-disable-next-line max-len
-      `https://renown.id/api/auth/credential?address=${signer.user.address}&chainId=${signer.user.chainId}&app=${signer.app.key}`
-    );
-
-    const credential = await data.json();
+    const issuerId = getAddressDID(signer.user.address, signer.user.chainId);
+    const credential = await service.getCredential(issuerId, signer.app.key)
 
     if (!credential) {
       throw new Error('Credential not found');
