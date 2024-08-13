@@ -24,6 +24,7 @@ import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
 import { systemType } from '../system';
 import { verifyOperationsAndSignature } from '../document/utils';
+import ForbiddenError from '../../errors/ForbiddenError';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -411,7 +412,7 @@ export const pushUpdates = mutationField('pushUpdates', {
           try {
             const verified = await verifyOperationsAndSignature(operations as Operation<DocumentDriveAction>[])
             if (!verified) { // todo fix this
-              throw new BadRequestError({
+              throw new ForbiddenError({
                 message: 'Invalid operation signature'
               });
             }
