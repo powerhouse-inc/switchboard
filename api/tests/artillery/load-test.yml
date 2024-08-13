@@ -1,7 +1,7 @@
 config:
   # This is a test server run by team Artillery
   # It's designed to be highly scalable
-  # target: https://apps.powerhouse.io/alpha/powerhouse/switchboard/d/powerhouse
+  # target: https://apps.powerhouse.io/staging/powerhouse/switchboard/d/powerhouse
   target: http://localhost:3000/d/test-arbitrum
   phases:
     - duration: 60

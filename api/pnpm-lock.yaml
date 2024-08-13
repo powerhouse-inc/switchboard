@@ -52,13 +52,13 @@ dependencies:
     version: 4.1.0
   document-drive:
     specifier: 1.0.0-alpha.88
-    version: 1.0.0-alpha.88(document-model-libs@1.81.0)(document-model@1.7.0)(pg@8.12.0)(prisma@5.16.0)
+    version: 1.0.0-alpha.88(document-model-libs@1.83.0)(document-model@1.7.0)(pg@8.12.0)(prisma@5.16.0)
   document-model:
     specifier: 1.7.0
     version: 1.7.0
   document-model-libs:
-    specifier: ^1.81.0
-    version: 1.81.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
+    specifier: ^1.82.0
+    version: 1.83.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -244,7 +244,7 @@ packages:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-codegen/schema-ast': 4.0.0(graphql@16.9.0)
       '@graphql-codegen/visitor-plugin-common': 4.1.2(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphlib: 2.1.8
       graphql: 16.9.0
     transitivePeerDependencies:
@@ -2897,7 +2897,7 @@ packages:
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-tools/schema': 10.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
     dev: false
@@ -2907,7 +2907,7 @@ packages:
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       change-case-all: 1.0.15
       common-tags: 1.8.2
       graphql: 16.9.0
@@ -2922,7 +2922,7 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.5.3
     dev: false
@@ -2933,7 +2933,7 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
     dev: false
@@ -2962,7 +2962,7 @@ packages:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-tools/optimize': 2.0.0(graphql@16.9.0)
       '@graphql-tools/relay-operation-optimizer': 7.0.1(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       dependency-graph: 0.11.0
@@ -2983,7 +2983,7 @@ packages:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-tools/optimize': 2.0.0(graphql@16.9.0)
       '@graphql-tools/relay-operation-optimizer': 7.0.1(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       dependency-graph: 0.11.0
@@ -3122,7 +3122,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
     transitivePeerDependencies:
@@ -7270,14 +7270,14 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /document-drive@1.0.0-alpha.88(document-model-libs@1.81.0)(document-model@1.7.0)(pg@8.12.0)(prisma@5.16.0):
+  /document-drive@1.0.0-alpha.88(document-model-libs@1.83.0)(document-model@1.7.0)(pg@8.12.0)(prisma@5.16.0):
     resolution: {integrity: sha512-HwLtyr9wo5Q4c6aMKOK8rFqXO0NZwB07gVljCeCqrromcDekHeQREvYUQaqXlo4RKhQP3dyyzcI6itzS0g5qjQ==}
     peerDependencies:
       document-model: ^1.7.0
       document-model-libs: ^1.57.0
     dependencies:
       document-model: 1.7.0
-      document-model-libs: 1.81.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
+      document-model-libs: 1.83.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.9.0
       graphql-request: 6.1.0(graphql@16.9.0)
@@ -7306,8 +7306,8 @@ packages:
       - tedious
     dev: false
 
-  /document-model-libs@1.81.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4):
-    resolution: {integrity: sha512-czYPIrR8GqQm5EmrzpWxNMwul1M1op40ClEdamWKQnVJqNQf/IuOC55gxDvRv+Kgw19YaPH7w2Svm+vHKxb5BQ==}
+  /document-model-libs@1.83.0(graphql@16.9.0)(react-dom@18.3.1)(react@18.3.1)(vitest@0.32.4):
+    resolution: {integrity: sha512-GbgsUgW47+K051vu63bazdY05GBKTLNDNnasjoZ9lcLMbsY+FycknMGRbscuvCneNFQk131GQWPuzxD2WxobAw==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
