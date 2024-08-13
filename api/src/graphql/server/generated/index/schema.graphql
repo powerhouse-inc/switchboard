@@ -66,6 +66,7 @@ type Mutation {
   createSession(session: SessionInput!): SessionOutput
   deleteDrive(id: String!): Boolean
   revokeSession(sessionId: String!): Session
+  setDriveIcon(icon: String!, id: String!): Boolean
   setDriveName(id: String!, name: String!): Boolean
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }

@@ -31,7 +31,7 @@
     "cors": "^2.8.5",
     "document-drive": "1.0.0-alpha.88",
     "document-model": "1.7.0",
-    "document-model-libs": "1.59.0-arbitrum-stip.22",
+    "document-model-libs": "1.59.0-arbitrum-stip.23",
     "dotenv": "^16.4.5",
     "esbuild": "^0.21.2",
     "ethers": "^5.7.2",
