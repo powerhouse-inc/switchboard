@@ -10,15 +10,40 @@ const keyDidResolver = KeyDidResolver.getResolver()
 const didResolver = new Resolver(keyDidResolver)
 
 
-export async function verifyOperationsAndSignature(operations: Operation[]) {
-  const results = await Promise.all(operations.map(async (operation) => {
-    const signer = operation.context?.signer;
-    if (!signer) {
-      // TODO: throw error
-      // throw new Error('Signer is not defined');
+export async function verifyOperationsAndSignature(documentId: string, operations: Operation[]) {
+  const results = await Promise.all(operations.map(async (operation: Operation, index: number) => {
+    const { DISABLE_SIGNATURE_VERIFICATION } = process.env;
+    if (DISABLE_SIGNATURE_VERIFICATION === "true") {
       return true;
     }
 
+    const signer = operation.context?.signer;
+    if (!signer) {
+      throw new Error('Signer is not defined');
+    }
+
+    // check data fields
+    // const previousStateHash = operations[index - 1]?.hash ?? "";
+    // const genData = utils.buildOperationSignatureParams({ documentId, operation, previousStateHash, signer })
+    // const sigData = signer.signatures[0]?.toString().split(",")
+    // logger.info(sigData)
+    // logger.info(genData)
+
+    // const validData = genData.map((d: string, i: number) => {
+    //   // if()
+    //   if (!sigData[i] || d !== sigData[i]) {
+    //     logger.error(`Data mismatch: ${d} !== ${sigData[i]}`)
+    //     return false
+    //   }
+
+    //   return true;
+    // }).filter(e => !e).length === 0
+
+    // if (!validData) {
+    //   return false
+    // }
+
+    // check signature
     const algorithm = {
       name: 'ECDSA',
       namedCurve: 'P-256',
@@ -51,6 +76,8 @@ export async function verifyOperationsAndSignature(operations: Operation[]) {
           signature,
           data,
         );
+
+
       },
     );
     const issuerId = getAddressDID(signer.user.address, signer.user.chainId);
