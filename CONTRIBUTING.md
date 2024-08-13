@@ -36,9 +36,12 @@ Here's a couple of examples:
     In order to maintain the logging structure and be able to filter logs by file they have been produced at the following approach has to be taken:
 
     ```typescript
-    import { getModuleBinding, getChildLogger } from './logger';
+    import { getModuleBinding, getChildLogger } from "./logger";
 
-    const logger = getChildLogger({ msgPrefix: 'PREFIX' }, { myCustomBinding: 'Funny guy' });
+    const logger = getChildLogger(
+        { msgPrefix: "PREFIX" },
+        { myCustomBinding: "Funny guy" }
+    );
     ```
 
     If this approach is used - then it will be possible to filter the logs via providing the corresponding environment variable values. For more on this read the root [README](./api/README.md)

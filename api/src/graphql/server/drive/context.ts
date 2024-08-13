@@ -1,13 +1,13 @@
+import { Session } from '@prisma/client';
 import type express from 'express';
 import pino from 'pino';
-import { Session } from '@prisma/client';
-import { getChildLogger } from '../../../logger';
 import { getExtendedPrisma } from '../../../importedModules';
+import { getChildLogger } from '../../../logger';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
   { msgPrefix: 'APOLLO' },
-  { module: undefined },
+  { module: undefined }
 );
 
 export interface Context {
@@ -40,8 +40,9 @@ export function createContext(params: CreateContextParams): Context {
     request: params,
     prisma,
     apolloLogger,
-    getSession: async () => prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
+    getSession: async () =>
+      prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
     origin,
-    driveId,
+    driveId
   };
 }
