@@ -4,10 +4,10 @@ import bodyParser from 'body-parser';
 import type { Express } from 'express';
 import express from 'express';
 import promBundle from 'express-prom-bundle';
-import { renderPlaygroundPage } from 'graphql-playground-html';
 
 import { dependencies } from '../package.json';
 import prisma from './database';
+import { renderGraphqlPlayground } from './graphql/playground';
 import { getChildLogger } from './logger';
 import register from './metrics';
 
@@ -92,14 +92,7 @@ export const createApp = (): { app: Express; router: express.Router } => {
     const basePath =
       process.env.BASE_PATH === '/' ? '' : process.env.BASE_PATH || '';
     const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'}`;
-    res.send(
-      renderPlaygroundPage({
-        endpoint,
-        settings: {
-          'request.credentials': 'include'
-        }
-      })
-    );
+    res.send(renderGraphqlPlayground(endpoint));
   });
 
   // Hooks
