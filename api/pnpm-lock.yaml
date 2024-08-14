@@ -68,9 +68,6 @@ importers:
       graphql-middleware:
         specifier: ^6.1.35
         version: 6.1.35(graphql@16.9.0)
-      graphql-playground-html:
-        specifier: ^1.6.30
-        version: 1.6.30
       graphql-playground-middleware-express:
         specifier: ^1.7.23
         version: 1.7.23(express@4.19.2)
