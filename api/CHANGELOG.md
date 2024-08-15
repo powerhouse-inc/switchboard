@@ -1,3 +1,10 @@
+# [1.0.0-dev.32](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.31...v1.0.0-dev.32) (2024-08-15)
+
+
+### Features
+
+* replaced graphql explorer ([0859817](https://github.com/powerhouse-inc/switchboard/commit/0859817118dc9dc365ce691edbd7861ac973acdd))
+
 # [1.0.0-dev.31](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2024-08-09)
 
 
