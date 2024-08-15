@@ -1,3 +1,10 @@
+# [1.0.0-dev.33](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.32...v1.0.0-dev.33) (2024-08-15)
+
+
+### Features
+
+* added health check ([b4e4b29](https://github.com/powerhouse-inc/switchboard/commit/b4e4b298e1e5411b499a5d4d56075e65be1d0e9e))
+
 # [1.0.0-dev.32](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.31...v1.0.0-dev.32) (2024-08-15)
 
 
