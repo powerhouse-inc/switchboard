@@ -1,3 +1,10 @@
+# [1.0.0-dev.34](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.33...v1.0.0-dev.34) (2024-08-15)
+
+
+### Bug Fixes
+
+* health check response ([1e444e4](https://github.com/powerhouse-inc/switchboard/commit/1e444e44b8b024ef1d684e95e8f438fe370bd224))
+
 # [1.0.0-dev.33](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.32...v1.0.0-dev.33) (2024-08-15)
 
 
