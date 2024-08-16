@@ -23,7 +23,7 @@ export function getUserCrud(prisma: Prisma.TransactionClient) {
         update: {},
         create: { ...user }
       });
-      logger.error('Upserted user', upsertedUser);
+      logger.info('Upserted user', upsertedUser);
       return upsertedUser;
     }
   };

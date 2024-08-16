@@ -1,20 +1,18 @@
 # [1.0.0-next.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.7...v1.0.0-next.8) (2024-08-12)
 
-
 ### Bug Fixes
 
-* base path of develop env ([6a1e6c7](https://github.com/powerhouse-inc/switchboard/commit/6a1e6c7448d4e02b9a152930c3edb167124536fb))
-* Fixed error when deleting drive ([007d681](https://github.com/powerhouse-inc/switchboard/commit/007d68116cd8b8ebfc551c5cee2006b17c5ebf8b))
-
+- base path of develop env ([6a1e6c7](https://github.com/powerhouse-inc/switchboard/commit/6a1e6c7448d4e02b9a152930c3edb167124536fb))
+- Fixed error when deleting drive ([007d681](https://github.com/powerhouse-inc/switchboard/commit/007d68116cd8b8ebfc551c5cee2006b17c5ebf8b))
 
 ### Features
 
-* added calc for current values ([693b782](https://github.com/powerhouse-inc/switchboard/commit/693b782e88a4697e77c424dc182c014e53889f6c))
-* added current value for rwadocument ([7453848](https://github.com/powerhouse-inc/switchboard/commit/7453848bd55ceba0a74e7ab0a78404398294570f))
-* added protected mutations ([37562c0](https://github.com/powerhouse-inc/switchboard/commit/37562c0dcd7ad2b8544e5d513d13764d4407745a))
-* bump libs ([cbdda22](https://github.com/powerhouse-inc/switchboard/commit/cbdda22a96416c3128f665e4cd3d3b51d7415c8a))
-* formatted all files ([1d36fb4](https://github.com/powerhouse-inc/switchboard/commit/1d36fb4ad31c41dc88edb23bb5475a8cb6b81858))
-* updated prettier config ([59011d5](https://github.com/powerhouse-inc/switchboard/commit/59011d5497fc300f005e742c1e100a499170a8a3))
+- added calc for current values ([693b782](https://github.com/powerhouse-inc/switchboard/commit/693b782e88a4697e77c424dc182c014e53889f6c))
+- added current value for rwadocument ([7453848](https://github.com/powerhouse-inc/switchboard/commit/7453848bd55ceba0a74e7ab0a78404398294570f))
+- added protected mutations ([37562c0](https://github.com/powerhouse-inc/switchboard/commit/37562c0dcd7ad2b8544e5d513d13764d4407745a))
+- bump libs ([cbdda22](https://github.com/powerhouse-inc/switchboard/commit/cbdda22a96416c3128f665e4cd3d3b51d7415c8a))
+- formatted all files ([1d36fb4](https://github.com/powerhouse-inc/switchboard/commit/1d36fb4ad31c41dc88edb23bb5475a8cb6b81858))
+- updated prettier config ([59011d5](https://github.com/powerhouse-inc/switchboard/commit/59011d5497fc300f005e742c1e100a499170a8a3))
 
 # [1.0.0-next.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.6...v1.0.0-next.7) (2024-08-02)
 
