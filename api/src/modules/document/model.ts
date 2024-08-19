@@ -126,6 +126,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         throw new Error('Drive not found');
       }
     },
+    getDriveDocument: async (driveId: string) => {
+      const drive = await driveServer.getDrive(driveId);
+      return drive;
+    },
     getDriveBySlug: async (slug: string) => {
       try {
         const { state } = await driveServer.getDriveBySlug(slug);

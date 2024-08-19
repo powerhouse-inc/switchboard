@@ -6,7 +6,7 @@ import {
   DocumentDriveAction,
   DocumentDriveState
 } from 'document-model-libs/document-drive';
-import { Operation, OperationScope } from 'document-model/document';
+import { Document, Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import {
   enumType,
@@ -410,8 +410,12 @@ export const pushUpdates = mutationField('pushUpdates', {
               branch: 'main'
             })) ?? [];
 
+          const doc = s.documentId ?
+            await ctx.prisma.document.getDocument(s.driveId, s.documentId)
+            : await ctx.prisma.document.getDriveDocument(s.driveId);
           const verified = await verifyOperationsAndSignature(
             s.documentId ?? s.driveId,
+            doc as Document,
             operations as Operation<DocumentDriveAction>[]
           )
           if (!verified) { // todo fix this

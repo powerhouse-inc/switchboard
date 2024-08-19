@@ -1,4 +1,4 @@
-import { Operation, utils } from "document-model/document";
+import { Document, Operation, utils } from "document-model/document";
 import * as KeyDidResolver from 'key-did-resolver'
 import { Resolver } from 'did-resolver'
 import crypto from "node:crypto";
@@ -10,7 +10,12 @@ const keyDidResolver = KeyDidResolver.getResolver()
 const didResolver = new Resolver(keyDidResolver)
 
 
-export async function verifyOperationsAndSignature(documentId: string, operations: Operation[]) {
+export async function verifyOperationsAndSignature(
+  documentId: string,
+  document: Document,
+  operations: Operation[]
+): Promise<boolean> {
+  const lastOp = document.operations[operations.pop()!.scope].pop();
   const results = await Promise.all(operations.map(async (operation: Operation, index: number) => {
     const { DISABLE_SIGNATURE_VERIFICATION } = process.env;
     if (DISABLE_SIGNATURE_VERIFICATION === "true") {
@@ -23,25 +28,33 @@ export async function verifyOperationsAndSignature(documentId: string, operation
     }
 
     // check data fields
-    // const previousStateHash = operations[index - 1]?.hash ?? "";
-    // const genData = utils.buildOperationSignatureParams({ documentId, operation, previousStateHash, signer })
-    // const sigData = signer.signatures[0]?.toString().split(",")
-    // logger.info(sigData)
-    // logger.info(genData)
+    const previousStateHash = index === 0 ? lastOp?.hash ?? "" : operations[index - 1]?.hash ?? "";
+    const genData = utils.buildOperationSignatureParams({
+      documentId,
+      operation,
+      previousStateHash,
+      signer
+    })
+    const sigData = signer.signatures[0]?.toString().split(",")
+    if (!sigData) {
+      return false;
+    }
+    logger.info(sigData)
+    logger.info(genData)
 
-    // const validData = genData.map((d: string, i: number) => {
-    //   // if()
-    //   if (!sigData[i] || d !== sigData[i]) {
-    //     logger.error(`Data mismatch: ${d} !== ${sigData[i]}`)
-    //     return false
-    //   }
+    const validData = genData.map((d: string, i: number) => {
+      // if()
+      if (!sigData[i] || d !== sigData[i]) {
+        logger.error(`Data mismatch: ${d} !== ${sigData![i]}`)
+        return false
+      }
 
-    //   return true;
-    // }).filter(e => !e).length === 0
+      return true;
+    }).filter(e => !e).length === 0
 
-    // if (!validData) {
-    //   return false
-    // }
+    if (!validData) {
+      return false
+    }
 
     // check signature
     const algorithm = {
