@@ -11,7 +11,7 @@ const didResolver = new Resolver(keyDidResolver)
 
 
 export async function verifyOperationsAndSignature(
-  documentId: string,
+  id: string,
   document: Document,
   operations: Operation[]
 ): Promise<boolean> {
@@ -30,7 +30,7 @@ export async function verifyOperationsAndSignature(
     // check data fields
     const previousStateHash = index === 0 ? lastOp?.hash ?? "" : operations[index - 1]?.hash ?? "";
     const genData = utils.buildOperationSignatureParams({
-      documentId,
+      documentId: id,
       operation,
       previousStateHash,
       signer
