@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Head from "next/head";
+import { PublicEnvScript } from "next-runtime-env";
 import Header from "@/components/header/header";
-
+import Link from "next/link";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,22 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href={`${process.env.NEXT_PUBLIC_BASE_PATH}/apple-touch-icon.png`}
-        />
+        <PublicEnvScript />
+        <Link rel="apple-touch-icon" href={`/apple-touch-icon.png`} />
 
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href={`${process.env.NEXT_PUBLIC_BASE_PATH}/favicon-16x16.png`}
-        />
-        <link
-          rel="manifest"
-          href={`${process.env.NEXT_PUBLIC_BASE_PATH}/site.webmanifest`}
-        />
+        <Link rel="icon" type="image/png" href={`/favicon-16x16.png`} />
+        <Link rel="manifest" href={`/site.webmanifest`} />
       </head>
       <body className={inter.className}>
         <div className="bg-gray-100">
