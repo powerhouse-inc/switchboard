@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import { ApolloClient, InMemoryCache, createHttpLink, gql } from '@apollo/client';
 import { useEffect } from 'react';
 import { setContext } from '@apollo/client/link/context';
+import { env } from 'next-runtime-env';
 
 
 export interface Session {
@@ -67,8 +68,12 @@ const useAuth = () => {
     }
   }, []);
 
+  const NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST = env(
+    "NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST"
+  );
+
   const httpLink = createHttpLink({
-    uri: process.env.NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST + '/drives',
+    uri: NEXT_PUBLIC_SWITCHBOARD_GRAPHQL_HOST + '/drives',
   });
 
   const authLink = setContext((_, { headers }) => {
