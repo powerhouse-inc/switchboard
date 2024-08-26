@@ -1,3 +1,10 @@
+# [1.0.0-dev.35](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.34...v1.0.0-dev.35) (2024-08-26)
+
+
+### Features
+
+* support setting explorer query on url ([4fce05a](https://github.com/powerhouse-inc/switchboard/commit/4fce05a0c1a3442fa7b72334dda3f7282b612f7a))
+
 # [1.0.0-dev.34](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.33...v1.0.0-dev.34) (2024-08-15)
 
 
