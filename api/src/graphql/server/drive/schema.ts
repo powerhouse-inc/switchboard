@@ -8,6 +8,7 @@ import * as accountSnapshotResolver from '../../../modules/account-snapshot';
 import * as budgetStatement from '../../../modules/budget-statement';
 import * as documentResolver from '../../../modules/document';
 import * as driveResolver from '../../../modules/document-drive/drive-resolver';
+import * as driveStateResolver from '../../../modules/document-drive/resolvers';
 import * as rwaDocumentResolver from '../../../modules/real-world-assets';
 import * as scopeFramework from '../../../modules/scope-framework';
 import * as systemResolver from '../../../modules/system';
@@ -26,6 +27,7 @@ export const dirname = (() => {
 export const schema = nexus.makeSchema({
   types: {
     ...systemResolver,
+    ...driveStateResolver,
     ...driveResolver,
     ...documentResolver,
     ...rwaDocumentResolver,

@@ -41,6 +41,8 @@ export const documentModelInterface = interfaceType({
   },
   resolveType: e => {
     switch (e.documentType) {
+      case 'powerhouse/document-drive':
+        return 'DocumentDrive';
       case 'powerhouse/budget-statement':
         return 'BudgetStatement';
       case 'powerhouse/account-snapshot':

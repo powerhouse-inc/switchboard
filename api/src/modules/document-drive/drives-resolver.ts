@@ -10,16 +10,8 @@ import {
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import { Context } from '../../graphql/server/drive/context';
 import logger from '../../logger';
-import { DocumentDriveStateObject } from './drive-resolver';
+import { DocumentDriveLocalState, DocumentDriveState } from './resolvers';
 import { checkUserIsAdmin } from './utils';
-
-export const DocumentDriveLocalState = objectType({
-  name: 'DocumentDriveLocalState',
-  definition(t) {
-    t.string('sharingType');
-    t.nonNull.boolean('availableOffline');
-  }
-});
 
 export const DocumentDriveLocalStateInput = inputObjectType({
   name: 'DocumentDriveLocalStateInput',
@@ -78,7 +70,7 @@ const addDriveResponseDefinition = objectType({
   name: 'AddDriveResponse',
   definition(t) {
     t.nonNull.field('global', {
-      type: DocumentDriveStateObject
+      type: DocumentDriveState
     });
     t.nonNull.field('local', {
       type: DocumentDriveLocalState

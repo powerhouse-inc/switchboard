@@ -2,10 +2,7 @@ import {
   ListenerRevision as IListenerRevision,
   UpdateStatus as IUpdateStatus
 } from 'document-drive';
-import {
-  DocumentDriveAction,
-  DocumentDriveState
-} from 'document-model-libs/document-drive';
+import { DocumentDriveAction } from 'document-model-libs/document-drive';
 import { Operation, OperationScope } from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import {
@@ -23,33 +20,9 @@ import DocumentDriveError from '../../errors/DocumentDriveError';
 import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
 import { systemType } from '../system';
+import { DocumentDriveState, Listener } from './resolvers';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
-
-export const Node = objectType({
-  name: 'Node',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.string('documentType');
-    t.string('parentFolder');
-  }
-});
-
-
-export const DocumentDriveStateObject = objectType({
-  name: 'DocumentDriveState',
-  definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    t.nonNull.list.field('nodes', { type: Node });
-    t.string('icon');
-    t.string('slug');
-    t.string("sharingType");
-    t.nonNull.boolean("availableOffline");
-  }
-});
 
 // v2
 export const UpdateStatus = enumType({
@@ -209,49 +182,6 @@ export const InputStrandUpdate = inputObjectType({
   }
 });
 
-export const ListenerFilter = objectType({
-  name: 'ListenerFilter',
-  definition(t) {
-    t.nonNull.list.nonNull.string('documentType');
-    t.list.nonNull.id('documentId');
-    t.list.nonNull.string('scope');
-    t.list.nonNull.string('branch');
-  }
-});
-
-export const TransmitterType = enumType({
-  name: 'TransmitterType',
-  members: [
-    'Internal',
-    'SwitchboardPush',
-    'PullResponder',
-    'SecureConnect',
-    'MatrixConnect',
-    'RESTWebhook'
-  ]
-});
-
-export const ListenerCallInfo = objectType({
-  name: 'ListenerCallInfo',
-  definition(t) {
-    t.field('transmitterType', { type: TransmitterType });
-    t.string('name');
-    t.string('data');
-  }
-});
-
-export const Listener = objectType({
-  name: 'Listener',
-  definition(t) {
-    t.nonNull.id('listenerId');
-    t.string('label');
-    t.nonNull.boolean('block');
-    t.nonNull.boolean('system');
-    t.nonNull.field('filter', { type: ListenerFilter });
-    t.field('callInfo', { type: ListenerCallInfo });
-  }
-});
-
 export const syncType = objectType({
   name: 'Sync',
   definition(t) {
@@ -318,13 +248,17 @@ export const driveSystemQueryField = queryField('system', {
 });
 
 export const getDrive = queryField('drive', {
-  type: DocumentDriveStateObject,
+  type: DocumentDriveState,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
-      const {global, local} = (await ctx.prisma.document.getDrive(
+      const { global, local } = await ctx.prisma.document.getDrive(
         ctx.driveId ?? '1'
-      )) ;
-      return {...global, ...local, sharingType: local.sharingType?.toUpperCase() ?? null};
+      );
+      return {
+        ...global,
+        ...local,
+        sharingType: local.sharingType?.toUpperCase() ?? null
+      };
     } catch (e: any) {
       throw new DocumentDriveError({
         code: 500,
@@ -367,18 +301,18 @@ export const registerListener = mutationField('registerPullResponderListener', {
 });
 
 export const deleteListener = mutationField('deletePullResponderListener', {
-  type: Listener,
+  type: 'Boolean',
   args: {
-    filter: nonNull(InputListenerFilter)
+    listenerId: nonNull('String')
   },
-  resolve: async (_parent, { filter }, ctx: Context) => {
+  resolve: async (_parent, { listenerId }, ctx: Context) => {
     try {
-      const result = await ctx.prisma.document.deletePullResponderListener(
+      await ctx.prisma.document.deletePullResponderListener(
         ctx.driveId ?? '1',
-        filter
+        listenerId
       );
 
-      return result;
+      return true;
     } catch (e: any) {
       throw new DocumentDriveError({
         code: 500,
