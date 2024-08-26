@@ -1,5 +1,6 @@
 export function renderGraphqlPlayground(
   url: string,
+  query?: string,
   headers: Record<string, string> = {}
 ): string {
   return `<!doctype html>
@@ -44,19 +45,32 @@ export function renderGraphqlPlayground(
       <body>
         <div id="graphiql">Loading...</div>
         <script>
-          const root = ReactDOM.createRoot(document.getElementById('graphiql'));
-          const fetcher = GraphiQL.createFetcher({
-            url: '${url}',
-            headers: ${JSON.stringify(headers)},
-          });
-          const explorerPlugin = GraphiQLPluginExplorer.explorerPlugin();
-          root.render(
-            React.createElement(GraphiQL, {
-              fetcher,
-              defaultEditorToolsVisibility: true,
-              plugins: [explorerPlugin],
-            }),
-          );
+            var fetcher = GraphiQL.createFetcher({
+                url: '${url}',
+                headers: ${JSON.stringify(headers)}
+            });
+            var defaultQuery = ${query ? `\`${query}\`` : undefined};
+
+            if (defaultQuery) {
+                var sessionQuery = localStorage.getItem("graphiql:query");
+                if (sessionQuery) {
+                    localStorage.setItem("graphiql:query", defaultQuery);
+                }
+            }
+
+            var explorerPlugin = GraphiQLPluginExplorer.explorerPlugin();
+
+            function GraphiQLWithExplorer() {
+                return React.createElement(GraphiQL, {
+                fetcher: fetcher,
+                defaultEditorToolsVisibility: true,
+                plugins: [explorerPlugin],
+                defaultQuery
+                });
+            }
+
+            const root = ReactDOM.createRoot(document.getElementById('graphiql'));
+            root.render(React.createElement(GraphiQLWithExplorer));
         </script>
       </body>
     </html>`;
