@@ -5,6 +5,7 @@ import { validationPlugin } from 'nexus-validation-plugin';
 import nexus from 'nexus/dist/index.js';
 import { getExtraResolvers } from '../../../importedModules';
 import * as drivesResolver from '../../../modules/document-drive/drives-resolver';
+import * as driveResolver from '../../../modules/document-drive/resolvers';
 import * as systemResolver from '../../../modules/system';
 
 export const dirname = (() => {
@@ -21,6 +22,7 @@ export const dirname = (() => {
 export const schema = nexus.makeSchema({
   types: {
     ...systemResolver,
+    ...driveResolver,
     ...drivesResolver,
     ...getExtraResolvers()
   },
