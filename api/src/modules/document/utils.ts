@@ -47,8 +47,6 @@ export async function verifyOperationsAndSignature(
     if (!sigData) {
       return false;
     }
-    logger.info(sigData)
-    logger.info(genData)
 
     const validData = genData.map((d: string, i: number) => {
       // if()
