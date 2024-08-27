@@ -410,13 +410,18 @@ export const pushUpdates = mutationField('pushUpdates', {
               branch: 'main'
             })) ?? [];
 
-          const doc = s.documentId ?
-            await ctx.prisma.document.getDocument(s.driveId, s.documentId)
-            : await ctx.prisma.document.getDriveDocument(s.driveId);
+          logger.info(`Drive Id and DocumentId${s.driveId} ${s.documentId}`);
+
+          const id = s.documentId && s.documentId !== "" ? s.documentId : s.driveId;
+
+
+          const existingOperations = await ctx.prisma.document.getOperations(
+            s.driveId, s.documentId ? s.documentId : undefined
+          );
           const verified = await verifyOperationsAndSignature(
-            s.documentId ?? s.driveId,
-            doc as Document,
-            operations as Operation<DocumentDriveAction>[]
+            id,
+            existingOperations[s.scope as OperationScope],
+            operations as Operation[]
           )
           if (!verified) { // todo fix this
             throw new ForbiddenError({
