@@ -1,4 +1,4 @@
-import { Document, Operation, utils } from "document-model/document";
+import { Operation, utils } from "document-model/document";
 import * as KeyDidResolver from 'key-did-resolver'
 import { Resolver } from 'did-resolver'
 import crypto from "node:crypto";
@@ -12,10 +12,10 @@ const didResolver = new Resolver(keyDidResolver)
 
 export async function verifyOperationsAndSignature(
   id: string,
-  document: Document,
+  existingOperations: Operation[],
   operations: Operation[]
 ): Promise<boolean> {
-  const lastOp = document.operations[operations.pop()!.scope].pop();
+
   const results = await Promise.all(operations.map(async (operation: Operation, index: number) => {
     const { DISABLE_SIGNATURE_VERIFICATION } = process.env;
     if (DISABLE_SIGNATURE_VERIFICATION === "true") {
@@ -24,11 +24,19 @@ export async function verifyOperationsAndSignature(
 
     const signer = operation.context?.signer;
     if (!signer) {
+      // return true;
       throw new Error('Signer is not defined');
     }
 
     // check data fields
-    const previousStateHash = index === 0 ? lastOp?.hash ?? "" : operations[index - 1]?.hash ?? "";
+
+    let previousStateHash = "";
+    if (operation.index > 0 && index === 0 && existingOperations.length > 0) {
+      previousStateHash = existingOperations[existingOperations.length - 1]?.hash ?? "";
+    } else if (index > 1) {
+      previousStateHash = operations[index - 1]!.hash;
+    }
+
     const genData = utils.buildOperationSignatureParams({
       documentId: id,
       operation,
@@ -44,7 +52,7 @@ export async function verifyOperationsAndSignature(
 
     const validData = genData.map((d: string, i: number) => {
       // if()
-      if (!sigData[i] || d !== sigData[i]) {
+      if (d !== sigData[i]) {
         logger.error(`Data mismatch: ${d} !== ${sigData![i]}`)
         return false
       }
