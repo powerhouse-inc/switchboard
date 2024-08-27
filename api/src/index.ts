@@ -14,30 +14,31 @@ import { initKYCService } from './modules/renown/kyc-service';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
-const { app, router } = createApp();
-
-async function startServer(
-  app: express.Application,
-  router: express.Router
-): Promise<Server> {
-  await addGraphqlRoutes(router);
-
-  logger.debug('Starting server');
-
+async function startServer(): Promise<Server> {
+  logger.info('Starting server');
+  // init services
   if (process.env.REDIS_TLS_URL) {
     await initRedis();
   }
-
   await initKYCService();
 
+  const { app, router } = createApp();
+  // add graphql routes to router
+  await addGraphqlRoutes(router);
+
+  // configure base path for router
   const basePath = process.env.BASE_PATH || '/';
   app.use(basePath, router);
 
+  // configure sentry
   if (process.env.SENTRY_DSN) {
     app.use(Sentry.Handlers.errorHandler());
   }
 
+  // add error handler
   app.use(errorHandler);
+
+  // add metrics
   router.get(
     '/metrics',
     async (req: express.Request, res: express.Response) => {
@@ -47,6 +48,7 @@ async function startServer(
     }
   );
 
+  // instantiate http server
   const httpServer = createHttpServer(app);
   return httpServer.listen({ port: PORT }, () => {
     logger.info(`Running on ${PORT}`);
@@ -54,7 +56,7 @@ async function startServer(
 }
 
 /* istanbul ignore next @preserve */
-startServer(app, router)
+startServer()
   .then(e => {
     // Hot Module Replacement
     const { hot } = import.meta as any;
