@@ -1,4 +1,33 @@
-# [1.0.0-next.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.6...v1.0.0-next.7) (2024-08-02)
+# [1.0.0-next.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.6...v1.0.0-next.7) (2024-08-02)
+
+
+### Features
+
+* support setting explorer query on url ([4fce05a](https://github.com/powerhouse-inc/switchboard/commit/4fce05a0c1a3442fa7b72334dda3f7282b612f7a))
+
+# [1.0.0-dev.34](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.33...v1.0.0-dev.34) (2024-08-15)
+
+
+### Bug Fixes
+
+* health check response ([1e444e4](https://github.com/powerhouse-inc/switchboard/commit/1e444e44b8b024ef1d684e95e8f438fe370bd224))
+
+# [1.0.0-dev.33](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.32...v1.0.0-dev.33) (2024-08-15)
+
+
+### Features
+
+* added health check ([b4e4b29](https://github.com/powerhouse-inc/switchboard/commit/b4e4b298e1e5411b499a5d4d56075e65be1d0e9e))
+
+# [1.0.0-dev.32](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.31...v1.0.0-dev.32) (2024-08-15)
+
+
+### Features
+
+* replaced graphql explorer ([0859817](https://github.com/powerhouse-inc/switchboard/commit/0859817118dc9dc365ce691edbd7861ac973acdd))
+
+# [1.0.0-dev.31](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2024-08-09)
+
 
 ### Bug Fixes
 
