@@ -162,5 +162,6 @@ export const ScopeFrameworkDocument = objectType({
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: ScopeFrameworkState });
+    t.nonNull.field('initialState', { type: ScopeFrameworkState });
   }
 });

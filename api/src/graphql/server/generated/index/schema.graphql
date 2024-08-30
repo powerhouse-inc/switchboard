@@ -39,6 +39,8 @@ type DefaultOperation implements IOperation {
   hash: String!
   id: String
   index: Int!
+  inputText: String!
+  skip: Int!
   timestamp: Date!
   type: String!
 }
@@ -47,6 +49,7 @@ type DocumentDrive implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: DocumentDriveState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!
@@ -111,6 +114,8 @@ interface IOperation {
   hash: String!
   id: String
   index: Int!
+  inputText: String!
+  skip: Int!
   timestamp: Date!
   type: String!
 }

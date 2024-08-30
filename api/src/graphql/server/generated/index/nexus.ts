@@ -109,6 +109,8 @@ export interface NexusGenObjects {
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
+    inputText: string; // String!
+    skip: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
@@ -116,6 +118,7 @@ export interface NexusGenObjects {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
+    initialState: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
@@ -250,6 +253,8 @@ export interface NexusGenFieldTypes {
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
+    inputText: string; // String!
+    skip: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
@@ -257,6 +262,7 @@ export interface NexusGenFieldTypes {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
+    initialState: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
@@ -376,6 +382,8 @@ export interface NexusGenFieldTypes {
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
+    inputText: string; // String!
+    skip: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
@@ -418,6 +426,8 @@ export interface NexusGenFieldTypeNames {
     hash: 'String'
     id: 'String'
     index: 'Int'
+    inputText: 'String'
+    skip: 'Int'
     timestamp: 'Date'
     type: 'String'
   }
@@ -425,6 +435,7 @@ export interface NexusGenFieldTypeNames {
     created: 'Date'
     documentType: 'String'
     id: 'String'
+    initialState: 'DocumentDriveState'
     lastModified: 'Date'
     name: 'String'
     operations: 'DefaultOperation'
@@ -544,6 +555,8 @@ export interface NexusGenFieldTypeNames {
     hash: 'String'
     id: 'String'
     index: 'Int'
+    inputText: 'String'
+    skip: 'Int'
     timestamp: 'Date'
     type: 'String'
   }
