@@ -156,5 +156,6 @@ export const DocumentDriveDocument = objectType({
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: DocumentDriveState });
+    t.nonNull.field('initialState', { type: DocumentDriveState });
   }
 });

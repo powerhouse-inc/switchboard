@@ -103,6 +103,7 @@ type BudgetStatement implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: BudgetStatementState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!
@@ -207,6 +208,7 @@ type DocumentDrive implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: DocumentDriveState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!
@@ -560,6 +562,7 @@ type ScopeFramework implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: ScopeFrameworkState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!

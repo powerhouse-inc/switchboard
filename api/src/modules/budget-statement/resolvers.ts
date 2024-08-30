@@ -137,5 +137,6 @@ export const BudgetStatementDocument = objectType({
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: BudgetStatementState });
+    t.nonNull.field('initialState', { type: BudgetStatementState });
   }
 });

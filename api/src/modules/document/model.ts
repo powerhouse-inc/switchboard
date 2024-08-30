@@ -263,7 +263,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         id: documentId,
         revision: document.revision.global,
         state: document.state.global,
-        operations: document.operations.global
+        operations: document.operations.global.map(op => ({
+          ...op,
+          inputText:
+            typeof op.input === 'string' ? op.input : JSON.stringify(op.input)
+        })),
+        initialState: document.initialState.state.global
       };
       return response;
     },
