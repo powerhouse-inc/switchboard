@@ -264,7 +264,7 @@ export const syncType = objectType({
           const result = await ctx.prisma.document.pullStrands(
             ctx.driveId ?? '1',
             listenerId,
-            since
+            { since }
           );
           return result.map(e => ({
             driveId: e.driveId,
