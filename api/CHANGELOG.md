@@ -1,20 +1,42 @@
-# [1.0.0-next.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.7...v1.0.0-next.8) (2024-08-12)
-
-
-### Bug Fixes
-
-* base path of develop env ([6a1e6c7](https://github.com/powerhouse-inc/switchboard/commit/6a1e6c7448d4e02b9a152930c3edb167124536fb))
-* Fixed error when deleting drive ([007d681](https://github.com/powerhouse-inc/switchboard/commit/007d68116cd8b8ebfc551c5cee2006b17c5ebf8b))
-
+# [1.0.0-dev.35](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.34...v1.0.0-dev.35) (2024-08-26)
 
 ### Features
 
-* added calc for current values ([693b782](https://github.com/powerhouse-inc/switchboard/commit/693b782e88a4697e77c424dc182c014e53889f6c))
-* added current value for rwadocument ([7453848](https://github.com/powerhouse-inc/switchboard/commit/7453848bd55ceba0a74e7ab0a78404398294570f))
-* added protected mutations ([37562c0](https://github.com/powerhouse-inc/switchboard/commit/37562c0dcd7ad2b8544e5d513d13764d4407745a))
-* bump libs ([cbdda22](https://github.com/powerhouse-inc/switchboard/commit/cbdda22a96416c3128f665e4cd3d3b51d7415c8a))
-* formatted all files ([1d36fb4](https://github.com/powerhouse-inc/switchboard/commit/1d36fb4ad31c41dc88edb23bb5475a8cb6b81858))
-* updated prettier config ([59011d5](https://github.com/powerhouse-inc/switchboard/commit/59011d5497fc300f005e742c1e100a499170a8a3))
+- support setting explorer query on url ([4fce05a](https://github.com/powerhouse-inc/switchboard/commit/4fce05a0c1a3442fa7b72334dda3f7282b612f7a))
+
+# [1.0.0-dev.34](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.33...v1.0.0-dev.34) (2024-08-15)
+
+### Bug Fixes
+
+- health check response ([1e444e4](https://github.com/powerhouse-inc/switchboard/commit/1e444e44b8b024ef1d684e95e8f438fe370bd224))
+
+# [1.0.0-dev.33](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.32...v1.0.0-dev.33) (2024-08-15)
+
+### Features
+
+- added health check ([b4e4b29](https://github.com/powerhouse-inc/switchboard/commit/b4e4b298e1e5411b499a5d4d56075e65be1d0e9e))
+
+# [1.0.0-dev.32](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.31...v1.0.0-dev.32) (2024-08-15)
+
+### Features
+
+- replaced graphql explorer ([0859817](https://github.com/powerhouse-inc/switchboard/commit/0859817118dc9dc365ce691edbd7861ac973acdd))
+
+# [1.0.0-dev.31](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.30...v1.0.0-dev.31) (2024-08-09)
+
+### Bug Fixes
+
+- base path of develop env ([6a1e6c7](https://github.com/powerhouse-inc/switchboard/commit/6a1e6c7448d4e02b9a152930c3edb167124536fb))
+- Fixed error when deleting drive ([007d681](https://github.com/powerhouse-inc/switchboard/commit/007d68116cd8b8ebfc551c5cee2006b17c5ebf8b))
+
+### Features
+
+- added calc for current values ([693b782](https://github.com/powerhouse-inc/switchboard/commit/693b782e88a4697e77c424dc182c014e53889f6c))
+- added current value for rwadocument ([7453848](https://github.com/powerhouse-inc/switchboard/commit/7453848bd55ceba0a74e7ab0a78404398294570f))
+- added protected mutations ([37562c0](https://github.com/powerhouse-inc/switchboard/commit/37562c0dcd7ad2b8544e5d513d13764d4407745a))
+- bump libs ([cbdda22](https://github.com/powerhouse-inc/switchboard/commit/cbdda22a96416c3128f665e4cd3d3b51d7415c8a))
+- formatted all files ([1d36fb4](https://github.com/powerhouse-inc/switchboard/commit/1d36fb4ad31c41dc88edb23bb5475a8cb6b81858))
+- updated prettier config ([59011d5](https://github.com/powerhouse-inc/switchboard/commit/59011d5497fc300f005e742c1e100a499170a8a3))
 
 # [1.0.0-next.7](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.6...v1.0.0-next.7) (2024-08-02)
 

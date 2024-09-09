@@ -93,10 +93,10 @@ type BaseTransaction {
   assetId: ID!
   assetType: AssetType!
   counterPartyAccountId: ID
-  entryTime: Date!
+  entryTime: DateTime!
   id: ID!
-  settlementTime: Date
-  tradeTime: Date
+  settlementTime: DateTime
+  tradeTime: DateTime
 }
 
 type BudgetStatement implements IDocument {
@@ -138,8 +138,8 @@ type Cash {
   balance: Float!
   currency: String!
   id: ID!
-  spv: Spv
-  spvId: ID
+  spvId: ID!
+  type: AssetType!
 }
 
 type Challenge {
@@ -181,6 +181,8 @@ type CoreUnit {
 """Date custom scalar type"""
 scalar Date
 
+scalar DateTime
+
 type DefaultDocument implements IDocument {
   created: Date!
   documentType: String!
@@ -195,6 +197,8 @@ type DefaultOperation implements IOperation {
   hash: String!
   id: String
   index: Int!
+  inputText: String!
+  skip: Int!
   timestamp: Date!
   type: String!
 }
@@ -212,23 +216,20 @@ union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | Se
 type FixedIncome {
   CUSIP: String
   ISIN: String
-  assetProceeds: Float
+  assetProceeds: Float!
   coupon: Float
-  currentValue(date: Date): Float
-  fixedIncomeType: FixedIncomeType
-  fixedIncomeTypeId: ID
-  id: ID
-  maturity: Date
-  name: String
-  notional: Float
-  purchaseDate: Date
-  purchasePrice: Float
-  purchaseProceeds: Float
-  realizedSurplus: Float
-  salesProceeds: Float
-  spv: Spv
-  spvId: ID
-  totalDiscount: Float
+  fixedIncomeTypeId: ID!
+  id: ID!
+  maturity: DateTime
+  name: String!
+  notional: Float!
+  purchaseDate: DateTime!
+  purchasePrice: Float!
+  purchaseProceeds: Float!
+  realizedSurplus: Float!
+  salesProceeds: Float!
+  spvId: ID!
+  totalDiscount: Float!
   type: AssetType!
 }
 
@@ -250,7 +251,7 @@ type FtesForecast {
 type GroupTransaction {
   cashBalanceChange: Float!
   cashTransaction: BaseTransaction!
-  entryTime: Date!
+  entryTime: DateTime!
   fees: [TransactionFee!]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
@@ -285,18 +286,10 @@ interface IOperation {
   hash: String!
   id: String
   index: Int!
+  inputText: String!
+  skip: Int!
   timestamp: Date!
   type: String!
-}
-
-interface IRealWorldAssetsState {
-  accounts: [Account!]!
-  fixedIncomeTypes: [FixedIncomeType!]!
-  portfolio: [Asset!]!
-  principalLenderAccountId: ID!
-  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
-  spvs: [Spv!]!
-  transactions: [GroupTransaction!]!
 }
 
 input InputListenerFilter {
@@ -485,7 +478,7 @@ type Query {
   document(id: String!): IDocument
   documents: [IDocument]
   drive: DocumentDriveState
-  rwaPortfolios(id: String): [RealWorldAssetsPortfolio]
+  rwaPortfolios(id: String): [RealWorldAssets]
   system: SwitchboardDrive
 }
 
@@ -493,6 +486,7 @@ type RealWorldAssets implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: RealWorldAssetsState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!
@@ -500,18 +494,7 @@ type RealWorldAssets implements IDocument {
   state: RealWorldAssetsState!
 }
 
-type RealWorldAssetsPortfolio implements IRealWorldAssetsState {
-  accounts: [Account!]!
-  fixedIncomeTypes: [FixedIncomeType!]!
-  id: ID!
-  portfolio: [Asset!]!
-  principalLenderAccountId: ID!
-  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
-  spvs: [Spv!]!
-  transactions: [GroupTransaction!]!
-}
-
-type RealWorldAssetsState implements IRealWorldAssetsState {
+type RealWorldAssetsState {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   portfolio: [Asset!]!
