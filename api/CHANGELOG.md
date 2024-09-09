@@ -1,3 +1,10 @@
+# [1.0.0-dev.36](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.35...v1.0.0-dev.36) (2024-09-09)
+
+
+### Features
+
+* updated dependencies ([d716dbb](https://github.com/powerhouse-inc/switchboard/commit/d716dbbedecf61cb2cf95e4d6e9831c106a592d7))
+
 # [1.0.0-dev.35](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.34...v1.0.0-dev.35) (2024-08-26)
 
 
