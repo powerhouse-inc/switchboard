@@ -36,6 +36,7 @@ type CoreUnit {
 scalar Date
 
 type DefaultOperation implements IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -111,6 +112,7 @@ interface IDocument {
 }
 
 interface IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!

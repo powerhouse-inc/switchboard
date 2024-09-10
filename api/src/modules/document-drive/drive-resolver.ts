@@ -108,6 +108,7 @@ export const OperationUpdate = objectType({
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
+    t.string('error');
     t.field('context', { type: OperationContext });
   }
 });
@@ -156,6 +157,7 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
     t.string('id');
+    t.string('error');
     t.field('context', { type: InputOperationContext });
   }
 });
