@@ -73,6 +73,7 @@ export interface NexusGenInputs {
   }
   InputOperationUpdate: { // input type
     context?: NexusGenInputs['InputOperationContext'] | null; // InputOperationContext
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -286,6 +287,7 @@ export interface NexusGenObjects {
     revision: number; // Int!
   }
   DefaultOperation: { // root type
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -453,6 +455,7 @@ export interface NexusGenObjects {
   }
   OperationUpdate: { // root type
     context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -808,6 +811,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   DefaultOperation: { // field return type
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -984,6 +988,7 @@ export interface NexusGenFieldTypes {
   }
   OperationUpdate: { // field return type
     context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -1201,6 +1206,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   IOperation: { // field return type
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -1364,6 +1370,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   DefaultOperation: { // field return type name
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
@@ -1540,6 +1547,7 @@ export interface NexusGenFieldTypeNames {
   }
   OperationUpdate: { // field return type name
     context: 'OperationContext'
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
@@ -1757,6 +1765,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   IOperation: { // field return type name
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'

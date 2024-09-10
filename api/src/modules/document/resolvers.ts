@@ -16,6 +16,7 @@ export const operationModelInterface = interfaceType({
     t.nonNull.string('hash');
     t.string('id');
     t.nonNull.string('inputText');
+    t.string('error');
   },
   resolveType: e => {
     return 'DefaultOperation';

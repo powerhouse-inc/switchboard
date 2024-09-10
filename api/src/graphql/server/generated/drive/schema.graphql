@@ -195,6 +195,7 @@ type DefaultDocument implements IDocument {
 }
 
 type DefaultOperation implements IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -319,6 +320,7 @@ interface IDocument {
 }
 
 interface IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -358,6 +360,7 @@ input InputOperationSignerUser {
 
 input InputOperationUpdate {
   context: InputOperationContext
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -492,6 +495,7 @@ type OperationSignerUser {
 
 type OperationUpdate {
   context: OperationContext
+  error: String
   hash: String!
   id: String
   index: Int!

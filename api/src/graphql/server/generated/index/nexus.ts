@@ -106,6 +106,7 @@ export interface NexusGenObjects {
     shortCode?: string | null; // String
   }
   DefaultOperation: { // root type
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -250,6 +251,7 @@ export interface NexusGenFieldTypes {
     shortCode: string | null; // String
   }
   DefaultOperation: { // field return type
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -379,6 +381,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   IOperation: { // field return type
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -423,6 +426,7 @@ export interface NexusGenFieldTypeNames {
     shortCode: 'String'
   }
   DefaultOperation: { // field return type name
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
@@ -552,6 +556,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   IOperation: { // field return type name
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
