@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { inputObjectType, objectType } from 'nexus';
 import { documentModelInterface } from '../document';
 

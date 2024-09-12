@@ -103,6 +103,7 @@ type BudgetStatement implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: BudgetStatementState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!
@@ -194,6 +195,7 @@ type DefaultDocument implements IDocument {
 }
 
 type DefaultOperation implements IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -203,15 +205,43 @@ type DefaultOperation implements IOperation {
   type: String!
 }
 
+type DocumentDrive implements IDocument {
+  created: Date!
+  documentType: String!
+  id: String!
+  initialState: DocumentDriveState!
+  lastModified: Date!
+  name: String!
+  operations: [DefaultOperation!]!
+  revision: Int!
+  state: DocumentDriveState!
+}
+
+type DocumentDriveLocalState {
+  availableOffline: Boolean!
+  listeners: [Listener!]!
+  sharingType: String
+  triggers: [Trigger!]!
+}
+
 type DocumentDriveState {
   icon: String
   id: ID!
   name: String!
-  nodes: [Node]!
+  nodes: [Node!]!
   slug: String
 }
 
 union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | SectionComponent | TypeSpecificationComponent
+
+type FileNode implements Node {
+  documentType: String!
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
+  synchronizationUnits: [SynchronizationUnit!]!
+}
 
 type FixedIncome {
   CUSIP: String
@@ -236,6 +266,13 @@ type FixedIncome {
 type FixedIncomeType {
   id: ID!
   name: String!
+}
+
+type FolderNode implements Node {
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
 }
 
 type Ftes {
@@ -283,6 +320,7 @@ interface IDocument {
 }
 
 interface IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -322,6 +360,7 @@ input InputOperationSignerUser {
 
 input InputOperationUpdate {
   context: InputOperationContext
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -419,15 +458,14 @@ type Mutation {
   acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
-  deletePullResponderListener(filter: InputListenerFilter!): Listener
+  deletePullResponderListener(listenerId: String!): Boolean
   pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
   registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
 
-type Node {
-  documentType: String
+interface Node {
   id: String!
   kind: String!
   name: String!
@@ -457,6 +495,7 @@ type OperationSignerUser {
 
 type OperationUpdate {
   context: OperationContext
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -470,6 +509,12 @@ type Owner {
   id: String
   ref: String
   title: String
+}
+
+type PullResponderTriggerData {
+  interval: String!
+  listenerId: ID!
+  url: String!
 }
 
 type Query {
@@ -521,6 +566,7 @@ type ScopeFramework implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: ScopeFrameworkState!
   lastModified: Date!
   name: String!
   operations: [DefaultOperation!]!
@@ -672,6 +718,12 @@ type Sync {
   strands(listenerId: ID, since: Date): [StrandUpdate]
 }
 
+type SynchronizationUnit {
+  branch: String!
+  scope: String!
+  syncId: ID!
+}
+
 interface System {
   auth: Auth
 }
@@ -691,6 +743,18 @@ enum TransmitterType {
   SwitchboardPush
 }
 
+type Trigger {
+  data: TriggerData
+  id: ID!
+  type: TriggerType!
+}
+
+union TriggerData = PullResponderTriggerData
+
+enum TriggerType {
+  PullResponder
+}
+
 type TypeSpecificationComponent {
   additionalLogic: String
   category: TypeSpecificationComponentCategory
@@ -706,6 +770,8 @@ enum TypeSpecificationComponentCategory {
   Primary
   Supporting
 }
+
+scalar Unknown
 
 type UpdateElementComponentsInput {
   components: ElementComponents

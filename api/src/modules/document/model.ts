@@ -29,9 +29,8 @@ import { RealWorldAssetsDocument } from 'document-model-libs/real-world-assets';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import { getChildLogger } from '../../logger';
 import { initRedis } from '../../redis';
-import { init } from './listenerManager';
 import { buildRWADocument } from '../real-world-assets/utils';
-
+import { init } from './listenerManager';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -120,7 +119,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     getDrive: async (id: string) => {
       try {
         const { state } = await driveServer.getDrive(id);
-        return state.global;
+        return state;
       } catch (e) {
         logger.error(e);
         throw new Error('Drive not found');
@@ -253,7 +252,9 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
 
     getDocument: async (driveId: string, documentId: string) => {
-      let document = await driveServer.getDocument(driveId, documentId);
+      let document = await (driveId !== documentId
+        ? driveServer.getDocument(driveId, documentId)
+        : driveServer.getDrive(documentId));
       if (document.documentType === 'makerdao/rwa-portfolio') {
         document = buildRWADocument(document as RealWorldAssetsDocument);
       }
@@ -262,7 +263,12 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         id: documentId,
         revision: document.revision.global,
         state: document.state.global,
-        operations: document.operations.global
+        operations: document.operations.global.map(op => ({
+          ...op,
+          inputText:
+            typeof op.input === 'string' ? op.input : JSON.stringify(op.input)
+        })),
+        initialState: document.initialState.state.global
       };
       return response;
     },
@@ -272,14 +278,10 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return documents;
     },
 
-    setDriveIcon: async (driveId: string, icon: string) => driveServer.queueDriveAction(
-      driveId,
-      actions.setDriveIcon({ icon })
-    ),
-    setDriveName: async (driveId: string, name: string) => driveServer.queueDriveAction(
-      driveId,
-      actions.setDriveName({ name })
-    ),
+    setDriveIcon: async (driveId: string, icon: string) =>
+      driveServer.queueDriveAction(driveId, actions.setDriveIcon({ icon })),
+    setDriveName: async (driveId: string, name: string) =>
+      driveServer.queueDriveAction(driveId, actions.setDriveName({ name }))
     // closeScopeOfWorkIssue: async (githubId: number) => {
     // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
     //     where: {

@@ -73,6 +73,7 @@ export interface NexusGenInputs {
   }
   InputOperationUpdate: { // input type
     context?: NexusGenInputs['InputOperationContext'] | null; // InputOperationContext
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -128,6 +129,7 @@ export interface NexusGenEnums {
   GroupTransactionType: "AssetPurchase" | "AssetSale" | "FeesIncome" | "FeesPayment" | "InterestIncome" | "InterestPayment" | "PrincipalDraw" | "PrincipalReturn"
   ScopeFrameworkElementType: "Article" | "Core" | "Scope" | "Section" | "TypeSpecification"
   TransmitterType: "Internal" | "MatrixConnect" | "PullResponder" | "RESTWebhook" | "SecureConnect" | "SwitchboardPush"
+  TriggerType: "PullResponder"
   TypeSpecificationComponentCategory: "Accessory" | "Immutable" | "Primary" | "Supporting"
   UpdateStatus: "CONFLICT" | "ERROR" | "MISSING" | "SUCCESS"
 }
@@ -141,6 +143,7 @@ export interface NexusGenScalars {
   Attachment: any
   Date: any
   DateTime: any
+  Unknown: any
 }
 
 export interface NexusGenObjects {
@@ -214,6 +217,7 @@ export interface NexusGenObjects {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
+    initialState: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
@@ -283,6 +287,7 @@ export interface NexusGenObjects {
     revision: number; // Int!
   }
   DefaultOperation: { // root type
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -291,12 +296,37 @@ export interface NexusGenObjects {
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
+  DocumentDrive: { // root type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    id: string; // String!
+    initialState: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+    lastModified: NexusGenScalars['Date']; // Date!
+    name: string; // String!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
+    revision: number; // Int!
+    state: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+  }
+  DocumentDriveLocalState: { // root type
+    availableOffline: boolean; // Boolean!
+    listeners: NexusGenRootTypes['Listener'][]; // [Listener!]!
+    sharingType?: string | null; // String
+    triggers: NexusGenRootTypes['Trigger'][]; // [Trigger!]!
+  }
   DocumentDriveState: { // root type
     icon?: string | null; // String
     id: string; // ID!
     name: string; // String!
-    nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    nodes: NexusGenRootTypes['Node'][]; // [Node!]!
     slug?: string | null; // String
+  }
+  FileNode: { // root type
+    documentType: string; // String!
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder?: string | null; // String
+    synchronizationUnits: NexusGenRootTypes['SynchronizationUnit'][]; // [SynchronizationUnit!]!
   }
   FixedIncome: { // root type
     CUSIP?: string | null; // String
@@ -320,6 +350,12 @@ export interface NexusGenObjects {
   FixedIncomeType: { // root type
     id: string; // ID!
     name: string; // String!
+  }
+  FolderNode: { // root type
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder?: string | null; // String
   }
   Ftes: { // root type
     forecast: NexusGenRootTypes['FtesForecast'][]; // [FtesForecast!]!
@@ -400,13 +436,6 @@ export interface NexusGenObjects {
     newParentId: string; // ID!
   }
   Mutation: {};
-  Node: { // root type
-    documentType?: string | null; // String
-    id: string; // String!
-    kind: string; // String!
-    name: string; // String!
-    parentFolder?: string | null; // String
-  }
   OperationContext: { // root type
     signer?: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
   }
@@ -426,6 +455,7 @@ export interface NexusGenObjects {
   }
   OperationUpdate: { // root type
     context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
+    error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
     index: number; // Int!
@@ -438,6 +468,11 @@ export interface NexusGenObjects {
     id?: string | null; // String
     ref?: string | null; // String
     title?: string | null; // String
+  }
+  PullResponderTriggerData: { // root type
+    interval: string; // String!
+    listenerId: string; // ID!
+    url: string; // String!
   }
   Query: {};
   RealWorldAssets: { // root type
@@ -474,6 +509,7 @@ export interface NexusGenObjects {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
+    initialState: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
@@ -564,10 +600,20 @@ export interface NexusGenObjects {
   SwitchboardDrive: {};
   SwitchboardHost: {};
   Sync: {};
+  SynchronizationUnit: { // root type
+    branch: string; // String!
+    scope: string; // String!
+    syncId: string; // ID!
+  }
   TransactionFee: { // root type
     amount: number; // Float!
     id: string; // ID!
     serviceProviderFeeTypeId: string; // ID!
+  }
+  Trigger: { // root type
+    data?: NexusGenRootTypes['TriggerData'] | null; // TriggerData
+    id: string; // ID!
+    type: NexusGenEnums['TriggerType']; // TriggerType!
   }
   TypeSpecificationComponent: { // root type
     additionalLogic?: string | null; // String
@@ -605,14 +651,16 @@ export interface NexusGenObjects {
 }
 
 export interface NexusGenInterfaces {
-  IDocument: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
+  IDocument: NexusGenRootTypes['AccountSnapshot'] | NexusGenRootTypes['BudgetStatement'] | NexusGenRootTypes['DefaultDocument'] | NexusGenRootTypes['DocumentDrive'] | NexusGenRootTypes['RealWorldAssets'] | NexusGenRootTypes['ScopeFramework'];
   IOperation: NexusGenRootTypes['DefaultOperation'];
+  Node: NexusGenRootTypes['FileNode'] | NexusGenRootTypes['FolderNode'];
   System: NexusGenRootTypes['SwitchboardDrive'] | NexusGenRootTypes['SwitchboardHost'];
 }
 
 export interface NexusGenUnions {
   Asset: NexusGenRootTypes['Cash'] | NexusGenRootTypes['FixedIncome'];
   ElementComponents: NexusGenRootTypes['ArticleComponent'] | NexusGenRootTypes['CoreComponent'] | NexusGenRootTypes['ScopeComponent'] | NexusGenRootTypes['SectionComponent'] | NexusGenRootTypes['TypeSpecificationComponent'];
+  TriggerData: NexusGenRootTypes['PullResponderTriggerData'];
 }
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
@@ -693,6 +741,7 @@ export interface NexusGenFieldTypes {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
+    initialState: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
@@ -762,6 +811,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   DefaultOperation: { // field return type
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -770,12 +820,37 @@ export interface NexusGenFieldTypes {
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
   }
+  DocumentDrive: { // field return type
+    created: NexusGenScalars['Date']; // Date!
+    documentType: string; // String!
+    id: string; // String!
+    initialState: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+    lastModified: NexusGenScalars['Date']; // Date!
+    name: string; // String!
+    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
+    revision: number; // Int!
+    state: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
+  }
+  DocumentDriveLocalState: { // field return type
+    availableOffline: boolean; // Boolean!
+    listeners: NexusGenRootTypes['Listener'][]; // [Listener!]!
+    sharingType: string | null; // String
+    triggers: NexusGenRootTypes['Trigger'][]; // [Trigger!]!
+  }
   DocumentDriveState: { // field return type
     icon: string | null; // String
     id: string; // ID!
     name: string; // String!
-    nodes: Array<NexusGenRootTypes['Node'] | null>; // [Node]!
+    nodes: NexusGenRootTypes['Node'][]; // [Node!]!
     slug: string | null; // String
+  }
+  FileNode: { // field return type
+    documentType: string; // String!
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder: string | null; // String
+    synchronizationUnits: NexusGenRootTypes['SynchronizationUnit'][]; // [SynchronizationUnit!]!
   }
   FixedIncome: { // field return type
     CUSIP: string | null; // String
@@ -799,6 +874,12 @@ export interface NexusGenFieldTypes {
   FixedIncomeType: { // field return type
     id: string; // ID!
     name: string; // String!
+  }
+  FolderNode: { // field return type
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder: string | null; // String
   }
   Ftes: { // field return type
     forecast: NexusGenRootTypes['FtesForecast'][]; // [FtesForecast!]!
@@ -882,18 +963,11 @@ export interface NexusGenFieldTypes {
     acknowledge: boolean | null; // Boolean
     createChallenge: NexusGenRootTypes['Challenge'] | null; // Challenge
     createSession: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
-    deletePullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
+    deletePullResponderListener: boolean | null; // Boolean
     pushUpdates: Array<NexusGenRootTypes['ListenerRevision'] | null> | null; // [ListenerRevision]
     registerPullResponderListener: NexusGenRootTypes['Listener'] | null; // Listener
     revokeSession: NexusGenRootTypes['Session'] | null; // Session
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
-  }
-  Node: { // field return type
-    documentType: string | null; // String
-    id: string; // String!
-    kind: string; // String!
-    name: string; // String!
-    parentFolder: string | null; // String
   }
   OperationContext: { // field return type
     signer: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
@@ -914,6 +988,7 @@ export interface NexusGenFieldTypes {
   }
   OperationUpdate: { // field return type
     context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -926,6 +1001,11 @@ export interface NexusGenFieldTypes {
     id: string | null; // String
     ref: string | null; // String
     title: string | null; // String
+  }
+  PullResponderTriggerData: { // field return type
+    interval: string; // String!
+    listenerId: string; // ID!
+    url: string; // String!
   }
   Query: { // field return type
     coreUnit: NexusGenRootTypes['CoreUnit'] | null; // CoreUnit
@@ -970,6 +1050,7 @@ export interface NexusGenFieldTypes {
     created: NexusGenScalars['Date']; // Date!
     documentType: string; // String!
     id: string; // String!
+    initialState: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
     operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
@@ -1067,10 +1148,20 @@ export interface NexusGenFieldTypes {
   Sync: { // field return type
     strands: Array<NexusGenRootTypes['StrandUpdate'] | null> | null; // [StrandUpdate]
   }
+  SynchronizationUnit: { // field return type
+    branch: string; // String!
+    scope: string; // String!
+    syncId: string; // ID!
+  }
   TransactionFee: { // field return type
     amount: number; // Float!
     id: string; // ID!
     serviceProviderFeeTypeId: string; // ID!
+  }
+  Trigger: { // field return type
+    data: NexusGenRootTypes['TriggerData'] | null; // TriggerData
+    id: string; // ID!
+    type: NexusGenEnums['TriggerType']; // TriggerType!
   }
   TypeSpecificationComponent: { // field return type
     additionalLogic: string | null; // String
@@ -1115,6 +1206,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   IOperation: { // field return type
+    error: string | null; // String
     hash: string; // String!
     id: string | null; // String
     index: number; // Int!
@@ -1122,6 +1214,12 @@ export interface NexusGenFieldTypes {
     skip: number; // Int!
     timestamp: NexusGenScalars['Date']; // Date!
     type: string; // String!
+  }
+  Node: { // field return type
+    id: string; // String!
+    kind: string; // String!
+    name: string; // String!
+    parentFolder: string | null; // String
   }
   System: { // field return type
     auth: NexusGenRootTypes['Auth'] | null; // Auth
@@ -1202,6 +1300,7 @@ export interface NexusGenFieldTypeNames {
     created: 'Date'
     documentType: 'String'
     id: 'String'
+    initialState: 'BudgetStatementState'
     lastModified: 'Date'
     name: 'String'
     operations: 'DefaultOperation'
@@ -1271,6 +1370,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   DefaultOperation: { // field return type name
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
@@ -1279,12 +1379,37 @@ export interface NexusGenFieldTypeNames {
     timestamp: 'Date'
     type: 'String'
   }
+  DocumentDrive: { // field return type name
+    created: 'Date'
+    documentType: 'String'
+    id: 'String'
+    initialState: 'DocumentDriveState'
+    lastModified: 'Date'
+    name: 'String'
+    operations: 'DefaultOperation'
+    revision: 'Int'
+    state: 'DocumentDriveState'
+  }
+  DocumentDriveLocalState: { // field return type name
+    availableOffline: 'Boolean'
+    listeners: 'Listener'
+    sharingType: 'String'
+    triggers: 'Trigger'
+  }
   DocumentDriveState: { // field return type name
     icon: 'String'
     id: 'ID'
     name: 'String'
     nodes: 'Node'
     slug: 'String'
+  }
+  FileNode: { // field return type name
+    documentType: 'String'
+    id: 'String'
+    kind: 'String'
+    name: 'String'
+    parentFolder: 'String'
+    synchronizationUnits: 'SynchronizationUnit'
   }
   FixedIncome: { // field return type name
     CUSIP: 'String'
@@ -1308,6 +1433,12 @@ export interface NexusGenFieldTypeNames {
   FixedIncomeType: { // field return type name
     id: 'ID'
     name: 'String'
+  }
+  FolderNode: { // field return type name
+    id: 'String'
+    kind: 'String'
+    name: 'String'
+    parentFolder: 'String'
   }
   Ftes: { // field return type name
     forecast: 'FtesForecast'
@@ -1391,18 +1522,11 @@ export interface NexusGenFieldTypeNames {
     acknowledge: 'Boolean'
     createChallenge: 'Challenge'
     createSession: 'SessionOutput'
-    deletePullResponderListener: 'Listener'
+    deletePullResponderListener: 'Boolean'
     pushUpdates: 'ListenerRevision'
     registerPullResponderListener: 'Listener'
     revokeSession: 'Session'
     solveChallenge: 'SessionOutput'
-  }
-  Node: { // field return type name
-    documentType: 'String'
-    id: 'String'
-    kind: 'String'
-    name: 'String'
-    parentFolder: 'String'
   }
   OperationContext: { // field return type name
     signer: 'OperationSigner'
@@ -1423,6 +1547,7 @@ export interface NexusGenFieldTypeNames {
   }
   OperationUpdate: { // field return type name
     context: 'OperationContext'
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
@@ -1435,6 +1560,11 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     ref: 'String'
     title: 'String'
+  }
+  PullResponderTriggerData: { // field return type name
+    interval: 'String'
+    listenerId: 'ID'
+    url: 'String'
   }
   Query: { // field return type name
     coreUnit: 'CoreUnit'
@@ -1479,6 +1609,7 @@ export interface NexusGenFieldTypeNames {
     created: 'Date'
     documentType: 'String'
     id: 'String'
+    initialState: 'ScopeFrameworkState'
     lastModified: 'Date'
     name: 'String'
     operations: 'DefaultOperation'
@@ -1576,10 +1707,20 @@ export interface NexusGenFieldTypeNames {
   Sync: { // field return type name
     strands: 'StrandUpdate'
   }
+  SynchronizationUnit: { // field return type name
+    branch: 'String'
+    scope: 'String'
+    syncId: 'ID'
+  }
   TransactionFee: { // field return type name
     amount: 'Float'
     id: 'ID'
     serviceProviderFeeTypeId: 'ID'
+  }
+  Trigger: { // field return type name
+    data: 'TriggerData'
+    id: 'ID'
+    type: 'TriggerType'
   }
   TypeSpecificationComponent: { // field return type name
     additionalLogic: 'String'
@@ -1624,6 +1765,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   IOperation: { // field return type name
+    error: 'String'
     hash: 'String'
     id: 'String'
     index: 'Int'
@@ -1631,6 +1773,12 @@ export interface NexusGenFieldTypeNames {
     skip: 'Int'
     timestamp: 'Date'
     type: 'String'
+  }
+  Node: { // field return type name
+    id: 'String'
+    kind: 'String'
+    name: 'String'
+    parentFolder: 'String'
   }
   System: { // field return type name
     auth: 'Auth'
@@ -1650,7 +1798,7 @@ export interface NexusGenArgTypes {
       session: NexusGenInputs['SessionInput']; // SessionInput!
     }
     deletePullResponderListener: { // args
-      filter: NexusGenInputs['InputListenerFilter']; // InputListenerFilter!
+      listenerId: string; // String!
     }
     pushUpdates: { // args
       strands?: NexusGenInputs['InputStrandUpdate'][] | null; // [InputStrandUpdate!]
@@ -1688,8 +1836,10 @@ export interface NexusGenArgTypes {
 export interface NexusGenAbstractTypeMembers {
   Asset: "Cash" | "FixedIncome"
   ElementComponents: "ArticleComponent" | "CoreComponent" | "ScopeComponent" | "SectionComponent" | "TypeSpecificationComponent"
-  IDocument: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "RealWorldAssets" | "ScopeFramework"
+  TriggerData: "PullResponderTriggerData"
+  IDocument: "AccountSnapshot" | "BudgetStatement" | "DefaultDocument" | "DocumentDrive" | "RealWorldAssets" | "ScopeFramework"
   IOperation: "DefaultOperation"
+  Node: "FileNode" | "FolderNode"
   System: "SwitchboardDrive" | "SwitchboardHost"
 }
 
@@ -1698,6 +1848,9 @@ export interface NexusGenTypeInterfaces {
   BudgetStatement: "IDocument"
   DefaultDocument: "IDocument"
   DefaultOperation: "IOperation"
+  DocumentDrive: "IDocument"
+  FileNode: "Node"
+  FolderNode: "Node"
   RealWorldAssets: "IDocument"
   ScopeFramework: "IDocument"
   SwitchboardDrive: "System"
@@ -1718,7 +1871,7 @@ export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IOperation" | "System";
+export type NexusGenAbstractsUsingStrategyResolveType = "Asset" | "ElementComponents" | "IDocument" | "IOperation" | "Node" | "System" | "TriggerData";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
