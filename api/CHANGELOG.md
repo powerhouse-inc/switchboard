@@ -1,3 +1,14 @@
+# [1.0.0-dev.37](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.36...v1.0.0-dev.37) (2024-09-12)
+
+
+### Features
+
+* added error field to operations ([d3a7458](https://github.com/powerhouse-inc/switchboard/commit/d3a7458e9367dabe1e6e0444401086178d32d481))
+* added more drive info to drive query ([328a9fa](https://github.com/powerhouse-inc/switchboard/commit/328a9fa236e7ce5170f98b057ce4687721d396a3))
+* added operations and initialState to getDocument query ([191272e](https://github.com/powerhouse-inc/switchboard/commit/191272e8f048de8e5d1bbd0cafbc015473799b01))
+* replace graphql explorer ([6350d25](https://github.com/powerhouse-inc/switchboard/commit/6350d25414e8db5014ad44df8a9b6765e91a2fc1))
+* support getting drive state on getDocument query ([ff0564e](https://github.com/powerhouse-inc/switchboard/commit/ff0564e48218cff87425b1d5a88d12800a4e52cc))
+
 # [1.0.0-dev.36](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.35...v1.0.0-dev.36) (2024-09-09)
 
 
