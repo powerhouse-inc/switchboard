@@ -161,10 +161,11 @@ export const GroupTransactionType = enumType({
 export const DateTime = scalarType({
   name: 'DateTime',
   serialize(value) {
-    return new Date(value as string).toISOString();
+    const date = utils.dateValidator.safeParse(value);
+    return date.data?.toISOString() || '';
   },
   parseValue(value) {
-    return utils.dateValidator.safeParse(value);
+    return utils.dateValidator.safeParse(value).data || '';
   }
 });
 
