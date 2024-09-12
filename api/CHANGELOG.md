@@ -1,3 +1,10 @@
+# [1.0.0-dev.38](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.37...v1.0.0-dev.38) (2024-09-12)
+
+
+### Bug Fixes
+
+* rwa dateTime resolvers now accepts empty strings ([2c76786](https://github.com/powerhouse-inc/switchboard/commit/2c76786af3a2a1101c7c45680d56371d00157288))
+
 # [1.0.0-dev.37](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.36...v1.0.0-dev.37) (2024-09-12)
 
 
