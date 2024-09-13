@@ -1,3 +1,10 @@
+# [1.0.0-dev.39](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.38...v1.0.0-dev.39) (2024-09-13)
+
+
+### Features
+
+* added currentValue field on rwa ([0790673](https://github.com/powerhouse-inc/switchboard/commit/079067317f3737166f169d91598cb9f269f1110e))
+
 # [1.0.0-dev.38](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.37...v1.0.0-dev.38) (2024-09-12)
 
 
