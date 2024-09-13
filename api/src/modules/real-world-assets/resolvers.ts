@@ -69,6 +69,10 @@ export const FixedIncome = objectType({
     t.string('ISIN');
     t.string('CUSIP');
     t.float('coupon');
+    t.field('currentValue', {
+        type: 'Float',
+        args: { date: DateTime }
+    });
   }
 });
 export const FixedIncomeType = objectType({
