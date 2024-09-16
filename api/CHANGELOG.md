@@ -1,3 +1,22 @@
+# [1.0.0-next.10](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.9...v1.0.0-next.10) (2024-09-16)
+
+
+### Bug Fixes
+
+* rwa dateTime resolvers now accepts empty strings ([2c76786](https://github.com/powerhouse-inc/switchboard/commit/2c76786af3a2a1101c7c45680d56371d00157288))
+
+
+### Features
+
+* added currentValue field on rwa ([0790673](https://github.com/powerhouse-inc/switchboard/commit/079067317f3737166f169d91598cb9f269f1110e))
+* added error field to operations ([d3a7458](https://github.com/powerhouse-inc/switchboard/commit/d3a7458e9367dabe1e6e0444401086178d32d481))
+* added more drive info to drive query ([328a9fa](https://github.com/powerhouse-inc/switchboard/commit/328a9fa236e7ce5170f98b057ce4687721d396a3))
+* added operations and initialState to getDocument query ([191272e](https://github.com/powerhouse-inc/switchboard/commit/191272e8f048de8e5d1bbd0cafbc015473799b01))
+* replace graphql explorer ([6350d25](https://github.com/powerhouse-inc/switchboard/commit/6350d25414e8db5014ad44df8a9b6765e91a2fc1))
+* support getting drive state on getDocument query ([ff0564e](https://github.com/powerhouse-inc/switchboard/commit/ff0564e48218cff87425b1d5a88d12800a4e52cc))
+* support setting explorer query on url ([4fce05a](https://github.com/powerhouse-inc/switchboard/commit/4fce05a0c1a3442fa7b72334dda3f7282b612f7a))
+* updated dependencies ([d716dbb](https://github.com/powerhouse-inc/switchboard/commit/d716dbbedecf61cb2cf95e4d6e9831c106a592d7))
+
 # [1.0.0-next.9](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.8...v1.0.0-next.9) (2024-08-16)
 
 ### Bug Fixes
