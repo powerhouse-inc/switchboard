@@ -35,9 +35,34 @@ type CoreUnit {
 """Date custom scalar type"""
 scalar Date
 
+type DefaultOperation implements IOperation {
+  error: String
+  hash: String!
+  id: String
+  index: Int!
+  inputText: String!
+  skip: Int!
+  timestamp: Date!
+  type: String!
+}
+
+type DocumentDrive implements IDocument {
+  created: Date!
+  documentType: String!
+  id: String!
+  initialState: DocumentDriveState!
+  lastModified: Date!
+  name: String!
+  operations: [DefaultOperation!]!
+  revision: Int!
+  state: DocumentDriveState!
+}
+
 type DocumentDriveLocalState {
   availableOffline: Boolean!
+  listeners: [Listener!]!
   sharingType: String
+  triggers: [Trigger!]!
 }
 
 input DocumentDriveLocalStateInput {
@@ -49,7 +74,7 @@ type DocumentDriveState {
   icon: String
   id: ID!
   name: String!
-  nodes: [Node]!
+  nodes: [Node!]!
   slug: String
 }
 
@@ -58,6 +83,65 @@ input DocumentDriveStateInput {
   id: ID
   name: String!
   slug: String
+}
+
+type FileNode implements Node {
+  documentType: String!
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
+  synchronizationUnits: [SynchronizationUnit!]!
+}
+
+type FolderNode implements Node {
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
+}
+
+interface IDocument {
+  created: Date!
+  documentType: String!
+  id: String!
+  lastModified: Date!
+  name: String!
+  operations: [DefaultOperation!]!
+  revision: Int!
+}
+
+interface IOperation {
+  error: String
+  hash: String!
+  id: String
+  index: Int!
+  inputText: String!
+  skip: Int!
+  timestamp: Date!
+  type: String!
+}
+
+type Listener {
+  block: Boolean!
+  callInfo: ListenerCallInfo
+  filter: ListenerFilter!
+  label: String
+  listenerId: ID!
+  system: Boolean!
+}
+
+type ListenerCallInfo {
+  data: String
+  name: String
+  transmitterType: TransmitterType
+}
+
+type ListenerFilter {
+  branch: [String!]
+  documentId: [ID!]
+  documentType: [String!]!
+  scope: [String!]
 }
 
 type Mutation {
@@ -71,12 +155,17 @@ type Mutation {
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
 
-type Node {
-  documentType: String
+interface Node {
   id: String!
   kind: String!
   name: String!
   parentFolder: String
+}
+
+type PullResponderTriggerData {
+  interval: String!
+  listenerId: ID!
+  url: String!
 }
 
 type Query {
@@ -118,9 +207,38 @@ type SwitchboardHost implements System {
   auth: Auth
 }
 
+type SynchronizationUnit {
+  branch: String!
+  scope: String!
+  syncId: ID!
+}
+
 interface System {
   auth: Auth
 }
+
+enum TransmitterType {
+  Internal
+  MatrixConnect
+  PullResponder
+  RESTWebhook
+  SecureConnect
+  SwitchboardPush
+}
+
+type Trigger {
+  data: TriggerData
+  id: ID!
+  type: TriggerType!
+}
+
+union TriggerData = PullResponderTriggerData
+
+enum TriggerType {
+  PullResponder
+}
+
+scalar Unknown
 
 type User {
   address: String!

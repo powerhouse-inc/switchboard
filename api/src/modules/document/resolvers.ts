@@ -11,9 +11,12 @@ export const operationModelInterface = interfaceType({
   definition(t) {
     t.nonNull.string('type');
     t.nonNull.int('index');
+    t.nonNull.int('skip');
     t.nonNull.field('timestamp', { type: GQLDateBase });
     t.nonNull.string('hash');
     t.string('id');
+    t.nonNull.string('inputText');
+    t.string('error');
   },
   resolveType: e => {
     return 'DefaultOperation';
@@ -41,6 +44,8 @@ export const documentModelInterface = interfaceType({
   },
   resolveType: e => {
     switch (e.documentType) {
+      case 'powerhouse/document-drive':
+        return 'DocumentDrive';
       case 'powerhouse/budget-statement':
         return 'BudgetStatement';
       case 'powerhouse/account-snapshot':
@@ -83,13 +88,12 @@ export const documentsQuery = queryField('documents', {
     try {
       const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
       const docs = await Promise.all(
-        docIds.map(doc => {
-          return ctx.prisma.document.getDocument(ctx.driveId!, doc);
-        })
+        docIds.map(doc => ctx.prisma.document.getDocument(ctx.driveId!, doc))
       );
       return docs;
     } catch (e: any) {
       logger.error({ msg: e.message });
+      throw e;
     }
   }
 });

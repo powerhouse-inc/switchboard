@@ -36,14 +36,14 @@ importers:
         specifier: ^2.8.5
         version: 2.8.5
       document-drive:
-        specifier: 1.0.0-alpha.88
-        version: 1.0.0-alpha.88(document-model-libs@1.82.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0)
+        specifier: 1.0.0-alpha.94
+        version: 1.0.0-alpha.94(document-model-libs@1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.8.0)(encoding@0.1.13)(prisma@5.16.0)
       document-model:
-        specifier: 1.7.0
-        version: 1.7.0
+        specifier: ^1.8.0
+        version: 1.8.0
       document-model-libs:
-        specifier: ^1.82.0
-        version: 1.82.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
+        specifier: ^1.84.0
+        version: 1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -1276,8 +1276,8 @@ packages:
       prisma:
         optional: true
 
-  '@prisma/client@5.17.0':
-    resolution: {integrity: sha512-N2tnyKayT0Zf7mHjwEyE8iG7FwTmXDHFZ1GnNhQp0pJUObsuel4ZZ1XwfuAYkq5mRIiC/Kot0kt0tGCfLJ70Jw==}
+  '@prisma/client@5.19.1':
+    resolution: {integrity: sha512-x30GFguInsgt+4z5I4WbkZP2CGpotJMUXy+Gl/aaUjHn2o1DnLYNTA+q9XdYmAQZM8fIIkvUiA2NpgosM3fneg==}
     engines: {node: '>=16.13'}
     peerDependencies:
       prisma: '*'
@@ -2392,20 +2392,20 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  document-drive@1.0.0-alpha.88:
-    resolution: {integrity: sha512-HwLtyr9wo5Q4c6aMKOK8rFqXO0NZwB07gVljCeCqrromcDekHeQREvYUQaqXlo4RKhQP3dyyzcI6itzS0g5qjQ==}
+  document-drive@1.0.0-alpha.94:
+    resolution: {integrity: sha512-664ITD1XCLL4u1rNzgxdAvi5T0gXkIuuBenG33sQQKD9BGD7E6MxtViJPTssKeNsra3sm9fl3SfAqx/PciUrKw==}
     peerDependencies:
-      document-model: ^1.7.0
+      document-model: ^1.8.0
       document-model-libs: ^1.57.0
 
-  document-model-libs@1.82.0:
-    resolution: {integrity: sha512-718kbi3sdWWlOWGmXaujhk0hOEJE/omLZ7wT+DaSkw4+mlnNz4ItBAAo3GoHRWcqucRDsF3wEm8uj5keGpONDA==}
+  document-model-libs@1.84.0:
+    resolution: {integrity: sha512-v3dc9asjf+pvAPffubUb8Pr1R8ahPwKUU1/qIwLrlXbSJ4Rz3ctsvjcwW2z0uIiCZJPoLCRTE+VESIIAO5GiHQ==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
 
-  document-model@1.7.0:
-    resolution: {integrity: sha512-g35SSY9+pqsCKz0xwZm3tWp9/bEQlvrVEp+96vyFtR/w1zyrGXwBOYslpKhpfuDmqJfN0ERq+LgB26rmf+YDyQ==}
+  document-model@1.8.0:
+    resolution: {integrity: sha512-dgJHAFIsJddwhjZDspFexmJifaZv4yL3Hbak2pNim22lIEW3n+wSw8IvNV+ZAWJW7ql5lIOcFDU4mUhQO2Gi4g==}
 
   dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
@@ -4658,6 +4658,9 @@ packages:
     resolution: {integrity: sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ==}
     hasBin: true
 
+  sha1-uint8array@0.10.7:
+    resolution: {integrity: sha512-COJRCUOuTgEEPyhcRncHlf3Z2/Nik0PGZ60/tA9Ni2jlwYJ2g/WgP8TV19gbllmZDs/DGV5YklZxreyMHFX8ww==}
+
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -6736,7 +6739,7 @@ snapshots:
     optionalDependencies:
       prisma: 5.16.0
 
-  '@prisma/client@5.17.0(prisma@5.16.0)':
+  '@prisma/client@5.19.1(prisma@5.16.0)':
     optionalDependencies:
       prisma: 5.16.0
     optional: true
@@ -8152,10 +8155,11 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  document-drive@1.0.0-alpha.88(document-model-libs@1.82.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.7.0)(encoding@0.1.13)(prisma@5.16.0):
+  document-drive@1.0.0-alpha.94(document-model-libs@1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.8.0)(encoding@0.1.13)(prisma@5.16.0):
     dependencies:
-      document-model: 1.7.0
-      document-model-libs: 1.82.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
+      change-case: 5.4.4
+      document-model: 1.8.0
+      document-model-libs: 1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.9.0
       graphql-request: 6.1.0(encoding@0.1.13)(graphql@16.9.0)
@@ -8164,7 +8168,7 @@ snapshots:
       sanitize-filename: 1.6.3
       uuid: 9.0.1
     optionalDependencies:
-      '@prisma/client': 5.17.0(prisma@5.16.0)
+      '@prisma/client': 5.19.1(prisma@5.16.0)
       localforage: 1.10.0
       redis: 4.7.0
       sequelize: 6.37.3(sqlite3@5.1.7)
@@ -8183,7 +8187,7 @@ snapshots:
       - supports-color
       - tedious
 
-  document-model-libs@1.82.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
+  document-model-libs@1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
     dependencies:
       '@acaldas/graphql-codegen-typescript-validation-schema': 0.12.3(encoding@0.1.13)(graphql@16.9.0)
       '@graphql-codegen/core': 4.0.2(graphql@16.9.0)
@@ -8209,13 +8213,14 @@ snapshots:
       - supports-color
       - vitest
 
-  document-model@1.7.0:
+  document-model@1.8.0:
     dependencies:
       change-case: 5.4.4
       jszip: 3.10.1
       mime: 4.0.3
       mutative: 1.0.6
       safe-stable-stringify: 2.4.3
+      sha1-uint8array: 0.10.7
       uuid: 9.0.1
       zod: 3.23.8
 
@@ -10702,6 +10707,8 @@ snapshots:
     dependencies:
       inherits: 2.0.4
       safe-buffer: 5.2.1
+
+  sha1-uint8array@0.10.7: {}
 
   shebang-command@2.0.0:
     dependencies:

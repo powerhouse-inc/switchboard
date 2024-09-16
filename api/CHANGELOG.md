@@ -1,15 +1,13 @@
 # [1.0.0-next.9](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.8...v1.0.0-next.9) (2024-08-16)
 
-
 ### Bug Fixes
 
-* health check response ([1e444e4](https://github.com/powerhouse-inc/switchboard/commit/1e444e44b8b024ef1d684e95e8f438fe370bd224))
-
+- health check response ([1e444e4](https://github.com/powerhouse-inc/switchboard/commit/1e444e44b8b024ef1d684e95e8f438fe370bd224))
 
 ### Features
 
-* added health check ([b4e4b29](https://github.com/powerhouse-inc/switchboard/commit/b4e4b298e1e5411b499a5d4d56075e65be1d0e9e))
-* replaced graphql explorer ([0859817](https://github.com/powerhouse-inc/switchboard/commit/0859817118dc9dc365ce691edbd7861ac973acdd))
+- added health check ([b4e4b29](https://github.com/powerhouse-inc/switchboard/commit/b4e4b298e1e5411b499a5d4d56075e65be1d0e9e))
+- replaced graphql explorer ([0859817](https://github.com/powerhouse-inc/switchboard/commit/0859817118dc9dc365ce691edbd7861ac973acdd))
 
 # [1.0.0-next.8](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.7...v1.0.0-next.8) (2024-08-12)
 

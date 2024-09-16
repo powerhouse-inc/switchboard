@@ -92,7 +92,13 @@ export const createApp = (): { app: Express; router: express.Router } => {
     const basePath =
       process.env.BASE_PATH === '/' ? '' : process.env.BASE_PATH || '';
     const endpoint = `${basePath}${req.params.driveId !== undefined ? `/d/${req.params.driveId}` : '/drives'}`;
-    res.send(renderGraphqlPlayground(endpoint));
+
+    const { query } = req.query;
+    if (query && typeof query !== 'string') {
+      throw new Error('Invalid query');
+    }
+
+    res.send(renderGraphqlPlayground(endpoint, query));
   });
 
   // Hooks
