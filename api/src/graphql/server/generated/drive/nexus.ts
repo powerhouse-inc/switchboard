@@ -158,7 +158,6 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['AccountSnapshotState']; // AccountSnapshotState!
   }
@@ -220,7 +219,6 @@ export interface NexusGenObjects {
     initialState: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['BudgetStatementState']; // BudgetStatementState!
   }
@@ -283,7 +281,6 @@ export interface NexusGenObjects {
     id: string; // String!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
   }
   DefaultOperation: { // root type
@@ -303,7 +300,6 @@ export interface NexusGenObjects {
     initialState: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
   }
@@ -333,6 +329,7 @@ export interface NexusGenObjects {
     ISIN?: string | null; // String
     assetProceeds: number; // Float!
     coupon?: number | null; // Float
+    currentValue?: number | null; // Float
     fixedIncomeTypeId: string; // ID!
     id: string; // ID!
     maturity?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -482,7 +479,6 @@ export interface NexusGenObjects {
     initialState: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['RealWorldAssetsState']; // RealWorldAssetsState!
   }
@@ -512,7 +508,6 @@ export interface NexusGenObjects {
     initialState: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['ScopeFrameworkState']; // ScopeFrameworkState!
   }
@@ -857,6 +852,7 @@ export interface NexusGenFieldTypes {
     ISIN: string | null; // String
     assetProceeds: number; // Float!
     coupon: number | null; // Float
+    currentValue: number | null; // Float
     fixedIncomeTypeId: string; // ID!
     id: string; // ID!
     maturity: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1416,6 +1412,7 @@ export interface NexusGenFieldTypeNames {
     ISIN: 'String'
     assetProceeds: 'Float'
     coupon: 'Float'
+    currentValue: 'Float'
     fixedIncomeTypeId: 'ID'
     id: 'ID'
     maturity: 'DateTime'
@@ -1786,6 +1783,35 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  AccountSnapshot: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
+  BudgetStatement: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
+  DefaultDocument: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
+  DocumentDrive: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
+  FixedIncome: {
+    currentValue: { // args
+      date?: NexusGenScalars['DateTime'] | null; // DateTime
+    }
+  }
   Mutation: {
     acknowledge: { // args
       listenerId: string; // String!
@@ -1825,10 +1851,28 @@ export interface NexusGenArgTypes {
       id?: string | null; // String
     }
   }
+  RealWorldAssets: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
+  ScopeFramework: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
   Sync: {
     strands: { // args
       listenerId?: string | null; // ID
       since?: NexusGenScalars['Date'] | null; // Date
+    }
+  }
+  IDocument: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
     }
   }
 }
