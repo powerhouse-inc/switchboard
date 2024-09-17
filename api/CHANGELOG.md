@@ -1,3 +1,10 @@
+# [1.0.0-dev.40](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.39...v1.0.0-dev.40) (2024-09-17)
+
+
+### Features
+
+* added operations query arguments ([9aabf42](https://github.com/powerhouse-inc/switchboard/commit/9aabf425db70a91c1ba141b110e33e244190353c))
+
 # [1.0.0-dev.39](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.38...v1.0.0-dev.39) (2024-09-13)
 
 
