@@ -55,7 +55,12 @@ export const documentModelInterface = interfaceType({
           return operations
         }
 
-        return [];
+        if (!ctx.driveId) {
+          throw new Error('DriveId is not defined');
+        }
+
+        const doc = await ctx.prisma.document.getDocument(ctx.driveId, parent.id);
+        return doc.operations ?? [];
       }
     },
     );
