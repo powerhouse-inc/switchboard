@@ -41,7 +41,7 @@ export const documentModelInterface = interfaceType({
     t.nonNull.list.nonNull.field('operations', {
       args: { first: 'Int', skip: 'Int' },
       type: operationModel, resolve: async (parent, { first, skip }, ctx: Context) => {
-        const operations = ctx.document?.operations;
+        const operations = ctx.documents![parent.id]?.operations;
         if (operations) {
           if (first && skip) {
             return operations.slice(skip, skip + first);
@@ -98,21 +98,25 @@ export const documentQuery = queryField('document', {
       throw new Error('DriveId is not defined');
     }
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
-    ctx.document = doc;
+    ctx.documents![doc.id] = doc;
     return doc;
   }
 });
 
 export const documentsQuery = queryField('documents', {
   type: list(documentModelInterface),
-  resolve: async (_root, { id }, ctx: Context) => {
+  resolve: async (_root, args, ctx: Context) => {
     if (!ctx.driveId) {
       throw new Error('DriveId is not defined');
     }
     try {
       const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
       const docs = await Promise.all(
-        docIds.map(doc => ctx.prisma.document.getDocument(ctx.driveId!, doc))
+        docIds.map(async (id) => {
+          const doc = await ctx.prisma.document.getDocument(ctx.driveId!, id)
+          ctx.documents![doc.id] = doc;
+          return doc;
+        })
       );
       return docs;
     } catch (e: any) {

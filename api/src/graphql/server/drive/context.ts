@@ -18,7 +18,7 @@ export interface Context {
   apolloLogger: pino.Logger;
   origin: string | undefined;
   driveId?: string;
-  document?: { operations: Operation[]; };
+  documents?: Record<string, { operations: Operation[]; }>;
 }
 
 type CreateContextParams = {
@@ -46,6 +46,6 @@ export function createContext(params: CreateContextParams): Context {
       prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
     origin,
     driveId,
-    document: undefined
+    documents: {},
   };
 }
