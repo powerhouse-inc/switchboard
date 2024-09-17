@@ -51,6 +51,9 @@ export const documentModelInterface = interfaceType({
             return operations.slice(0, first);
           }
 
+          if (skip) {
+            return operations.slice(skip);
+          }
 
           return operations
         }
