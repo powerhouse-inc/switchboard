@@ -3,7 +3,11 @@ import {
   UpdateStatus as IUpdateStatus
 } from 'document-drive';
 import { DocumentDriveAction } from 'document-model-libs/document-drive';
-import { Operation, OperationScope } from 'document-model/document';
+import {
+  ActionContext,
+  Operation,
+  OperationScope
+} from 'document-model/document';
 import stringify from 'json-stringify-deterministic';
 import {
   enumType,
@@ -184,6 +188,20 @@ export const InputStrandUpdate = inputObjectType({
   }
 });
 
+function migrateOperationContext(context?: ActionContext) {
+  if (!context || !context.signer || context.signer?.signatures) {
+    return context;
+  } else {
+    return {
+      ...context,
+      signer: {
+        ...context.signer,
+        signatures: []
+      }
+    };
+  }
+}
+
 export const syncType = objectType({
   name: 'Sync',
   definition(t) {
@@ -214,7 +232,7 @@ export const syncType = objectType({
               hash: o.hash,
               timestamp: o.timestamp,
               type: o.type,
-              context: o.context,
+              context: migrateOperationContext(o.context),
               id: o.id
             }))
           }));
