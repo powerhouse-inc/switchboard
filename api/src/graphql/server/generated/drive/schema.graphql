@@ -14,7 +14,7 @@ type AccountSnapshot implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: AccountSnapshotState!
 }
@@ -106,7 +106,7 @@ type BudgetStatement implements IDocument {
   initialState: BudgetStatementState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: BudgetStatementState!
 }
@@ -190,7 +190,7 @@ type DefaultDocument implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
 }
 
@@ -212,7 +212,7 @@ type DocumentDrive implements IDocument {
   initialState: DocumentDriveState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: DocumentDriveState!
 }
@@ -248,6 +248,7 @@ type FixedIncome {
   ISIN: String
   assetProceeds: Float!
   coupon: Float
+  currentValue(date: DateTime): Float
   fixedIncomeTypeId: ID!
   id: ID!
   maturity: DateTime
@@ -315,7 +316,7 @@ interface IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
 }
 
@@ -534,7 +535,7 @@ type RealWorldAssets implements IDocument {
   initialState: RealWorldAssetsState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: RealWorldAssetsState!
 }
@@ -569,7 +570,7 @@ type ScopeFramework implements IDocument {
   initialState: ScopeFrameworkState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: ScopeFrameworkState!
 }

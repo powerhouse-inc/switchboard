@@ -18,16 +18,14 @@ export const operationModelInterface = interfaceType({
     t.nonNull.string('inputText');
     t.string('error');
   },
-  resolveType: e => {
-    return 'DefaultOperation';
-  }
+  resolveType: () => null,
 });
 
 export const operationModel = objectType({
   name: 'DefaultOperation',
   definition(t) {
     t.implements(operationModelInterface);
-  }
+  },
 });
 
 // todo: resolveType should be moved to somewhere else
@@ -40,7 +38,32 @@ export const documentModelInterface = interfaceType({
     t.nonNull.int('revision');
     t.nonNull.field('created', { type: GQLDateBase });
     t.nonNull.field('lastModified', { type: GQLDateBase });
-    t.nonNull.list.nonNull.field('operations', { type: operationModel });
+    t.nonNull.list.nonNull.field('operations', {
+      args: { first: 'Int', skip: 'Int' },
+      type: operationModel, resolve: async (parent, { first, skip }, ctx: Context) => {
+        const operations = ctx.document?.operations;
+        if (operations) {
+          if (first && skip) {
+            return operations.slice(skip, skip + first);
+          }
+
+          if (first) {
+            return operations.slice(0, first);
+          }
+
+
+          return operations
+        }
+
+        if (!ctx.driveId) {
+          throw new Error('DriveId is not defined');
+        }
+
+        const doc = await ctx.prisma.document.getDocument(ctx.driveId, parent.id);
+        return doc.operations ?? [];
+      }
+    },
+    );
   },
   resolveType: e => {
     switch (e.documentType) {
@@ -75,6 +98,7 @@ export const documentQuery = queryField('document', {
       throw new Error('DriveId is not defined');
     }
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
+    ctx.document = doc;
     return doc;
   }
 });

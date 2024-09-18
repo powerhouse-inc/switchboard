@@ -122,7 +122,6 @@ export interface NexusGenObjects {
     initialState: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
     lastModified: NexusGenScalars['Date']; // Date!
     name: string; // String!
-    operations: NexusGenRootTypes['DefaultOperation'][]; // [DefaultOperation!]!
     revision: number; // Int!
     state: NexusGenRootTypes['DocumentDriveState']; // DocumentDriveState!
   }
@@ -577,6 +576,12 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  DocumentDrive: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
+    }
+  }
   Mutation: {
     addDrive: { // args
       global: NexusGenInputs['DocumentDriveStateInput']; // DocumentDriveStateInput!
@@ -613,6 +618,12 @@ export interface NexusGenArgTypes {
     }
     driveIdBySlug: { // args
       slug?: string | null; // String
+    }
+  }
+  IDocument: {
+    operations: { // args
+      first?: number | null; // Int
+      skip?: number | null; // Int
     }
   }
 }
