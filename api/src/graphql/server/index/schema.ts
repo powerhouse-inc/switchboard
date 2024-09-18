@@ -1,11 +1,12 @@
 import * as path from 'path';
 // eslint-disable-next-line import/extensions
-import nexus from 'nexus/dist/index.js';
-import { validationPlugin } from 'nexus-validation-plugin';
 import { applyMiddleware } from 'graphql-middleware';
-import * as systemResolver from '../../../modules/system';
-import * as drivesResolver from '../../../modules/document-drive/drives-resolver';
+import { validationPlugin } from 'nexus-validation-plugin';
+import nexus from 'nexus/dist/index.js';
 import { getExtraResolvers } from '../../../importedModules';
+import * as drivesResolver from '../../../modules/document-drive/drives-resolver';
+import * as driveResolver from '../../../modules/document-drive/resolvers';
+import * as systemResolver from '../../../modules/system';
 
 export const dirname = (() => {
   if (typeof __dirname !== 'undefined') {
@@ -20,27 +21,30 @@ export const dirname = (() => {
 /* istanbul ignore next @preserve */
 export const schema = nexus.makeSchema({
   types: {
-    ...systemResolver, ...drivesResolver, ...getExtraResolvers(),
+    ...systemResolver,
+    ...driveResolver,
+    ...drivesResolver,
+    ...getExtraResolvers()
   },
   plugins: [
     nexus.fieldAuthorizePlugin({
-      formatError: (authConfig) => authConfig.error,
+      formatError: authConfig => authConfig.error
     }),
     nexus.connectionPlugin({
       cursorFromNode(node: any) {
         return node.id;
-      },
+      }
     }),
-    validationPlugin(),
+    validationPlugin()
   ],
   outputs: {
     schema: path.join(dirname, '../generated/index/schema.graphql'),
-    typegen: path.join(dirname, '../generated/index/nexus.ts'),
+    typegen: path.join(dirname, '../generated/index/nexus.ts')
   },
   contextType: {
     module: path.join(dirname, 'context.ts'),
-    export: 'Context',
-  },
+    export: 'Context'
+  }
 });
 
 export const schemaWithMiddleware = applyMiddleware(schema);

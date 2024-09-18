@@ -1,5 +1,6 @@
 generator client {
     provider = "prisma-client-js"
+    previewFeatures = ["metrics"]
 }
 
 datasource db {
@@ -71,7 +72,7 @@ model Document {
 
 model Operation {
     id             String       @id @default(uuid())
-    opId           String?
+    opId           String?      @default(uuid())
     driveId        String
     Document       Document?    @relation(fields: [driveId, documentId], references: [driveId, id], onDelete: Cascade)
     documentId     String

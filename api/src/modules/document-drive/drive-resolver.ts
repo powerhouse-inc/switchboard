@@ -1,4 +1,11 @@
 import {
+  ListenerRevision as IListenerRevision,
+  UpdateStatus as IUpdateStatus
+} from 'document-drive';
+import { DocumentDriveAction } from 'document-model-libs/document-drive';
+import { Operation, OperationScope } from 'document-model/document';
+import stringify from 'json-stringify-deterministic';
+import {
   enumType,
   idArg,
   inputObjectType,
@@ -6,48 +13,21 @@ import {
   mutationField,
   nonNull,
   objectType,
-  queryField,
+  queryField
 } from 'nexus';
-import { systemType } from '../system';
-import {
-  ListenerRevision as IListenerRevision, UpdateStatus as IUpdateStatus,
-} from 'document-drive';
-import { Operation, OperationScope } from 'document-model/document';
-import stringify from 'json-stringify-deterministic';
-import { getChildLogger } from '../../logger';
-import { Context } from '../../graphql/server/drive/context';
-import { DocumentDriveAction, DocumentDriveState } from 'document-model-libs/document-drive';
+import BadRequestError from '../../errors/BadRequestError';
 import DocumentDriveError from '../../errors/DocumentDriveError';
-import NotFoundError from '../../errors/NotFoundError';
+import { Context } from '../../graphql/server/drive/context';
+import { getChildLogger } from '../../logger';
+import { systemType } from '../system';
+import { DocumentDriveState, Listener } from './resolvers';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
-
-export const Node = objectType({
-  name: 'Node',
-  definition(t) {
-    t.nonNull.string('id');
-    t.nonNull.string('name');
-    t.nonNull.string('kind');
-    t.string('documentType');
-    t.string('parentFolder');
-  },
-});
-
-export const DocumentDriveStateObject = objectType({
-  name: 'DocumentDriveState',
-  definition(t) {
-    t.nonNull.id('id');
-    t.nonNull.string('name');
-    t.nonNull.list.field('nodes', { type: Node });
-    t.string('icon');
-    t.string('slug');
-  },
-});
 
 // v2
 export const UpdateStatus = enumType({
   name: 'UpdateStatus',
-  members: ['SUCCESS', 'MISSING', 'CONFLICT', 'ERROR'],
+  members: ['SUCCESS', 'MISSING', 'CONFLICT', 'ERROR']
 });
 
 export const InputListenerFilter = inputObjectType({
@@ -57,7 +37,7 @@ export const InputListenerFilter = inputObjectType({
     t.list.string('documentId');
     t.list.string('scope');
     t.list.string('branch');
-  },
+  }
 });
 
 export const ListenerRevisionInput = inputObjectType({
@@ -69,7 +49,7 @@ export const ListenerRevisionInput = inputObjectType({
     t.nonNull.string('branch');
     t.nonNull.field('status', { type: UpdateStatus });
     t.nonNull.int('revision');
-  },
+  }
 });
 
 export const ListenerRevision = objectType({
@@ -82,7 +62,7 @@ export const ListenerRevision = objectType({
     t.nonNull.field('status', { type: UpdateStatus });
     t.nonNull.int('revision');
     t.string('error');
-  },
+  }
 });
 
 export const OperationSignerUser = objectType({
@@ -91,7 +71,7 @@ export const OperationSignerUser = objectType({
     t.nonNull.string('address');
     t.nonNull.string('networkId');
     t.nonNull.int('chainId');
-  },
+  }
 });
 
 export const OperationSignerApp = objectType({
@@ -99,7 +79,7 @@ export const OperationSignerApp = objectType({
   definition(t) {
     t.nonNull.string('name');
     t.nonNull.string('key');
-  },
+  }
 });
 
 export const OperationSigner = objectType({
@@ -107,7 +87,7 @@ export const OperationSigner = objectType({
   definition(t) {
     t.nonNull.field('user', { type: OperationSignerUser });
     t.nonNull.field('app', { type: OperationSignerApp });
-    t.nonNull.string('signature');
+    t.nonNull.list.nonNull.list.nonNull.field('signatures', { type: 'String' });
   }
 });
 
@@ -116,7 +96,7 @@ export const OperationContext = objectType({
   definition(t) {
     t.field('signer', { type: OperationSigner });
   }
-})
+});
 
 export const OperationUpdate = objectType({
   name: 'OperationUpdate',
@@ -128,8 +108,9 @@ export const OperationUpdate = objectType({
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
+    t.string('error');
     t.field('context', { type: OperationContext });
-  },
+  }
 });
 
 export const InputOperationSignerUser = inputObjectType({
@@ -138,7 +119,7 @@ export const InputOperationSignerUser = inputObjectType({
     t.nonNull.string('address');
     t.nonNull.string('networkId');
     t.nonNull.int('chainId');
-  },
+  }
 });
 
 export const InputOperationSignerApp = inputObjectType({
@@ -146,7 +127,7 @@ export const InputOperationSignerApp = inputObjectType({
   definition(t) {
     t.nonNull.string('name');
     t.nonNull.string('key');
-  },
+  }
 });
 
 export const InputOperationSigner = inputObjectType({
@@ -154,7 +135,7 @@ export const InputOperationSigner = inputObjectType({
   definition(t) {
     t.nonNull.field('user', { type: InputOperationSignerUser });
     t.nonNull.field('app', { type: InputOperationSignerApp });
-    t.nonNull.string('signature');
+    t.nonNull.list.nonNull.list.nonNull.field('signatures', { type: 'String' });
   }
 });
 
@@ -163,7 +144,7 @@ export const InputOperationContext = inputObjectType({
   definition(t) {
     t.field('signer', { type: InputOperationSigner });
   }
-})
+});
 
 export const InputOperationUpdate = inputObjectType({
   name: 'InputOperationUpdate',
@@ -171,12 +152,14 @@ export const InputOperationUpdate = inputObjectType({
     t.nonNull.int('index');
     t.int('skip');
     t.nonNull.string('type');
+    t.nonNull.string('id');
     t.nonNull.string('input');
     t.nonNull.string('hash');
     t.nonNull.string('timestamp');
     t.string('id');
+    t.string('error');
     t.field('context', { type: InputOperationContext });
-  },
+  }
 });
 
 export const IStrandUpdate = objectType({
@@ -187,7 +170,7 @@ export const IStrandUpdate = objectType({
     t.nonNull.string('scope');
     t.nonNull.string('branch');
     t.nonNull.list.nonNull.field('operations', { type: OperationUpdate });
-  },
+  }
 });
 
 export const InputStrandUpdate = inputObjectType({
@@ -198,50 +181,7 @@ export const InputStrandUpdate = inputObjectType({
     t.nonNull.string('scope');
     t.nonNull.string('branch');
     t.nonNull.list.nonNull.field('operations', { type: InputOperationUpdate });
-  },
-});
-
-export const ListenerFilter = objectType({
-  name: 'ListenerFilter',
-  definition(t) {
-    t.nonNull.list.nonNull.string('documentType');
-    t.list.nonNull.id('documentId');
-    t.list.nonNull.string('scope');
-    t.list.nonNull.string('branch');
-  },
-});
-
-export const TransmitterType = enumType({
-  name: 'TransmitterType',
-  members: [
-    'Internal',
-    'SwitchboardPush',
-    'PullResponder',
-    'SecureConnect',
-    'MatrixConnect',
-    'RESTWebhook',
-  ],
-});
-
-export const ListenerCallInfo = objectType({
-  name: 'ListenerCallInfo',
-  definition(t) {
-    t.field('transmitterType', { type: TransmitterType });
-    t.string('name');
-    t.string('data');
-  },
-});
-
-export const Listener = objectType({
-  name: 'Listener',
-  definition(t) {
-    t.nonNull.id('listenerId');
-    t.string('label');
-    t.nonNull.boolean('block');
-    t.nonNull.boolean('system');
-    t.nonNull.field('filter', { type: ListenerFilter });
-    t.field('callInfo', { type: ListenerCallInfo });
-  },
+  }
 });
 
 export const syncType = objectType({
@@ -251,7 +191,7 @@ export const syncType = objectType({
       type: list(IStrandUpdate),
       args: {
         listenerId: idArg(),
-        since: 'Date',
+        since: 'Date'
       },
       resolve: async (_parent, { listenerId, since }, ctx: Context) => {
         if (!listenerId) throw new Error('Listener ID is required');
@@ -259,14 +199,14 @@ export const syncType = objectType({
           const result = await ctx.prisma.document.pullStrands(
             ctx.driveId ?? '1',
             listenerId,
-            since,
+            since
           );
-          return result.map((e) => ({
+          return result.map(e => ({
             driveId: e.driveId,
             documentId: e.documentId,
             scope: e.scope,
             branch: e.branch,
-            operations: e.operations.map((o) => ({
+            operations: e.operations.map(o => ({
               index: o.index,
               skip: o.skip,
               name: o.type,
@@ -275,20 +215,22 @@ export const syncType = objectType({
               timestamp: o.timestamp,
               type: o.type,
               context: o.context,
-              id: o.id,
-            })),
+              id: o.id
+            }))
           }));
         } catch (e) {
           if ((e as Error).message?.match(/Transmitter .+ not found/)) {
-            throw new NotFoundError({ message: "Transmitter not found" });
+            throw new BadRequestError({
+              message: (e as Error).message ?? 'Transmitter not found'
+            });
           } else {
             logger.error(e);
             throw new Error('Failed to fetch strands');
           }
         }
-      },
+      }
     });
-  },
+  }
 });
 
 export const driveSystemType = objectType({
@@ -297,157 +239,184 @@ export const driveSystemType = objectType({
     t.implements(systemType);
     t.field('sync', {
       type: syncType,
-      resolve: async () => true,
+      resolve: async () => true
     });
-  },
+  }
 });
 
 export const driveSystemQueryField = queryField('system', {
   type: driveSystemType,
-  resolve: async () => true,
+  resolve: async () => true
 });
 
 export const getDrive = queryField('drive', {
-  type: DocumentDriveStateObject,
+  type: DocumentDriveState,
   resolve: async (_parent, _args, ctx: Context) => {
     try {
-      const drive = await ctx.prisma.document.getDrive(ctx.driveId ?? '1') as DocumentDriveState;
-      return drive;
+      const { global, local } = await ctx.prisma.document.getDrive(
+        ctx.driveId ?? '1'
+      );
+      return {
+        ...global,
+        ...local,
+        sharingType: local.sharingType?.toUpperCase() ?? null
+      };
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to get drive", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to get drive',
+        logging: true,
+        context: e
+      });
     }
-  },
+  }
 });
 
 export const registerListener = mutationField('registerPullResponderListener', {
   type: Listener,
   args: {
-    filter: nonNull(InputListenerFilter),
+    filter: nonNull(InputListenerFilter)
   },
   resolve: async (_parent, { filter }, ctx: Context) => {
     try {
       const result = await ctx.prisma.document.registerPullResponderListener(
         ctx.driveId ?? '1',
         {
-          branch: filter.branch?.filter(b => !!b) as string[] ?? [],
-          documentId: filter.documentId?.filter(b => !!b) as string[] ?? [],
-          documentType: filter.documentType?.filter(b => !!b) as string[] ?? [],
-          scope: filter.scope?.filter(b => !!b) as string[] ?? [],
-        },
+          branch: (filter.branch?.filter(b => !!b) as string[]) ?? [],
+          documentId: (filter.documentId?.filter(b => !!b) as string[]) ?? [],
+          documentType:
+            (filter.documentType?.filter(b => !!b) as string[]) ?? [],
+          scope: (filter.scope?.filter(b => !!b) as string[]) ?? []
+        }
       );
 
       return result;
-
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to register listener", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to register listener',
+        logging: true,
+        context: e
+      });
     }
-
-  },
+  }
 });
 
-
 export const deleteListener = mutationField('deletePullResponderListener', {
-  type: Listener,
+  type: 'Boolean',
   args: {
-    filter: nonNull(InputListenerFilter),
+    listenerId: nonNull('String')
   },
-  resolve: async (_parent, { filter }, ctx: Context) => {
+  resolve: async (_parent, { listenerId }, ctx: Context) => {
     try {
-      const result = await ctx.prisma.document.deletePullResponderListener(
+      await ctx.prisma.document.deletePullResponderListener(
         ctx.driveId ?? '1',
-        filter,
+        listenerId
       );
 
-      return result;
+      return true;
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to delete listener", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to delete listener',
+        logging: true,
+        context: e
+      });
     }
-  },
+  }
 });
 
 export const pushUpdates = mutationField('pushUpdates', {
   type: list(ListenerRevision),
   args: {
-    strands: list(nonNull(InputStrandUpdate)),
+    strands: list(nonNull(InputStrandUpdate))
   },
   resolve: async (_parent, { strands }, ctx: Context) => {
     logger.info('pushUpdates');
     if (!strands || strands?.length === 0) return [];
 
     try {
-      const listenerRevisions: IListenerRevision[] = await Promise.all(strands.map(async (s) => {
-        const operations = s.operations?.map((o) => ({
-          ...o,
-          input: JSON.parse(o.input),
-          skip: o.skip ?? 0,
-          scope: s.scope as OperationScope,
-          branch: "main",
-        })) ?? [];
+      const listenerRevisions: IListenerRevision[] = await Promise.all(
+        strands.map(async s => {
+          const operations =
+            s.operations?.map(o => ({
+              ...o,
+              input: JSON.parse(o.input),
+              skip: o.skip ?? 0,
+              scope: s.scope as OperationScope,
+              branch: 'main'
+            })) ?? [];
 
-        const result = await ctx.prisma.document.pushUpdates(
-          s.driveId,
-          operations as Operation<DocumentDriveAction>[],
-          s.documentId ?? undefined,
-        );
+          const result = await ctx.prisma.document.pushUpdates(
+            s.driveId,
+            operations as Operation<DocumentDriveAction>[],
+            s.documentId ?? undefined
+          );
 
-        if (result.status !== "SUCCESS") logger.error(result.error);
+          if (result.status !== 'SUCCESS') logger.error(result.error);
 
-        const revision = result.document?.operations[s.scope as OperationScope]
-          .slice()
-          .pop()?.index ?? -1;
+          const revision =
+            result.document?.operations[s.scope as OperationScope].slice().pop()
+              ?.index ?? -1;
 
-        return {
-          revision,
-          branch: s.branch,
-          documentId: s.documentId ?? "",
-          driveId: s.driveId,
-          scope: s.scope as OperationScope,
-          status: result.status,
-          error: result.error?.message,
-        };
-      }));
+          return {
+            revision,
+            branch: s.branch,
+            documentId: s.documentId ?? '',
+            driveId: s.driveId,
+            scope: s.scope as OperationScope,
+            status: result.status,
+            error: result.error?.message
+          };
+        })
+      );
 
       return listenerRevisions;
     } catch (e: any) {
       throw new DocumentDriveError({
         code: 500,
-        message: e.message ?? "Failed to push updates",
+        message: e.message ?? 'Failed to push updates',
         logging: true,
         context: e
       });
     }
-  },
+  }
 });
 
 export const acknowledge = mutationField('acknowledge', {
   type: 'Boolean',
   args: {
     listenerId: nonNull('String'),
-    revisions: list(ListenerRevisionInput),
+    revisions: list(ListenerRevisionInput)
   },
   resolve: async (_parent, { revisions, listenerId }, ctx: Context) => {
     try {
       if (!listenerId || !revisions) return false;
       const validEntries: IListenerRevision[] = revisions
-        .filter((r) => r !== null)
-        .map((e) => ({
+        .filter(r => r !== null)
+        .map(e => ({
           driveId: e!.driveId,
           documentId: e!.documentId,
           scope: e!.scope,
           branch: e!.branch,
           revision: e!.revision,
-          status: e!.status as IUpdateStatus,
+          status: e!.status as IUpdateStatus
         }));
 
       const result = await ctx.prisma.document.processAcknowledge(
-        ctx.driveId ?? "1",
+        ctx.driveId ?? '1',
         listenerId,
-        validEntries,
+        validEntries
       );
 
       return result;
     } catch (e: any) {
-      throw new DocumentDriveError({ code: 500, message: e.message ?? "Failed to acknowledge", logging: true, context: e })
+      throw new DocumentDriveError({
+        code: 500,
+        message: e.message ?? 'Failed to acknowledge',
+        logging: true,
+        context: e
+      });
     }
-  },
+  }
 });

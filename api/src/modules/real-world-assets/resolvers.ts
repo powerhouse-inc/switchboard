@@ -1,183 +1,201 @@
-import { arg, enumType, interfaceType, list, objectType, queryField, stringArg, unionType } from 'nexus';
-import { GQLDateBase } from '../system';
-import { documentModelInterface } from '../document';
-import { getChildLogger } from '../../logger';
-import { string } from 'zod';
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import {
+  enumType,
+  list,
+  objectType,
+  queryField,
+  scalarType,
+  stringArg,
+  unionType
+} from 'nexus';
 
-const logger = getChildLogger({ msgPrefix: 'REAL WORLD ASSETS RESOLVER' });
+import { utils } from 'document-model-libs/real-world-assets';
+import { getChildLogger } from '../../logger';
+import { documentModelInterface } from '../document/resolvers';
+
+export const logger = getChildLogger({
+  msgPrefix: 'REAL WORLD ASSETS RESOLVER'
+});
 
 export const Account = objectType({
-  name: "Account",
+  name: 'Account',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.string("reference")
-    t.string("label")
+    t.nonNull.id('id');
+    t.nonNull.string('reference');
+    t.string('label');
   }
-})
+});
 export const BaseTransaction = objectType({
-  name: "BaseTransaction",
+  name: 'BaseTransaction',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.id("assetId")
-    t.nonNull.float("amount")
-    t.nonNull.field("entryTime", { type: GQLDateBase })
-    t.field("tradeTime", { type: GQLDateBase })
-    t.field("settlementTime", { type: GQLDateBase })
-    t.string("txRef")
-    t.id("accountId")
-    t.id("counterPartyAccountId")
+    t.nonNull.id('id');
+    t.nonNull.field('assetType', { type: AssetType });
+    t.nonNull.id('assetId');
+    t.nonNull.float('amount');
+    t.nonNull.field('entryTime', { type: DateTime });
+    t.field('tradeTime', { type: DateTime });
+    t.field('settlementTime', { type: DateTime });
+    t.id('accountId');
+    t.id('counterPartyAccountId');
   }
-})
+});
 export const Cash = objectType({
-  name: "Cash",
+  name: 'Cash',
   definition(t) {
-    t.nonNull.id("id")
-    t.id("spvId")
-    t.field("spv", { type: Spv })
-    t.nonNull.string("currency")
-    t.nonNull.float("balance")
+    t.nonNull.id('id');
+    t.nonNull.field('type', { type: AssetType });
+    t.nonNull.id('spvId');
+    t.nonNull.string('currency');
+    t.nonNull.float('balance');
   }
-})
+});
 export const FixedIncome = objectType({
-  name: "FixedIncome",
+  name: 'FixedIncome',
   definition(t) {
-    t.id("id")
-    t.id("fixedIncomeTypeId")
-    t.field("fixedIncomeType", { type: FixedIncomeType })
-    t.string("name")
-    t.id("spvId")
-    t.field("spv", { type: Spv })
-    t.field("maturity", { type: GQLDateBase })
-    t.field("purchaseDate", { type: GQLDateBase })
-    t.float("notional")
-    t.float("purchasePrice")
-    t.float("purchaseProceeds")
-    t.float("totalDiscount")
-    t.float("annualizedYield")
-    t.float("realizedSurplus")
-    t.string("ISIN")
-    t.string("CUSIP")
-    t.float("coupon")
-    t.float("salesProceeds")
+    t.nonNull.id('id');
+    t.nonNull.field('type', { type: AssetType });
+    t.nonNull.id('fixedIncomeTypeId');
+    t.nonNull.string('name');
+    t.nonNull.id('spvId');
+    t.nonNull.field('purchaseDate', { type: DateTime });
+    t.nonNull.float('notional');
+    t.nonNull.float('assetProceeds');
+    t.nonNull.float('purchaseProceeds');
+    t.nonNull.float('salesProceeds');
+    t.nonNull.float('purchasePrice');
+    t.nonNull.float('totalDiscount');
+    t.nonNull.float('realizedSurplus');
+    t.field('maturity', { type: DateTime });
+    t.string('ISIN');
+    t.string('CUSIP');
+    t.float('coupon');
+    t.field('currentValue', {
+        type: 'Float',
+        args: { date: DateTime }
+    });
   }
-})
+});
 export const FixedIncomeType = objectType({
-  name: "FixedIncomeType",
+  name: 'FixedIncomeType',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.string("name")
+    t.nonNull.id('id');
+    t.nonNull.string('name');
   }
-})
+});
 export const GroupTransaction = objectType({
-  name: "GroupTransaction",
+  name: 'GroupTransaction',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.field("type", { type: GroupTransactionType })
-    t.nonNull.field("entryTime", { type: GQLDateBase })
-    t.nonNull.float("cashBalanceChange")
-    t.list.nonNull.field("fees", { type: TransactionFee })
-    t.field("cashTransaction", { type: BaseTransaction })
-    t.field("fixedIncomeTransaction", { type: BaseTransaction })
-    t.list.nonNull.field("feeTransactions", { type: BaseTransaction })
-    t.field("interestTransaction", { type: BaseTransaction })
+    t.nonNull.id('id');
+    t.nonNull.field('type', { type: GroupTransactionType });
+    t.nonNull.field('entryTime', { type: DateTime });
+    t.nonNull.float('cashBalanceChange');
+    t.float('unitPrice');
+    t.list.nonNull.field('fees', { type: TransactionFee });
+    t.nonNull.field('cashTransaction', { type: BaseTransaction });
+    t.field('fixedIncomeTransaction', { type: BaseTransaction });
+    t.id('serviceProviderFeeTypeId');
+    t.string('txRef');
   }
-})
-export const RealWorldAssetsStateInterface = interfaceType({
-  name: "IRealWorldAssetsState",
-  definition(t) {
-    t.nonNull.list.nonNull.field("accounts", { type: Account })
-    t.nonNull.id("principalLenderAccountId")
-    t.nonNull.list.nonNull.field("spvs", { type: Spv })
-    t.nonNull.list.nonNull.field("serviceProviderFeeTypes", { type: ServiceProviderFeeType })
-    t.nonNull.list.nonNull.field("fixedIncomeTypes", { type: FixedIncomeType })
-    t.nonNull.list.nonNull.field("portfolio", { type: AssetUnion })
-    t.nonNull.list.nonNull.field("transactions", { type: GroupTransaction })
-  }, resolveType: () => "RealWorldAssetsState"
-})
-
+});
 export const RealWorldAssetsState = objectType({
-  name: "RealWorldAssetsState",
+  name: 'RealWorldAssetsState',
   definition(t) {
-    t.implements(RealWorldAssetsStateInterface)
+    t.nonNull.list.nonNull.field('accounts', { type: Account });
+    t.nonNull.id('principalLenderAccountId');
+    t.nonNull.list.nonNull.field('spvs', { type: Spv });
+    t.nonNull.list.nonNull.field('serviceProviderFeeTypes', {
+      type: ServiceProviderFeeType
+    });
+    t.nonNull.list.nonNull.field('fixedIncomeTypes', { type: FixedIncomeType });
+    t.nonNull.list.nonNull.field('portfolio', { type: Asset });
+    t.nonNull.list.nonNull.field('transactions', { type: GroupTransaction });
   }
-})
-
+});
 export const ServiceProviderFeeType = objectType({
-  name: "ServiceProviderFeeType",
+  name: 'ServiceProviderFeeType',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.string("name")
-    t.nonNull.string("feeType")
-    t.nonNull.id("accountId")
+    t.nonNull.id('id');
+    t.nonNull.string('name');
+    t.nonNull.string('feeType');
+    t.nonNull.id('accountId');
   }
-})
+});
 export const Spv = objectType({
-  name: "Spv",
+  name: 'Spv',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.string("name")
+    t.nonNull.id('id');
+    t.nonNull.string('name');
   }
-})
+});
 export const TransactionFee = objectType({
-  name: "TransactionFee",
+  name: 'TransactionFee',
   definition(t) {
-    t.nonNull.id("id")
-    t.nonNull.id("serviceProviderFeeTypeId")
-    t.nonNull.float("amount")
+    t.nonNull.id('id');
+    t.nonNull.id('serviceProviderFeeTypeId');
+    t.nonNull.float('amount');
   }
-})
+});
 
-export const AssetUnion = unionType({
-  name: "Asset",
+export const Asset = unionType({
+  name: 'Asset',
   definition(t) {
-    t.members(FixedIncome, Cash)
+    t.members(FixedIncome, Cash);
   },
-  resolveType: (asset) => {
-    if (asset.name) {
-      return "FixedIncome";
-    }
-
-    return "Cash"
-  }
+  resolveType: t => t.type
 });
 
+export const AssetType = enumType({
+  name: 'AssetType',
+  members: ['Cash', 'FixedIncome']
+});
 export const GroupTransactionType = enumType({
-  name: "GroupTransactionType",
-  members: ['AssetPurchase', 'AssetSale', 'InterestDraw', 'InterestReturn', 'FeesPayment', 'PrincipalDraw', 'PrincipalReturn', 'InterestPayment'],
+  name: 'GroupTransactionType',
+  members: [
+    'PrincipalDraw',
+    'PrincipalReturn',
+    'AssetPurchase',
+    'AssetSale',
+    'InterestIncome',
+    'InterestPayment',
+    'FeesIncome',
+    'FeesPayment'
+  ]
 });
 
-export const RealWorldAssetsPortfolio = objectType({
-  name: "RealWorldAssetsPortfolio",
-  definition(t) {
-    t.nonNull.id("id")
-    t.implements(RealWorldAssetsStateInterface)
+export const DateTime = scalarType({
+  name: 'DateTime',
+  serialize(value) {
+    const date = utils.dateValidator.safeParse(value);
+    return date.data?.toISOString() || '';
+  },
+  parseValue(value) {
+    return utils.dateValidator.safeParse(value).data || '';
   }
-})
+});
 
 export const RealWorldAssetsDocument = objectType({
   name: 'RealWorldAssets',
   definition(t) {
     t.implements(documentModelInterface);
     t.nonNull.field('state', { type: RealWorldAssetsState });
-  },
+    t.nonNull.field('initialState', { type: RealWorldAssetsState });
+  }
 });
 
 export const rwaQuery = queryField('rwaPortfolios', {
-  type: list(RealWorldAssetsPortfolio),
+  type: list(RealWorldAssetsDocument),
   args: {
-    id: stringArg(),
+    id: stringArg()
   },
   resolve: async (_root, { id }, ctx) => {
-    try {
-      const docs = await ctx.prisma.rWAPortfolio.findRWAPortfolios({ driveId: ctx.driveId });
-      if (id) {
-        return docs.filter(e => e.id === id);
-      }
-
-      return docs;
-    } catch (e: any) {
-      logger.error({ msg: e.message });
+    logger.info('Fetching RWA portfolios');
+    const docs = await ctx.prisma.rWAPortfolio.findRWAPortfolios({
+      driveId: ctx.driveId
+    });
+    if (id) {
+      return docs.filter(e => e.id === id);
     }
-  },
-});
 
+    return docs as any[];
+  }
+});

@@ -14,7 +14,7 @@ type AccountSnapshot implements IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: AccountSnapshotState!
 }
@@ -61,6 +61,11 @@ type ArticleComponent {
 
 union Asset = Cash | FixedIncome
 
+enum AssetType {
+  Cash
+  FixedIncome
+}
+
 """Attachment custom scalar type"""
 scalar Attachment
 
@@ -86,21 +91,22 @@ type BaseTransaction {
   accountId: ID
   amount: Float!
   assetId: ID!
+  assetType: AssetType!
   counterPartyAccountId: ID
-  entryTime: Date!
+  entryTime: DateTime!
   id: ID!
-  settlementTime: Date
-  tradeTime: Date
-  txRef: String
+  settlementTime: DateTime
+  tradeTime: DateTime
 }
 
 type BudgetStatement implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: BudgetStatementState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: BudgetStatementState!
 }
@@ -133,8 +139,8 @@ type Cash {
   balance: Float!
   currency: String!
   id: ID!
-  spv: Spv
-  spvId: ID
+  spvId: ID!
+  type: AssetType!
 }
 
 type Challenge {
@@ -176,58 +182,98 @@ type CoreUnit {
 """Date custom scalar type"""
 scalar Date
 
+scalar DateTime
+
 type DefaultDocument implements IDocument {
   created: Date!
   documentType: String!
   id: String!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
 }
 
 type DefaultOperation implements IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
+  inputText: String!
+  skip: Int!
   timestamp: Date!
   type: String!
+}
+
+type DocumentDrive implements IDocument {
+  created: Date!
+  documentType: String!
+  id: String!
+  initialState: DocumentDriveState!
+  lastModified: Date!
+  name: String!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
+  revision: Int!
+  state: DocumentDriveState!
+}
+
+type DocumentDriveLocalState {
+  availableOffline: Boolean!
+  listeners: [Listener!]!
+  sharingType: String
+  triggers: [Trigger!]!
 }
 
 type DocumentDriveState {
   icon: String
   id: ID!
   name: String!
-  nodes: [Node]!
+  nodes: [Node!]!
   slug: String
 }
 
 union ElementComponents = ArticleComponent | CoreComponent | ScopeComponent | SectionComponent | TypeSpecificationComponent
 
+type FileNode implements Node {
+  documentType: String!
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
+  synchronizationUnits: [SynchronizationUnit!]!
+}
+
 type FixedIncome {
   CUSIP: String
   ISIN: String
-  annualizedYield: Float
+  assetProceeds: Float!
   coupon: Float
-  fixedIncomeType: FixedIncomeType
-  fixedIncomeTypeId: ID
-  id: ID
-  maturity: Date
-  name: String
-  notional: Float
-  purchaseDate: Date
-  purchasePrice: Float
-  purchaseProceeds: Float
-  realizedSurplus: Float
-  salesProceeds: Float
-  spv: Spv
-  spvId: ID
-  totalDiscount: Float
+  currentValue(date: DateTime): Float
+  fixedIncomeTypeId: ID!
+  id: ID!
+  maturity: DateTime
+  name: String!
+  notional: Float!
+  purchaseDate: DateTime!
+  purchasePrice: Float!
+  purchaseProceeds: Float!
+  realizedSurplus: Float!
+  salesProceeds: Float!
+  spvId: ID!
+  totalDiscount: Float!
+  type: AssetType!
 }
 
 type FixedIncomeType {
   id: ID!
   name: String!
+}
+
+type FolderNode implements Node {
+  id: String!
+  kind: String!
+  name: String!
+  parentFolder: String
 }
 
 type Ftes {
@@ -242,23 +288,24 @@ type FtesForecast {
 
 type GroupTransaction {
   cashBalanceChange: Float!
-  cashTransaction: BaseTransaction
-  entryTime: Date!
-  feeTransactions: [BaseTransaction!]
+  cashTransaction: BaseTransaction!
+  entryTime: DateTime!
   fees: [TransactionFee!]
   fixedIncomeTransaction: BaseTransaction
   id: ID!
-  interestTransaction: BaseTransaction
+  serviceProviderFeeTypeId: ID
+  txRef: String
   type: GroupTransactionType!
+  unitPrice: Float
 }
 
 enum GroupTransactionType {
   AssetPurchase
   AssetSale
+  FeesIncome
   FeesPayment
-  InterestDraw
+  InterestIncome
   InterestPayment
-  InterestReturn
   PrincipalDraw
   PrincipalReturn
 }
@@ -269,26 +316,19 @@ interface IDocument {
   id: String!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
 }
 
 interface IOperation {
+  error: String
   hash: String!
   id: String
   index: Int!
+  inputText: String!
+  skip: Int!
   timestamp: Date!
   type: String!
-}
-
-interface IRealWorldAssetsState {
-  accounts: [Account!]!
-  fixedIncomeTypes: [FixedIncomeType!]!
-  portfolio: [Asset!]!
-  principalLenderAccountId: ID!
-  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
-  spvs: [Spv!]!
-  transactions: [GroupTransaction!]!
 }
 
 input InputListenerFilter {
@@ -304,7 +344,7 @@ input InputOperationContext {
 
 input InputOperationSigner {
   app: InputOperationSignerApp!
-  signature: String!
+  signatures: [[String!]!]!
   user: InputOperationSignerUser!
 }
 
@@ -321,6 +361,7 @@ input InputOperationSignerUser {
 
 input InputOperationUpdate {
   context: InputOperationContext
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -418,15 +459,14 @@ type Mutation {
   acknowledge(listenerId: String!, revisions: [ListenerRevisionInput]): Boolean
   createChallenge(address: String!): Challenge
   createSession(session: SessionInput!): SessionOutput
-  deletePullResponderListener(filter: InputListenerFilter!): Listener
+  deletePullResponderListener(listenerId: String!): Boolean
   pushUpdates(strands: [InputStrandUpdate!]): [ListenerRevision]
   registerPullResponderListener(filter: InputListenerFilter!): Listener
   revokeSession(sessionId: String!): Session
   solveChallenge(nonce: String!, signature: String!): SessionOutput
 }
 
-type Node {
-  documentType: String
+interface Node {
   id: String!
   kind: String!
   name: String!
@@ -439,7 +479,7 @@ type OperationContext {
 
 type OperationSigner {
   app: OperationSignerApp!
-  signature: String!
+  signatures: [[String!]!]!
   user: OperationSignerUser!
 }
 
@@ -456,6 +496,7 @@ type OperationSignerUser {
 
 type OperationUpdate {
   context: OperationContext
+  error: String
   hash: String!
   id: String
   index: Int!
@@ -471,13 +512,19 @@ type Owner {
   title: String
 }
 
+type PullResponderTriggerData {
+  interval: String!
+  listenerId: ID!
+  url: String!
+}
+
 type Query {
   coreUnit(id: String): CoreUnit
   coreUnits: [CoreUnit]
   document(id: String!): IDocument
   documents: [IDocument]
   drive: DocumentDriveState
-  rwaPortfolios(id: String): [RealWorldAssetsPortfolio]
+  rwaPortfolios(id: String): [RealWorldAssets]
   system: SwitchboardDrive
 }
 
@@ -485,25 +532,15 @@ type RealWorldAssets implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: RealWorldAssetsState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: RealWorldAssetsState!
 }
 
-type RealWorldAssetsPortfolio implements IRealWorldAssetsState {
-  accounts: [Account!]!
-  fixedIncomeTypes: [FixedIncomeType!]!
-  id: ID!
-  portfolio: [Asset!]!
-  principalLenderAccountId: ID!
-  serviceProviderFeeTypes: [ServiceProviderFeeType!]!
-  spvs: [Spv!]!
-  transactions: [GroupTransaction!]!
-}
-
-type RealWorldAssetsState implements IRealWorldAssetsState {
+type RealWorldAssetsState {
   accounts: [Account!]!
   fixedIncomeTypes: [FixedIncomeType!]!
   portfolio: [Asset!]!
@@ -530,9 +567,10 @@ type ScopeFramework implements IDocument {
   created: Date!
   documentType: String!
   id: String!
+  initialState: ScopeFrameworkState!
   lastModified: Date!
   name: String!
-  operations: [DefaultOperation!]!
+  operations(first: Int, skip: Int): [DefaultOperation!]!
   revision: Int!
   state: ScopeFrameworkState!
 }
@@ -681,6 +719,12 @@ type Sync {
   strands(listenerId: ID, since: Date): [StrandUpdate]
 }
 
+type SynchronizationUnit {
+  branch: String!
+  scope: String!
+  syncId: ID!
+}
+
 interface System {
   auth: Auth
 }
@@ -700,6 +744,18 @@ enum TransmitterType {
   SwitchboardPush
 }
 
+type Trigger {
+  data: TriggerData
+  id: ID!
+  type: TriggerType!
+}
+
+union TriggerData = PullResponderTriggerData
+
+enum TriggerType {
+  PullResponder
+}
+
 type TypeSpecificationComponent {
   additionalLogic: String
   category: TypeSpecificationComponentCategory
@@ -715,6 +771,8 @@ enum TypeSpecificationComponentCategory {
   Primary
   Supporting
 }
+
+scalar Unknown
 
 type UpdateElementComponentsInput {
   components: ElementComponents
