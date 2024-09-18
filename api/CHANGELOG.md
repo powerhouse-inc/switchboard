@@ -1,3 +1,10 @@
+# [1.0.0-next.11](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.10...v1.0.0-next.11) (2024-09-18)
+
+
+### Features
+
+* added operations query arguments ([9aabf42](https://github.com/powerhouse-inc/switchboard/commit/9aabf425db70a91c1ba141b110e33e244190353c))
+* merge branch 'develop' into staging ([e48b30c](https://github.com/powerhouse-inc/switchboard/commit/e48b30cb01d9e45571207d856e3f2eea5dc6f753))
 
 # [1.0.0-next.10](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-next.9...v1.0.0-next.10) (2024-09-16)
 
