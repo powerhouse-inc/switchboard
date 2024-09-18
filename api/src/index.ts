@@ -10,7 +10,7 @@ import { getChildLogger } from './logger';
 import register from './metrics';
 import { errorHandler } from './middleware/errors';
 import { closeRedis, initRedis } from './redis';
-import { initKYCService } from './modules/renown/kyc-service';
+import { initRenownCredentialService } from './modules/renown/renown-credential.service';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
@@ -20,7 +20,7 @@ async function startServer(): Promise<Server> {
   if (process.env.REDIS_TLS_URL) {
     await initRedis();
   }
-  await initKYCService();
+  await initRenownCredentialService();
 
   const { app, router } = createApp();
   // add graphql routes to router

@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { RuntimeCompositeDefinition } from "@composedb/types";
-import { KYCService } from "../src/modules/renown/kyc-service";
+import { KYCService } from "../src/modules/renown/renown-credential.service";
 import { definition } from "../src/modules/renown/ceramic/definition";
 
 describe("KYC Service", () => {

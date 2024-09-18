@@ -2,7 +2,7 @@ import { Operation, utils } from "document-model/document";
 import * as KeyDidResolver from 'key-did-resolver'
 import { Resolver } from 'did-resolver'
 import crypto from "node:crypto";
-import { service } from "../renown/kyc-service";
+import { service } from "../renown/renown-credential.service";
 import { getAddressDID } from "../renown/types";
 import logger from "../../logger";
 

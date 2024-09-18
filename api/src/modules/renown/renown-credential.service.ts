@@ -2,20 +2,20 @@ import { RuntimeCompositeDefinition } from "@composedb/types";
 import { ComposeClient } from "@composedb/client";
 import { EventSource } from "cross-eventsource";
 import { JsonAsString, AggregationDocument } from '@ceramicnetwork/codecs';
-import { Codec, decode } from "codeco";
+import { decode } from "codeco";
 import { Logger } from "pino";
 import { fetchEntry } from "./queries";
 import logger from "../../logger";
 import { CeramicPowerhouseVerifiableCredential } from "./types";
 import { definition } from "./ceramic/definition";
 
-export interface KYCServiceOptions {
+export interface RenownCredentialServiceOptions {
   ceramicUrl?: string;
   logger?: Logger;
   definition: RuntimeCompositeDefinition
 }
 
-export class KYCService {
+export class RenownCredentialService {
 
   protected client: ComposeClient;
 
@@ -23,18 +23,17 @@ export class KYCService {
 
   protected credentials: CeramicPowerhouseVerifiableCredential[] = [];
 
-  protected codec: Codec<any, any, any>;
+  protected Codec = JsonAsString.pipe(AggregationDocument)
 
   protected logger: Logger;
 
-  constructor(options: KYCServiceOptions) {
+  constructor(options: RenownCredentialServiceOptions) {
     const ceramic = options.ceramicUrl || "http://localhost:7007";
     this.client = new ComposeClient({
       ceramic,
       definition: options.definition as RuntimeCompositeDefinition,
     });
     this.eventSource = new EventSource(`${ceramic}/api/v0/feed/aggregation/documents`)
-    this.codec = JsonAsString.pipe(AggregationDocument)
     this.logger = options.logger || logger;
   }
 
@@ -109,6 +108,21 @@ export class KYCService {
     return data.verifiableCredentialEIP712Index.edges[0]!.node;
   }
 
+  #replaceCredential = (credential: CeramicPowerhouseVerifiableCredential) => {
+    const index = this.credentials.findIndex(
+      (e) => e.issuer.id === credential.issuer.id && e.credentialSubject.id === credential.credentialSubject.id
+    );
+    if (index !== -1) {
+      if (credential.revocationDate && credential.revocationDate < new Date().toISOString()) {
+        delete this.credentials[index];
+      } else {
+        this.credentials[index] = credential;
+      }
+    } else {
+      this.credentials.push(credential);
+    }
+  }
+
   #updateCredential = async (issuerId: string, subjectId: string) => {
     const entry = await this.#fetchCredential(issuerId, subjectId);
     const index = this.credentials.findIndex((e) => e.issuer.id === issuerId && e.credentialSubject.id === subjectId);
@@ -117,12 +131,7 @@ export class KYCService {
       return null;
     }
 
-    if (index !== -1) {
-      this.credentials[index] = entry;
-    } else {
-      this.credentials.push(entry);
-    }
-
+    this.#replaceCredential(entry);
     return entry;
   }
 
@@ -132,20 +141,19 @@ export class KYCService {
     }
 
     this.eventSource.addEventListener('message', (event) => {
-      this.logger.info('event', event);
-      const parsedData = decode(this.codec, event.data);
-      this.logger.info('parsed', parsedData)
+      const { content } = JSON.parse(event.data);
+      const parsedCredential = JSON.parse(content) as CeramicPowerhouseVerifiableCredential;
+      this.#replaceCredential(parsedCredential);
     })
 
     this.eventSource.addEventListener('error', error => {
-      this.logger.error('error', error)
+      this.logger.error(error)
     })
   }
 
 
   async init() {
-    // await this.#updateCredentials();
-    // this.#subscribeToEvents();
+    this.#subscribeToEvents();
     return Promise.resolve();
   }
 
@@ -188,11 +196,11 @@ export class KYCService {
   }
 }
 
-export const service: KYCService = new KYCService({
+export const service: RenownCredentialService = new RenownCredentialService({
   definition: definition as RuntimeCompositeDefinition,
   ceramicUrl: "https://ceramic-ksdc-mainnet.hirenodes.io",
 });
 
-export async function initKYCService() {
+export async function initRenownCredentialService() {
   await service.init();
 }
