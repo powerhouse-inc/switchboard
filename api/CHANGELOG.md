@@ -1,3 +1,10 @@
+# [1.0.0-dev.41](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.40...v1.0.0-dev.41) (2024-09-19)
+
+
+### Bug Fixes
+
+* updated context of docker build ([ddc19f0](https://github.com/powerhouse-inc/switchboard/commit/ddc19f030f0a07f6d7b699e1e81cfc249e7d7b55))
+
 # [1.0.0-dev.40](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.39...v1.0.0-dev.40) (2024-09-17)
 
 
