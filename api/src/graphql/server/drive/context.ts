@@ -1,9 +1,10 @@
 import { Session } from '@prisma/client';
+import { DocumentGraphQLResult } from 'document-drive/utils/graphql';
+import { Document } from 'document-model/document';
 import type express from 'express';
 import pino from 'pino';
 import { getExtendedPrisma } from '../../../importedModules';
 import { getChildLogger } from '../../../logger';
-import { Document, Operation } from 'document-model/document';
 
 const logger = getChildLogger({ msgPrefix: 'CONTEXT' });
 const apolloLogger = getChildLogger(
@@ -18,7 +19,7 @@ export interface Context {
   apolloLogger: pino.Logger;
   origin: string | undefined;
   driveId?: string;
-  documents?: Record<string, { operations: Operation[]; }>;
+  documents: Map<string, DocumentGraphQLResult<Document>>;
 }
 
 type CreateContextParams = {
@@ -46,6 +47,6 @@ export function createContext(params: CreateContextParams): Context {
       prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
     origin,
     driveId,
-    documents: {},
+    documents: new Map()
   };
 }

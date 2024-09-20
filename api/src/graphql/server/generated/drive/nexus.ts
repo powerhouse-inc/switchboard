@@ -284,6 +284,7 @@ export interface NexusGenObjects {
     revision: number; // Int!
   }
   DefaultOperation: { // root type
+    context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
@@ -806,6 +807,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   DefaultOperation: { // field return type
+    context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     error: string | null; // String
     hash: string; // String!
     id: string | null; // String
@@ -1202,6 +1204,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   IOperation: { // field return type
+    context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     error: string | null; // String
     hash: string; // String!
     id: string | null; // String
@@ -1366,6 +1369,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   DefaultOperation: { // field return type name
+    context: 'OperationContext'
     error: 'String'
     hash: 'String'
     id: 'String'
@@ -1762,6 +1766,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   IOperation: { // field return type name
+    context: 'OperationContext'
     error: 'String'
     hash: 'String'
     id: 'String'
