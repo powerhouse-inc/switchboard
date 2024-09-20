@@ -1,3 +1,10 @@
+# [1.0.0-dev.42](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.41...v1.0.0-dev.42) (2024-09-20)
+
+
+### Bug Fixes
+
+* operations in documents query ([1445538](https://github.com/powerhouse-inc/switchboard/commit/14455381ff3f34e9124b102391b9a71a77c74034))
+
 # [1.0.0-dev.41](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.40...v1.0.0-dev.41) (2024-09-19)
 
 
