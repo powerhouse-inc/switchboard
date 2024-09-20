@@ -1,3 +1,10 @@
+# [1.0.0-dev.43](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.42...v1.0.0-dev.43) (2024-09-20)
+
+
+### Bug Fixes
+
+* return operation context on getDocument query ([8c58b29](https://github.com/powerhouse-inc/switchboard/commit/8c58b298447596351a55052c4f7bed5e670867de))
+
 # [1.0.0-dev.42](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.41...v1.0.0-dev.42) (2024-09-20)
 
 
