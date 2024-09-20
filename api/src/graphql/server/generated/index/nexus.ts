@@ -106,6 +106,7 @@ export interface NexusGenObjects {
     shortCode?: string | null; // String
   }
   DefaultOperation: { // root type
+    context?: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     error?: string | null; // String
     hash: string; // String!
     id?: string | null; // String
@@ -172,6 +173,23 @@ export interface NexusGenObjects {
     scope?: string[] | null; // [String!]
   }
   Mutation: {};
+  OperationContext: { // root type
+    signer?: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
+  }
+  OperationSigner: { // root type
+    app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
+    signatures: string[][]; // [[String!]!]!
+    user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
+  }
+  OperationSignerApp: { // root type
+    key: string; // String!
+    name: string; // String!
+  }
+  OperationSignerUser: { // root type
+    address: string; // String!
+    chainId: number; // Int!
+    networkId: string; // String!
+  }
   PullResponderTriggerData: { // root type
     interval: string; // String!
     listenerId: string; // ID!
@@ -250,6 +268,7 @@ export interface NexusGenFieldTypes {
     shortCode: string | null; // String
   }
   DefaultOperation: { // field return type
+    context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     error: string | null; // String
     hash: string; // String!
     id: string | null; // String
@@ -326,6 +345,23 @@ export interface NexusGenFieldTypes {
     setDriveName: boolean | null; // Boolean
     solveChallenge: NexusGenRootTypes['SessionOutput'] | null; // SessionOutput
   }
+  OperationContext: { // field return type
+    signer: NexusGenRootTypes['OperationSigner'] | null; // OperationSigner
+  }
+  OperationSigner: { // field return type
+    app: NexusGenRootTypes['OperationSignerApp']; // OperationSignerApp!
+    signatures: string[][]; // [[String!]!]!
+    user: NexusGenRootTypes['OperationSignerUser']; // OperationSignerUser!
+  }
+  OperationSignerApp: { // field return type
+    key: string; // String!
+    name: string; // String!
+  }
+  OperationSignerUser: { // field return type
+    address: string; // String!
+    chainId: number; // Int!
+    networkId: string; // String!
+  }
   PullResponderTriggerData: { // field return type
     interval: string; // String!
     listenerId: string; // ID!
@@ -380,6 +416,7 @@ export interface NexusGenFieldTypes {
     revision: number; // Int!
   }
   IOperation: { // field return type
+    context: NexusGenRootTypes['OperationContext'] | null; // OperationContext
     error: string | null; // String
     hash: string; // String!
     id: string | null; // String
@@ -425,6 +462,7 @@ export interface NexusGenFieldTypeNames {
     shortCode: 'String'
   }
   DefaultOperation: { // field return type name
+    context: 'OperationContext'
     error: 'String'
     hash: 'String'
     id: 'String'
@@ -501,6 +539,23 @@ export interface NexusGenFieldTypeNames {
     setDriveName: 'Boolean'
     solveChallenge: 'SessionOutput'
   }
+  OperationContext: { // field return type name
+    signer: 'OperationSigner'
+  }
+  OperationSigner: { // field return type name
+    app: 'OperationSignerApp'
+    signatures: 'String'
+    user: 'OperationSignerUser'
+  }
+  OperationSignerApp: { // field return type name
+    key: 'String'
+    name: 'String'
+  }
+  OperationSignerUser: { // field return type name
+    address: 'String'
+    chainId: 'Int'
+    networkId: 'String'
+  }
   PullResponderTriggerData: { // field return type name
     interval: 'String'
     listenerId: 'ID'
@@ -555,6 +610,7 @@ export interface NexusGenFieldTypeNames {
     revision: 'Int'
   }
   IOperation: { // field return type name
+    context: 'OperationContext'
     error: 'String'
     hash: 'String'
     id: 'String'

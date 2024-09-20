@@ -36,6 +36,7 @@ type CoreUnit {
 scalar Date
 
 type DefaultOperation implements IOperation {
+  context: OperationContext
   error: String
   hash: String!
   id: String
@@ -112,6 +113,7 @@ interface IDocument {
 }
 
 interface IOperation {
+  context: OperationContext
   error: String
   hash: String!
   id: String
@@ -160,6 +162,27 @@ interface Node {
   kind: String!
   name: String!
   parentFolder: String
+}
+
+type OperationContext {
+  signer: OperationSigner
+}
+
+type OperationSigner {
+  app: OperationSignerApp!
+  signatures: [[String!]!]!
+  user: OperationSignerUser!
+}
+
+type OperationSignerApp {
+  key: String!
+  name: String!
+}
+
+type OperationSignerUser {
+  address: String!
+  chainId: Int!
+  networkId: String!
 }
 
 type PullResponderTriggerData {

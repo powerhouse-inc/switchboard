@@ -9,6 +9,7 @@ import {
 } from 'document-drive';
 import { ILogger, setLogger } from 'document-drive/logger';
 import { PrismaStorage } from 'document-drive/storage/prisma';
+import { DocumentGraphQLResult } from 'document-drive/utils/graphql';
 import {
   actions,
   DocumentDriveAction,
@@ -16,7 +17,7 @@ import {
   ListenerFilter
 } from 'document-model-libs/document-drive';
 import * as DocumentModelsLibs from 'document-model-libs/document-models';
-import { DocumentModel, Operation } from 'document-model/document';
+import { Document, DocumentModel, Operation } from 'document-model/document';
 import { module as DocumentModelLib } from 'document-model/document-model';
 
 // import * as sow from 'document-model-libs/scope-of-work';
@@ -29,6 +30,7 @@ import { RealWorldAssetsDocument } from 'document-model-libs/real-world-assets';
 import DocumentDriveError from '../../errors/DocumentDriveError';
 import { getChildLogger } from '../../logger';
 import { initRedis } from '../../redis';
+import { migrateOperationContext } from '../document-drive/utils';
 import { buildRWADocument } from '../real-world-assets/utils';
 import { init } from './listenerManager';
 
@@ -58,9 +60,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ...Object.values(DocumentModelsLibs)
   ] as DocumentModel[];
 
-  let driveServer: DocumentDriveServer;
-
-  driveServer = new DocumentDriveServer(
+  const driveServer = new DocumentDriveServer(
     documentModels,
     new PrismaStorage(prisma as PrismaClient),
     redisClient ? new RedisCache(redisClient, redisTTL) : new MemoryCache(),
@@ -174,7 +174,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ): Promise<StrandUpdate[]> => {
       const transmitter = await getTransmitter(driveId, listenerId);
       if (transmitter.getStrands) {
-        const result = await transmitter.getStrands(since || undefined);
+        const result = await transmitter.getStrands({ since });
         return result;
       }
 
@@ -251,13 +251,17 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       return listenerId;
     },
 
-    getDocument: async (driveId: string, documentId: string) => {
+    getDocument: async (
+      driveId: string,
+      documentId: string
+    ): Promise<DocumentGraphQLResult<Document>> => {
       let document = await (driveId !== documentId
         ? driveServer.getDocument(driveId, documentId)
         : driveServer.getDrive(documentId));
       if (document.documentType === 'makerdao/rwa-portfolio') {
         document = buildRWADocument(document as RealWorldAssetsDocument);
       }
+
       const response = {
         ...document,
         id: documentId,
@@ -266,7 +270,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         operations: document.operations.global.map(op => ({
           ...op,
           inputText:
-            typeof op.input === 'string' ? op.input : JSON.stringify(op.input)
+            typeof op.input === 'string' ? op.input : JSON.stringify(op.input),
+          context: migrateOperationContext(op.context)
         })),
         initialState: document.initialState.state.global
       };

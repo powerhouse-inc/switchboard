@@ -1,6 +1,7 @@
 import { interfaceType, list, nonNull, objectType, queryField } from 'nexus';
 import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
+import { OperationContext } from '../document-drive/drive-resolver';
 import { GQLDateBase } from '../system';
 
 const logger = getChildLogger({ msgPrefix: 'DOCUMENT RESOLVER' });
@@ -17,15 +18,16 @@ export const operationModelInterface = interfaceType({
     t.string('id');
     t.nonNull.string('inputText');
     t.string('error');
+    t.field('context', { type: OperationContext });
   },
-  resolveType: () => null,
+  resolveType: () => null
 });
 
 export const operationModel = objectType({
   name: 'DefaultOperation',
   definition(t) {
     t.implements(operationModelInterface);
-  },
+  }
 });
 
 // todo: resolveType should be moved to somewhere else
@@ -40,33 +42,26 @@ export const documentModelInterface = interfaceType({
     t.nonNull.field('lastModified', { type: GQLDateBase });
     t.nonNull.list.nonNull.field('operations', {
       args: { first: 'Int', skip: 'Int' },
-      type: operationModel, resolve: async (parent, { first, skip }, ctx: Context) => {
-        const operations = ctx.documents![parent.id]?.operations;
-        if (operations) {
-          if (first && skip) {
-            return operations.slice(skip, skip + first);
-          }
-
-          if (first) {
-            return operations.slice(0, first);
-          }
-
-          if (skip) {
-            return operations.slice(skip);
-          }
-
-          return operations
-        }
-
+      type: operationModel,
+      resolve: async (parent, { first, skip }, ctx: Context) => {
         if (!ctx.driveId) {
           throw new Error('DriveId is not defined');
         }
+        const document =
+          ctx.documents.get(parent.id) ??
+          (await ctx.prisma.document.getDocument(ctx.driveId, parent.id));
+        const { operations } = document;
+        if (first && skip) {
+          return operations.slice(skip, skip + first);
+        }
 
-        const doc = await ctx.prisma.document.getDocument(ctx.driveId, parent.id);
-        return doc.operations ?? [];
+        if (first) {
+          return operations.slice(0, first);
+        }
+
+        return operations;
       }
-    },
-    );
+    });
   },
   resolveType: e => {
     switch (e.documentType) {
@@ -101,7 +96,7 @@ export const documentQuery = queryField('document', {
       throw new Error('DriveId is not defined');
     }
     const doc = await ctx.prisma.document.getDocument(ctx.driveId, id);
-    ctx.documents![doc.id] = doc;
+    ctx.documents.set(doc.id, doc);
     return doc;
   }
 });
@@ -115,9 +110,9 @@ export const documentsQuery = queryField('documents', {
     try {
       const docIds = await ctx.prisma.document.getDocuments(ctx.driveId);
       const docs = await Promise.all(
-        docIds.map(async (id) => {
-          const doc = await ctx.prisma.document.getDocument(ctx.driveId!, id)
-          ctx.documents![doc.id] = doc;
+        docIds.map(async id => {
+          const doc = await ctx.prisma.document.getDocument(ctx.driveId!, id);
+          ctx.documents.set(doc.id, doc);
           return doc;
         })
       );

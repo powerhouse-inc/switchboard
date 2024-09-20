@@ -195,6 +195,7 @@ type DefaultDocument implements IDocument {
 }
 
 type DefaultOperation implements IOperation {
+  context: OperationContext
   error: String
   hash: String!
   id: String
@@ -321,6 +322,7 @@ interface IDocument {
 }
 
 interface IOperation {
+  context: OperationContext
   error: String
   hash: String!
   id: String
