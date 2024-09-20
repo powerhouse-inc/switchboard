@@ -36,14 +36,14 @@ importers:
         specifier: ^2.8.5
         version: 2.8.5
       document-drive:
-        specifier: 1.0.0-alpha.94
-        version: 1.0.0-alpha.94(document-model-libs@1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.8.0)(encoding@0.1.13)(prisma@5.16.0)
+        specifier: 1.0.0-alpha.97
+        version: 1.0.0-alpha.97(document-model-libs@1.89.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.8.0)(encoding@0.1.13)(prisma@5.16.0)
       document-model:
         specifier: ^1.8.0
         version: 1.8.0
       document-model-libs:
         specifier: ^1.84.0
-        version: 1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
+        version: 1.89.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -112,7 +112,7 @@ importers:
         version: 15.1.3
       redis:
         specifier: ^4.6.13
-        version: 4.6.14
+        version: 4.7.0
       siwe:
         specifier: ^2.3.2
         version: 2.3.2(ethers@5.7.2)
@@ -1061,8 +1061,8 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
-  '@graphql-tools/utils@10.2.2':
-    resolution: {integrity: sha512-ueoplzHIgFfxhFrF4Mf/niU/tYHuO6Uekm2nCYU72qpI+7Hn9dA2/o5XOBvFXDk27Lp5VSvQY5WfmRbqwVxaYQ==}
+  '@graphql-tools/utils@10.3.4':
+    resolution: {integrity: sha512-5xUXVsp1Yh1ttYHYDLJscoyv2LcW1BjpbcooIAkGUzINftD/qRBw9zvVmALx+oQWr/9MSIYghHHZzbYHsVO0/A==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
@@ -1335,10 +1335,6 @@ packages:
     peerDependencies:
       '@redis/client': ^1.0.0
 
-  '@redis/client@1.5.16':
-    resolution: {integrity: sha512-X1a3xQ5kEMvTib5fBrHKh6Y+pXbeKXqziYuxOUo1ojQNECg4M5Etd1qqyhMap+lFUOAh8S7UYevgJHOm4A+NOg==}
-    engines: {node: '>=14'}
-
   '@redis/client@1.6.0':
     resolution: {integrity: sha512-aR0uffYI700OEEH4gYnitAnv3vzVGXCFvYfdpu/CJKvk4pHfLPEy/JSZyrpQ+15WhXe1yJRXLtfQ84s4mEXnPg==}
     engines: {node: '>=14'}
@@ -1348,28 +1344,13 @@ packages:
     peerDependencies:
       '@redis/client': ^1.0.0
 
-  '@redis/json@1.0.6':
-    resolution: {integrity: sha512-rcZO3bfQbm2zPRpqo82XbW8zg4G/w4W3tI7X8Mqleq9goQjAGLL7q/1n1ZX4dXEAmORVZ4s1+uKLaUOg7LrUhw==}
-    peerDependencies:
-      '@redis/client': ^1.0.0
-
   '@redis/json@1.0.7':
     resolution: {integrity: sha512-6UyXfjVaTBTJtKNG4/9Z8PSpKE6XgSyEb8iwaqDcy+uKrd/DGYHTWkUdnQDyzm727V7p21WUMhsqz5oy65kPcQ==}
     peerDependencies:
       '@redis/client': ^1.0.0
 
-  '@redis/search@1.1.6':
-    resolution: {integrity: sha512-mZXCxbTYKBQ3M2lZnEddwEAks0Kc7nauire8q20oA0oA/LoA+E/b5Y5KZn232ztPb1FkIGqo12vh3Lf+Vw5iTw==}
-    peerDependencies:
-      '@redis/client': ^1.0.0
-
   '@redis/search@1.2.0':
     resolution: {integrity: sha512-tYoDBbtqOVigEDMAcTGsRlMycIIjwMCgD8eR2t0NANeQmgK/lvxNAvYyb6bZDD4frHRhIHkJu2TBRvB0ERkOmw==}
-    peerDependencies:
-      '@redis/client': ^1.0.0
-
-  '@redis/time-series@1.0.5':
-    resolution: {integrity: sha512-IFjIgTusQym2B5IZJG3XKr5llka7ey84fw/NOYqESP5WUfQs9zz1ww/9+qoz4ka/S6KcGBodzlCeZ5UImKbscg==}
     peerDependencies:
       '@redis/client': ^1.0.0
 
@@ -2237,8 +2218,8 @@ packages:
   cross-fetch@3.1.8:
     resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
 
-  cross-inspect@1.0.0:
-    resolution: {integrity: sha512-4PFfn4b5ZN6FMNGSZlyb7wUhuN8wvj8t/VQHZdM4JsDcruGJ8L2kf9zao98QIrBPFCpdk27qst/AGTl7pL3ypQ==}
+  cross-inspect@1.0.1:
+    resolution: {integrity: sha512-Pcw1JTvZLSJH83iiGWt6fRcT+BjZlCDRVwYLbUcHzv/CRpB7r0MlSrGbIyQvVSNyGnbt7G4AXuyCiDR3POvZ1A==}
     engines: {node: '>=16.0.0'}
 
   cross-spawn@7.0.3:
@@ -2392,14 +2373,14 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  document-drive@1.0.0-alpha.94:
-    resolution: {integrity: sha512-664ITD1XCLL4u1rNzgxdAvi5T0gXkIuuBenG33sQQKD9BGD7E6MxtViJPTssKeNsra3sm9fl3SfAqx/PciUrKw==}
+  document-drive@1.0.0-alpha.97:
+    resolution: {integrity: sha512-b3K2LVVjcoBSwlt266xejR7vKakne08TNyg98yFg3LqRe2bsomwjTSsp6HPDNI1zsxrF+vgmyYLbcHdIH7jc5w==}
     peerDependencies:
       document-model: ^1.8.0
       document-model-libs: ^1.57.0
 
-  document-model-libs@1.84.0:
-    resolution: {integrity: sha512-v3dc9asjf+pvAPffubUb8Pr1R8ahPwKUU1/qIwLrlXbSJ4Rz3ctsvjcwW2z0uIiCZJPoLCRTE+VESIIAO5GiHQ==}
+  document-model-libs@1.89.0:
+    resolution: {integrity: sha512-Kjp7hufpyMKispLEfH2ThyhfxjwOKmgpnPF8vH+KP9GAi4u98LDxQZ/dMvZIf1ox6zOZhPXstvgvxtnmlD7LEg==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -4449,9 +4430,6 @@ packages:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
 
-  redis@4.6.14:
-    resolution: {integrity: sha512-GrNg/e33HtsQwNXL7kJT+iNFPSwE1IPmd7wzV3j4f2z0EYxZfZE7FVTmUysgAtqQQtg5NXF5SNLR9OdO/UHOfw==}
-
   redis@4.7.0:
     resolution: {integrity: sha512-zvmkHEAdGMn+hMRXuMBtu4Vo5P6rHQjLoHftu+lBqq8ZTA3RCVC/WzD790bkKKiNFp7d5/9PcSD19fJyyRvOdQ==}
 
@@ -5420,7 +5398,7 @@ snapshots:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-codegen/schema-ast': 4.0.0(graphql@16.9.0)
       '@graphql-codegen/visitor-plugin-common': 4.1.2(encoding@0.1.13)(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphlib: 2.1.8
       graphql: 16.9.0
     transitivePeerDependencies:
@@ -6349,13 +6327,13 @@ snapshots:
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-tools/schema': 10.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
 
   '@graphql-codegen/plugin-helpers@5.0.4(graphql@16.9.0)':
     dependencies:
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       change-case-all: 1.0.15
       common-tags: 1.8.2
       graphql: 16.9.0
@@ -6366,14 +6344,14 @@ snapshots:
   '@graphql-codegen/schema-ast@4.0.0(graphql@16.9.0)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.5.3
 
   '@graphql-codegen/schema-ast@4.0.2(graphql@16.9.0)':
     dependencies:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
 
@@ -6394,7 +6372,7 @@ snapshots:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-tools/optimize': 2.0.0(graphql@16.9.0)
       '@graphql-tools/relay-operation-optimizer': 7.0.1(encoding@0.1.13)(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       dependency-graph: 0.11.0
@@ -6411,7 +6389,7 @@ snapshots:
       '@graphql-codegen/plugin-helpers': 5.0.4(graphql@16.9.0)
       '@graphql-tools/optimize': 2.0.0(graphql@16.9.0)
       '@graphql-tools/relay-operation-optimizer': 7.0.1(encoding@0.1.13)(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       auto-bind: 4.0.0
       change-case-all: 1.0.15
       dependency-graph: 0.11.0
@@ -6455,7 +6433,7 @@ snapshots:
 
   '@graphql-tools/merge@9.0.4(graphql@16.9.0)':
     dependencies:
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
 
@@ -6467,7 +6445,7 @@ snapshots:
   '@graphql-tools/relay-operation-optimizer@7.0.1(encoding@0.1.13)(graphql@16.9.0)':
     dependencies:
       '@ardatan/relay-compiler': 12.0.0(encoding@0.1.13)(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
     transitivePeerDependencies:
@@ -6477,7 +6455,7 @@ snapshots:
   '@graphql-tools/schema@10.0.4(graphql@16.9.0)':
     dependencies:
       '@graphql-tools/merge': 9.0.4(graphql@16.9.0)
-      '@graphql-tools/utils': 10.2.2(graphql@16.9.0)
+      '@graphql-tools/utils': 10.3.4(graphql@16.9.0)
       graphql: 16.9.0
       tslib: 2.6.3
       value-or-promise: 1.0.12
@@ -6498,10 +6476,10 @@ snapshots:
       tslib: 2.6.3
       value-or-promise: 1.0.12
 
-  '@graphql-tools/utils@10.2.2(graphql@16.9.0)':
+  '@graphql-tools/utils@10.3.4(graphql@16.9.0)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
-      cross-inspect: 1.0.0
+      cross-inspect: 1.0.1
       dset: 3.1.3
       graphql: 16.9.0
       tslib: 2.6.3
@@ -6788,63 +6766,31 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@redis/bloom@1.2.0(@redis/client@1.5.16)':
-    dependencies:
-      '@redis/client': 1.5.16
-
   '@redis/bloom@1.2.0(@redis/client@1.6.0)':
     dependencies:
       '@redis/client': 1.6.0
-    optional: true
-
-  '@redis/client@1.5.16':
-    dependencies:
-      cluster-key-slot: 1.1.2
-      generic-pool: 3.9.0
-      yallist: 4.0.0
 
   '@redis/client@1.6.0':
     dependencies:
       cluster-key-slot: 1.1.2
       generic-pool: 3.9.0
       yallist: 4.0.0
-    optional: true
-
-  '@redis/graph@1.1.1(@redis/client@1.5.16)':
-    dependencies:
-      '@redis/client': 1.5.16
 
   '@redis/graph@1.1.1(@redis/client@1.6.0)':
     dependencies:
       '@redis/client': 1.6.0
-    optional: true
-
-  '@redis/json@1.0.6(@redis/client@1.5.16)':
-    dependencies:
-      '@redis/client': 1.5.16
 
   '@redis/json@1.0.7(@redis/client@1.6.0)':
     dependencies:
       '@redis/client': 1.6.0
-    optional: true
-
-  '@redis/search@1.1.6(@redis/client@1.5.16)':
-    dependencies:
-      '@redis/client': 1.5.16
 
   '@redis/search@1.2.0(@redis/client@1.6.0)':
     dependencies:
       '@redis/client': 1.6.0
-    optional: true
-
-  '@redis/time-series@1.0.5(@redis/client@1.5.16)':
-    dependencies:
-      '@redis/client': 1.5.16
 
   '@redis/time-series@1.1.0(@redis/client@1.6.0)':
     dependencies:
       '@redis/client': 1.6.0
-    optional: true
 
   '@sec-ant/readable-stream@0.4.1': {}
 
@@ -8015,7 +7961,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  cross-inspect@1.0.0:
+  cross-inspect@1.0.1:
     dependencies:
       tslib: 2.6.3
 
@@ -8155,11 +8101,11 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  document-drive@1.0.0-alpha.94(document-model-libs@1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.8.0)(encoding@0.1.13)(prisma@5.16.0):
+  document-drive@1.0.0-alpha.97(document-model-libs@1.89.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4))(document-model@1.8.0)(encoding@0.1.13)(prisma@5.16.0):
     dependencies:
       change-case: 5.4.4
       document-model: 1.8.0
-      document-model-libs: 1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
+      document-model-libs: 1.89.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4)
       exponential-backoff: 3.1.1
       graphql: 16.9.0
       graphql-request: 6.1.0(encoding@0.1.13)(graphql@16.9.0)
@@ -8187,7 +8133,7 @@ snapshots:
       - supports-color
       - tedious
 
-  document-model-libs@1.84.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
+  document-model-libs@1.89.0(encoding@0.1.13)(graphql@16.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@0.32.4):
     dependencies:
       '@acaldas/graphql-codegen-typescript-validation-schema': 0.12.3(encoding@0.1.13)(graphql@16.9.0)
       '@graphql-codegen/core': 4.0.2(graphql@16.9.0)
@@ -10453,15 +10399,6 @@ snapshots:
       indent-string: 4.0.0
       strip-indent: 3.0.0
 
-  redis@4.6.14:
-    dependencies:
-      '@redis/bloom': 1.2.0(@redis/client@1.5.16)
-      '@redis/client': 1.5.16
-      '@redis/graph': 1.1.1(@redis/client@1.5.16)
-      '@redis/json': 1.0.6(@redis/client@1.5.16)
-      '@redis/search': 1.1.6(@redis/client@1.5.16)
-      '@redis/time-series': 1.0.5(@redis/client@1.5.16)
-
   redis@4.7.0:
     dependencies:
       '@redis/bloom': 1.2.0(@redis/client@1.6.0)
@@ -10470,7 +10407,6 @@ snapshots:
       '@redis/json': 1.0.7(@redis/client@1.6.0)
       '@redis/search': 1.2.0(@redis/client@1.6.0)
       '@redis/time-series': 1.1.0(@redis/client@1.6.0)
-    optional: true
 
   regenerator-runtime@0.14.1: {}
 

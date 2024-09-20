@@ -21,6 +21,7 @@ import { Context } from '../../graphql/server/drive/context';
 import { getChildLogger } from '../../logger';
 import { systemType } from '../system';
 import { DocumentDriveState, Listener } from './resolvers';
+import { migrateOperationContext } from './utils';
 
 const logger = getChildLogger({ msgPrefix: 'Drive Resolver' });
 
@@ -214,7 +215,7 @@ export const syncType = objectType({
               hash: o.hash,
               timestamp: o.timestamp,
               type: o.type,
-              context: o.context,
+              context: migrateOperationContext(o.context),
               id: o.id
             }))
           }));

@@ -1,3 +1,45 @@
+# [1.0.0-dev.43](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.42...v1.0.0-dev.43) (2024-09-20)
+
+
+### Bug Fixes
+
+* return operation context on getDocument query ([8c58b29](https://github.com/powerhouse-inc/switchboard/commit/8c58b298447596351a55052c4f7bed5e670867de))
+
+# [1.0.0-dev.42](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.41...v1.0.0-dev.42) (2024-09-20)
+
+
+### Bug Fixes
+
+* operations in documents query ([1445538](https://github.com/powerhouse-inc/switchboard/commit/14455381ff3f34e9124b102391b9a71a77c74034))
+
+# [1.0.0-dev.41](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.40...v1.0.0-dev.41) (2024-09-19)
+
+
+### Bug Fixes
+
+* updated context of docker build ([ddc19f0](https://github.com/powerhouse-inc/switchboard/commit/ddc19f030f0a07f6d7b699e1e81cfc249e7d7b55))
+
+# [1.0.0-dev.40](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.39...v1.0.0-dev.40) (2024-09-17)
+
+
+### Features
+
+* added operations query arguments ([9aabf42](https://github.com/powerhouse-inc/switchboard/commit/9aabf425db70a91c1ba141b110e33e244190353c))
+
+# [1.0.0-dev.39](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.38...v1.0.0-dev.39) (2024-09-13)
+
+
+### Features
+
+* added currentValue field on rwa ([0790673](https://github.com/powerhouse-inc/switchboard/commit/079067317f3737166f169d91598cb9f269f1110e))
+
+# [1.0.0-dev.38](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.37...v1.0.0-dev.38) (2024-09-12)
+
+
+### Bug Fixes
+
+* rwa dateTime resolvers now accepts empty strings ([2c76786](https://github.com/powerhouse-inc/switchboard/commit/2c76786af3a2a1101c7c45680d56371d00157288))
+
 # [1.0.0-dev.37](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.36...v1.0.0-dev.37) (2024-09-12)
 
 

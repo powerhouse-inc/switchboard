@@ -1,4 +1,6 @@
 import { Session } from '@prisma/client';
+import { DocumentGraphQLResult } from 'document-drive/utils/graphql';
+import { Document } from 'document-model/document';
 import type express from 'express';
 import pino from 'pino';
 import { getExtendedPrisma } from '../../../importedModules';
@@ -17,6 +19,7 @@ export interface Context {
   apolloLogger: pino.Logger;
   origin: string | undefined;
   driveId?: string;
+  documents: Map<string, DocumentGraphQLResult<Document>>;
 }
 
 type CreateContextParams = {
@@ -43,6 +46,7 @@ export function createContext(params: CreateContextParams): Context {
     getSession: async () =>
       prisma.session.getSessionByToken(origin, token || cookieAuthHeader),
     origin,
-    driveId
+    driveId,
+    documents: new Map()
   };
 }
