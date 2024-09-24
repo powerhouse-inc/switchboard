@@ -66,7 +66,14 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     redisClient ? new RedisCache(redisClient, redisTTL) : new MemoryCache(),
     redisClient
       ? new RedisQueueManager(1, 10, redisClient)
-      : new BaseQueueManager(3, 10)
+      : new BaseQueueManager(3, 10),
+    {
+      defaultDrives: {
+        removeOldRemoteDrives: {
+          strategy: 'preserve-all'
+        }
+      }
+    }
   );
 
   initialize();
