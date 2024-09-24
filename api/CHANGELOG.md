@@ -1,3 +1,11 @@
+# [1.0.0-dev.44](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.43...v1.0.0-dev.44) (2024-09-24)
+
+
+### Features
+
+* prevent delete old drives ([d946c43](https://github.com/powerhouse-inc/switchboard/commit/d946c435bc157b78ac3e8192d4b7db2ac5f25311))
+* prevent delete old drives ([#298](https://github.com/powerhouse-inc/switchboard/issues/298)) ([f45adf0](https://github.com/powerhouse-inc/switchboard/commit/f45adf0b26113fef9bafbf8a238fbeaffb223516))
+
 # [1.0.0-dev.43](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.42...v1.0.0-dev.43) (2024-09-20)
 
 
