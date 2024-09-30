@@ -55,7 +55,7 @@ const prisma = prismaBase.$extends({
     session: getSessionCrud(prismaBase),
     challenge: getChallengeCrud(prismaBase),
     document: getDocumentDriveCRUD(prismaBase),
-    rWAPortfolio: getRWACRUD(prismaBase)
+    rWAPortfolio: getRWACRUD(prismaBase),
   }
 });
 

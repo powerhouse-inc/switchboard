@@ -1,6 +1,5 @@
-import type { Prisma, PrismaClient } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import {
-  DocumentDriveServer,
   DriveInput,
   generateUUID,
   ListenerRevision,
@@ -8,29 +7,18 @@ import {
   StrandUpdate
 } from 'document-drive';
 import { ILogger, setLogger } from 'document-drive/logger';
-import { PrismaStorage } from 'document-drive/storage/prisma';
 import {
   actions,
   DocumentDriveAction,
   Listener,
   ListenerFilter
 } from 'document-model-libs/document-drive';
-import * as DocumentModelsLibs from 'document-model-libs/document-models';
-import { DocumentModel, Operation } from 'document-model/document';
-import { module as DocumentModelLib } from 'document-model/document-model';
-
-// import * as sow from 'document-model-libs/scope-of-work';
-import MemoryCache from 'document-drive/cache/memory';
-import RedisCache from 'document-drive/cache/redis';
-import { BaseQueueManager } from 'document-drive/queue/base';
-import { RedisQueueManager } from 'document-drive/queue/redis';
-
 import { RealWorldAssetsDocument } from 'document-model-libs/real-world-assets';
-import DocumentDriveError from '../../errors/DocumentDriveError';
+import { Operation } from 'document-model/document';
+import { getDocumentDriveServer } from '../../document-drive-server';
 import { getChildLogger } from '../../logger';
 import { initRedis } from '../../redis';
 import { buildRWADocument } from '../real-world-assets/utils';
-import { init } from './listenerManager';
 
 const logger = getChildLogger({ msgPrefix: 'Document Model' });
 
@@ -53,38 +41,9 @@ const redisTTL = process.env.REDIS_TTL
   : 31556952; // defaults to 1 year
 
 export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
-  const documentModels = [
-    DocumentModelLib,
-    ...Object.values(DocumentModelsLibs)
-  ] as DocumentModel[];
-
-  let driveServer: DocumentDriveServer;
-
-  driveServer = new DocumentDriveServer(
-    documentModels,
-    new PrismaStorage(prisma as PrismaClient),
-    redisClient ? new RedisCache(redisClient, redisTTL) : new MemoryCache(),
-    redisClient
-      ? new RedisQueueManager(1, 10, redisClient)
-      : new BaseQueueManager(3, 10)
-  );
-
-  initialize();
-  async function initialize() {
-    try {
-      await driveServer.initialize();
-      await init(driveServer, prisma);
-    } catch (e: any) {
-      throw new DocumentDriveError({
-        code: 500,
-        message: e.message ?? 'Failed to initialize drive server',
-        logging: true,
-        context: e
-      });
-    }
-  }
 
   async function getTransmitter(driveId: string, transmitterId: string) {
+    const driveServer = getDocumentDriveServer();
     const transmitter = (await driveServer.getTransmitter(
       driveId,
       transmitterId
@@ -98,8 +57,8 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
   return {
     addDrive: async (args: DriveInput) => {
       try {
+        const driveServer = getDocumentDriveServer();
         const drive = await driveServer!.addDrive(args);
-        await initialize();
         return drive;
       } catch (e) {
         logger.error(e);
@@ -108,6 +67,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
     deleteDrive: async (id: string) => {
       try {
+        const driveServer = getDocumentDriveServer();
         await driveServer.deleteDrive(id);
       } catch (e) {
         logger.error(e);
@@ -118,6 +78,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
     getDrive: async (id: string) => {
       try {
+        const driveServer = getDocumentDriveServer();
         const { state } = await driveServer.getDrive(id);
         return state;
       } catch (e) {
@@ -127,6 +88,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
     getDriveBySlug: async (slug: string) => {
       try {
+        const driveServer = getDocumentDriveServer();
         const { state } = await driveServer.getDriveBySlug(slug);
         return state.global;
       } catch (e) {
@@ -136,6 +98,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
     getDrives: async () => {
       try {
+        const driveServer = getDocumentDriveServer();
         const driveIds = await driveServer.getDrives();
         return driveIds;
       } catch (e) {
@@ -149,6 +112,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       operations: Operation<DocumentDriveAction>[],
       documentId?: string
     ) => {
+      const driveServer = getDocumentDriveServer();
       if (!documentId) {
         logger.info('adding drive operations');
         const result = await driveServer.queueDriveOperations(
@@ -174,7 +138,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     ): Promise<StrandUpdate[]> => {
       const transmitter = await getTransmitter(driveId, listenerId);
       if (transmitter.getStrands) {
-        const result = await transmitter.getStrands(since || undefined);
+        const result = await transmitter.getStrands({ since } || undefined);
         return result;
       }
 
@@ -219,6 +183,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
         system: false
       };
 
+      const driveServer = getDocumentDriveServer();
       const result = await driveServer.queueDriveAction(
         driveId,
         actions.addListener({ listener })
@@ -237,6 +202,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
       driveId: string,
       listenerId: string
     ) => {
+      const driveServer = getDocumentDriveServer();
       const result = await driveServer.queueDriveAction(
         driveId,
         actions.removeListener({ listenerId })
@@ -252,6 +218,7 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
 
     getDocument: async (driveId: string, documentId: string) => {
+      const driveServer = getDocumentDriveServer();
       let document = await (driveId !== documentId
         ? driveServer.getDocument(driveId, documentId)
         : driveServer.getDrive(documentId));
@@ -274,14 +241,18 @@ export function getDocumentDriveCRUD(prisma: Prisma.TransactionClient) {
     },
 
     getDocuments: async (driveId: string) => {
+      const driveServer = getDocumentDriveServer();
       const documents = await driveServer.getDocuments(driveId);
       return documents;
     },
-
-    setDriveIcon: async (driveId: string, icon: string) =>
-      driveServer.queueDriveAction(driveId, actions.setDriveIcon({ icon })),
-    setDriveName: async (driveId: string, name: string) =>
+    setDriveIcon: async (driveId: string, icon: string) => {
+      const driveServer = getDocumentDriveServer();
+      driveServer.queueDriveAction(driveId, actions.setDriveIcon({ icon }));
+    },
+    setDriveName: async (driveId: string, name: string) => {
+      const driveServer = getDocumentDriveServer();
       driveServer.queueDriveAction(driveId, actions.setDriveName({ name }))
+    }
     // closeScopeOfWorkIssue: async (githubId: number) => {
     // const dbEntry = await prisma.scopeOfWorkDeliverable.findFirst({
     //     where: {

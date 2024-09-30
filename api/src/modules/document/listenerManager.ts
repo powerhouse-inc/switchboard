@@ -46,7 +46,7 @@ async function registerListener(
   listener: Listener
 ) {
   const receiver: IReceiver = {
-    transmit: async () => {}
+    transmit: async () => { }
   };
   await driveServer.addInternalListener(driveId, receiver, {
     listenerId: listener.listenerId,
@@ -90,7 +90,7 @@ export async function init(
             transmit: async (strands: InternalTransmitterUpdate[]) => {
               transmit(strands, prisma);
             },
-            disconnect: async ()  =>{
+            disconnect: async () => {
               logger.info(`Disconnecting listener ${options.listenerId}`);
             }
           });

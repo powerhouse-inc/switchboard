@@ -10,22 +10,25 @@ import { getChildLogger } from './logger';
 import register from './metrics';
 import { errorHandler } from './middleware/errors';
 import { closeRedis, initRedis } from './redis';
+import { initDocumentDriveServer } from './document-drive-server';
 
 const logger = getChildLogger({ msgPrefix: 'SERVER' });
 
-const { app, router } = createApp();
 
-async function startServer(
-  app: express.Application,
-  router: express.Router
-): Promise<Server> {
-  await addGraphqlRoutes(router);
+
+async function startServer(): Promise<Server> {
+
 
   logger.debug('Starting server');
 
   if (process.env.REDIS_TLS_URL) {
     await initRedis();
   }
+
+  await initDocumentDriveServer();
+
+  const { app, router } = createApp();
+  await addGraphqlRoutes(router);
 
   const basePath = process.env.BASE_PATH || '/';
   app.use(basePath, router);
@@ -51,7 +54,7 @@ async function startServer(
 }
 
 /* istanbul ignore next @preserve */
-startServer(app, router)
+startServer()
   .then(e => {
     // Hot Module Replacement
     const { hot } = import.meta as any;
