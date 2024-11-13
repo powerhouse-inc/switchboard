@@ -1,3 +1,10 @@
+# [1.0.0-dev.45](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.44...v1.0.0-dev.45) (2024-11-13)
+
+
+### Features
+
+* updated document-model-libs ([195ab75](https://github.com/powerhouse-inc/switchboard/commit/195ab7529fb456edbbb13cb784ae0ea129ba589a))
+
 # [1.0.0-dev.44](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.43...v1.0.0-dev.44) (2024-09-24)
 
 
