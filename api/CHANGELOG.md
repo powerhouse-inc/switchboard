@@ -1,3 +1,10 @@
+# [1.0.0-dev.46](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.45...v1.0.0-dev.46) (2024-11-27)
+
+
+### Bug Fixes
+
+* update deps ([66f9191](https://github.com/powerhouse-inc/switchboard/commit/66f9191b048f3f0c8a9b4d24413c6ac8b9ced09a))
+
 # [1.0.0-dev.45](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.44...v1.0.0-dev.45) (2024-11-13)
 
 
