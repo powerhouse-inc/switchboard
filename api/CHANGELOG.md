@@ -1,3 +1,10 @@
+# [1.0.0-dev.47](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.46...v1.0.0-dev.47) (2024-12-06)
+
+
+### Bug Fixes
+
+* updated libs ([d35c245](https://github.com/powerhouse-inc/switchboard/commit/d35c2454faf88efbb73158500dac910483be64a7))
+
 # [1.0.0-dev.46](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.45...v1.0.0-dev.46) (2024-11-27)
 
 
