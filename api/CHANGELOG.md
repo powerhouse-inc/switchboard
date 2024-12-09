@@ -1,3 +1,10 @@
+# [1.0.0-dev.48](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.47...v1.0.0-dev.48) (2024-12-09)
+
+
+### Bug Fixes
+
+* bump libs ([5f81a11](https://github.com/powerhouse-inc/switchboard/commit/5f81a11aa78c5d84a555e946cabdc0b08b645edd))
+
 # [1.0.0-dev.47](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.46...v1.0.0-dev.47) (2024-12-06)
 
 
