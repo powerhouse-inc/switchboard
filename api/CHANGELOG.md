@@ -1,3 +1,11 @@
+# [1.0.0-dev.49](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.48...v1.0.0-dev.49) (2024-12-10)
+
+
+### Features
+
+* bump libs ([159150a](https://github.com/powerhouse-inc/switchboard/commit/159150a929936c5801f61025bde9df834f260ce3))
+* enabled chat-room document model ([#318](https://github.com/powerhouse-inc/switchboard/issues/318)) ([c755cab](https://github.com/powerhouse-inc/switchboard/commit/c755cabed86c6808b2aa2e75843835bcf3bdf549))
+
 # [1.0.0-dev.48](https://github.com/powerhouse-inc/switchboard/compare/v1.0.0-dev.47...v1.0.0-dev.48) (2024-12-09)
 
 
