@@ -1,3 +1,6 @@
+Switchboard has migrated to the [Powerhouse Monorepo] (https://github.com/powerhouse-inc/powerhouse) and is available as an app. 
+This legacy version will gradually be replaced and phase out. 
+
 ![Open-source API Supporting a Thriving Ecosystem of (D)apps](./.github/banner.png)
 
 [![CI](https://github.com/makerdao-ses/switchboard-boilerplate/actions/workflows/ci.yaml/badge.svg)](https://github.com/makerdao-ses/switchboard-boilerplate/actions/workflows/ci.yaml)
